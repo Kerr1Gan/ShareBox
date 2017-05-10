@@ -36,4 +36,7 @@ public class MainActivity extends AppCompatActivity {
             scroll.addView(b);
         }
     }
+    private  void test(){
+
+    }
 }
