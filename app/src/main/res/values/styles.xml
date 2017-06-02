@@ -1,14 +1,39 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="drawerArrowStyle">@style/AppTheme.DrawerArrowToggle</item>
+        <item name="android:toolbarStyle" tools:targetApi="lollipop">@style/CustomToolBar</item>
+        <item name="android:actionBarStyle">@style/CustomActionBarStyle</item>
     </style>
 
     <style name="ImageStatusBarStyle" parent="Theme.AppCompat.Light.NoActionBar">
-
+        <item name="drawerArrowStyle">@style/AppTheme.DrawerArrowToggle</item>
     </style>
-    
+    <style name="AppTheme.DrawerArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@android:color/white</item>
+    </style>
+
+    <style name="CustomToolBar" parent="Widget.AppCompat.Toolbar">
+        <item name="android:contentInsetStart" tools:targetApi="lollipop">0dp</item>
+        <item name="android:contentInsetEnd" tools:targetApi="lollipop">0dp</item>
+        <item name="android:colorControlNormal">?attr/colorPrimary</item>//修改后退箭头颜色
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:actionMenuTextColor">@android:color/white</item>
+
+        <item name="colorControlNormal">@android:color/white</item>//below v21
+    </style>
+
+    <style name="CustomActionBarStyle" parent="Base.Widget.AppCompat.Light.ActionBar">
+        <!--<item name="android:titleTextStyle">@style/ActionBarTitle</item>-->
+        <item name="android:actionMenuTextColor">@android:color/white</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:background">@color/colorPrimary</item>
+
+        <item name="android:colorControlNormal">@android:color/white</item>//up v21
+        <item name="colorControlNormal">@android:color/white</item>//below v21
+    </style>
 </resources>
