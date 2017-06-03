@@ -15,97 +15,112 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorPrimary"
+                android:layout_height="25dp"
+                android:background="@color/colorPrimary"/><!--fix bug in google device-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/main_content"
                 android:fitsSystemWindows="true"
-                android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:title="@string/app_name"
-                app:titleTextColor="@android:color/white">
+                android:orientation="vertical">
 
-            </android.support.v7.widget.Toolbar>
-
-            <android.support.design.widget.CoordinatorLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <android.support.design.widget.AppBarLayout
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:background="@color/colorPrimary"
+                    android:fitsSystemWindows="true"
+                    android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                    app:title="@string/app_name"
+                    app:titleTextColor="@android:color/white">
 
-                    <LinearLayout
+                </android.support.v7.widget.Toolbar>
+
+                <android.support.design.widget.CoordinatorLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <android.support.design.widget.AppBarLayout
                         android:layout_width="match_parent"
-                        android:layout_height="70dp"
-                        android:background="@color/colorPrimary"
-                        android:orientation="horizontal"
-                        app:layout_scrollFlags="scroll|enterAlways">
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
                         <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:orientation="horizontal">
+                            android:layout_width="match_parent"
+                            android:layout_height="70dp"
+                            android:background="@color/colorPrimary"
+                            android:orientation="horizontal"
+                            app:layout_scrollFlags="scroll|enterAlways">
 
-                            <TextView
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_marginLeft="20dp"
+                                    android:text="tp-link"
+                                    android:textColor="@android:color/white"
+                                    android:textSize="20sp"/>
+                            </LinearLayout>
+
+                            <Button
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginLeft="20dp"
-                                android:text="tp-link"
-                                android:textColor="@android:color/white"
-                                android:textSize="20sp"/>
+                                android:layout_marginBottom="10dp"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="5dp"
+                                android:layout_marginTop="10dp"
+                                android:text="Wifi"/>
+
+                            <Button
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10dp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="10dp"
+                                android:layout_marginTop="10dp"
+                                android:text="Hotspot"/>
                         </LinearLayout>
+                    </android.support.design.widget.AppBarLayout>
 
-                        <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="5dp"
-                            android:layout_marginTop="10dp"
-                            android:text="Wifi"/>
+                    <!--<android.support.v4.widget.NestedScrollView-->
+                    <!--android:id="@+id/scroll_view"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
 
-                        <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginTop="10dp"
-                            android:text="Hotspot"/>
-                    </LinearLayout>
-                </android.support.design.widget.AppBarLayout>
+                    <!--<LinearLayout-->
+                    <!--android:id="@+id/content"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:orientation="vertical">-->
+                    <!--</LinearLayout>-->
+                    <!--</android.support.v4.widget.NestedScrollView>-->
 
-                <!--<android.support.v4.widget.NestedScrollView-->
-                <!--android:id="@+id/scroll_view"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
+                    <ViewSwitcher
+                        android:id="@+id/view_switcher"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="80dp"/>
 
-                <!--<LinearLayout-->
-                <!--android:id="@+id/content"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:orientation="vertical">-->
-                <!--</LinearLayout>-->
-                <!--</android.support.v4.widget.NestedScrollView>-->
+                </android.support.design.widget.CoordinatorLayout>
+            </LinearLayout>
 
-                <ViewSwitcher
-                    android:id="@+id/view_switcher"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="80dp"/>
+        </RelativeLayout>
 
-            </android.support.design.widget.CoordinatorLayout>
-        </LinearLayout>
+
 
         <!--//侧滑内容-->
         <LinearLayout
