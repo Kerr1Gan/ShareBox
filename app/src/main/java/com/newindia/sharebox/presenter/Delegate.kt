@@ -14,14 +14,14 @@ import android.view.View
  */
 abstract class Delegate<T>(val owner: T) {
 
-    fun findViewById(resId: Int): View? {
+    open fun findViewById(resId: Int): View? {
         if (owner is Activity) {
             return owner.findViewById(resId)
         }
         return null
     }
 
-    val mContext: Context?
+    open val mContext: Context?
         get() {
             if (owner is Context) {
                 return owner
@@ -29,7 +29,7 @@ abstract class Delegate<T>(val owner: T) {
             return null
         }
 
-    val mResources: Resources?
+    open val mResources: Resources?
         get() {
             if (owner is Context) {
                 return owner.resources
@@ -37,7 +37,7 @@ abstract class Delegate<T>(val owner: T) {
             return null
         }
 
-    val mIntent: Intent?
+    open val mIntent: Intent?
         get() {
             if (owner is Activity) {
                 return owner.intent
@@ -45,7 +45,7 @@ abstract class Delegate<T>(val owner: T) {
             return null
         }
 
-    val mApplication: Application?
+    open val mApplication: Application?
         get() {
             if (owner is Activity) {
                 return owner.application
@@ -53,7 +53,7 @@ abstract class Delegate<T>(val owner: T) {
             return null
         }
 
-    val mLayoutInflater: LayoutInflater?
+    open val mLayoutInflater: LayoutInflater?
         get() {
             if (owner is Activity) {
                 return owner.layoutInflater
@@ -61,7 +61,7 @@ abstract class Delegate<T>(val owner: T) {
             return null
         }
 
-    val mMenuInflater: MenuInflater?
+    open val mMenuInflater: MenuInflater?
         get() {
             if (owner is Activity) {
                 return owner.menuInflater
@@ -69,7 +69,7 @@ abstract class Delegate<T>(val owner: T) {
             return null
         }
 
-    fun getSystemService(serviceName: String): Any? {
+    open fun getSystemService(serviceName: String): Any? {
         if (owner is Activity) {
             return owner.getSystemService(serviceName)
         }

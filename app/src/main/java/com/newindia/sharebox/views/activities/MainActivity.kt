@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         var toolbar=findViewById(R.id.toolbar) as Toolbar
-//        toolbar.inflateMenu(R.menu.menu_main_activity)
+
         setSupportActionBar(toolbar)
         mDelegate= MainActivityDelegate(this)
     }
@@ -34,4 +34,6 @@ class MainActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
+
 }

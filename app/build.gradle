@@ -29,7 +29,6 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:recyclerview-v7:23.2.0'
     testCompile 'junit:junit:4.12'
-    compile 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.6.1'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     compile 'com.android.support:design:24.2.0'
 }
