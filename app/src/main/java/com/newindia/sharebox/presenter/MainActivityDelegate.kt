@@ -12,6 +12,7 @@ import android.widget.Toast
 import android.widget.ViewSwitcher
 import com.newindia.sharebox.R
 import com.newindia.sharebox.views.activities.MainActivity
+import com.newindia.sharebox.views.dialog.WifiBottomSheetDialog
 
 /**
  * Created by KerriGan on 2017/6/2.
@@ -44,9 +45,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
         mViewSwitcher.addView(view1)
 
         view0.findViewById(R.id.button_help).setOnClickListener {
-            var v=LayoutInflater.from(owner).inflate(R.layout.layout_main_activity_data,null)
-            var dialog=BottomSheetDialog(owner)
-            dialog.setContentView(v)
+            var dialog=WifiBottomSheetDialog(owner,owner)
             dialog.show()
         }
 //        val scroll = findViewById(R.id.content) as LinearLayout
