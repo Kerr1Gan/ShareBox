@@ -84,6 +84,8 @@
                                 android:layout_marginTop="10dp"
                                 android:layout_gravity="center_vertical"
                                 android:background="@drawable/selector_wifi_button"
+                                android:textColor="@android:color/white"
+                                android:id="@+id/btn_wifi"
                                 android:text="Wifi"/>
 
                             <Button
@@ -95,6 +97,8 @@
                                 android:layout_marginTop="10dp"
                                 android:layout_gravity="center_vertical"
                                 android:background="@drawable/selector_wifi_button"
+                                android:textColor="@android:color/white"
+                                android:id="@+id/btn_hotspot"
                                 android:text="Hotspot"/>
                         </LinearLayout>
                     </android.support.design.widget.AppBarLayout>

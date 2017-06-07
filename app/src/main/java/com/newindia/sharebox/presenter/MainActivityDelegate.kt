@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
 import android.widget.Toast
 import android.widget.ViewSwitcher
 import com.newindia.sharebox.R
@@ -24,6 +25,8 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
     private var mDrawerToggle:ActionBarDrawerToggle
     private var mFloatingActionButton:FloatingActionButton
     private var mViewSwitcher:ViewSwitcher
+    private var mWifiButton:Button
+    private var mHotspotButton:Button
     init {
         mToolbar = findViewById(R.id.toolbar) as Toolbar
         mDrawerLayout = findViewById(R.id.drawer_layout) as DrawerLayout
@@ -48,16 +51,21 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
             var dialog=WifiBottomSheetDialog(owner,owner)
             dialog.show()
         }
-//        val scroll = findViewById(R.id.content) as LinearLayout
-//        for (i in 0..99) {
-//            val b = Button(owner)
-//            b.text = "1234"
-//            b.layoutParams = LinearLayout.LayoutParams(-1, -2)
-//            scroll.addView(b)
-//        }
+
+        mWifiButton=findViewById(R.id.btn_wifi) as Button
+        mHotspotButton=findViewById(R.id.btn_hotspot) as Button
+
+
+        mWifiButton.setOnClickListener {
+            mWifiButton.isActivated=!mWifiButton.isActivated
+        }
+        mHotspotButton.setOnClickListener {
+            mHotspotButton.isActivated=!mHotspotButton.isActivated
+        }
     }
 
     fun onOptionsItemSelected(item: MenuItem?): Boolean{
+
         when(item?.getItemId()){
             R.id.qr_code ->{
                 Toast.makeText(owner,"打开QRCode",Toast.LENGTH_SHORT).show()
