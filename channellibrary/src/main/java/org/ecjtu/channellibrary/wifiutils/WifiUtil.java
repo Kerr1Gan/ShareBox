@@ -443,4 +443,7 @@ public class WifiUtil {
         return false;
     }
 
+    public static String setupWifiDataProtocol(String apName,String pwd){
+        return String.format("WIFI:T:WPA;P:\"%s\";S:%s;",pwd,apName);
+    }
 }

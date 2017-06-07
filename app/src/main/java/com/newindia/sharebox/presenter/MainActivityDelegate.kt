@@ -1,10 +1,15 @@
 package com.newindia.sharebox.presenter
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
 import android.net.wifi.WifiConfiguration
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.Toolbar
+import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -60,10 +65,10 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
 
 
         mWifiButton.setOnClickListener {
-            mWifiButton.isActivated=!mWifiButton.isActivated
+//            mWifiButton.isActivated=!mWifiButton.isActivated
         }
         mHotspotButton.setOnClickListener {
-            mHotspotButton.isActivated=!mHotspotButton.isActivated
+//            mHotspotButton.isActivated=!mHotspotButton.isActivated
         }
 
         mApName=findViewById(R.id.ap_name) as TextView
@@ -90,9 +95,11 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
         if(NetworkUtil.isWifi(owner)){
             var wifiInfo=NetworkUtil.getConnectWifiInfo(owner)
             mApName.setText(getRealName(wifiInfo.ssid))
+            mWifiButton.isActivated=!mWifiButton.isActivated
         }else if(NetworkUtil.isHotSpot(owner)){
             var config=NetworkUtil.getHotSpotConfiguration(owner)
             mApName.setText(getRealName(config.SSID))
+            mHotspotButton.isActivated=!mHotspotButton.isActivated
         }
     }
 
@@ -104,5 +111,55 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
         if(str[str.length-1]=='"')
             str=str.dropLast(1)
         return str
+    }
+
+    protected class WifiApReceiver: BroadcastReceiver() {
+        val WIFI_AP_STATE_DISABLING = 10
+
+        val WIFI_AP_STATE_DISABLED = 11
+
+        val WIFI_AP_STATE_ENABLING = 12
+
+        val WIFI_AP_STATE_ENABLED = 13
+
+        val WIFI_AP_STATE_FAILED = 14
+
+        val EXTRA_WIFI_AP_STATE = "wifi_state"
+
+        val ACTION_WIFI_AP_CHANGED = "android.net.wifi.WIFI_AP_STATE_CHANGED"
+
+        override fun onReceive(context: Context, intent: Intent) {
+            val state = intent.getIntExtra(EXTRA_WIFI_AP_STATE, -1)
+            val action = intent.action
+
+            if (action == ACTION_WIFI_AP_CHANGED) {
+                when (state) {
+                    WIFI_AP_STATE_ENABLED -> {
+
+
+                        var s = ""
+                        when (state) {
+                            WIFI_AP_STATE_DISABLED -> s = "WIFI_AP_STATE_DISABLED"
+                            WIFI_AP_STATE_DISABLING -> s = "WIFI_AP_STATE_DISABLING"
+                            WIFI_AP_STATE_ENABLED -> s = "WIFI_AP_STATE_ENABLED"
+                            WIFI_AP_STATE_ENABLING -> s = "WIFI_AP_STATE_ENABLED"
+                            WIFI_AP_STATE_FAILED -> s = "WIFI_AP_STATE_FAILED"
+                        }
+                        Log.i("WifiApReceiver", s)
+                    }
+                    else -> {
+                        var s = ""
+                        when (state) {
+                            WIFI_AP_STATE_DISABLED -> s = "WIFI_AP_STATE_DISABLED"
+                            WIFI_AP_STATE_DISABLING -> s = "WIFI_AP_STATE_DISABLING"
+                            WIFI_AP_STATE_ENABLED -> s = "WIFI_AP_STATE_ENABLED"
+                            WIFI_AP_STATE_ENABLING -> s = "WIFI_AP_STATE_ENABLED"
+                            WIFI_AP_STATE_FAILED -> s = "WIFI_AP_STATE_FAILED"
+                        }
+                        Log.i("WifiApReceiver", s)
+                    }
+                }
+            }
+        }
     }
 }
