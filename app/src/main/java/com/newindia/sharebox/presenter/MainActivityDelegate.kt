@@ -1,5 +1,6 @@
 package com.newindia.sharebox.presenter
 
+import android.net.wifi.WifiConfiguration
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
@@ -8,11 +9,13 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import android.widget.ViewSwitcher
 import com.newindia.sharebox.R
 import com.newindia.sharebox.views.activities.MainActivity
 import com.newindia.sharebox.views.dialog.WifiBottomSheetDialog
+import org.ecjtu.channellibrary.wifiutils.NetworkUtil
 
 /**
  * Created by KerriGan on 2017/6/2.
@@ -26,6 +29,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
     private var mViewSwitcher:ViewSwitcher
     private var mWifiButton:Button
     private var mHotspotButton:Button
+    private var mApName:TextView
     init {
         mToolbar = findViewById(R.id.toolbar) as Toolbar
         mDrawerLayout = findViewById(R.id.drawer_layout) as DrawerLayout
@@ -61,6 +65,10 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
         mHotspotButton.setOnClickListener {
             mHotspotButton.isActivated=!mHotspotButton.isActivated
         }
+
+        mApName=findViewById(R.id.ap_name) as TextView
+
+        checkCurrentAp()
     }
 
     fun onOptionsItemSelected(item: MenuItem?): Boolean{
@@ -76,5 +84,25 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
             }
         }
         return false
+    }
+
+    private fun checkCurrentAp(){
+        if(NetworkUtil.isWifi(owner)){
+            var wifiInfo=NetworkUtil.getConnectWifiInfo(owner)
+            mApName.setText(getRealName(wifiInfo.ssid))
+        }else if(NetworkUtil.isHotSpot(owner)){
+            var config=NetworkUtil.getHotSpotConfiguration(owner)
+            mApName.setText(getRealName(config.SSID))
+        }
+    }
+
+    private fun getRealName(name:String):String{
+        var str=name
+        if(str[0]=='"')
+            str=str.drop(1)
+
+        if(str[str.length-1]=='"')
+            str=str.dropLast(1)
+        return str
     }
 }
