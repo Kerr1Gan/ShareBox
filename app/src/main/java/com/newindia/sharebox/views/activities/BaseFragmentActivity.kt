@@ -31,7 +31,6 @@ open class BaseFragmentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_base_fragment)
-
         val fragmentName = intent.getStringExtra(EXTRA_FRAGMENT_NAME)
         var fragment: Fragment? = null
         if (TextUtils.isEmpty(fragmentName)) {
