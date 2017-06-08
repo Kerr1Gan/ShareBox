@@ -7,12 +7,15 @@ import android.net.wifi.WifiConfiguration
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -31,7 +34,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
     private var mDrawerLayout:DrawerLayout
     private var mDrawerToggle:ActionBarDrawerToggle
     private var mFloatingActionButton:FloatingActionButton
-    private var mViewSwitcher:ViewSwitcher
+    private var mViewSwitcher:ViewSwitcher? = null
     private var mWifiButton:Button
     private var mHotspotButton:Button
     private var mApName:TextView
@@ -46,14 +49,15 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
         mFloatingActionButton=findViewById(R.id.floating_action_button) as FloatingActionButton
         mFloatingActionButton.setOnClickListener({view->
             Toast.makeText(owner,"onClick ",Toast.LENGTH_SHORT).show()
+            mViewSwitcher?.showNext()
         })
 
         //for view switcher
         mViewSwitcher=findViewById(R.id.view_switcher) as ViewSwitcher
         var view0:View=LayoutInflater.from(owner).inflate(R.layout.layout_main_activity_data,null)
         var view1:View=LayoutInflater.from(owner).inflate(R.layout.layout_main_activity_list,null)
-        mViewSwitcher.addView(view0)
-        mViewSwitcher.addView(view1)
+        mViewSwitcher?.addView(view0)
+        mViewSwitcher?.addView(view1)
 
         view0.findViewById(R.id.button_help).setOnClickListener {
             var dialog=WifiBottomSheetDialog(owner,owner)
@@ -74,6 +78,28 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
         mApName=findViewById(R.id.ap_name) as TextView
 
         checkCurrentAp()
+
+        var recycler=view1 as RecyclerView
+        recycler.adapter=object : RecyclerView.Adapter<Holder>(){
+
+            override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): Holder {
+                return Holder(Button(owner))
+            }
+
+            override fun onBindViewHolder(holder: Holder?, position: Int) {
+                (holder!!.itemView as Button).setText(""+position)
+            }
+
+            override fun getItemCount(): Int = 1000
+
+
+        }
+        var manager: LinearLayoutManager = LinearLayoutManager(owner, LinearLayoutManager.VERTICAL,false)
+        recycler.layoutManager=manager
+    }
+
+    class Holder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
+
     }
 
     fun onOptionsItemSelected(item: MenuItem?): Boolean{
@@ -100,6 +126,8 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
             var config=NetworkUtil.getHotSpotConfiguration(owner)
             mApName.setText(getRealName(config.SSID))
             mHotspotButton.isActivated=!mHotspotButton.isActivated
+        }else if(NetworkUtil.isMobile(owner)){
+            mApName.setText(getRealName("Cellular Data"))
         }
     }
 
@@ -113,7 +141,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
         return str
     }
 
-    protected class WifiApReceiver: BroadcastReceiver() {
+    protected class WifiApReceiver : BroadcastReceiver() {
         val WIFI_AP_STATE_DISABLING = 10
 
         val WIFI_AP_STATE_DISABLED = 11
@@ -162,4 +190,5 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
             }
         }
     }
+
 }

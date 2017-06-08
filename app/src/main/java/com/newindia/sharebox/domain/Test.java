@@ -22,6 +22,9 @@ public class Test {
     public static class Test2 extends Test{
         public Test2(int x){
             super(x);
+            for(int i=0;i<1000;i++){
+
+            }
         }
 
         public Test2(int x,int y,int z){
