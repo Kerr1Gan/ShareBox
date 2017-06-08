@@ -19,7 +19,7 @@ open class WifiBottomSheetDialog:CloseBottomSheetDialog{
 
     override fun onCreateView(): View?{
         var vg = super.onCreateView() as ViewGroup
-        var child=LayoutInflater.from(context).inflate(R.layout.layout_main_activity_data,vg,false)
+        var child=layoutInflater.inflate(R.layout.layout_main_activity_data,vg,false)
         vg.addView(child)
         return vg
     }

@@ -18,7 +18,7 @@ open class CloseBottomSheetDialog:BaseBottomSheetDialog{
     }
 
     override fun onCreateView(): View? {
-        var bg=LayoutInflater.from(context).inflate(R.layout.layout_close_dialog,null)
+        var bg=layoutInflater.inflate(R.layout.layout_close_dialog,null)
         bg.setBackgroundColor(Color.TRANSPARENT)
         return bg
     }
