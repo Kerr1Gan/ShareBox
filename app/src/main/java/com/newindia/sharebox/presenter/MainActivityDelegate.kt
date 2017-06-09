@@ -22,6 +22,9 @@ import com.newindia.sharebox.views.activities.MainActivity
 import com.newindia.sharebox.views.dialog.FilePickBottomSheetDialog
 import com.newindia.sharebox.views.dialog.WifiBottomSheetDialog
 import org.ecjtu.channellibrary.wifiutils.NetworkUtil
+import android.support.v4.app.ActivityCompat.startActivity
+
+
 
 /**
  * Created by KerriGan on 2017/6/2.
@@ -69,6 +72,9 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
 
         mWifiButton.setOnClickListener {
 //            mWifiButton.isActivated=!mWifiButton.isActivated
+            val intent = Intent()
+            intent.action = "android.net.wifi.PICK_WIFI_NETWORK"
+            owner.startActivity(intent)
         }
         mHotspotButton.setOnClickListener {
 //            mHotspotButton.isActivated=!mHotspotButton.isActivated
