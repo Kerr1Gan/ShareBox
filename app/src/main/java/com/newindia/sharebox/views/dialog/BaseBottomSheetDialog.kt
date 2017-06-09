@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.util.DisplayMetrics
 import android.app.Activity
+import android.support.design.widget.BottomSheetBehavior
 import com.newindia.sharebox.R
 import com.newindia.sharebox.views.activities.MainActivity
 
@@ -47,6 +48,7 @@ abstract class BaseBottomSheetDialog:BottomSheetDialog{
     }
 
     protected open fun onCreateView():View?{
+        var behavior = BottomSheetBehavior.from(findViewById(android.support.design.R.id.design_bottom_sheet))
         return null
     }
 
