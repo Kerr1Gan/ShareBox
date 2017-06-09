@@ -70,7 +70,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
                                     android:layout_marginLeft="20dp"
-                                    android:src="@mipmap/hotspot" />
+                                    android:src="@mipmap/hotspot"
+                                    android:id="@+id/image_wifi" />
 
                                 <TextView
                                     android:id="@+id/ap_name"
@@ -141,7 +142,16 @@
                     android:id="@+id/drawer_layout_content"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"></LinearLayout>
+                    android:orientation="vertical">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@mipmap/logo"
+                        android:layout_margin="45dp"
+                        android:layout_gravity="center_horizontal"/>
+
+                </LinearLayout>
             </ScrollView>
         </LinearLayout>
     </android.support.v4.widget.DrawerLayout>
@@ -152,6 +162,6 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="35dp"
+        android:layout_marginBottom="75dp"
         android:layout_marginRight="35dp" />
 </RelativeLayout>

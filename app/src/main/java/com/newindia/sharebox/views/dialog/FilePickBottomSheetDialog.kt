@@ -2,10 +2,13 @@ package com.newindia.sharebox.views.dialog
 
 import android.app.Activity
 import android.content.Context
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import com.newindia.sharebox.R
+import android.opengl.ETC1.getHeight
+import android.opengl.ETC1.getWidth
+import android.support.design.widget.BottomSheetBehavior
+import android.view.*
+import android.widget.FrameLayout
+
 
 /**
  * Created by KerriGan on 2017/6/2.
@@ -21,13 +24,23 @@ class FilePickBottomSheetDialog:BaseBottomSheetDialog{
     }
 
     override fun onCreateView(): View? {
-        var vg = super.onCreateView() as ViewGroup
-        var child= layoutInflater.inflate(R.layout.layout_main_activity_data,vg,false)
-        vg.addView(child)
+        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+
+        var vg= layoutInflater.inflate(R.layout.layout_main_activity_data,null)
+
+        val display = ownerActivity.getWindowManager().getDefaultDisplay()
+        val width = display.getWidth()
+        val height = display.height/*getScreenHeight(ownerActivity)+getStatusBarHeight(context)*/
+
+        vg.layoutParams=ViewGroup.LayoutParams(width,height)
         return vg
     }
 
-    override fun onViewCreated(view: View?) {
+    override fun onViewCreated(view: View?):Boolean {
         super.onViewCreated(view)
+        var behavior = BottomSheetBehavior.from(findViewById(android.support.design.R.id.design_bottom_sheet))
+        behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        behavior.skipCollapsed=true
+        return true
     }
 }

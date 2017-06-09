@@ -16,12 +16,10 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
-import android.widget.ViewSwitcher
+import android.widget.*
 import com.newindia.sharebox.R
 import com.newindia.sharebox.views.activities.MainActivity
+import com.newindia.sharebox.views.dialog.FilePickBottomSheetDialog
 import com.newindia.sharebox.views.dialog.WifiBottomSheetDialog
 import org.ecjtu.channellibrary.wifiutils.NetworkUtil
 
@@ -38,6 +36,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
     private var mWifiButton:Button
     private var mHotspotButton:Button
     private var mApName:TextView
+    private var mWifiImage:ImageView
     init {
         mToolbar = findViewById(R.id.toolbar) as Toolbar
         mDrawerLayout = findViewById(R.id.drawer_layout) as DrawerLayout
@@ -77,8 +76,6 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
 
         mApName=findViewById(R.id.ap_name) as TextView
 
-        checkCurrentAp()
-
         var recycler=view1 as RecyclerView
         recycler.adapter=object : RecyclerView.Adapter<Holder>(){
 
@@ -96,6 +93,10 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
         }
         var manager: LinearLayoutManager = LinearLayoutManager(owner, LinearLayoutManager.VERTICAL,false)
         recycler.layoutManager=manager
+
+        mWifiImage=findViewById(R.id.image_wifi) as ImageView
+
+        checkCurrentAp()
     }
 
     class Holder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
@@ -107,6 +108,8 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
         when(item?.getItemId()){
             R.id.qr_code ->{
                 Toast.makeText(owner,"打开QRCode",Toast.LENGTH_SHORT).show()
+                var dialog=FilePickBottomSheetDialog(owner,owner)
+                dialog.show()
                 return true
             }
             R.id.refresh ->{
@@ -117,17 +120,20 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
         return false
     }
 
-    private fun checkCurrentAp(){
+    protected fun checkCurrentAp(){
         if(NetworkUtil.isWifi(owner)){
             var wifiInfo=NetworkUtil.getConnectWifiInfo(owner)
             mApName.setText(getRealName(wifiInfo.ssid))
             mWifiButton.isActivated=!mWifiButton.isActivated
+            mWifiImage.setImageResource(R.mipmap.wifi)
         }else if(NetworkUtil.isHotSpot(owner)){
             var config=NetworkUtil.getHotSpotConfiguration(owner)
             mApName.setText(getRealName(config.SSID))
             mHotspotButton.isActivated=!mHotspotButton.isActivated
+            mWifiImage.setImageResource(R.mipmap.hotspot)
         }else if(NetworkUtil.isMobile(owner)){
-            mApName.setText(getRealName("Cellular Data"))
+            mApName.setText(getRealName("Cellular"))
+            mWifiImage.setImageResource(R.mipmap.wifi_off)
         }
     }
 
@@ -141,7 +147,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
         return str
     }
 
-    protected class WifiApReceiver : BroadcastReceiver() {
+    protected inner class WifiApReceiver : BroadcastReceiver() {
         val WIFI_AP_STATE_DISABLING = 10
 
         val WIFI_AP_STATE_DISABLED = 11
@@ -159,6 +165,8 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
         override fun onReceive(context: Context, intent: Intent) {
             val state = intent.getIntExtra(EXTRA_WIFI_AP_STATE, -1)
             val action = intent.action
+
+            this@MainActivityDelegate.checkCurrentAp()
 
             if (action == ACTION_WIFI_AP_CHANGED) {
                 when (state) {

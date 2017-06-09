@@ -24,20 +24,20 @@ abstract class BaseBottomSheetDialog:BottomSheetDialog{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        init()
+        var immersive=init()
         if(ownerActivity==null)
             return
         val screenHeight = getScreenHeight(ownerActivity)
         val statusBarHeight = getStatusBarHeight(context)
-        val dialogHeight = screenHeight - statusBarHeight
+        val dialogHeight = if(immersive) screenHeight else screenHeight- statusBarHeight
         window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, if (dialogHeight == 0) ViewGroup.LayoutParams.MATCH_PARENT else dialogHeight)
     }
 
-    private fun init(){
+    private fun init():Boolean{
         initializeDialog()
         var view= onCreateView()
         setContentView(view)
-        onViewCreated(view)
+        return onViewCreated(view)
     }
 
     protected open fun initializeDialog(){
@@ -50,16 +50,20 @@ abstract class BaseBottomSheetDialog:BottomSheetDialog{
         return null
     }
 
-    protected open fun onViewCreated(view:View?){
+    /**
+     *  返回true 则为沉浸式对话框
+     */
+    protected open fun onViewCreated(view:View?):Boolean{
+        return false
     }
 
-    private fun getScreenHeight(activity: Activity): Int {
+    protected fun getScreenHeight(activity: Activity): Int {
         val displayMetrics = DisplayMetrics()
         activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
         return displayMetrics.heightPixels
     }
 
-    private fun getStatusBarHeight(context: Context): Int {
+    protected fun getStatusBarHeight(context: Context): Int {
         var statusBarHeight = 0
         val res = context.resources
         val resourceId = res.getIdentifier("status_bar_height", "dimen", "android")
