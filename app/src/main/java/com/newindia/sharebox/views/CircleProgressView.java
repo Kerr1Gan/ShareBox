@@ -56,6 +56,8 @@ public class CircleProgressView extends View {
 
     private String mStartText="";
 
+    private boolean mShowStartText=true;
+
     public CircleProgressView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
@@ -114,9 +116,8 @@ public class CircleProgressView extends View {
         mPaint.setColor(mTextColor);
         mPaint.setStrokeWidth(mTxtStrokeWidth);
         String text;
-        if(mStartText!=null){
+        if(mShowStartText){
             text=mStartText;
-            mStartText=null;
         }else
             text = mCurProgress + "%";
 
@@ -163,17 +164,20 @@ public class CircleProgressView extends View {
         setProgress(progress,false,0);
     }
 
-    public void setProgress(int progress,boolean animate,int time){
+    public boolean setProgress(int progress,boolean animate,int time){
+        if(mAnimate) return false;
         this.mProgress = progress;
         if(!animate) {
             mCurProgress=progress;
-            return;
+            this.invalidate();
+            return false;
         }
+        mShowStartText=false;
         mAnimate=animate;
         mAnimTime=time;
         mIncrement=0;
-        this.invalidate();
         startAnimate();
+        return true;
     }
 
     public void setProgressNotInUiThread(int progress) {
@@ -244,7 +248,17 @@ public class CircleProgressView extends View {
     }
 
     public void setStartText(String text){
+        mCurProgress=0;
+        mProgress=0;
+        mAnimate=false;
         mStartText=text;
+        mShowStartText=true;
+        invalidate();
     }
 
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mAnimate=false;
+    }
 }

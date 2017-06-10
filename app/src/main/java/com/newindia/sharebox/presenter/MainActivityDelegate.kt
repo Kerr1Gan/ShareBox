@@ -3,7 +3,10 @@ package com.newindia.sharebox.presenter
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.net.wifi.WifiConfiguration
+import android.net.wifi.WifiInfo
+import android.provider.Settings
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
@@ -23,7 +26,7 @@ import com.newindia.sharebox.views.dialog.FilePickBottomSheetDialog
 import com.newindia.sharebox.views.dialog.WifiBottomSheetDialog
 import org.ecjtu.channellibrary.wifiutils.NetworkUtil
 import android.support.v4.app.ActivityCompat.startActivity
-
+import com.newindia.sharebox.views.dialog.ApDataDialog
 
 
 /**
@@ -40,6 +43,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
     private var mHotspotButton:Button
     private var mApName:TextView
     private var mWifiImage:ImageView
+
     init {
         mToolbar = findViewById(R.id.toolbar) as Toolbar
         mDrawerLayout = findViewById(R.id.drawer_layout) as DrawerLayout
@@ -73,7 +77,8 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
         mWifiButton.setOnClickListener {
 //            mWifiButton.isActivated=!mWifiButton.isActivated
             val intent = Intent()
-            intent.action = "android.net.wifi.PICK_WIFI_NETWORK"
+//            intent.action = "android.net.wifi.PICK_WIFI_NETWORK"
+            intent.action =Settings.ACTION_WIFI_SETTINGS
             owner.startActivity(intent)
         }
         mHotspotButton.setOnClickListener {
@@ -102,7 +107,24 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
 
         mWifiImage=findViewById(R.id.image_wifi) as ImageView
 
-        checkCurrentAp()
+        checkCurrentAp(null)
+
+        initDrawerLayout()
+
+    }
+
+    private fun initDrawerLayout(){
+        findViewById(R.id.text_faq)?.setOnClickListener {
+
+        }
+
+        findViewById(R.id.text_setting)?.setOnClickListener {
+
+        }
+
+        findViewById(R.id.text_help)?.setOnClickListener {
+
+        }
     }
 
     class Holder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
@@ -114,7 +136,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
         when(item?.getItemId()){
             R.id.qr_code ->{
                 Toast.makeText(owner,"打开QRCode",Toast.LENGTH_SHORT).show()
-                var dialog=FilePickBottomSheetDialog(owner,owner)
+                var dialog=ApDataDialog(owner,owner)
                 dialog.show()
                 return true
             }
@@ -126,20 +148,36 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
         return false
     }
 
-    protected fun checkCurrentAp(){
-        if(NetworkUtil.isWifi(owner)){
-            var wifiInfo=NetworkUtil.getConnectWifiInfo(owner)
-            mApName.setText(getRealName(wifiInfo.ssid))
-            mWifiButton.isActivated=!mWifiButton.isActivated
+
+    public fun checkCurrentAp(info:WifiInfo?){
+        if(NetworkUtil.isWifi(owner) || info!=null){
+            var wifiInfo:WifiInfo?=null
+            if(info!=null)
+                wifiInfo=info
+            else
+                wifiInfo=NetworkUtil.getConnectWifiInfo(owner)
+
+            mApName.setText(getRealName(wifiInfo!!.ssid))
+            mWifiButton.isActivated=true
+            mHotspotButton.isActivated=false
             mWifiImage.setImageResource(R.mipmap.wifi)
         }else if(NetworkUtil.isHotSpot(owner)){
             var config=NetworkUtil.getHotSpotConfiguration(owner)
             mApName.setText(getRealName(config.SSID))
-            mHotspotButton.isActivated=!mHotspotButton.isActivated
+            mWifiButton.isActivated=false
+            mHotspotButton.isActivated=true
             mWifiImage.setImageResource(R.mipmap.hotspot)
         }else if(NetworkUtil.isMobile(owner)){
             mApName.setText(getRealName("Cellular"))
             mWifiImage.setImageResource(R.mipmap.wifi_off)
+
+            mWifiButton.isActivated=false
+            mHotspotButton.isActivated=false
+        }else{
+            mApName.setText(getRealName("No Internet"))
+            mWifiImage.setImageResource(R.mipmap.wifi_off)
+            mWifiButton.isActivated=false
+            mHotspotButton.isActivated=false
         }
     }
 
@@ -153,56 +191,6 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
         return str
     }
 
-    protected inner class WifiApReceiver : BroadcastReceiver() {
-        val WIFI_AP_STATE_DISABLING = 10
 
-        val WIFI_AP_STATE_DISABLED = 11
-
-        val WIFI_AP_STATE_ENABLING = 12
-
-        val WIFI_AP_STATE_ENABLED = 13
-
-        val WIFI_AP_STATE_FAILED = 14
-
-        val EXTRA_WIFI_AP_STATE = "wifi_state"
-
-        val ACTION_WIFI_AP_CHANGED = "android.net.wifi.WIFI_AP_STATE_CHANGED"
-
-        override fun onReceive(context: Context, intent: Intent) {
-            val state = intent.getIntExtra(EXTRA_WIFI_AP_STATE, -1)
-            val action = intent.action
-
-            this@MainActivityDelegate.checkCurrentAp()
-
-            if (action == ACTION_WIFI_AP_CHANGED) {
-                when (state) {
-                    WIFI_AP_STATE_ENABLED -> {
-
-
-                        var s = ""
-                        when (state) {
-                            WIFI_AP_STATE_DISABLED -> s = "WIFI_AP_STATE_DISABLED"
-                            WIFI_AP_STATE_DISABLING -> s = "WIFI_AP_STATE_DISABLING"
-                            WIFI_AP_STATE_ENABLED -> s = "WIFI_AP_STATE_ENABLED"
-                            WIFI_AP_STATE_ENABLING -> s = "WIFI_AP_STATE_ENABLED"
-                            WIFI_AP_STATE_FAILED -> s = "WIFI_AP_STATE_FAILED"
-                        }
-                        Log.i("WifiApReceiver", s)
-                    }
-                    else -> {
-                        var s = ""
-                        when (state) {
-                            WIFI_AP_STATE_DISABLED -> s = "WIFI_AP_STATE_DISABLED"
-                            WIFI_AP_STATE_DISABLING -> s = "WIFI_AP_STATE_DISABLING"
-                            WIFI_AP_STATE_ENABLED -> s = "WIFI_AP_STATE_ENABLED"
-                            WIFI_AP_STATE_ENABLING -> s = "WIFI_AP_STATE_ENABLED"
-                            WIFI_AP_STATE_FAILED -> s = "WIFI_AP_STATE_FAILED"
-                        }
-                        Log.i("WifiApReceiver", s)
-                    }
-                }
-            }
-        }
-    }
 
 }

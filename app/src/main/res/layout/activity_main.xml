@@ -151,6 +151,45 @@
                         android:layout_margin="45dp"
                         android:layout_gravity="center_horizontal"/>
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="12.5dp"
+                        android:text="FAQ"
+                        android:textSize="18sp"
+                        android:textColor="@android:color/white"
+                        android:drawableLeft="@mipmap/faq"
+                        android:drawablePadding="15dp"
+                        android:gravity="center_vertical"
+                        android:id="@+id/text_faq"
+                        android:background="@drawable/selector_drawer_layout_item"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="12.5dp"
+                        android:text="Setting"
+                        android:textSize="18sp"
+                        android:textColor="@android:color/white"
+                        android:drawableLeft="@mipmap/setting"
+                        android:drawablePadding="15dp"
+                        android:gravity="center_vertical"
+                        android:id="@+id/text_setting"
+                        android:background="@drawable/selector_drawer_layout_item"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="12.5dp"
+                        android:text="Help"
+                        android:textSize="18sp"
+                        android:textColor="@android:color/white"
+                        android:drawableLeft="@mipmap/help"
+                        android:drawablePadding="15dp"
+                        android:gravity="center_vertical"
+                        android:id="@+id/text_help"
+                        android:background="@drawable/selector_drawer_layout_item"/>
+
                 </LinearLayout>
             </ScrollView>
         </LinearLayout>
