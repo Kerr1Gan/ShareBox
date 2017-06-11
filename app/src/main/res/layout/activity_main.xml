@@ -38,7 +38,8 @@
                     android:fitsSystemWindows="true"
                     android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                     app:title="@string/app_name"
-                    app:titleTextColor="@android:color/white"></android.support.v7.widget.Toolbar>
+                    app:titleTextColor="@android:color/white">
+                </android.support.v7.widget.Toolbar>
 
                 <android.support.design.widget.CoordinatorLayout
                     android:layout_width="match_parent"

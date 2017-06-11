@@ -23,6 +23,8 @@ import com.newindia.sharebox.ui.dialog.WifiBottomSheetDialog
 import org.ecjtu.channellibrary.wifiutils.NetworkUtil
 import com.newindia.sharebox.ui.dialog.ApDataDialog
 import com.newindia.sharebox.ui.dialog.EditNameDialog
+import com.newindia.sharebox.ui.dialog.FilePickDialog
+import com.newindia.sharebox.ui.fragments.FilePickDialogFragment
 
 
 /**
@@ -62,7 +64,9 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
         mViewSwitcher?.addView(view1)
 
         view0.findViewById(R.id.button_help).setOnClickListener {
-
+//            FilePickDialog(owner,owner).show()  not suitable for fragment
+            var dlg=FilePickDialogFragment(owner)
+            dlg.show(owner.supportFragmentManager,"FilePickDialogFragment")
         }
 
         mWifiButton=findViewById(R.id.btn_wifi) as Button

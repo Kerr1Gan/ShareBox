@@ -1,1 +1,1 @@
-include ':app', ':channellibrary'
+include ':app', ':channellibrary', ':floatinglibrary'
