@@ -1,18 +1,16 @@
-package com.newindia.sharebox.views.dialog
+package com.newindia.sharebox.ui.dialog
 
 import android.app.Activity
 import android.content.Context
-import android.graphics.Color
 import android.support.design.widget.TextInputEditText
 import android.support.design.widget.TextInputLayout
 import android.text.Editable
-import android.text.Spannable
 import android.text.TextWatcher
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.newindia.sharebox.R
-import com.newindia.sharebox.views.CircleProgressView
+import com.newindia.sharebox.ui.views.CircleProgressView
 
 /**
  * Created by KerriGan on 2017/6/2.
@@ -57,10 +55,12 @@ open class WifiBottomSheetDialog:CloseBottomSheetDialog{
         mCircleProgress?.backgroundColor=context.resources.getColor(R.color.colorPrimary)
         mCircleProgress?.progressColor=context.resources.getColor(android.R.color.holo_green_light)
         mCircleProgress?.textColor=context.resources.getColor(android.R.color.white)
-        mCircleProgress?.setStartText("连接")
+        mCircleProgress?.setStartText("Start")
         mCircleProgress?.setOnClickListener {
             mCircleProgress?.setProgress(50,true,10000)
         }
+
+        (vg.findViewById(R.id.text_title) as TextView).setText("Hotspot")
     }
 
     override fun dismiss() {

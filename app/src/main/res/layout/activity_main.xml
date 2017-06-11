@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.activities.MainActivity">
+    tools:context=".ui.activities.MainActivity">
 
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer_layout"
@@ -150,6 +150,19 @@
                         android:src="@mipmap/logo"
                         android:layout_margin="45dp"
                         android:layout_gravity="center_horizontal"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="12.5dp"
+                        android:text="M3 note"
+                        android:textSize="18sp"
+                        android:gravity="center"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@drawable/selector_drawer_layout_item"
+                        android:id="@+id/text_name"
+                        android:textColor="@android:color/white"
+                        android:drawableRight="@mipmap/refactor"/>
 
                     <TextView
                         android:layout_width="match_parent"

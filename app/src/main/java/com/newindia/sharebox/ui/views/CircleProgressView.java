@@ -1,17 +1,13 @@
-package com.newindia.sharebox.views;
+package com.newindia.sharebox.ui.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.widget.ViewDragHelper;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewAnimationUtils;
-import android.view.animation.AnimationUtils;
 
 public class CircleProgressView extends View {
 

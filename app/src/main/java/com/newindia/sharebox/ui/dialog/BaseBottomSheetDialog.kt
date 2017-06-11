@@ -1,4 +1,4 @@
-package com.newindia.sharebox.views.dialog
+package com.newindia.sharebox.ui.dialog
 
 import android.content.Context
 import android.os.Bundle
@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import android.util.DisplayMetrics
 import android.app.Activity
 import android.support.design.widget.BottomSheetBehavior
+import android.view.WindowManager
 import com.newindia.sharebox.R
-import com.newindia.sharebox.views.activities.MainActivity
 
 
 /**
@@ -78,5 +78,25 @@ abstract class BaseBottomSheetDialog:BottomSheetDialog{
     protected fun transparentDialog(){
         getWindow().findViewById(R.id.design_bottom_sheet)
                 .setBackgroundResource(android.R.color.transparent)
+    }
+
+    public fun fullScreenBehavior():Boolean{
+        var behavior = BottomSheetBehavior.from(findViewById(android.support.design.R.id.design_bottom_sheet))
+        behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        behavior.skipCollapsed=true
+        return true
+    }
+
+    public fun fullScreenLayout(view: View?):View?{
+        val display = ownerActivity.getWindowManager().getDefaultDisplay()
+        val width = display.getWidth()
+        val height = display.height/*getScreenHeight(ownerActivity)+getStatusBarHeight(context)*/
+
+        view?.layoutParams= ViewGroup.LayoutParams(width,height)
+        return view
+    }
+
+    public fun windowTranslucent(){
+        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
     }
 }

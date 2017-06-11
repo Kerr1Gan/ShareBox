@@ -1,4 +1,4 @@
-package com.newindia.sharebox.views.activities
+package com.newindia.sharebox.ui.activities
 
 import android.content.Context
 import android.content.Intent

@@ -4,7 +4,9 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -52,7 +54,7 @@
     </android.support.design.widget.TextInputLayout>
 
 
-    <com.newindia.sharebox.views.CircleProgressView
+    <com.newindia.sharebox.ui.views.CircleProgressView
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:id="@+id/circle_progress"

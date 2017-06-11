@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:name=".MainApplication"
         android:theme="@style/AppTheme">
-        <activity android:name="com.newindia.sharebox.views.activities.MainActivity"
+        <activity android:name="com.newindia.sharebox.ui.activities.MainActivity"
             android:theme="@style/ImageStatusBarStyle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -17,7 +17,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".views.activities.BaseFragmentActivity"
+        <activity android:name="com.newindia.sharebox.ui.activities.BaseFragmentActivity"
                   android:theme="@style/ImageStatusBarStyle">
         </activity>
     </application>

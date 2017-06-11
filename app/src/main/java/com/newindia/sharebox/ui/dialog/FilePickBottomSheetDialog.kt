@@ -1,13 +1,10 @@
-package com.newindia.sharebox.views.dialog
+package com.newindia.sharebox.ui.dialog
 
 import android.app.Activity
 import android.content.Context
 import com.newindia.sharebox.R
-import android.opengl.ETC1.getHeight
-import android.opengl.ETC1.getWidth
 import android.support.design.widget.BottomSheetBehavior
 import android.view.*
-import android.widget.FrameLayout
 
 
 /**

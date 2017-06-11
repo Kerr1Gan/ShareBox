@@ -1,4 +1,4 @@
-package com.newindia.sharebox.views.activities
+package com.newindia.sharebox.ui.activities
 
 import android.animation.ObjectAnimator
 import android.content.BroadcastReceiver
@@ -10,15 +10,9 @@ import android.net.NetworkInfo
 import android.net.wifi.WifiInfo
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
-import android.support.v4.widget.NestedScrollView
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.*
-import android.widget.Button
-import android.widget.LinearLayout
 import com.newindia.sharebox.R
 import com.newindia.sharebox.presenter.MainActivityDelegate
 

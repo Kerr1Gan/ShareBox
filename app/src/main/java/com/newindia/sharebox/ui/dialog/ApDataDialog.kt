@@ -1,17 +1,14 @@
-package com.newindia.sharebox.views.dialog
+package com.newindia.sharebox.ui.dialog
 
 import android.app.Activity
 import android.content.Context
-import android.graphics.BitmapFactory
-import android.os.Build.ID
 import android.support.design.widget.BottomSheetBehavior
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.ImageView
 import com.newindia.sharebox.R
-import com.newindia.sharebox.qrimage.QrUtils
+import com.newindia.sharebox.utils.qrimage.QrUtils
 import kotlin.concurrent.thread
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.ColorMatrix

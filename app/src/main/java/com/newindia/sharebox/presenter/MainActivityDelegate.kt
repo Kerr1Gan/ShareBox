@@ -1,11 +1,9 @@
 package com.newindia.sharebox.presenter
 
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
-import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiInfo
+import android.os.Build
+import android.preference.PreferenceManager
 import android.provider.Settings
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.widget.DrawerLayout
@@ -13,20 +11,18 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
-import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.newindia.sharebox.R
-import com.newindia.sharebox.views.activities.MainActivity
-import com.newindia.sharebox.views.dialog.FilePickBottomSheetDialog
-import com.newindia.sharebox.views.dialog.WifiBottomSheetDialog
+import com.newindia.sharebox.domain.PreferenceInfo
+import com.newindia.sharebox.ui.activities.MainActivity
+import com.newindia.sharebox.ui.dialog.WifiBottomSheetDialog
 import org.ecjtu.channellibrary.wifiutils.NetworkUtil
-import android.support.v4.app.ActivityCompat.startActivity
-import com.newindia.sharebox.views.dialog.ApDataDialog
+import com.newindia.sharebox.ui.dialog.ApDataDialog
+import com.newindia.sharebox.ui.dialog.EditNameDialog
 
 
 /**
@@ -43,6 +39,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
     private var mHotspotButton:Button
     private var mApName:TextView
     private var mWifiImage:ImageView
+    private var mTextName:TextView? =null
 
     init {
         mToolbar = findViewById(R.id.toolbar) as Toolbar
@@ -54,7 +51,6 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
 
         mFloatingActionButton=findViewById(R.id.floating_action_button) as FloatingActionButton
         mFloatingActionButton.setOnClickListener({view->
-            Toast.makeText(owner,"onClick ",Toast.LENGTH_SHORT).show()
             mViewSwitcher?.showNext()
         })
 
@@ -66,8 +62,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
         mViewSwitcher?.addView(view1)
 
         view0.findViewById(R.id.button_help).setOnClickListener {
-            var dialog=WifiBottomSheetDialog(owner,owner)
-            dialog.show()
+
         }
 
         mWifiButton=findViewById(R.id.btn_wifi) as Button
@@ -75,14 +70,14 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
 
 
         mWifiButton.setOnClickListener {
-//            mWifiButton.isActivated=!mWifiButton.isActivated
             val intent = Intent()
 //            intent.action = "android.net.wifi.PICK_WIFI_NETWORK"
             intent.action =Settings.ACTION_WIFI_SETTINGS
             owner.startActivity(intent)
         }
         mHotspotButton.setOnClickListener {
-//            mHotspotButton.isActivated=!mHotspotButton.isActivated
+            var dlg=WifiBottomSheetDialog(owner,owner)
+            dlg.show()
         }
 
         mApName=findViewById(R.id.ap_name) as TextView
@@ -114,6 +109,8 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
     }
 
     private fun initDrawerLayout(){
+        mTextName=findViewById(R.id.text_name) as TextView
+
         findViewById(R.id.text_faq)?.setOnClickListener {
 
         }
@@ -125,6 +122,18 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
         findViewById(R.id.text_help)?.setOnClickListener {
 
         }
+
+        findViewById(R.id.text_name)?.setOnClickListener {
+            var dlg=EditNameDialog(activity = owner,context =owner )
+            dlg.show()
+            dlg.setOnDismissListener({
+                mTextName?.setText(PreferenceManager.getDefaultSharedPreferences(owner).
+                        getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL))
+            })
+        }
+
+        mTextName?.setText(PreferenceManager.getDefaultSharedPreferences(owner).
+                getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL))
     }
 
     class Holder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
@@ -135,7 +144,6 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
 
         when(item?.getItemId()){
             R.id.qr_code ->{
-                Toast.makeText(owner,"打开QRCode",Toast.LENGTH_SHORT).show()
                 var dialog=ApDataDialog(owner,owner)
                 dialog.show()
                 return true

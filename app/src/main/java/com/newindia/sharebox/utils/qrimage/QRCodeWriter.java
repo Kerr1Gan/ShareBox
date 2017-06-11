@@ -1,4 +1,4 @@
-package com.newindia.sharebox.qrimage;
+package com.newindia.sharebox.utils.qrimage;
 
 
 import com.google.zxing.EncodeHintType;
