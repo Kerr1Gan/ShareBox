@@ -1,11 +1,76 @@
-<resources>
-
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="drawerArrowStyle">@style/AppTheme.DrawerArrowToggle</item>
+        <item name="android:toolbarStyle" tools:targetApi="lollipop">@style/CustomToolBar</item>
+        <item name="android:actionBarStyle">@style/CustomActionBarStyle</item>
     </style>
 
+    <style name="ImageStatusBarStyle" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="drawerArrowStyle">@style/AppTheme.DrawerArrowToggle</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+    </style>
+
+    <style name="AppTheme.DrawerArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@android:color/white</item>
+    </style>
+
+    <style name="CustomToolBar" parent="Widget.AppCompat.Toolbar">
+        <item name="android:contentInsetStart" tools:targetApi="lollipop">0dp</item>
+        <item name="android:contentInsetEnd" tools:targetApi="lollipop">0dp</item>
+        <item name="android:colorControlNormal">?attr/colorPrimary</item>//修改后退箭头颜色
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:actionMenuTextColor">@android:color/white</item>
+
+        <item name="colorControlNormal">@android:color/white</item>//below v21
+    </style>
+
+    <style name="CustomActionBarStyle" parent="Base.Widget.AppCompat.Light.ActionBar">
+        <!--<item name="android:titleTextStyle">@style/ActionBarTitle</item>-->
+        <item name="android:actionMenuTextColor">@android:color/white</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:background">@color/colorPrimary</item>
+
+        <item name="android:colorControlNormal">@android:color/white</item>//up v21
+        <item name="colorControlNormal">@android:color/white</item>//below v21
+    </style>
+
+    <style name="CounterOverflowTextColor" parent="Base.TextAppearance.AppCompat.Widget.PopupMenu.Small">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">12dp</item>
+        <!--kevin:counterOverflowTextAppearance="@style/counterOverflowTextColor"//UserName的TextInputLayout里添加-->
+        <!--kevin:errorTextAppearance="@style/counterOverflowTextColor"//Password的TextInputLayout里添加-->
+    </style>
+
+    <style name="CounterTextColor" parent="Base.TextAppearance.AppCompat.Widget.PopupMenu.Small">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">12dp</item>
+        <!--kevin:counterOverflowTextAppearance="@style/counterOverflowTextColor"//UserName的TextInputLayout里添加-->
+        <!--kevin:errorTextAppearance="@style/counterOverflowTextColor"//Password的TextInputLayout里添加-->
+    </style>
+
+    <style name="BottomSheetDialogStyle" parent="Theme.Design.BottomSheetDialog">
+
+        <item name="counterOverflowTextAppearance">@style/CounterOverflowTextColor</item>
+        <item name="counterTextAppearance">@style/CounterTextColor</item>
+        <item name="errorTextAppearance">@style/CounterOverflowTextColor</item>
+
+        <!--<item name="android:textColorHint">@android:color/white</item>-->
+        <item name="colorControlNormal">@android:color/black</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
+    </style>
+
+    <style name="WhiteToolbar" parent="Base.Widget.AppCompat.Light.ActionBar">
+        <item name="android:colorControlNormal">@android:color/white</item>
+        <item name="colorControlNormal">@android:color/white</item>
+    </style>
 </resources>
