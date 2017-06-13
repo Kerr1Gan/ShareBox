@@ -27,7 +27,8 @@ open class CloseBottomSheetDialog:BaseBottomSheetDialog,View.OnClickListener{
         super.onViewCreated(view)
         transparentDialog()
         var v=findViewById(R.id.btn_close)
-        v?.setOnClickListener(){
+
+        (v?.parent as ViewGroup).setOnClickListener(){
             dismiss()
         }
         return false

@@ -14,6 +14,7 @@ import android.graphics.ColorMatrixColorFilter
 import android.graphics.ColorMatrix
 import android.widget.TextView
 import org.ecjtu.channellibrary.wifiutils.NetworkUtil
+import org.ecjtu.channellibrary.wifiutils.WifiUtil
 
 
 /**
@@ -69,11 +70,20 @@ class ApDataDialog(context: Context,activity: Activity):BaseBottomSheetDialog(co
             pwd.setText(String.format(format,pwd.text.toString(),preSharedKey))
             thread {
                 var px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 250f, context.resources.displayMetrics)
-                val qr = QrUtils.createQRImage("http://$ip:$port", px.toInt(), px.toInt())
+                val qr = QrUtils.createQRImage(WifiUtil.setupWifiDataProtocol(ssid,preSharedKey), px.toInt(), px.toInt())
                 ownerActivity.runOnUiThread {
                     darkImageView(vg.findViewById(R.id.image_qr) as ImageView)
                             .setImageBitmap(qr)
                 }
+            }
+        }
+
+        thread {
+            var px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 250f, context.resources.displayMetrics)
+            val qr = QrUtils.createQRImage("http://$ip:$port", px.toInt(), px.toInt())
+            ownerActivity.runOnUiThread {
+                darkImageView(vg.findViewById(R.id.image_url) as ImageView)
+                        .setImageBitmap(qr)
             }
         }
 
