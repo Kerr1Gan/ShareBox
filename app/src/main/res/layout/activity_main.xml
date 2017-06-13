@@ -225,5 +225,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="75dp"
-        android:layout_marginRight="35dp" />
+        android:layout_marginRight="35dp"
+        android:src="@mipmap/share"
+        app:fabSize="normal" />
 </RelativeLayout>

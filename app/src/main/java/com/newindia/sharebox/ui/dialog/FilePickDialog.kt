@@ -77,6 +77,8 @@ class FilePickDialog :BaseBottomSheetDialog{
             dismiss()
         }
 
+        toolbar.inflateMenu(R.menu.menu_file_pick)
+
         mBehavior?.setBottomSheetCallback(object :BottomSheetBehavior.BottomSheetCallback(){
             var mFitSystemWindow=false
 

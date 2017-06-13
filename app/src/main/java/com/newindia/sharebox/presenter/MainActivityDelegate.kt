@@ -53,7 +53,9 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
 
         mFloatingActionButton=findViewById(R.id.floating_action_button) as FloatingActionButton
         mFloatingActionButton.setOnClickListener({view->
-            mViewSwitcher?.showNext()
+//            mViewSwitcher?.showNext()
+            var dlg=FilePickDialogFragment(owner)
+            dlg.show(owner.supportFragmentManager,"FilePickDialogFragment")
         })
 
         //for view switcher
@@ -65,8 +67,8 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
 
         view0.findViewById(R.id.button_help).setOnClickListener {
 //            FilePickDialog(owner,owner).show()  not suitable for fragment
-            var dlg=FilePickDialogFragment(owner)
-            dlg.show(owner.supportFragmentManager,"FilePickDialogFragment")
+//            var dlg=FilePickDialogFragment(owner)
+//            dlg.show(owner.supportFragmentManager,"FilePickDialogFragment")
         }
 
         mWifiButton=findViewById(R.id.btn_wifi) as Button

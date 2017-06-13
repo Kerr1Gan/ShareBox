@@ -72,5 +72,6 @@
     <style name="WhiteToolbar" parent="Base.Widget.AppCompat.Light.ActionBar">
         <item name="android:colorControlNormal">@android:color/white</item>
         <item name="colorControlNormal">@android:color/white</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
     </style>
 </resources>
