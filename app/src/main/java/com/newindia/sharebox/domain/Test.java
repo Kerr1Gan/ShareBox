@@ -12,7 +12,19 @@ public class Test {
 
 
     public Test(int x){
+        setListener2(0, new IListener() {
+            @Override
+            public void onClick() {
 
+            }
+        });
+
+        setListener1(new IListener() {
+            @Override
+            public void onClick() {
+
+            }
+        });
     }
 
     public Test(int x,int y,int z){
@@ -21,6 +33,13 @@ public class Test {
 
     protected void add(){
 
+    }
+
+    public void setListener2(int x,IListener listener){
+        listener.onClick();
+    }
+    public void setListener1(IListener listener){
+        listener.onClick();
     }
 
     public static class Test2 extends Test{
@@ -76,4 +95,8 @@ public class Test {
 
         }
     };
+
+    public interface IListener{
+        void onClick();
+    }
 }

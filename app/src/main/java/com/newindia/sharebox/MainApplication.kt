@@ -1,6 +1,7 @@
 package com.newindia.sharebox
 
 import android.app.Application
+import com.newindia.sharebox.utils.fileutils.FileUtil
 
 /**
  * Created by KerriGan on 2017/6/9 0009.
@@ -12,6 +13,7 @@ class MainApplication:Application(){
 
     override fun onCreate() {
         super.onCreate()
+
     }
 
     public fun getSavedStateInstance():Map<String,Unit>{
