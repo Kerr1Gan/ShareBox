@@ -163,7 +163,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
     }
 
 
-    public fun checkCurrentAp(info:WifiInfo?){
+    fun checkCurrentAp(info:WifiInfo?){
         if(NetworkUtil.isWifi(owner) || info!=null){
             var wifiInfo:WifiInfo?=null
             if(info!=null)
@@ -204,7 +204,5 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
             str=str.dropLast(1)
         return str
     }
-
-
 
 }

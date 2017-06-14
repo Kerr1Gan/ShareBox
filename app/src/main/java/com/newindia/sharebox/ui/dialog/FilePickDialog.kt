@@ -2,6 +2,7 @@ package com.newindia.sharebox.ui.dialog
 
 import android.app.Activity
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import com.newindia.sharebox.R
@@ -20,6 +21,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.newindia.sharebox.ui.activities.MainActivity
 import com.newindia.sharebox.ui.fragments.PageFragment
+import com.newindia.sharebox.ui.views.FileExpandableListView
 import com.newindia.sharebox.utils.fileutils.FileUtil
 import java.io.File
 
@@ -43,14 +45,7 @@ class FilePickDialog :BaseBottomSheetDialog{
 
     private var mTabItemHolders:MutableMap<String,TabItemHolder>? = mutableMapOf()
 
-    private var mFileTypes: MutableMap<String, List<File>>? = mutableMapOf(Pair("Movie", listOf<File>()),
-                    Pair("Music", listOf<File>()),
-                    Pair("Photo", listOf<File>()),
-                    Pair("Doc", listOf<File>()),
-                    Pair("Apk", listOf<File>()),
-                    Pair("Rar", listOf<File>()))
-
-    private var mTaskTypes:MutableMap<String,LoadingFilesTask>? = mutableMapOf()
+    private var mViewPagerViews = mutableMapOf<Int,View>()
 
     override fun initializeDialog() {
         super.initializeDialog()
@@ -84,7 +79,23 @@ class FilePickDialog :BaseBottomSheetDialog{
     }
 
     private fun initData(){
-//        mTabItemHolders
+        var item=TabItemHolder(context.getString(R.string.movie),string2MediaFileType("Movie"))
+        mTabItemHolders?.put("Movie",item)
+
+        item=TabItemHolder(context.getString(R.string.music),string2MediaFileType("Music"))
+        mTabItemHolders?.put("Music",item)
+
+        item=TabItemHolder(context.getString(R.string.photo),string2MediaFileType("Photo"))
+        mTabItemHolders?.put("Photo",item)
+
+        item=TabItemHolder(context.getString(R.string.doc),string2MediaFileType("Doc"))
+        mTabItemHolders?.put("Doc",item)
+
+        item=TabItemHolder(context.getString(R.string.apk),string2MediaFileType("Apk"))
+        mTabItemHolders?.put("Apk",item)
+
+        item=TabItemHolder(context.getString(R.string.rar),string2MediaFileType("Rar"))
+        mTabItemHolders?.put("Rar",item)
 
     }
 
@@ -152,50 +163,84 @@ class FilePickDialog :BaseBottomSheetDialog{
             }
 
             override fun getCount(): Int {
-                return mFileTypes?.size ?:0
+                return mTabItemHolders?.size ?:0
             }
 
             override fun getPageTitle(position: Int): CharSequence {
-                return mFileTypes?.keys?.elementAt(position)!!
+                var key=mTabItemHolders?.keys?.elementAt(position)!!
+                return mTabItemHolders?.get(key)?.title as CharSequence
             }
 
             override fun instantiateItem(container: ViewGroup?, position: Int): Any {
-                var vg=layoutInflater.inflate(R.layout.layout_main_activity_data,container,false)
+
+                var vg:FileExpandableListView? =null
+
+                vg= mViewPagerViews.get(position) as FileExpandableListView?
+                if(vg==null){
+                    Log.e("ViewPager","create view")
+                    vg=layoutInflater.inflate(R.layout.layout_file_expandable_list_view,container,false) as FileExpandableListView
+                }
+
                 container?.addView(vg)
 
-                var title=getPageTitle(position).toString()
+                var title=mTabItemHolders?.keys?.elementAt(position) as String
 
-                if(mTaskTypes?.get(title)==null){
-                    var task=LoadingFilesTask(context,string2MediaFileType(title)!!)
+                var holder=mTabItemHolders?.get(title)
+                vg.initData(holder)
+
+                if(mTabItemHolders?.get(title)?.task==null){
+                    var task=LoadingFilesTask(context,holder!!)
                     task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
-                    mTaskTypes?.put(title,task)
+                    mTabItemHolders?.get(title)?.task=task
                 }
+
+                mViewPagerViews.put(position,vg)
                 return vg
             }
 
             override fun destroyItem(container: ViewGroup?, position: Int, `object`: Any?) {
-                var title=getPageTitle(position).toString()
-                if(mTaskTypes?.get(title)!=null){
-                    var task=mTaskTypes?.get(title)
-                    task?.cancel(true)
-                    mTaskTypes?.remove(title)
+                var title=mTabItemHolders?.keys?.elementAt(position) as String
+                if(mTabItemHolders?.get(title)?.task!=null){
+                    var task=mTabItemHolders?.get(title)?.task
+                    if(task?.status==AsyncTask.Status.FINISHED){
+                        //do nothing
+                    }else{
+                        task?.cancel(true)
+                        mTabItemHolders?.get(title)?.task=null
+                    }
                 }
                 container?.removeView(`object` as View)
+//                mViewPagerViews.remove(position)
             }
         }
+
+        mViewPager?.setOnPageChangeListener(object :ViewPager.OnPageChangeListener{
+            override fun onPageScrollStateChanged(state: Int) {
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                (mViewPagerViews.get(position) as FileExpandableListView).loadedData()
+            }
+        })
 
         mTabLayout?.setupWithViewPager(mViewPager)
     }
 
-     protected inner class LoadingFilesTask:AsyncTask<List<File>?,Void,List<File>?>{
+    inner class LoadingFilesTask:AsyncTask<List<File>?,Void,List<File>?>{
         private val TAG="LoadingFilesTask"
 
         private var mType:FileUtil.MediaFileType? =null
 
         private var mContext: Context? =null
-        constructor(context: Context,type: FileUtil.MediaFileType):super(){
-            mType=type
+
+        private var mHolder: TabItemHolder? =null
+        constructor(context: Context,holder: TabItemHolder):super(){
+            mType=holder.type
             mContext=context
+            mHolder=holder
         }
 
         override fun doInBackground(vararg params: List<File>?): List<File>? {
@@ -206,27 +251,27 @@ class FilePickDialog :BaseBottomSheetDialog{
             when(mType){
                 FileUtil.MediaFileType.MOVIE->{
                     list=FileUtil.getAllMediaFile(mContext!!,null)
-                    mFileTypes?.put("Movie",list)
+                    mTabItemHolders?.get("Movie")?.fileList=list
                 }
                 FileUtil.MediaFileType.MP3->{
                     list=FileUtil.getAllMusicFile(mContext!!,null)
-                    mFileTypes?.put("Music",list)
+                    mTabItemHolders?.get("Music")?.fileList=list
                 }
                 FileUtil.MediaFileType.IMG->{
                     list=FileUtil.getAllImageFile(mContext!!,null)
-                    mFileTypes?.put("Photo",list)
+                    mTabItemHolders?.get("Photo")?.fileList=list
                 }
                 FileUtil.MediaFileType.DOC->{
                     list=FileUtil.getAllDocFile(mContext!!,null)
-                    mFileTypes?.put("Doc",list)
+                    mTabItemHolders?.get("Doc")?.fileList=list
                 }
                 FileUtil.MediaFileType.APP->{
                     list=FileUtil.getAllApkFile(mContext!!,null)
-                    mFileTypes?.put("Apk",list)
+                    mTabItemHolders?.get("Apk")?.fileList=list
                 }
                 FileUtil.MediaFileType.RAR->{
                     list=FileUtil.getAllRarFile(mContext!!,null)
-                    mFileTypes?.put("Rar",list)
+                    mTabItemHolders?.get("Rar")?.fileList=list
                 }
             }
 
@@ -237,6 +282,8 @@ class FilePickDialog :BaseBottomSheetDialog{
 
         override fun onPostExecute(result: List<File>?) {
             super.onPostExecute(result)
+            var index=mViewPager?.currentItem
+            (mViewPagerViews.get(index) as FileExpandableListView).loadedData()
         }
 
         override fun onCancelled(result: List<File>?) {
@@ -295,10 +342,6 @@ class FilePickDialog :BaseBottomSheetDialog{
         return ret
     }
 
-    protected class TabItemHolder{
-        var title:String? =null
-        var type:FileUtil.MediaFileType? =null
-        var task:LoadingFilesTask? =null
-        var fileList:List<File>? =null
-    }
+    public data class TabItemHolder(var title:String?=null,var type:FileUtil.MediaFileType?=null
+                                       ,var task:LoadingFilesTask?=null,var fileList:List<File>?=null)
 }
