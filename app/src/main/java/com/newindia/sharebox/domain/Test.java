@@ -4,6 +4,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 
+import java.io.IOError;
+import java.io.IOException;
+import java.io.InvalidObjectException;
+
 /**
  * Created by KerriGan on 2017/6/2.
  */
@@ -25,6 +29,16 @@ public class Test {
 
             }
         });
+
+        String[] strs=new String[2];
+        String[] strs2=new String[]{"123","321"};
+
+
+        try {
+            int xx=0/0;
+        }catch (NumberFormatException | IOError e2){
+
+        }
     }
 
     public Test(int x,int y,int z){

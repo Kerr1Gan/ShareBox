@@ -2,6 +2,7 @@ package com.newindia.sharebox.presenter
 
 import android.content.Intent
 import android.net.wifi.WifiInfo
+import android.net.wifi.WifiManager
 import android.os.Build
 import android.preference.PreferenceManager
 import android.provider.Settings
@@ -25,6 +26,10 @@ import com.newindia.sharebox.ui.dialog.ApDataDialog
 import com.newindia.sharebox.ui.dialog.EditNameDialog
 import com.newindia.sharebox.ui.dialog.FilePickDialog
 import com.newindia.sharebox.ui.fragments.FilePickDialogFragment
+import java.lang.Exception
+import android.support.v4.app.ActivityCompat.startActivity
+
+
 
 
 /**
@@ -77,9 +82,15 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
 
         mWifiButton.setOnClickListener {
             val intent = Intent()
-//            intent.action = "android.net.wifi.PICK_WIFI_NETWORK"
-            intent.action =Settings.ACTION_WIFI_SETTINGS
-            owner.startActivity(intent)
+            val action= arrayOf(WifiManager.ACTION_PICK_WIFI_NETWORK,Settings.ACTION_WIFI_SETTINGS)
+            for (str in action){
+                try {
+                    intent.action =Settings.ACTION_WIFI_SETTINGS
+                    owner.startActivity(intent)
+                    break
+                }catch (ex: Exception){
+                }
+            }
         }
         mHotspotButton.setOnClickListener {
             var dlg=WifiBottomSheetDialog(owner,owner)
