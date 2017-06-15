@@ -257,4 +257,8 @@ public class CircleProgressView extends View {
         super.onDetachedFromWindow();
         mAnimate=false;
     }
+
+    public boolean isAnimated(){
+        return mAnimate;
+    }
 }

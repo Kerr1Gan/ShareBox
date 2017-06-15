@@ -1,7 +1,11 @@
 package com.ecjtu.sharebox.ui.dialog
 
 import android.app.Activity
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.net.wifi.WifiConfiguration
 import android.support.design.widget.TextInputEditText
 import android.support.design.widget.TextInputLayout
 import android.text.Editable
@@ -11,6 +15,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.ui.views.CircleProgressView
+import org.ecjtu.channellibrary.wifiutils.NetworkUtil
+import org.ecjtu.channellibrary.wifiutils.WifiUtil
 
 /**
  * Created by KerriGan on 2017/6/2.
@@ -30,6 +36,8 @@ open class WifiBottomSheetDialog:CloseBottomSheetDialog{
     private var mPwdTextInput:TextInputLayout? =null
 
     private var mCircleProgress:CircleProgressView? =null
+
+    private var mReceiver:BroadcastReceiver? =null
 
     override fun onCreateView(): View?{
         var vg = super.onCreateView() as ViewGroup
@@ -57,7 +65,26 @@ open class WifiBottomSheetDialog:CloseBottomSheetDialog{
         mCircleProgress?.textColor=context.resources.getColor(android.R.color.white)
         mCircleProgress?.setStartText("Start")
         mCircleProgress?.setOnClickListener {
-            mCircleProgress?.setProgress(50,true,10000)
+
+            if(NetworkUtil.isHotSpot(context)){
+                WifiUtil.openHotSpot(context,false,mHotspotName?.text.toString(),mHotspotPwd?.text.toString())
+                return@setOnClickListener
+            }
+
+            if(!mCircleProgress?.isAnimated!!){
+                mCircleProgress?.setProgress(80,true,2000)
+            }
+            WifiUtil.openHotSpot(context,true,mHotspotName?.text.toString()
+                    ,mHotspotPwd?.text.toString())
+        }
+
+        var config=NetworkUtil.getHotSpotConfiguration(context)
+        mHotspotName?.setText(config.SSID)
+        mHotspotPwd?.setText(config.preSharedKey)
+        if(NetworkUtil.isHotSpot(context)){
+            mCircleProgress?.setStartText("Close")
+        }else{
+            mCircleProgress?.setStartText("Start")
         }
 
         (vg.findViewById(R.id.text_title) as TextView).setText("Hotspot")
@@ -110,4 +137,35 @@ open class WifiBottomSheetDialog:CloseBottomSheetDialog{
 
         }
     }
+
+    override fun onStart() {
+        super.onStart()
+        mReceiver=object :BroadcastReceiver(){
+            override fun onReceive(context: Context?, intent: Intent?) {
+                var status=intent?.getIntExtra("wifi_state", -1)
+                if(status==13){
+                    //wifi ap enabled
+                    var config=NetworkUtil.getHotSpotConfiguration(context)
+                    mHotspotName?.setText(config.SSID)
+                    mHotspotPwd?.setText(config.preSharedKey)
+                    mCircleProgress?.setStartText("Close")
+                }else if(status==11){
+                    //wifi ap disabled
+                    mCircleProgress?.setStartText("Start")
+                }
+            }
+
+        }
+
+        var filter=IntentFilter("android.net.wifi.WIFI_AP_STATE_CHANGED")
+
+        context.registerReceiver(mReceiver,filter)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        context.unregisterReceiver(mReceiver)
+    }
+
+
 }
