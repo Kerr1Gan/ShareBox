@@ -54,7 +54,7 @@
     </android.support.design.widget.TextInputLayout>
 
 
-    <com.newindia.sharebox.ui.views.CircleProgressView
+    <com.ecjtu.sharebox.ui.views.CircleProgressView
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:id="@+id/circle_progress"
