@@ -15,6 +15,13 @@ import android.util.Log
 import android.view.*
 import com.newindia.sharebox.R
 import com.newindia.sharebox.presenter.MainActivityDelegate
+import android.app.Activity
+import android.view.KeyCharacterMap
+import android.view.ViewConfiguration
+import android.graphics.Point
+import android.os.Build
+
+
 
 //http://www.tmtpost.com/195557.html 17.6.7
 class MainActivity : AppCompatActivity() {
@@ -33,8 +40,13 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(toolbar)
 
-
         mDelegate= MainActivityDelegate(this)
+
+        var drawer=findViewById(R.id.drawer_view)
+
+        if(isNavigationBarShow(this)){
+            drawer.setPadding(drawer.paddingLeft,drawer.paddingTop,drawer.paddingRight,getNavigationBarHeight(this))
+        }
     }
 
 
@@ -184,5 +196,37 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    fun isNavigationBarShow(activity: Activity): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            val display = windowManager.defaultDisplay
+            val size = Point()
+            val realSize = Point()
+            display.getSize(size)
+            display.getRealSize(realSize)
+            return realSize.y !== size.y
+        } else {
+            val menu = ViewConfiguration.get(activity).hasPermanentMenuKey()
+            val back = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK)
+            return !(menu || back)
+        }
+    }
+
+    fun getNavigationBarHeight(activity: Activity): Int {
+        if (!isNavigationBarShow(activity)) {
+            return 0
+        }
+        val resources = activity.resources
+        val resourceId = resources.getIdentifier("navigation_bar_height",
+                "dimen", "android")
+        //获取NavigationBar的高度
+        val height = resources.getDimensionPixelSize(resourceId)
+        return height
+    }
+
+
+    fun getScreenHeight(activity: Activity): Int {
+        return activity.windowManager.defaultDisplay.height + getNavigationBarHeight(activity)
     }
 }

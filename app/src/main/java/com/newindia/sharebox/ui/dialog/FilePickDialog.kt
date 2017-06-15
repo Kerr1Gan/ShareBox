@@ -47,6 +47,10 @@ class FilePickDialog :BaseBottomSheetDialog{
 
     private var mViewPagerViews = mutableMapOf<Int,View>()
 
+    private var mBottomSheet:View? =null
+
+    private var mExpandableListView:FileExpandableListView? =null
+
     override fun initializeDialog() {
         super.initializeDialog()
         context.setTheme(R.style.WhiteToolbar)
@@ -73,6 +77,8 @@ class FilePickDialog :BaseBottomSheetDialog{
 
 //        mBehavior?.skipCollapsed=true
         mBehavior?.peekHeight=mHeight*2/3
+
+        mBottomSheet=findViewById(R.id.design_bottom_sheet)
 
         initView(view as ViewGroup)
         return true
@@ -195,6 +201,9 @@ class FilePickDialog :BaseBottomSheetDialog{
                 }
 
                 mViewPagerViews.put(position,vg)
+
+                if(mExpandableListView==null)
+                    mExpandableListView=mViewPagerViews.get(0) as FileExpandableListView
                 return vg
             }
 
@@ -222,7 +231,8 @@ class FilePickDialog :BaseBottomSheetDialog{
             }
 
             override fun onPageSelected(position: Int) {
-                (mViewPagerViews.get(position) as FileExpandableListView).loadedData()
+                mExpandableListView=mViewPagerViews.get(position) as FileExpandableListView
+                mExpandableListView?.loadedData()
             }
         })
 
@@ -342,6 +352,36 @@ class FilePickDialog :BaseBottomSheetDialog{
         return ret
     }
 
-    public data class TabItemHolder(var title:String?=null,var type:FileUtil.MediaFileType?=null
+    data class TabItemHolder(var title:String?=null,var type:FileUtil.MediaFileType?=null
                                        ,var task:LoadingFilesTask?=null,var fileList:List<File>?=null)
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        //resolve listView doesn't not support NestedScrolling
+        var ret = false
+        if (mExpandableListView?.getFirstVisiblePosition() == 0) {
+            val topChildView = mExpandableListView?.getChildAt(0)
+            ret = topChildView?.getTop() == 0
+        }
+
+        if(mBehavior?.state!=BottomSheetBehavior.STATE_EXPANDED){
+            ret=true
+        }
+
+        if (ret) {
+            return super.dispatchTouchEvent(ev)
+        } else {
+            return mBottomSheet?.dispatchTouchEvent(ev)!!
+        }
+
+        return super.dispatchTouchEvent(ev)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        var iter=mTabItemHolders?.iterator()
+        while (iter?.hasNext() ?: false){
+            var obj=iter?.next()
+            obj?.value?.task?.cancel(true)
+        }
+    }
 }
