@@ -2,86 +2,86 @@
 <resources>
 
     <declare-styleable name="FloatingActionButton">
-        <attr name="fab_colorNormal" format="color" />
-        <attr name="fab_colorPressed" format="color" />
-        <attr name="fab_colorDisabled" format="color" />
-        <attr name="fab_colorRipple" format="color" />
-        <attr name="fab_showShadow" format="boolean" />
-        <attr name="fab_shadowColor" format="color" />
-        <attr name="fab_shadowRadius" format="dimension" />
-        <attr name="fab_shadowXOffset" format="dimension" />
-        <attr name="fab_shadowYOffset" format="dimension" />
-        <attr name="fab_size" format="enum">
+        <attr name="fab_colorNormal" mFormat="color" />
+        <attr name="fab_colorPressed" mFormat="color" />
+        <attr name="fab_colorDisabled" mFormat="color" />
+        <attr name="fab_colorRipple" mFormat="color" />
+        <attr name="fab_showShadow" mFormat="boolean" />
+        <attr name="fab_shadowColor" mFormat="color" />
+        <attr name="fab_shadowRadius" mFormat="dimension" />
+        <attr name="fab_shadowXOffset" mFormat="dimension" />
+        <attr name="fab_shadowYOffset" mFormat="dimension" />
+        <attr name="fab_size" mFormat="enum">
             <enum name="normal" value="0" />
             <enum name="mini" value="1" />
         </attr>
-        <attr name="fab_showAnimation" format="reference" />
-        <attr name="fab_hideAnimation" format="reference" />
-        <attr name="fab_label" format="string" />
-        <attr name="fab_elevationCompat" format="dimension" />
-        <attr name="fab_progress_color" format="color" />
-        <attr name="fab_progress_backgroundColor" format="color" />
-        <attr name="fab_progress_indeterminate" format="boolean" />
-        <attr name="fab_progress_max" format="integer" />
-        <attr name="fab_progress" format="integer" />
-        <attr name="fab_progress_showBackground" format="boolean" />
+        <attr name="fab_showAnimation" mFormat="reference" />
+        <attr name="fab_hideAnimation" mFormat="reference" />
+        <attr name="fab_label" mFormat="string" />
+        <attr name="fab_elevationCompat" mFormat="dimension" />
+        <attr name="fab_progress_color" mFormat="color" />
+        <attr name="fab_progress_backgroundColor" mFormat="color" />
+        <attr name="fab_progress_indeterminate" mFormat="boolean" />
+        <attr name="fab_progress_max" mFormat="integer" />
+        <attr name="fab_progress" mFormat="integer" />
+        <attr name="fab_progress_showBackground" mFormat="boolean" />
     </declare-styleable>
 
     <declare-styleable name="FloatingActionMenu">
-        <attr name="menu_showShadow" format="boolean" />
-        <attr name="menu_buttonSpacing" format="dimension" />
-        <attr name="menu_labels_margin" format="dimension" />
-        <attr name="menu_labels_showAnimation" format="reference" />
-        <attr name="menu_labels_hideAnimation" format="reference" />
-        <attr name="menu_labels_paddingTop" format="dimension" />
-        <attr name="menu_labels_paddingLeft" format="dimension" />
-        <attr name="menu_labels_paddingRight" format="dimension" />
-        <attr name="menu_labels_paddingBottom" format="dimension" />
-        <attr name="menu_labels_padding" format="dimension" />
-        <attr name="menu_labels_textColor" format="reference|color" />
-        <attr name="menu_labels_textSize" format="dimension" />
-        <attr name="menu_labels_cornerRadius" format="dimension" />
-        <attr name="menu_labels_showShadow" format="boolean" />
-        <attr name="menu_labels_colorNormal" format="color" />
-        <attr name="menu_labels_colorPressed" format="color" />
-        <attr name="menu_labels_colorRipple" format="color" />
-        <attr name="menu_labels_position" format="enum">
+        <attr name="menu_showShadow" mFormat="boolean" />
+        <attr name="menu_buttonSpacing" mFormat="dimension" />
+        <attr name="menu_labels_margin" mFormat="dimension" />
+        <attr name="menu_labels_showAnimation" mFormat="reference" />
+        <attr name="menu_labels_hideAnimation" mFormat="reference" />
+        <attr name="menu_labels_paddingTop" mFormat="dimension" />
+        <attr name="menu_labels_paddingLeft" mFormat="dimension" />
+        <attr name="menu_labels_paddingRight" mFormat="dimension" />
+        <attr name="menu_labels_paddingBottom" mFormat="dimension" />
+        <attr name="menu_labels_padding" mFormat="dimension" />
+        <attr name="menu_labels_textColor" mFormat="reference|color" />
+        <attr name="menu_labels_textSize" mFormat="dimension" />
+        <attr name="menu_labels_cornerRadius" mFormat="dimension" />
+        <attr name="menu_labels_showShadow" mFormat="boolean" />
+        <attr name="menu_labels_colorNormal" mFormat="color" />
+        <attr name="menu_labels_colorPressed" mFormat="color" />
+        <attr name="menu_labels_colorRipple" mFormat="color" />
+        <attr name="menu_labels_position" mFormat="enum">
             <enum name="left" value="0" />
             <enum name="right" value="1" />
         </attr>
-        <attr name="menu_icon" format="reference" />
-        <attr name="menu_animationDelayPerItem" format="integer" />
-        <attr name="menu_buttonToggleAnimation" format="reference" />
-        <attr name="menu_labels_singleLine" format="boolean" />
-        <attr name="menu_labels_ellipsize" format="enum">
+        <attr name="menu_icon" mFormat="reference" />
+        <attr name="menu_animationDelayPerItem" mFormat="integer" />
+        <attr name="menu_buttonToggleAnimation" mFormat="reference" />
+        <attr name="menu_labels_singleLine" mFormat="boolean" />
+        <attr name="menu_labels_ellipsize" mFormat="enum">
             <enum name="none" value="0" />
             <enum name="start" value="1" />
             <enum name="middle" value="2" />
             <enum name="end" value="3" />
             <enum name="marquee" value="4" />
         </attr>
-        <attr name="menu_labels_maxLines" format="integer" />
-        <attr name="menu_fab_size" format="enum">
+        <attr name="menu_labels_maxLines" mFormat="integer" />
+        <attr name="menu_fab_size" mFormat="enum">
             <enum name="normal" value="0" />
             <enum name="mini" value="1" />
         </attr>
-        <attr name="menu_labels_style" format="reference" />
-        <attr name="menu_labels_customFont" format="string" />
-        <attr name="menu_shadowColor" format="color" />
-        <attr name="menu_shadowRadius" format="dimension" />
-        <attr name="menu_shadowXOffset" format="dimension" />
-        <attr name="menu_shadowYOffset" format="dimension" />
-        <attr name="menu_colorNormal" format="color" />
-        <attr name="menu_colorPressed" format="color" />
-        <attr name="menu_colorRipple" format="color" />
-        <attr name="menu_openDirection" format="enum">
+        <attr name="menu_labels_style" mFormat="reference" />
+        <attr name="menu_labels_customFont" mFormat="string" />
+        <attr name="menu_shadowColor" mFormat="color" />
+        <attr name="menu_shadowRadius" mFormat="dimension" />
+        <attr name="menu_shadowXOffset" mFormat="dimension" />
+        <attr name="menu_shadowYOffset" mFormat="dimension" />
+        <attr name="menu_colorNormal" mFormat="color" />
+        <attr name="menu_colorPressed" mFormat="color" />
+        <attr name="menu_colorRipple" mFormat="color" />
+        <attr name="menu_openDirection" mFormat="enum">
             <enum name="up" value="0" />
             <enum name="down" value="1" />
         </attr>
-        <attr name="menu_backgroundColor" format="color" />
-        <attr name="menu_fab_label" format="string" />
-        <attr name="menu_fab_show_animation" format="reference" />
-        <attr name="menu_fab_hide_animation" format="reference" />
+        <attr name="menu_backgroundColor" mFormat="color" />
+        <attr name="menu_fab_label" mFormat="string" />
+        <attr name="menu_fab_show_animation" mFormat="reference" />
+        <attr name="menu_fab_hide_animation" mFormat="reference" />
     </declare-styleable>
 
 </resources>

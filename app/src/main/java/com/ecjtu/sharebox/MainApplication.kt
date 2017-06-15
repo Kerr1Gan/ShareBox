@@ -15,6 +15,7 @@ import com.bumptech.glide.load.engine.cache.MemoryCache
 import com.bumptech.glide.module.AppGlideModule
 import com.bumptech.glide.module.GlideModule
 import com.bumptech.glide.module.LibraryGlideModule
+import org.ecjtu.channellibrary.wifidirect.WifiDirectManager
 
 
 /**
@@ -35,12 +36,19 @@ class MainApplication:Application(){
         var glide=builder.build(this)
 
         Glide.init(glide)
+
+        WifiDirectManager.getInstance(this)
+
+        initSavedState()
     }
 
     fun getSavedStateInstance():Map<String,Unit>{
         return mSavedStateInstance
     }
 
+    private fun initSavedState(){
+
+    }
 
 
     inner class SimpleGlideModule : AppGlideModule() {

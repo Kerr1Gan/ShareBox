@@ -13,6 +13,7 @@ import kotlin.concurrent.thread
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.ColorMatrix
 import android.widget.TextView
+import org.ecjtu.channellibrary.wifidirect.WifiDirectManager
 import org.ecjtu.channellibrary.wifiutils.NetworkUtil
 import org.ecjtu.channellibrary.wifiutils.WifiUtil
 
@@ -36,7 +37,7 @@ class ApDataDialog(context: Context,activity: Activity):BaseBottomSheetDialog(co
         return vg
     }
 
-    private val format="%s %s"
+    private val mFormat ="%s %s"
 
 
     override fun onViewCreated(view: View?): Boolean {
@@ -47,7 +48,7 @@ class ApDataDialog(context: Context,activity: Activity):BaseBottomSheetDialog(co
     }
 
     private fun initView(vg:ViewGroup){
-        var ip="192.168.43.1"
+        var ip=WifiDirectManager.getInstance().localWLANIps
         var port=8000
 
         var ap=vg.findViewById(R.id.text_ap) as TextView
@@ -59,15 +60,15 @@ class ApDataDialog(context: Context,activity: Activity):BaseBottomSheetDialog(co
             var wifiInfo=NetworkUtil.getConnectWifiInfo(context)
             var ssid=wifiInfo.ssid.drop(1)
             ssid=ssid.dropLast(1)
-            name.setText(String.format(format,name.text.toString(),ssid))
+            name.setText(String.format(mFormat,name.text.toString(),ssid))
             pwd.visibility=View.INVISIBLE
         }else if(NetworkUtil.isHotSpot(context)){
             ap.text="Hotspot"
             var config=NetworkUtil.getHotSpotConfiguration(context)
             var ssid=config.SSID
             var preSharedKey=config.preSharedKey
-            name.setText(String.format(format,name.text.toString(),ssid))
-            pwd.setText(String.format(format,pwd.text.toString(),preSharedKey))
+            name.setText(String.format(mFormat,name.text.toString(),ssid))
+            pwd.setText(String.format(mFormat,pwd.text.toString(),preSharedKey))
             thread {
                 var px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 250f, context.resources.displayMetrics)
                 val qr = QrUtils.createQRImage(WifiUtil.setupWifiDataProtocol(ssid,preSharedKey), px.toInt(), px.toInt())

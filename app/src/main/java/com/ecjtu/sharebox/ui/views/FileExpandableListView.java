@@ -44,7 +44,9 @@ public class FileExpandableListView extends ExpandableListView implements View.O
 
     private ExpandableAdapter mAdapter=new ExpandableAdapter();
 
-    private LruCache<String, Bitmap> mLruCache = new LruCache<String, Bitmap>(5*1024*1024) {
+    private static final int CACHE_SIZE=5 * 1024 *1024;
+
+    private static LruCache<String, Bitmap> sLruCache = new LruCache<String, Bitmap>(CACHE_SIZE) {
         protected int sizeOf(String key, Bitmap value) {
             return value.getByteCount();
         }
@@ -122,10 +124,10 @@ public class FileExpandableListView extends ExpandableListView implements View.O
                     type== FileUtil.MediaFileType.IMG){
                 Glide.with(getContext()).load(f.getAbsolutePath()).into(icon);
             }else if(type== FileUtil.MediaFileType.APP){
-                Bitmap b= mLruCache.get(f.getAbsolutePath());
+                Bitmap b= sLruCache.get(f.getAbsolutePath());
                 if(b==null){
                     b=FileUtil.INSTANCE.getAppThumbnail(getContext(),f);
-                    mLruCache.put(f.getAbsolutePath(),b);
+                    sLruCache.put(f.getAbsolutePath(),b);
                 }
                 icon.setImageBitmap(b);
             }
