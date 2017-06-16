@@ -242,14 +242,14 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
             mWifiButton.isActivated=false
             mHotspotButton.isActivated=false
 
-            owner.getMainApplication().getSavedStateInstance().put(Constants.AP_STATE,Constants.NetWorkState.MOBILE as Unit)
+            owner.getMainApplication().getSavedStateInstance().put(Constants.AP_STATE,Constants.NetWorkState.MOBILE)
         }else{
             mApName.setText(getRealName("No Internet"))
             mWifiImage.setImageResource(R.mipmap.wifi_off)
             mWifiButton.isActivated=false
             mHotspotButton.isActivated=false
 
-            owner.getMainApplication().getSavedStateInstance().put(Constants.AP_STATE,Constants.NetWorkState.NONE as Unit)
+            owner.getMainApplication().getSavedStateInstance().put(Constants.AP_STATE,Constants.NetWorkState.NONE)
         }
     }
 
