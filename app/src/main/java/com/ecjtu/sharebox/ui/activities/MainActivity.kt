@@ -229,4 +229,10 @@ class MainActivity : AppCompatActivity() {
     fun getScreenHeight(activity: Activity): Int {
         return activity.windowManager.defaultDisplay.height + getNavigationBarHeight(activity)
     }
+
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        mDelegate?.onRequestPermissionsResult(requestCode,permissions,grantResults)
+    }
 }

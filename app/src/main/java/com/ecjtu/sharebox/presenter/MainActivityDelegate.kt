@@ -1,12 +1,18 @@
 package com.ecjtu.sharebox.presenter
 
+import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.preference.PreferenceManager
 import android.provider.Settings
 import android.support.design.widget.FloatingActionButton
+import android.support.v4.app.ActivityCompat
+import android.support.v4.app.ActivityCompat.startActivity
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.LinearLayoutManager
@@ -26,12 +32,13 @@ import com.ecjtu.sharebox.ui.dialog.ApDataDialog
 import com.ecjtu.sharebox.ui.dialog.EditNameDialog
 import com.ecjtu.sharebox.ui.fragments.FilePickDialogFragment
 import java.lang.Exception
+import java.security.Permission
 
 
 /**
  * Created by KerriGan on 2017/6/2.
  */
-class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
+class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),ActivityCompat.OnRequestPermissionsResultCallback{
 
     private var mToolbar:Toolbar
     private var mDrawerLayout:DrawerLayout
@@ -43,6 +50,13 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
     private var mApName:TextView
     private var mWifiImage:ImageView
     private var mTextName:TextView? =null
+
+    private val REQUEST_CODE=0x10;
+
+    private val mRequestPermission= arrayOf(Manifest.permission.ACCESS_NETWORK_STATE,
+            Manifest.permission.CHANGE_NETWORK_STATE,
+            Manifest.permission.ACCESS_NETWORK_STATE,
+            Manifest.permission.CHANGE_WIFI_STATE)
 
     init {
         mToolbar = findViewById(R.id.toolbar) as Toolbar
@@ -89,6 +103,13 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
             }
         }
         mHotspotButton.setOnClickListener {
+            for(index in 0..mRequestPermission.size-1){
+                if(ActivityCompat.checkSelfPermission(owner,mRequestPermission[index])!=PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(owner,mRequestPermission,REQUEST_CODE)
+                    return@setOnClickListener
+                }
+            }
+
             var dlg=WifiBottomSheetDialog(owner,owner)
             dlg.show()
         }
@@ -169,6 +190,26 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
         return false
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if(requestCode!=REQUEST_CODE) return
+        var hasPermission=true
+
+        for(index in 0..mRequestPermission.size-1){
+            if(grantResults[index]!=PackageManager.PERMISSION_GRANTED){
+                hasPermission=false
+            }
+
+            if(!ActivityCompat.shouldShowRequestPermissionRationale(owner,mRequestPermission[index])){
+                owner.startActivity(getAppDetailSettingIntent(owner))
+                return
+            }
+        }
+
+        if(hasPermission){
+            var dialog=ApDataDialog(owner,owner)
+            dialog.show()
+        }
+    }
 
     fun checkCurrentAp(info:WifiInfo?){
         if(NetworkUtil.isWifi(owner) || info!=null){
@@ -212,4 +253,20 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner){
         return str
     }
 
+    companion object{
+        //Settings.ACTION_APPLICATION_DETAIL_SETTING
+        fun getAppDetailSettingIntent(context: Context):Intent {
+            var localIntent = Intent()
+            localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            if (Build.VERSION.SDK_INT >= 9) {
+                localIntent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                localIntent.setData(Uri.fromParts("package", context.getPackageName(), null))
+            } else if (Build.VERSION.SDK_INT <= 8) {
+                localIntent.setAction(Intent.ACTION_VIEW)
+                localIntent.setClassName("com.android.settings","com.android.settings.InstalledAppDetails")
+                localIntent.putExtra("com.android.settings.ApplicationPkgName", context.getPackageName())
+            }
+            return localIntent
+        }
+    }
 }
