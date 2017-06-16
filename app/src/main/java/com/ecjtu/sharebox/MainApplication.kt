@@ -1,5 +1,6 @@
 package com.ecjtu.sharebox
 
+import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.os.Environment
@@ -24,7 +25,7 @@ import org.ecjtu.channellibrary.wifidirect.WifiDirectManager
 class MainApplication:Application(){
 
 
-    private val mSavedStateInstance=HashMap<String,Unit>()
+    private val mSavedStateInstance=HashMap<String,Any>()
 
     override fun onCreate() {
         super.onCreate()
@@ -42,7 +43,7 @@ class MainApplication:Application(){
         initSavedState()
     }
 
-    fun getSavedStateInstance():Map<String,Unit>{
+    fun getSavedStateInstance():MutableMap<String,Any>{
         return mSavedStateInstance
     }
 
@@ -72,4 +73,5 @@ class MainApplication:Application(){
             builder.setMemoryCache(LruResourceCache(24*1024*1024))
         }
     }
+
 }

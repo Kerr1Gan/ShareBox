@@ -23,8 +23,10 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.domain.PreferenceInfo
+import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.ui.activities.MainActivity
 import com.ecjtu.sharebox.ui.dialog.WifiBottomSheetDialog
 import org.ecjtu.channellibrary.wifiutils.NetworkUtil
@@ -223,23 +225,31 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
             mWifiButton.isActivated=true
             mHotspotButton.isActivated=false
             mWifiImage.setImageResource(R.mipmap.wifi)
+
+            owner.getMainApplication().getSavedStateInstance().put(Constants.AP_STATE,Constants.NetWorkState.WIFI)
         }else if(NetworkUtil.isHotSpot(owner)){
             var config=NetworkUtil.getHotSpotConfiguration(owner)
             mApName.setText(getRealName(config.SSID))
             mWifiButton.isActivated=false
             mHotspotButton.isActivated=true
             mWifiImage.setImageResource(R.mipmap.hotspot)
+
+            owner.getMainApplication().getSavedStateInstance().put(Constants.AP_STATE,Constants.NetWorkState.AP)
         }else if(NetworkUtil.isMobile(owner)){
             mApName.setText(getRealName("Cellular"))
             mWifiImage.setImageResource(R.mipmap.wifi_off)
 
             mWifiButton.isActivated=false
             mHotspotButton.isActivated=false
+
+            owner.getMainApplication().getSavedStateInstance().put(Constants.AP_STATE,Constants.NetWorkState.MOBILE as Unit)
         }else{
             mApName.setText(getRealName("No Internet"))
             mWifiImage.setImageResource(R.mipmap.wifi_off)
             mWifiButton.isActivated=false
             mHotspotButton.isActivated=false
+
+            owner.getMainApplication().getSavedStateInstance().put(Constants.AP_STATE,Constants.NetWorkState.NONE as Unit)
         }
     }
 
