@@ -8,7 +8,7 @@ import java.io.File
 /**
  * Created by KerriGan on 2017/6/13.
  */
-object OpenFileIntent {
+object FileOpenIntentUtil {
     fun openFile(filePath: String): Intent? {
 
         val file = File(filePath)
@@ -43,14 +43,15 @@ object OpenFileIntent {
         }
     }
 
-    //Android获取一个用于打开APK文件的intent
+    //Android获取一个用于打开所有文件的intent
     fun getAllIntent(param: String): Intent {
 
         val intent = Intent()
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.action = Intent.ACTION_VIEW
         val uri = Uri.fromFile(File(param))
-        intent.setDataAndType(uri, "*/*")
+        intent.setData(uri)
+//        intent.setDataAndType(uri, "*/*")
         return intent
     }
 

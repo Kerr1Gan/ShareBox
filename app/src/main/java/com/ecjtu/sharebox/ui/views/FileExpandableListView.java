@@ -1,12 +1,18 @@
 package com.ecjtu.sharebox.ui.views;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
@@ -14,17 +20,24 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.ecjtu.sharebox.R;
+import com.ecjtu.sharebox.async.AppThumbTask;
+import com.ecjtu.sharebox.ui.activities.BaseFragmentActivity;
+import com.ecjtu.sharebox.ui.dialog.FileItemLongClickDialog;
 import com.ecjtu.sharebox.ui.dialog.FilePickDialog;
+import com.ecjtu.sharebox.ui.fragments.VideoPlayerFragment;
+import com.ecjtu.sharebox.utils.fileutils.FileOpenIntentUtil;
 import com.ecjtu.sharebox.utils.fileutils.FileUtil;
 
 import java.io.File;
 import java.util.List;
 
+import kotlin.jvm.functions.Function1;
+
 /**
  * Created by KerriGan on 2017/6/13 0013.
  */
 
-public class FileExpandableListView extends ExpandableListView implements View.OnClickListener{
+public class FileExpandableListView extends ExpandableListView implements View.OnClickListener,View.OnLongClickListener {
 
     public FileExpandableListView(Context context) {
         super(context);
@@ -69,6 +82,62 @@ public class FileExpandableListView extends ExpandableListView implements View.O
 
     }
 
+    @Override
+    public boolean onLongClick(final View v) {
+
+        final FileItemLongClickDialog dlg=new FileItemLongClickDialog(getContext());
+        dlg.setOnClickListener(new Function1<Integer, Void>() {
+            @Override
+            public Void invoke(Integer integer) {
+                if(integer==R.id.open){
+                    String path=((File)v.getTag()).getAbsolutePath();
+                    if(mTabHolder.getType()== FileUtil.MediaFileType.MOVIE){
+                        Bundle bundle=new Bundle();
+                        bundle.putString(VideoPlayerFragment.Companion.getEXTRA_URI_PATH(),path);
+                        Intent i=BaseFragmentActivity.Companion.newInstance(getContext(), VideoPlayerFragment.class,bundle);
+                        getContext().startActivity(i);
+                    }else{
+                        Intent i=FileOpenIntentUtil.INSTANCE.openFile(path);
+                        try {
+                            getContext().startActivity(i);
+                        }catch (Exception ignore){
+                        }
+                    }
+                    dlg.cancel();
+                }else{
+                    dlg.cancel();
+                }
+                return null;
+            }
+        });
+        dlg.show();
+        return true;
+    }
+
+//    @Override
+//    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//        int itemType = ExpandableListView.getPackedPositionType(id);
+//        int childPosition=0,groupPosition=0;
+//        if ( itemType == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
+//            childPosition = ExpandableListView.getPackedPositionChild(id);
+//            groupPosition = ExpandableListView.getPackedPositionGroup(id);
+//
+//            Log.e("ttttttt","childPosition "+childPosition+" groupPosition "+groupPosition);
+//            //do your per-item callback here
+//            return true; //true if we consumed the click, false if not
+//
+//        } else if(itemType == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
+//            groupPosition = ExpandableListView.getPackedPositionGroup(id);
+//
+//            Log.e("ttttttt","groupPosition "+groupPosition);
+//            //do your per-group callback here
+//            return true; //true if we consumed the click, false if not
+//        } else {
+//            // null item; we don't consume the click
+//            return false;
+//        }
+//    }
+
 
     public class ExpandableAdapter extends BaseExpandableListAdapter{
 
@@ -100,7 +169,7 @@ public class FileExpandableListView extends ExpandableListView implements View.O
 
         @Override
         public long getChildId(int groupPosition, int childPosition) {
-            return 0;
+            return getChild(groupPosition,childPosition).hashCode();
         }
 
         @Override
@@ -119,20 +188,28 @@ public class FileExpandableListView extends ExpandableListView implements View.O
             FileUtil.MediaFileType type=mTabHolder.getType();
 
             ImageView icon=(ImageView) convertView.findViewById(R.id.icon);
-
+            icon.setImageDrawable(null);
             if(type == FileUtil.MediaFileType.MOVIE ||
                     type== FileUtil.MediaFileType.IMG){
                 Glide.with(getContext()).load(f.getAbsolutePath()).into(icon);
             }else if(type== FileUtil.MediaFileType.APP){
                 Bitmap b= sLruCache.get(f.getAbsolutePath());
                 if(b==null){
-                    b=FileUtil.INSTANCE.getAppThumbnail(getContext(),f);
-                    sLruCache.put(f.getAbsolutePath(),b);
-                }
-                icon.setImageBitmap(b);
+                    AppThumbTask task= new AppThumbTask(sLruCache,getContext(),icon);
+                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,f);
+                }else
+                    icon.setImageBitmap(b);
+            }else if(type== FileUtil.MediaFileType.MP3){
+                icon.setImageResource(R.mipmap.music);
+            }else if(type== FileUtil.MediaFileType.DOC){
+                icon.setImageResource(R.mipmap.document);
+            }else if(type== FileUtil.MediaFileType.RAR){
+                icon.setImageResource(R.mipmap.rar);
             }
 
+            convertView.setTag(f);
             convertView.setOnClickListener(FileExpandableListView.this);
+            convertView.setOnLongClickListener(FileExpandableListView.this);
             return convertView;
         }
 

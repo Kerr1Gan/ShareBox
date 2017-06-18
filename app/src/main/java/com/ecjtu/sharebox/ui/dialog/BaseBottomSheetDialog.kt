@@ -20,7 +20,8 @@ abstract class BaseBottomSheetDialog:BottomSheetDialog{
 
     constructor(context: Context,activity: Activity? = null):super(context){
         //do nothing
-        ownerActivity=activity
+        if(activity!=null)
+            ownerActivity=activity
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
