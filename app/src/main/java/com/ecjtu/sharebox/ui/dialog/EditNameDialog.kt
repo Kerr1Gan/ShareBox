@@ -27,8 +27,14 @@ class EditNameDialog(context: Context,activity: Activity):CloseBottomSheetDialog
         var parent=super.onCreateView() as ViewGroup
         var vg=layoutInflater.inflate(R.layout.dialog_edit_name,parent,false)
         var parm=LinearLayout.LayoutParams(-1,-2)
-        parm.bottomMargin=TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,80f
-                ,context.resources.displayMetrics).toInt()
+
+        var value=TypedValue()
+
+        context.resources.getValue(R.dimen.edit_name_dialog_margin_bottom,value,true)
+
+        parm.bottomMargin=TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                value.float,
+                context.resources.displayMetrics).toInt()
         parent.addView(vg,parm)
 
         var params=RelativeLayout.LayoutParams(-1,-2)

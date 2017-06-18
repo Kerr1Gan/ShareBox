@@ -5,15 +5,21 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.Uri
 import android.net.wifi.WifiConfiguration
+import android.os.Handler
+import android.provider.Settings
 import android.support.design.widget.TextInputEditText
 import android.support.design.widget.TextInputLayout
+import android.support.v4.app.ActivityCompat
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import com.ecjtu.sharebox.R
+import com.ecjtu.sharebox.presenter.MainActivityDelegate
 import com.ecjtu.sharebox.ui.views.CircleProgressView
 import org.ecjtu.channellibrary.wifiutils.NetworkUtil
 import org.ecjtu.channellibrary.wifiutils.WifiUtil
@@ -38,6 +44,10 @@ open class WifiBottomSheetDialog:CloseBottomSheetDialog{
     private var mCircleProgress:CircleProgressView? =null
 
     private var mReceiver:BroadcastReceiver? =null
+
+    private var mHandler:Handler =Handler(ownerActivity.mainLooper)
+
+    private val DELAY_TIME = 5 * 1000L
 
     override fun onCreateView(): View?{
         var vg = super.onCreateView() as ViewGroup
@@ -74,6 +84,12 @@ open class WifiBottomSheetDialog:CloseBottomSheetDialog{
             if(!mCircleProgress?.isAnimated!!){
                 mCircleProgress?.setProgress(80,true,2000)
             }
+
+            mHandler.postDelayed({
+                Toast.makeText(context,"No permission",Toast.LENGTH_SHORT).show()
+                context.startActivity(MainActivityDelegate.getAppDetailSettingIntent(context))
+                cancel()
+            },DELAY_TIME)
             WifiUtil.openHotSpot(context,true,mHotspotName?.text.toString()
                     ,mHotspotPwd?.text.toString())
         }
@@ -120,7 +136,6 @@ open class WifiBottomSheetDialog:CloseBottomSheetDialog{
     private var mTextWatcherPwd = object : TextWatcher{
         override fun beforeTextChanged(s: CharSequence, start: Int,
                                        count: Int, after: Int){
-
         }
 
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int){
@@ -131,7 +146,6 @@ open class WifiBottomSheetDialog:CloseBottomSheetDialog{
                 mPwdTextInput!!.setError(null)
             }
         }
-
 
         override fun afterTextChanged(s: Editable){
 
@@ -149,6 +163,8 @@ open class WifiBottomSheetDialog:CloseBottomSheetDialog{
                     mHotspotName?.setText(config.SSID)
                     mHotspotPwd?.setText(config.preSharedKey)
                     mCircleProgress?.setStartText("Close")
+
+                    mHandler.removeCallbacksAndMessages(null)
                 }else if(status==11){
                     //wifi ap disabled
                     mCircleProgress?.setStartText("Start")
@@ -165,7 +181,6 @@ open class WifiBottomSheetDialog:CloseBottomSheetDialog{
     override fun onStop() {
         super.onStop()
         context.unregisterReceiver(mReceiver)
+        mHandler.removeCallbacksAndMessages(null)
     }
-
-
 }

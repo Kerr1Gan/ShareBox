@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--<dimen name="edit_name_dialog_margin_bottom">80dp</dimen>-->
+    <item format="float" name="edit_name_dialog_margin_bottom" type="dimen">80.0</item>
+
+</resources>
