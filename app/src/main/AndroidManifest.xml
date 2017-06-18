@@ -31,6 +31,9 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+
+        <service android:name=".service.DaemonService"/>
+        <service android:name=".service.MainService"/>
     </application>
 
 </manifest>
