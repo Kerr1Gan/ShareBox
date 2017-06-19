@@ -3,6 +3,7 @@ package com.ecjtu.sharebox
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import android.os.Environment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.cache.DiskLruCacheFactory
@@ -16,6 +17,8 @@ import com.bumptech.glide.load.engine.cache.MemoryCache
 import com.bumptech.glide.module.AppGlideModule
 import com.bumptech.glide.module.GlideModule
 import com.bumptech.glide.module.LibraryGlideModule
+import com.ecjtu.sharebox.service.DaemonService
+import com.ecjtu.sharebox.service.MainService
 import org.ecjtu.channellibrary.wifidirect.WifiDirectManager
 
 
@@ -41,6 +44,8 @@ class MainApplication:Application(){
         WifiDirectManager.getInstance(this)
 
         initSavedState()
+
+        startService(Intent(this,MainService::class.java))
     }
 
     fun getSavedStateInstance():MutableMap<String,Any>{

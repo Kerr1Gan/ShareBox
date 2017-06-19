@@ -32,7 +32,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".service.DaemonService"/>
+        <service android:name=".service.DaemonService" android:process=":daemon"/>
         <service android:name=".service.MainService"/>
     </application>
 
