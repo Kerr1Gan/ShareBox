@@ -37,6 +37,15 @@ public class Test {
         }catch (NumberFormatException | IOError e2){
 
         }
+
+        int j=0;
+        for(int i=0;i<10;i++){
+            j++;
+            if(j==2){
+                i--;
+                j=0;
+            }
+        }
     }
 
     public Test(int x,int y,int z){
