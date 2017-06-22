@@ -32,6 +32,8 @@ class MainActivity : AppCompatActivity() {
 
     private var mReceiver : WifiApReceiver? =null
 
+    var refreshing =true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -81,16 +83,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        var result=mDelegate?.onOptionsItemSelected(item) ?: false
 
         when(item?.itemId){
             R.id.refresh->{
                 if(mAnimator!!.isRunning){
+                    refreshing =false
                     mAnimator?.cancel()
-                }else
+                }else{
+                    refreshing =true
                     mAnimator?.start()
+                }
             }
         }
+        var result=mDelegate?.onOptionsItemSelected(item) ?: false
 
         if(result){
             return result

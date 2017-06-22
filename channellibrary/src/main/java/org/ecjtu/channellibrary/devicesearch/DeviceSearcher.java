@@ -48,7 +48,7 @@ public abstract class DeviceSearcher extends Thread{
             mHostSocket.setSoTimeout(RECEIVE_TIME_OUT);
 
             byte[] sendData = new byte[1024];
-            InetAddress broadIP = InetAddress.getByName("255.255.255.255");
+            InetAddress broadIP = InetAddress.getByName("255.255.255.255");//255.255.255.255 会发送给局域网内所有设备 https://segmentfault.com/q/1010000004918877
             DatagramPacket sendPack = new DatagramPacket(sendData, sendData.length, broadIP, DEVICE_FIND_PORT);
 
             for (int i = 0; i < 3; i++) {
