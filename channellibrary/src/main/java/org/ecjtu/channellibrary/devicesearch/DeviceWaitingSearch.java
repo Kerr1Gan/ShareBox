@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
 
@@ -32,6 +33,7 @@ public abstract class DeviceWaitingSearch extends Thread{
 
     private Context mContext;
     private String mDeviceName, deviceRoom;
+    private DatagramSocket mSocket;
 
     public DeviceWaitingSearch(Context context, String name, String room) {
         mContext = context;
@@ -44,6 +46,7 @@ public abstract class DeviceWaitingSearch extends Thread{
         DatagramSocket socket = null;
         try {
             socket = new DatagramSocket(DEVICE_FIND_PORT);
+            mSocket=socket;
             byte[] data = new byte[1024];
             DatagramPacket pack = new DatagramPacket(data, data.length);
             while (true) {
@@ -200,5 +203,13 @@ public abstract class DeviceWaitingSearch extends Thread{
      */
     private String int2Ip(int i) {
         return String.format("%d.%d.%d.%d", i & 0xFF, (i >> 8) & 0xFF, (i >> 16) & 0xFF, (i >> 24) & 0xFF);
+    }
+
+    @Override
+    public void interrupt() {
+        if(mSocket!=null){
+            mSocket.close();
+        }
+        super.interrupt();
     }
 }

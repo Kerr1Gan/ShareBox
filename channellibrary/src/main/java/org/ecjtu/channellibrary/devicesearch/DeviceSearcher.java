@@ -101,7 +101,7 @@ public abstract class DeviceSearcher extends Thread{
      * 搜索结束后执行
      * @param deviceSet 搜索到的设备集合
      */
-    public abstract void onSearchFinish(Set deviceSet);
+    public abstract void onSearchFinish(Set<DeviceBean> deviceSet);
 
     /**
      * 解析报文
@@ -210,6 +210,11 @@ public abstract class DeviceSearcher extends Thread{
         return result;
     }
 
+    @Override
+    public void interrupt() {
+        if(mHostSocket!=null) mHostSocket.close();
+        super.interrupt();
+    }
 
     /**
      * 设备Bean
@@ -265,5 +270,7 @@ public abstract class DeviceSearcher extends Thread{
         public void setRoom(String room) {
             this.room = room;
         }
+
+
     }
 }

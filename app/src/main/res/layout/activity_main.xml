@@ -82,6 +82,7 @@
                                     android:layout_marginLeft="10dp"
                                     android:text="tp-link"
                                     android:textColor="@android:color/white"
+                                    android:singleLine="true"
                                     android:textSize="20sp" />
                             </LinearLayout>
 
@@ -129,7 +130,7 @@
         <!--//侧滑内容-->
         <LinearLayout
             android:id="@+id/drawer_view"
-            android:layout_width="200dp"
+            android:layout_width="250dp"
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:background="@color/colorPrimary"
@@ -137,7 +138,8 @@
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="0dp"
+                android:layout_weight="1">
 
                 <LinearLayout
                     android:id="@+id/drawer_layout_content"
@@ -160,10 +162,11 @@
                         android:textSize="18sp"
                         android:gravity="center"
                         android:layout_gravity="center_horizontal"
-                        android:background="@drawable/selector_drawer_layout_item"
+                        android:background="@drawable/ripple_drawer_layout_item"
                         android:id="@+id/text_name"
                         android:textColor="@android:color/white"
-                        android:drawableRight="@mipmap/refactor"/>
+                        android:drawableRight="@mipmap/refactor"
+                        android:singleLine="true"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -176,7 +179,7 @@
                         android:drawablePadding="15dp"
                         android:gravity="center_vertical"
                         android:id="@+id/text_faq"
-                        android:background="@drawable/selector_drawer_layout_item"/>
+                        android:background="@drawable/ripple_drawer_layout_item"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -189,7 +192,7 @@
                         android:drawablePadding="15dp"
                         android:gravity="center_vertical"
                         android:id="@+id/text_setting"
-                        android:background="@drawable/selector_drawer_layout_item"/>
+                        android:background="@drawable/ripple_drawer_layout_item"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -202,10 +205,16 @@
                         android:drawablePadding="15dp"
                         android:gravity="center_vertical"
                         android:id="@+id/text_help"
-                        android:background="@drawable/selector_drawer_layout_item"/>
+                        android:background="@drawable/ripple_drawer_layout_item"/>
 
                 </LinearLayout>
             </ScrollView>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="exit"
+                android:id="@+id/btn_close"/>
         </LinearLayout>
     </android.support.v4.widget.DrawerLayout>
 
@@ -216,5 +225,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="75dp"
-        android:layout_marginRight="35dp" />
+        android:layout_marginRight="35dp"
+        android:src="@mipmap/share"
+        app:fabSize="normal" />
 </RelativeLayout>
