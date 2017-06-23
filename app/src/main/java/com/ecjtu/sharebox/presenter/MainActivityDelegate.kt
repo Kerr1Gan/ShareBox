@@ -278,7 +278,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
     }
 
     fun doSearch(){
-        mDiscoverHelper=DiscoverHelper(owner,"xxxx")
+        mDiscoverHelper=DiscoverHelper(owner,"xxxx","8000")
         mDiscoverHelper?.setMessageListener { msg, deviceSet, handler ->
             var state=owner.getMainApplication().getSavedStateInstance().get(Constants.AP_STATE)
             when(msg){

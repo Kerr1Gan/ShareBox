@@ -35,9 +35,16 @@ public abstract class DeviceSearcher extends Thread{
     private byte mPackType;
     private String mDeviceIP;
 
+    private String mPort="";
     public DeviceSearcher() {
         mDeviceSet = new HashSet<>();
     }
+
+    public DeviceSearcher(String port){
+        this();
+        mPort=port;
+    }
+
 
     @Override
     public void run() {
@@ -200,7 +207,8 @@ public abstract class DeviceSearcher extends Thread{
         data[offset++] = (byte) (seq >> 24);
 
         if (mPackType == PACKET_TYPE_FIND_DEVICE_CHK_12) {
-            byte[] ips = mDeviceIP.getBytes(Charset.forName("UTF-8"));
+            String content=mDeviceIP+","+mPort;
+            byte[] ips = content.getBytes(Charset.forName("UTF-8"));
             System.arraycopy(ips, 0, data, offset, ips.length);
             offset += ips.length;
         }

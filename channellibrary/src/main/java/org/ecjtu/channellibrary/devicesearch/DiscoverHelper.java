@@ -60,9 +60,12 @@ public class DiscoverHelper{
 
     private IMessageListener mMsgListener;
 
-    public DiscoverHelper(Context context,String name){
+    private String mPort="";
+
+    public DiscoverHelper(Context context,String name,String port){
         mContext=context;
         mData=name;
+        mPort=port;
         prepare(mContext,mData,true,true);
     }
 
@@ -71,12 +74,13 @@ public class DiscoverHelper{
             if(mWaitingSearch!=null) mWaitingSearch.interrupt();
             mWaitingSearch=new DeviceWaitingSearch(context,name,"") {
                 @Override
-                public void onDeviceSearched(InetSocketAddress socketAddr) {
+                public void onDeviceSearched(InetSocketAddress socketAddr,String port) {
                     Set<DeviceSearcher.DeviceBean> set=new HashSet<>();
                     DeviceSearcher.DeviceBean bean=new DeviceSearcher.DeviceBean();
                     String ip=NetworkUtil.intToIp(NetworkUtil.byteArrayToInt(socketAddr.getAddress().getAddress()));
                     bean.setIp(ip);
                     bean.setPort(socketAddr.getPort());
+                    bean.setName(port);
                     set.add(bean);
                     mHandler.obtainMessage(MSG_BEING_SEARCHED,set).sendToTarget();
                 }
@@ -85,7 +89,7 @@ public class DiscoverHelper{
 
         if(restartSearcher){
             if(mSearcher!=null) mSearcher.interrupt();
-            mSearcher=new DeviceSearcher() {
+            mSearcher=new DeviceSearcher(mPort) {
                 @Override
                 public void onSearchStart() {
 
