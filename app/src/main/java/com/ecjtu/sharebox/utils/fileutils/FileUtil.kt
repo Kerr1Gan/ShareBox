@@ -286,7 +286,7 @@ object FileUtil {
         UNKNOWN
     }
 
-    val TX_PATH= arrayOf("/tencent/MicroMsg/","/tencent/MobileQQ/")
+    val TX_PATH= arrayOf("/tencent/MicroMsg","/tencent/MobileQQ")
 
     fun foldFiles(input: MutableList<File>?, output: LinkedHashMap<String, MutableList<File>>): LinkedHashMap<String, MutableList<File>>? {
         if (input == null || input.size == 0) return null
