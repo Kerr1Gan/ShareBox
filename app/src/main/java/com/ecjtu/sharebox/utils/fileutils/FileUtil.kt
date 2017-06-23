@@ -11,6 +11,7 @@ import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.util.ArrayList
+import java.util.LinkedHashMap
 
 
 /**
@@ -283,6 +284,49 @@ object FileUtil {
         RAR,
         DOC,
         UNKNOWN
+    }
+
+    val TX_PATH= arrayOf("/tencent/MicroMsg/","/tencent/MobileQQ/")
+
+    fun foldFiles(input: MutableList<File>?, output: LinkedHashMap<String, MutableList<File>>): LinkedHashMap<String, MutableList<File>>? {
+        if (input == null || input.size == 0) return null
+        val prefix = ArrayList<String>()
+        output.put(TX_PATH[0], arrayListOf<File>())
+        output.put(TX_PATH[1], arrayListOf<File>())
+        for (f in input) {
+            if (Thread.interrupted())
+                return output
+            val root = f.parent
+
+            var list: MutableList<File>? = output[root]
+            if (list != null) {
+                list.add(f)
+            } else {
+                list = ArrayList<File>()
+                list.add(f)
+                output.put(root, list)
+            }
+
+            if (prefix.indexOf(root) < 0)
+                prefix.add(root)
+
+            for (pre in prefix) {
+                if (Thread.interrupted()) return output
+                if (root.startsWith(pre)) {
+                    val lst = output[pre]
+                    if (lst?.indexOf(f) ?:0 < 0)
+                        lst?.add(f)
+                }
+
+                if(root.contains(TX_PATH[0]) || root.contains(TX_PATH[1])){
+                    val lst = output[if(root.contains(TX_PATH[0])) TX_PATH[0] else TX_PATH[1]]
+                    if (lst?.indexOf(f) ?:0 < 0)
+                        lst?.add(f)
+                }
+            }
+
+        }
+        return output
     }
 }
 

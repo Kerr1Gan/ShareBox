@@ -29,6 +29,8 @@ import com.ecjtu.sharebox.utils.fileutils.FileOpenIntentUtil;
 import com.ecjtu.sharebox.utils.fileutils.FileUtil;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import kotlin.jvm.functions.Function1;
@@ -65,16 +67,28 @@ public class FileExpandableListView extends ExpandableListView implements View.O
         }
     };
 
+    private List<VH> mVHList=new ArrayList<>();
+
+    private Worker mWorker=null;
+
     public void initData(FilePickDialog.TabItemHolder holder){
         mTabHolder=holder;
         mFileList=mTabHolder.getFileList();
         setAdapter(mAdapter);
         setGroupIndicator(null);
+        if(mWorker==null){
+            mWorker=new Worker();
+            mWorker.start();
+        }
     }
 
     public void loadedData(){
         mFileList=mTabHolder.getFileList();
-        ((BaseExpandableListAdapter)getExpandableListAdapter()).notifyDataSetInvalidated();
+        ((BaseExpandableListAdapter)getExpandableListAdapter()).notifyDataSetChanged();
+        if(mWorker==null){
+            mWorker=new Worker();
+            mWorker.start();
+        }
     }
 
     @Override
@@ -137,6 +151,10 @@ public class FileExpandableListView extends ExpandableListView implements View.O
 //            return false;
 //        }
 //    }
+
+    public void onFoldFiles(LinkedHashMap<String,List<File>> foldFiles){
+
+    }
 
 
     public class ExpandableAdapter extends BaseExpandableListAdapter{
@@ -222,7 +240,35 @@ public class FileExpandableListView extends ExpandableListView implements View.O
         public boolean isChildSelectable(int groupPosition, int childPosition) {
             return true;
         }
-
-
     }
+
+
+    public static class VH{
+
+        public List<File> childList;
+
+        public File group;
+
+        public VH(File group,List<File> childList){
+            this.group=group;
+            this.childList=childList;
+        }
+    }
+
+    class Worker extends Thread{
+
+        @Override
+        public void run() {
+
+            final LinkedHashMap<String,List<File>> res=FileUtil.INSTANCE.foldFiles(mFileList,new LinkedHashMap<String, List<File>>());
+            FileExpandableListView.this.post(new Runnable() {
+                @Override
+                public void run() {
+                    onFoldFiles(res);
+                }
+            });
+            mWorker=null;
+        }
+    }
+
 }
