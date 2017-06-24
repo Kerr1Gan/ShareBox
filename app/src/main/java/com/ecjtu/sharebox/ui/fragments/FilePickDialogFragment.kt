@@ -9,11 +9,15 @@ import com.ecjtu.sharebox.ui.dialog.FilePickDialog
 /**
  * Created by KerriGan on 2017/6/11.
  */
-class FilePickDialogFragment(activity:AppCompatActivity) : AppCompatDialogFragment() {
+class FilePickDialogFragment : AppCompatDialogFragment{
 
     private var mActivity:AppCompatActivity?=null
 
-    init {
+    constructor():super(){
+
+    }
+
+    constructor(activity: AppCompatActivity):super(){
         mActivity=activity
     }
 

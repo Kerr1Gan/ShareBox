@@ -131,43 +131,8 @@ public class FileExpandableListView extends ExpandableListView implements View.O
 
 
     public void onFoldFiles(LinkedHashMap<String,List<File>> foldFiles,String[] names){
-        List<List<File>> list=new ArrayList<>();
-        List<String> prefix=new ArrayList<>();
 
 
-
-//        List<File>[] col= foldFiles.values().toArray(new List[0]);
-//        list.add(col[0]);
-//        list.add(col[1]);
-//
-//        prefix.add(col[0].get(0).getParent());
-//        prefix.add(col[1].get(0).getParent());
-//
-//        //sort
-//        for(int i=2;i<col.length;i++){
-//            for(int j=i+1;j<col.length;j++){
-//                List<File> first=col[i];
-//                List<File> last=col[j];
-//                if(first.get(0).getParent().length()<last.get(0).getParent().length()){
-//                    List<File> tmp=first;
-//                    col[i]=last;
-//                    col[j]=tmp;
-//                }
-//            }
-//        }
-//
-//        for(int i=2;i<col.length;i++){
-//            List<File> obj=col[i];
-//            String name=obj.get(0).getParent();
-//            for(String str:prefix){
-//                if(!name.startsWith(str)){
-//                    list.add(obj);
-//                }
-//            }
-//            if(prefix.indexOf(name)<0){
-//                prefix.add(name);
-//            }
-//        }
         int x=0;
         x++;
     }
@@ -276,21 +241,9 @@ public class FileExpandableListView extends ExpandableListView implements View.O
         @Override
         public void run() {
 
-            final LinkedHashMap<String,List<File>> res=FileUtil.INSTANCE.foldFiles(mFileList,new LinkedHashMap<String, List<File>>());
-            Set<String> set=res.keySet();
-            final String[] names=set.toArray(new String[0]);
+            final LinkedHashMap<String,List<File>> res=new LinkedHashMap<>();
+            final String[] names=FileUtil.INSTANCE.foldFiles(mFileList,res);
 
-            for(int i=0;i<names.length;i++){
-                for(int j=i+1;j<names.length;j++){
-                    int sizeF=sizeOfChar(names[i],'/');
-                    int sizeL=sizeOfChar(names[j], '/');
-                    if(sizeF>sizeL){
-                        String tmp=names[i];
-                        names[i]=names[j];
-                        names[j]=tmp;
-                    }
-                }
-            }
 
             FileExpandableListView.this.post(new Runnable() {
                 @Override
@@ -299,16 +252,6 @@ public class FileExpandableListView extends ExpandableListView implements View.O
                 }
             });
             mWorker=null;
-        }
-
-        public int sizeOfChar(String str,char c){
-            int count=0;
-            for(int i=0;i<str.length();i++){
-                if(str.charAt(i)==c){
-                    count++;
-                }
-            }
-            return count;
         }
     }
 

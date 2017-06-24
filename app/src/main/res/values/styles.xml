@@ -75,4 +75,8 @@
         <item name="actionMenuTextColor">@android:color/white</item>
         <item name="colorControlHighlight">@android:color/white</item>
     </style>
+    
+    <style name="WhiteProgressBar" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminateTint">@android:color/white</item>
+    </style>
 </resources>

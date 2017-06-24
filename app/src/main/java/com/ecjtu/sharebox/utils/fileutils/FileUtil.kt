@@ -10,8 +10,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.io.IOException
-import java.util.ArrayList
-import java.util.LinkedHashMap
+import java.util.*
 
 
 /**
@@ -288,30 +287,34 @@ object FileUtil {
 
     val TX_PATH= arrayOf("/tencent/MicroMsg","/tencent/MobileQQ")
 
-    fun foldFiles(input: MutableList<File>?, output: LinkedHashMap<String, MutableList<File>>): LinkedHashMap<String, MutableList<File>>? {
+    fun foldFiles(input: MutableList<File>?, output: LinkedHashMap<String, MutableList<File>>): Array<String>? {
         if (input == null || input.size == 0) return null
         val prefix = ArrayList<String>()
         output.put(TX_PATH[0], arrayListOf<File>())
         output.put(TX_PATH[1], arrayListOf<File>())
+
+        for(f in input){
+            var root=f.parent
+
+            if (prefix.indexOf(root) < 0){
+                prefix.add(root)
+                var list = ArrayList<File>()
+                output.put(root,list)
+            }
+
+        }
+
         for (f in input) {
             if (Thread.interrupted())
-                return output
+                return null
             val root = f.parent
 
             var list: MutableList<File>? = output[root]
-            if (list != null) {
-                list.add(f)
-            } else {
-                list = ArrayList<File>()
-                list.add(f)
-                output.put(root, list)
-            }
 
-            if (prefix.indexOf(root) < 0)
-                prefix.add(root)
+            list?.add(f)
 
             for (pre in prefix) {
-                if (Thread.interrupted()) return output
+                if (Thread.interrupted()) return null
                 if (root.startsWith(pre)) {
                     val lst = output[pre]
                     if (lst?.indexOf(f) ?:0 < 0)
@@ -326,7 +329,34 @@ object FileUtil {
             }
 
         }
-        return output
+
+        //sort paths
+
+        val set = output.keys
+        val names = set.toTypedArray()
+
+        for (i in names.indices) {
+            for (j in i + 1..names.size - 1) {
+                val sizeF = sizeOfChar(names[i], '/')
+                val sizeL = sizeOfChar(names[j], '/')
+                if (sizeF > sizeL) {
+                    val tmp = names[i]
+                    names[i] = names[j]
+                    names[j] = tmp
+                }
+            }
+        }
+        return names
+    }
+
+    fun sizeOfChar(str: String, c: Char): Int {
+        var count = 0
+        for (i in 0..str.length - 1) {
+            if (str[i] == c) {
+                count++
+            }
+        }
+        return count
     }
 }
 
