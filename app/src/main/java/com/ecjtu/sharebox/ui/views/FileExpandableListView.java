@@ -94,6 +94,13 @@ public class FileExpandableListView extends ExpandableListView implements View.O
 
     @Override
     public void onClick(View v) {
+        VH vh= (VH) v.getTag();
+        int position=mVHList.indexOf(vh);
+        boolean isExpand=isGroupExpanded(position);
+        if(isExpand)
+            collapseGroup(position);
+        else
+            expandGroup(position,true);
 
     }
 
@@ -131,10 +138,14 @@ public class FileExpandableListView extends ExpandableListView implements View.O
 
 
     public void onFoldFiles(LinkedHashMap<String,List<File>> foldFiles,String[] names){
+        mVHList.clear();
 
+        for(String name:names){
+            VH vh=new VH(new File(name),foldFiles.get(name));
+            mVHList.add(vh);
+        }
 
-        int x=0;
-        x++;
+        mAdapter.notifyDataSetChanged();
     }
 
 
@@ -142,23 +153,22 @@ public class FileExpandableListView extends ExpandableListView implements View.O
 
         @Override
         public int getGroupCount() {
-            if(mFileList==null) return 0;
-            return mFileList.size();
+            return mVHList.size();
         }
 
         @Override
         public int getChildrenCount(int groupPosition) {
-            return 0;
+            return mVHList.get(groupPosition).childList.size();
         }
 
         @Override
         public Object getGroup(int groupPosition) {
-            return mFileList.get(groupPosition);
+            return mVHList.get(groupPosition);
         }
 
         @Override
         public Object getChild(int groupPosition, int childPosition) {
-            return null;
+            return mVHList.get(groupPosition).childList.get(childPosition);
         }
 
         @Override
@@ -178,7 +188,46 @@ public class FileExpandableListView extends ExpandableListView implements View.O
 
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-            File f= (File) getGroup(groupPosition);
+            VH vh= (VH) getGroup(groupPosition);
+            File f= (File) vh.group;
+            File thumb=null;
+            if(vh.childList.size()!=0)
+                thumb=vh.childList.get(0);
+            if(convertView==null)
+                convertView=LayoutInflater.from(getContext()).inflate(R.layout.layout_file_item,parent,false);
+
+            ((TextView)convertView.findViewById(R.id.text_name)).setText(f.getName());
+            FileUtil.MediaFileType type=mTabHolder.getType();
+
+            ImageView icon=(ImageView) convertView.findViewById(R.id.icon);
+            icon.setImageDrawable(null);
+            if(type == FileUtil.MediaFileType.MOVIE ||
+                    type== FileUtil.MediaFileType.IMG){
+                Glide.with(getContext()).load(thumb.getAbsolutePath()).into(icon);
+            }else if(type== FileUtil.MediaFileType.APP){
+                Bitmap b= sLruCache.get(thumb.getAbsolutePath());
+                if(b==null){
+                    AppThumbTask task= new AppThumbTask(sLruCache,getContext(),icon);
+                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,thumb);
+                }else
+                    icon.setImageBitmap(b);
+            }else if(type== FileUtil.MediaFileType.MP3){
+                icon.setImageResource(R.mipmap.music);
+            }else if(type== FileUtil.MediaFileType.DOC){
+                icon.setImageResource(R.mipmap.document);
+            }else if(type== FileUtil.MediaFileType.RAR){
+                icon.setImageResource(R.mipmap.rar);
+            }
+
+            convertView.setTag(getGroup(groupPosition));
+            convertView.setOnClickListener(FileExpandableListView.this);
+            convertView.setOnLongClickListener(FileExpandableListView.this);
+            return convertView;
+        }
+
+        @Override
+        public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+            File f= (File) getChild(groupPosition,childPosition);
 
             if(convertView==null)
                 convertView=LayoutInflater.from(getContext()).inflate(R.layout.layout_file_item,parent,false);
@@ -213,11 +262,6 @@ public class FileExpandableListView extends ExpandableListView implements View.O
         }
 
         @Override
-        public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-            return null;
-        }
-
-        @Override
         public boolean isChildSelectable(int groupPosition, int childPosition) {
             return true;
         }
@@ -242,7 +286,11 @@ public class FileExpandableListView extends ExpandableListView implements View.O
         public void run() {
 
             final LinkedHashMap<String,List<File>> res=new LinkedHashMap<>();
-            final String[] names=FileUtil.INSTANCE.foldFiles(mFileList,res);
+            boolean isFast=false;
+            if(mTabHolder.getType()== FileUtil.MediaFileType.IMG){
+                isFast=true;
+            }
+            final String[] names=FileUtil.INSTANCE.foldFiles(mFileList,res,isFast);
 
 
             FileExpandableListView.this.post(new Runnable() {

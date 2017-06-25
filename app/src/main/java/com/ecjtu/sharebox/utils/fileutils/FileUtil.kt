@@ -287,7 +287,7 @@ object FileUtil {
 
     val TX_PATH= arrayOf("/tencent/MicroMsg","/tencent/MobileQQ")
 
-    fun foldFiles(input: MutableList<File>?, output: LinkedHashMap<String, MutableList<File>>): Array<String>? {
+    fun foldFiles(input: MutableList<File>?, output: LinkedHashMap<String, MutableList<File>>,isFast:Boolean=false): Array<String>? {
         if (input == null || input.size == 0) return null
         val prefix = ArrayList<String>()
         output.put(TX_PATH[0], arrayListOf<File>())
@@ -313,14 +313,22 @@ object FileUtil {
 
             list?.add(f)
 
-            for (pre in prefix) {
-                if (Thread.interrupted()) return null
-                if (root.startsWith(pre)) {
-                    val lst = output[pre]
-                    if (lst?.indexOf(f) ?:0 < 0)
-                        lst?.add(f)
-                }
+            if(!isFast){
+                for (pre in prefix) {
+                    if (Thread.interrupted()) return null
+                    if (root.startsWith(pre)) {
+                        val lst = output[pre]
+                        if (lst?.indexOf(f) ?:0 < 0)
+                            lst?.add(f)
+                    }
 
+                    if(root.contains(TX_PATH[0]) || root.contains(TX_PATH[1])){
+                        val lst = output[if(root.contains(TX_PATH[0])) TX_PATH[0] else TX_PATH[1]]
+                        if (lst?.indexOf(f) ?:0 < 0)
+                            lst?.add(f)
+                    }
+                }
+            }else{
                 if(root.contains(TX_PATH[0]) || root.contains(TX_PATH[1])){
                     val lst = output[if(root.contains(TX_PATH[0])) TX_PATH[0] else TX_PATH[1]]
                     if (lst?.indexOf(f) ?:0 < 0)
@@ -330,22 +338,32 @@ object FileUtil {
 
         }
 
-        //sort paths
+        if(output.get(TX_PATH[0])?.size==0){
+            output.remove(TX_PATH[0])
+        }
 
+        if(output.get(TX_PATH[1])?.size==0){
+            output.remove(TX_PATH[1])
+        }
+
+        //sort paths
         val set = output.keys
         val names = set.toTypedArray()
 
-        for (i in names.indices) {
-            for (j in i + 1..names.size - 1) {
-                val sizeF = sizeOfChar(names[i], '/')
-                val sizeL = sizeOfChar(names[j], '/')
-                if (sizeF > sizeL) {
-                    val tmp = names[i]
-                    names[i] = names[j]
-                    names[j] = tmp
+        if(!isFast){
+            for (i in names.indices) {
+                for (j in i + 1..names.size - 1) {
+                    val sizeF = sizeOfChar(names[i], '/')
+                    val sizeL = sizeOfChar(names[j], '/')
+                    if (sizeF > sizeL) {
+                        val tmp = names[i]
+                        names[i] = names[j]
+                        names[j] = tmp
+                    }
                 }
             }
         }
+
         return names
     }
 

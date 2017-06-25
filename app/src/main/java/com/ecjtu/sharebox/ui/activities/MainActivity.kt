@@ -24,7 +24,7 @@ import android.os.Build
 
 
 //http://www.tmtpost.com/195557.html 17.6.7
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActionActivity() {
 
     private var mDelegate : MainActivityDelegate? =null
 

@@ -21,7 +21,8 @@
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             style="@style/WhiteProgressBar"
-            android:layout_gravity="right"/>
+            android:layout_gravity="right"
+            android:id="@+id/progress_bar"/>
 
     </android.support.v7.widget.Toolbar>
 

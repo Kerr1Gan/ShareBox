@@ -292,7 +292,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
                             mClientSet.add(obj)
                         }
                     }
-                    Log.e("tttttt",mClientSet.toString())
+//                    Log.e("tttttt",mClientSet.toString())
                     if(owner.refreshing){
                         handler.obtainMessage(DiscoverHelper.MSG_START_FIND_DEVICE).sendToTarget()
                     }
@@ -303,7 +303,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
                             mServerSet.add(obj)
                         }
                     }
-                    Log.e("tttttt",mServerSet.toString())
+//                    Log.e("tttttt",mServerSet.toString())
                     if(owner.refreshing){
                         handler.obtainMessage(DiscoverHelper.MSG_START_BEING_SEARCHED).sendToTarget()
                     }
