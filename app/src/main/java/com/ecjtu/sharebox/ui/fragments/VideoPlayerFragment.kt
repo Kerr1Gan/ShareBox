@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
+import android.view.Surface
 import android.view.View
 import android.view.ViewGroup
 import com.ecjtu.sharebox.R
@@ -29,6 +30,9 @@ class VideoPlayerFragment:Fragment(){
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        initOrientation()
+
         var videoView=view?.findViewById(R.id.video_view) as VideoView
         var bundle=arguments
         if(bundle!=null){
@@ -38,16 +42,18 @@ class VideoPlayerFragment:Fragment(){
             videoView.setOnPreparedListener { mediaPlayer->
                 var width=mediaPlayer.videoWidth
                 var height=mediaPlayer.videoHeight
-
+                var rotation=activity.getWindowManager().getDefaultDisplay().getRotation()
                 if(width>height){
                     //横屏
-                    if(activity.requestedOrientation!=ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE){
+                    if(rotation!=Surface.ROTATION_90&&rotation!=Surface.ROTATION_270
+                            &&activity.requestedOrientation!=ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE){
                         activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
                         videoView.stopPlayback()
                     }
                 }else{
                     //竖屏
-                    if(activity.requestedOrientation!=ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
+                    if(rotation!=Surface.ROTATION_0&&rotation!=Surface.ROTATION_180
+                            &&activity.requestedOrientation!=ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
                         activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
                         videoView.stopPlayback()
                     }
@@ -63,5 +69,30 @@ class VideoPlayerFragment:Fragment(){
         activity.finish()
     }
 
-
+    fun initOrientation(): Boolean{
+//        var rotation=activity.getWindowManager().getDefaultDisplay().getRotation()
+//        if (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270) {
+//            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+//            return true
+//        }
+//        //竖屏
+//        if (rotation == Surface.ROTATION_0 && rotation == Surface.ROTATION_180) {
+//            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+//            return true
+//        }
+        if(activity.requestedOrientation==ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED){
+            var rotation=activity.getWindowManager().getDefaultDisplay().getRotation()
+            if (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270) {
+                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+                return true
+            }
+            //竖屏
+            if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180) {
+                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+                return true
+            }
+        }
+//            activity.requestedOrientation=ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        return false
+    }
 }
