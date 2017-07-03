@@ -64,4 +64,12 @@
 
         <item name="colorControlHighlight">@android:color/white</item>
     </style>
+
+    <style name="CheckBoxStyle" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <!--波纹的颜色-->
+        <item name="android:colorControlHighlight">@color/colorPrimary</item>
+        <!--选中的颜色-->
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="colorControlHighlight">@color/colorPrimary</item>
+    </style>
 </resources>

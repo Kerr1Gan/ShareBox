@@ -3,6 +3,8 @@ package com.ecjtu.sharebox.ui.view;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.AttributeSet;
@@ -11,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.CheckBox;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -71,8 +74,13 @@ public class FileExpandableListView extends ExpandableListView implements View.O
     public void initData(FilePickDialog.TabItemHolder holder){
         mTabHolder=holder;
         mFileList=mTabHolder.getFileList();
-        setAdapter(mAdapter);
+
         setGroupIndicator(null);
+        setDivider(new ColorDrawable(Color.TRANSPARENT));
+        setChildDivider(new ColorDrawable(Color.DKGRAY));
+        setDividerHeight(1);
+
+        setAdapter(mAdapter);
     }
 
     public void loadedData(){
@@ -86,14 +94,21 @@ public class FileExpandableListView extends ExpandableListView implements View.O
 
     @Override
     public void onClick(View v) {
-        VH vh= (VH) v.getTag();
-        int position=mVHList.indexOf(vh);
-        boolean isExpand=isGroupExpanded(position);
-        if(isExpand)
-            collapseGroup(position);
-        else
-            expandGroup(position,true);
+        if (!(v.getTag() instanceof VH)) return;
+        VH vh = (VH) v.getTag();
+        int position = mVHList.indexOf(vh);
+        int id=v.getId();
 
+        if(id==R.id.select_all){
+            vh.isActivated=!vh.isActivated;
+            mAdapter.notifyDataSetChanged();
+        }else{
+            boolean isExpand = isGroupExpanded(position);
+            if (isExpand)
+                collapseGroup(position);
+            else
+                expandGroup(position, true);
+        }
     }
 
     @Override
@@ -186,7 +201,7 @@ public class FileExpandableListView extends ExpandableListView implements View.O
             if(vh.childList.size()!=0)
                 thumb=vh.childList.get(0);
             if(convertView==null)
-                convertView=LayoutInflater.from(getContext()).inflate(R.layout.layout_file_item,parent,false);
+                convertView=LayoutInflater.from(getContext()).inflate(R.layout.layout_file_group_item,parent,false);
 
             ((TextView)convertView.findViewById(R.id.text_name)).setText(f.getName());
             FileUtil.MediaFileType type=mTabHolder.getType();
@@ -211,8 +226,16 @@ public class FileExpandableListView extends ExpandableListView implements View.O
                 icon.setImageResource(R.mipmap.rar);
             }
 
+            View child=convertView.findViewById(R.id.select_all);
+            child.setActivated(vh.isActivated);
+
+            TextView fileCount= (TextView) convertView.findViewById(R.id.file_count);
+            fileCount.setText(""+vh.childList.size());
+
             convertView.setTag(getGroup(groupPosition));
+            child.setTag(getGroup(groupPosition));
             convertView.setOnClickListener(FileExpandableListView.this);
+            child.setOnClickListener(FileExpandableListView.this);
             convertView.setOnLongClickListener(FileExpandableListView.this);
             return convertView;
         }
@@ -220,7 +243,7 @@ public class FileExpandableListView extends ExpandableListView implements View.O
         @Override
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
             File f= (File) getChild(groupPosition,childPosition);
-
+            VH vh= (VH) getGroup(groupPosition);
             if(convertView==null)
                 convertView=LayoutInflater.from(getContext()).inflate(R.layout.layout_file_item,parent,false);
 
@@ -247,6 +270,10 @@ public class FileExpandableListView extends ExpandableListView implements View.O
                 icon.setImageResource(R.mipmap.rar);
             }
 
+
+            CheckBox check= (CheckBox) convertView.findViewById(R.id.check_box);
+            check.setChecked(vh.isActivated);
+
             convertView.setTag(f);
             convertView.setOnClickListener(FileExpandableListView.this);
             convertView.setOnLongClickListener(FileExpandableListView.this);
@@ -265,6 +292,8 @@ public class FileExpandableListView extends ExpandableListView implements View.O
         public List<File> childList;
 
         public File group;
+
+        public boolean isActivated=false;
 
         public VH(File group,List<File> childList){
             this.group=group;
