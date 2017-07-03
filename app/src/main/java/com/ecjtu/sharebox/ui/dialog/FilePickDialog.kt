@@ -14,8 +14,8 @@ import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
 import android.util.Log
 import android.widget.ProgressBar
-import com.ecjtu.sharebox.ui.views.FileExpandableListView
-import com.ecjtu.sharebox.utils.fileutils.FileUtil
+import com.ecjtu.sharebox.ui.view.FileExpandableListView
+import com.ecjtu.sharebox.util.fileutils.FileUtil
 import java.io.File
 
 

@@ -1,4 +1,4 @@
-package org.ecjtu.channellibrary.wifiutils;
+package org.ecjtu.channellibrary.wifiutil;
 
 /**
  * Created by 联想 on 2016/4/4.

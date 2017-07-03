@@ -1,19 +1,15 @@
-package com.ecjtu.sharebox.ui.views;
+package com.ecjtu.sharebox.ui.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
@@ -22,21 +18,17 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.ecjtu.sharebox.R;
 import com.ecjtu.sharebox.async.AppThumbTask;
-import com.ecjtu.sharebox.ui.activities.BaseFragmentActivity;
+import com.ecjtu.sharebox.ui.activity.BaseFragmentActivity;
 import com.ecjtu.sharebox.ui.dialog.FileItemLongClickDialog;
 import com.ecjtu.sharebox.ui.dialog.FilePickDialog;
-import com.ecjtu.sharebox.ui.fragments.VideoPlayerFragment;
-import com.ecjtu.sharebox.utils.fileutils.FileOpenIntentUtil;
-import com.ecjtu.sharebox.utils.fileutils.FileUtil;
+import com.ecjtu.sharebox.ui.fragment.VideoPlayerFragment;
+import com.ecjtu.sharebox.util.fileutils.FileOpenIntentUtil;
+import com.ecjtu.sharebox.util.fileutils.FileUtil;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Set;
 
 import kotlin.jvm.functions.Function1;
 

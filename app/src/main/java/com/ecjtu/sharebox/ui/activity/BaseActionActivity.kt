@@ -1,16 +1,20 @@
-package com.ecjtu.sharebox.ui.activities
+package com.ecjtu.sharebox.ui.activity
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Handler
+import android.os.Message
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatActivity
+import com.ecjtu.sharebox.async.MemoryUnLeakHandler
+import java.lang.ref.WeakReference
 
 /**
  * Created by KeriGan on 2017/6/25.
  */
-abstract class BaseActionActivity:AppCompatActivity{
+abstract class BaseActionActivity:AppCompatActivity,MemoryUnLeakHandler.IHandleMessage{
 
     private var mLocalBroadcastManger:LocalBroadcastManager? =null
 
@@ -18,11 +22,14 @@ abstract class BaseActionActivity:AppCompatActivity{
 
     private var mBroadcastReceiver: SimpleReceiver? =null
 
+    private var mSimpleHandler:SimpleHandler? =null
     constructor():super(){
         mLocalBroadcastManger= LocalBroadcastManager.getInstance(this)
         mIntentFilter= IntentFilter()
         mBroadcastReceiver=SimpleReceiver()
         registerActions(mIntentFilter)
+
+        mSimpleHandler= SimpleHandler(this)
     }
 
 
@@ -69,5 +76,17 @@ abstract class BaseActionActivity:AppCompatActivity{
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    fun getHandler():Handler?{
+        return mSimpleHandler
+    }
+
+    override fun handleMessage(msg: Message) {
+        //do nothing
+    }
+
+    class SimpleHandler(host:BaseActionActivity):
+            MemoryUnLeakHandler<BaseActionActivity>(host){
     }
 }

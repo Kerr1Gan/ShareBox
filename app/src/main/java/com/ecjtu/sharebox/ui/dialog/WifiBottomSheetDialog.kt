@@ -20,9 +20,9 @@ import android.widget.TextView
 import android.widget.Toast
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
-import com.ecjtu.sharebox.ui.views.CircleProgressView
-import org.ecjtu.channellibrary.wifiutils.NetworkUtil
-import org.ecjtu.channellibrary.wifiutils.WifiUtil
+import com.ecjtu.sharebox.ui.view.CircleProgressView
+import org.ecjtu.channellibrary.wifiutil.NetworkUtil
+import org.ecjtu.channellibrary.wifiutil.WifiUtil
 
 /**
  * Created by KerriGan on 2017/6/2.

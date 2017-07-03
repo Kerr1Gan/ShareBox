@@ -4,8 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
-import org.ecjtu.channellibrary.wifidirect.WifiDirectManager;
-import org.ecjtu.channellibrary.wifiutils.NetworkUtil;
+import org.ecjtu.channellibrary.wifiutil.NetworkUtil;
 
 import java.lang.ref.WeakReference;
 import java.net.InetSocketAddress;

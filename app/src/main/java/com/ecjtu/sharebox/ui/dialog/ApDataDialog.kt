@@ -8,14 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.ecjtu.sharebox.R
-import com.ecjtu.sharebox.utils.qrimage.QrUtils
+import com.ecjtu.sharebox.util.qrimage.QrUtils
 import kotlin.concurrent.thread
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.ColorMatrix
 import android.widget.TextView
 import org.ecjtu.channellibrary.wifidirect.WifiDirectManager
-import org.ecjtu.channellibrary.wifiutils.NetworkUtil
-import org.ecjtu.channellibrary.wifiutils.WifiUtil
+import org.ecjtu.channellibrary.wifiutil.NetworkUtil
+import org.ecjtu.channellibrary.wifiutil.WifiUtil
 
 
 /**

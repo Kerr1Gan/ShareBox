@@ -1,4 +1,4 @@
-package org.ecjtu.channellibrary.wifiutils;
+package org.ecjtu.channellibrary.wifiutil;
 
 import android.content.Context;
 import android.content.Intent;

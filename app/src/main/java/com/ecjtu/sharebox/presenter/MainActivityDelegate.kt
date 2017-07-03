@@ -27,15 +27,15 @@ import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.domain.PreferenceInfo
 import com.ecjtu.sharebox.getMainApplication
-import com.ecjtu.sharebox.ui.activities.MainActivity
+import com.ecjtu.sharebox.ui.activity.MainActivity
 import com.ecjtu.sharebox.ui.dialog.WifiBottomSheetDialog
-import org.ecjtu.channellibrary.wifiutils.NetworkUtil
+import org.ecjtu.channellibrary.wifiutil.NetworkUtil
 import com.ecjtu.sharebox.ui.dialog.ApDataDialog
 import com.ecjtu.sharebox.ui.dialog.EditNameDialog
-import com.ecjtu.sharebox.ui.fragments.FilePickDialogFragment
+import com.ecjtu.sharebox.ui.fragment.FilePickDialogFragment
 import org.ecjtu.channellibrary.devicesearch.DeviceSearcher
 import org.ecjtu.channellibrary.devicesearch.DiscoverHelper
-import org.ecjtu.channellibrary.wifiutils.WifiUtil
+import org.ecjtu.channellibrary.wifiutil.WifiUtil
 import java.lang.Exception
 
 
@@ -68,6 +68,8 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
             Manifest.permission.ACCESS_NETWORK_STATE,
             Manifest.permission.CHANGE_WIFI_STATE)
 
+    private var mRecyclerView:RecyclerView? =null
+
     init {
         mToolbar = findViewById(R.id.toolbar) as Toolbar
         mDrawerLayout = findViewById(R.id.drawer_layout) as DrawerLayout
@@ -91,9 +93,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
         mViewSwitcher?.addView(view1)
 
         view0.findViewById(R.id.button_help).setOnClickListener {
-//            FilePickDialog(owner,owner).show()  not suitable for fragment
-//            var dlg=FilePickDialogFragment(owner)
-//            dlg.show(owner.supportFragmentManager,"FilePickDialogFragment")
+
         }
 
         mWifiButton=findViewById(R.id.btn_wifi) as Button
@@ -126,8 +126,8 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
 
         mApName=findViewById(R.id.ap_name) as TextView
 
-        var recycler=view1 as RecyclerView
-        recycler.adapter=object : RecyclerView.Adapter<Holder>(){
+        mRecyclerView=view1 as RecyclerView
+        mRecyclerView?.adapter=object : RecyclerView.Adapter<Holder>(){
 
             override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): Holder {
                 return Holder(Button(owner))
@@ -142,7 +142,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
 
         }
         var manager: LinearLayoutManager = LinearLayoutManager(owner, LinearLayoutManager.VERTICAL,false)
-        recycler.layoutManager=manager
+        mRecyclerView?.layoutManager=manager
 
         mWifiImage=findViewById(R.id.image_wifi) as ImageView
 
@@ -189,8 +189,16 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
 
         when(item?.getItemId()){
             R.id.qr_code ->{
-                var dialog=ApDataDialog(owner,owner)
-                dialog.show()
+
+                var map=owner.getMainApplication().getSavedStateInstance()
+                var state=map.get(Constants.AP_STATE)
+
+                if(state==Constants.NetWorkState.MOBILE||state==Constants.NetWorkState.NONE){
+                    Toast.makeText(owner,"需要连接WIFI或者开启热点",Toast.LENGTH_SHORT).show()
+                }else{
+                    var dialog=ApDataDialog(owner,owner)
+                    dialog.show()
+                }
                 return true
             }
             R.id.refresh ->{

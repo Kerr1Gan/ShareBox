@@ -1,4 +1,4 @@
-package com.ecjtu.sharebox.utils.fileutils
+package com.ecjtu.sharebox.util.fileutils
 
 import android.content.Intent
 import android.net.Uri

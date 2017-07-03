@@ -1,4 +1,4 @@
-package com.ecjtu.sharebox.ui.fragments
+package com.ecjtu.sharebox.ui.fragment
 
 import android.content.pm.ActivityInfo
 import android.media.MediaPlayer

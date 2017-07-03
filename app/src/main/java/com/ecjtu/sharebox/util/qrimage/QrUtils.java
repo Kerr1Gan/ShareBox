@@ -1,4 +1,4 @@
-package com.ecjtu.sharebox.utils.qrimage;
+package com.ecjtu.sharebox.util.qrimage;
 
 import android.graphics.Bitmap;
 

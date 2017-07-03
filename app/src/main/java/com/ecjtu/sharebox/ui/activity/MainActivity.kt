@@ -1,4 +1,4 @@
-package com.ecjtu.sharebox.ui.activities
+package com.ecjtu.sharebox.ui.activity
 
 import android.animation.ObjectAnimator
 import android.content.BroadcastReceiver

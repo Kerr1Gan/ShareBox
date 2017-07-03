@@ -1,4 +1,4 @@
-package com.ecjtu.sharebox.utils.fileutils
+package com.ecjtu.sharebox.util.fileutils
 
 import android.content.Context
 import android.content.pm.PackageManager

@@ -1,4 +1,4 @@
-package com.ecjtu.sharebox.ui.activities
+package com.ecjtu.sharebox.ui.activity
 
 import android.os.Bundle
 import android.support.design.widget.TabLayout
@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import com.ecjtu.sharebox.R
-import com.ecjtu.sharebox.ui.fragments.PageFragment
+import com.ecjtu.sharebox.ui.fragment.PageFragment
 
 /**
  * Created by KerriGan on 2017/6/11.

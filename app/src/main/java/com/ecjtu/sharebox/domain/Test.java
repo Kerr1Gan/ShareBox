@@ -48,6 +48,14 @@ public class Test {
         }
     }
 
+    public <T extends String> void  addAll(T param){
+
+    }
+
+    public <T> void  addAll2(T param){
+
+    }
+
     public Test(int x,int y,int z){
 
     }

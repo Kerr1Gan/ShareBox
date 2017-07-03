@@ -1,4 +1,4 @@
-package com.ecjtu.sharebox.ui.fragments
+package com.ecjtu.sharebox.ui.fragment
 
 import android.app.Dialog
 import android.os.Bundle
