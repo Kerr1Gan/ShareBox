@@ -145,6 +145,8 @@ public class FileExpandableListView extends ExpandableListView implements View.O
 
 
     public void onFoldFiles(LinkedHashMap<String,List<File>> foldFiles,String[] names){
+        if(names==null) return;
+
         mVHList.clear();
 
         for(String name:names){
