@@ -13,7 +13,9 @@
         android:background="@color/colorPrimary"
         app:navigationIcon="?android:attr/homeAsUpIndicator"
         app:title="选择文件"
-        app:titleTextColor="@android:color/white">
+        app:titleTextColor="@android:color/white"
+        app:contentInsetStartWithNavigation="0dp"
+        app:contentInsetStart="0dp">
 
         <ProgressBar
             android:layout_width="wrap_content"
