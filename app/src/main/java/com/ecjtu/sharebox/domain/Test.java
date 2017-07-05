@@ -76,7 +76,7 @@ public class Test {
             super(x);
             for(int i=0;i<1000;i++){
 
-            }
+        }
         }
 
         public Test2(int x,int y,int z){
