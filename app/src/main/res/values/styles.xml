@@ -15,7 +15,6 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-
     </style>
 
     <style name="AppTheme.DrawerArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
@@ -25,7 +24,7 @@
     <style name="CustomToolBar" parent="Widget.AppCompat.Toolbar">
         <item name="android:contentInsetStart" tools:targetApi="lollipop">0dp</item>
         <item name="android:contentInsetEnd" tools:targetApi="lollipop">0dp</item>
-        <item name="android:colorControlNormal">?attr/colorPrimary</item>//修改后退箭头颜色
+        <item name="android:colorControlNormal" tools:targetApi="lollipop">?attr/colorPrimary</item>//修改后退箭头颜色
         <item name="android:textColor">@android:color/white</item>
         <item name="android:actionMenuTextColor">@android:color/white</item>
 
@@ -38,7 +37,7 @@
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:background">@color/colorPrimary</item>
 
-        <item name="android:colorControlNormal">@android:color/white</item>//up v21
+        <item name="android:colorControlNormal" tools:targetApi="lollipop">@android:color/white</item>//up v21
         <item name="colorControlNormal">@android:color/white</item>//below v21
     </style>
 
@@ -70,9 +69,22 @@
     </style>
 
     <style name="WhiteToolbar" parent="Base.Widget.AppCompat.Light.ActionBar">
-        <item name="android:colorControlNormal">@android:color/white</item>
+        <item name="android:colorControlNormal" tools:targetApi="lollipop">@android:color/white</item>
         <item name="colorControlNormal">@android:color/white</item>
         <item name="actionMenuTextColor">@android:color/white</item>
         <item name="colorControlHighlight">@android:color/white</item>
+    </style>
+    
+    <style name="WhiteProgressBar" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminateTint" tools:targetApi="lollipop">@android:color/white</item>
+        <!--<item name="indeterminateTint">@android:color/white</item>-->
+    </style>
+
+    <style name="CheckBoxStyle" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <!--波纹的颜色-->
+        <item name="android:colorControlHighlight" tools:targetApi="lollipop">@color/colorPrimary</item>
+        <!--选中的颜色-->
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="colorControlHighlight">@color/colorPrimary</item>
     </style>
 </resources>

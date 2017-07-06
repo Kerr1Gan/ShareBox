@@ -17,6 +17,8 @@ class FileItemLongClickDialog(context: Context):BaseBottomSheetDialog(context){
 
     private var mBody:((id:Int)->Void)? =null
 
+    private var mTitles:Array<String>? =null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -42,5 +44,9 @@ class FileItemLongClickDialog(context: Context):BaseBottomSheetDialog(context){
 
     fun setOnClickListener(body:(id:Int)->Void){
         mBody=body
+    }
+
+    fun setupItem(titles: Array<String>){
+        mTitles=titles
     }
 }

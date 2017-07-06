@@ -48,6 +48,14 @@ public class Test {
         }
     }
 
+    public <T extends String> void  addAll(T param){
+
+    }
+
+    public <T> void  addAll2(T param){
+
+    }
+
     public Test(int x,int y,int z){
 
     }
@@ -68,7 +76,7 @@ public class Test {
             super(x);
             for(int i=0;i<1000;i++){
 
-            }
+        }
         }
 
         public Test2(int x,int y,int z){

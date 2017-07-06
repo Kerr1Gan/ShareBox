@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.cache.DiskLruCacheFactory
 import com.bumptech.glide.load.DecodeFormat
 import android.os.Environment.getExternalStorageDirectory
+import android.support.v4.content.LocalBroadcastManager
 import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.Registry
 import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory
@@ -43,6 +44,8 @@ class MainApplication:Application(){
         Glide.init(glide)
 
         WifiDirectManager.getInstance(this)
+
+        LocalBroadcastManager.getInstance(this)
 
         initSavedState()
 

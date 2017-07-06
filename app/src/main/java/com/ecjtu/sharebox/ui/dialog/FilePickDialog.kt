@@ -13,8 +13,9 @@ import android.support.design.widget.TabLayout
 import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
 import android.util.Log
-import com.ecjtu.sharebox.ui.views.FileExpandableListView
-import com.ecjtu.sharebox.utils.fileutils.FileUtil
+import android.widget.ProgressBar
+import com.ecjtu.sharebox.ui.view.FileExpandableListView
+import com.ecjtu.sharebox.util.fileutils.FileUtil
 import java.io.File
 
 
@@ -42,6 +43,8 @@ class FilePickDialog :BaseBottomSheetDialog{
     private var mBottomSheet:View? =null
 
     private var mExpandableListView:FileExpandableListView? =null
+
+    private var mProgressBar:ProgressBar? =null
 
     override fun initializeDialog() {
         super.initializeDialog()
@@ -152,6 +155,7 @@ class FilePickDialog :BaseBottomSheetDialog{
 
         mTabLayout=vg.findViewById(R.id.tab_layout) as TabLayout
         mViewPager=vg.findViewById(R.id.view_pager) as ViewPager
+        mProgressBar=vg.findViewById(R.id.progress_bar) as ProgressBar
 
         mViewPager?.adapter=object :PagerAdapter(){
 
@@ -247,7 +251,7 @@ class FilePickDialog :BaseBottomSheetDialog{
 
         override fun doInBackground(vararg params: List<File>?): List<File>? {
             Log.e(TAG,mediaFileType2String(mType!!)+" task begin")
-
+            publishProgress()
             var list:List<File>? = null
 
             when(mType){
@@ -282,8 +286,14 @@ class FilePickDialog :BaseBottomSheetDialog{
             return list
         }
 
+        override fun onProgressUpdate(vararg values: Void?) {
+            super.onProgressUpdate(*values)
+            mProgressBar?.visibility=View.VISIBLE
+        }
+
         override fun onPostExecute(result: List<File>?) {
             super.onPostExecute(result)
+            mProgressBar?.visibility=View.INVISIBLE
             var index=mViewPager?.currentItem
             (mViewPagerViews.get(index) as FileExpandableListView).loadedData()
         }

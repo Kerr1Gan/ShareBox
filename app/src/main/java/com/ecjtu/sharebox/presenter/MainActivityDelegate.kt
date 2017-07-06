@@ -12,12 +12,12 @@ import android.preference.PreferenceManager
 import android.provider.Settings
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.ActivityCompat
-import android.support.v4.app.ActivityCompat.startActivity
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -27,14 +27,16 @@ import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.domain.PreferenceInfo
 import com.ecjtu.sharebox.getMainApplication
-import com.ecjtu.sharebox.ui.activities.MainActivity
+import com.ecjtu.sharebox.ui.activity.MainActivity
 import com.ecjtu.sharebox.ui.dialog.WifiBottomSheetDialog
-import org.ecjtu.channellibrary.wifiutils.NetworkUtil
+import org.ecjtu.channellibrary.wifiutil.NetworkUtil
 import com.ecjtu.sharebox.ui.dialog.ApDataDialog
 import com.ecjtu.sharebox.ui.dialog.EditNameDialog
-import com.ecjtu.sharebox.ui.fragments.FilePickDialogFragment
+import com.ecjtu.sharebox.ui.fragment.FilePickDialogFragment
+import org.ecjtu.channellibrary.devicesearch.DeviceSearcher
+import org.ecjtu.channellibrary.devicesearch.DiscoverHelper
+import org.ecjtu.channellibrary.wifiutil.WifiUtil
 import java.lang.Exception
-import java.security.Permission
 
 
 /**
@@ -55,10 +57,18 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
 
     private val REQUEST_CODE=0x10;
 
+    private var mServerSet= mutableSetOf<DeviceSearcher.DeviceBean>()
+
+    private var mClientSet= mutableSetOf<DeviceSearcher.DeviceBean>()
+
+    private var mDiscoverHelper:DiscoverHelper? =null
+
     private val mRequestPermission= arrayOf(Manifest.permission.ACCESS_NETWORK_STATE,
             Manifest.permission.CHANGE_NETWORK_STATE,
             Manifest.permission.ACCESS_NETWORK_STATE,
             Manifest.permission.CHANGE_WIFI_STATE)
+
+    private var mRecyclerView:RecyclerView? =null
 
     init {
         mToolbar = findViewById(R.id.toolbar) as Toolbar
@@ -83,9 +93,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
         mViewSwitcher?.addView(view1)
 
         view0.findViewById(R.id.button_help).setOnClickListener {
-//            FilePickDialog(owner,owner).show()  not suitable for fragment
-//            var dlg=FilePickDialogFragment(owner)
-//            dlg.show(owner.supportFragmentManager,"FilePickDialogFragment")
+
         }
 
         mWifiButton=findViewById(R.id.btn_wifi) as Button
@@ -118,8 +126,8 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
 
         mApName=findViewById(R.id.ap_name) as TextView
 
-        var recycler=view1 as RecyclerView
-        recycler.adapter=object : RecyclerView.Adapter<Holder>(){
+        mRecyclerView=view1 as RecyclerView
+        mRecyclerView?.adapter=object : RecyclerView.Adapter<Holder>(){
 
             override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): Holder {
                 return Holder(Button(owner))
@@ -134,7 +142,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
 
         }
         var manager: LinearLayoutManager = LinearLayoutManager(owner, LinearLayoutManager.VERTICAL,false)
-        recycler.layoutManager=manager
+        mRecyclerView?.layoutManager=manager
 
         mWifiImage=findViewById(R.id.image_wifi) as ImageView
 
@@ -142,6 +150,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
 
         initDrawerLayout()
 
+        doSearch()
     }
 
     private fun initDrawerLayout(){
@@ -180,12 +189,25 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
 
         when(item?.getItemId()){
             R.id.qr_code ->{
-                var dialog=ApDataDialog(owner,owner)
-                dialog.show()
+
+                var map=owner.getMainApplication().getSavedStateInstance()
+                var state=map.get(Constants.AP_STATE)
+
+                if(state==Constants.NetWorkState.MOBILE||state==Constants.NetWorkState.NONE){
+                    Toast.makeText(owner,"需要连接WIFI或者开启热点",Toast.LENGTH_SHORT).show()
+                }else{
+                    var dialog=ApDataDialog(owner,owner)
+                    dialog.show()
+                }
                 return true
             }
             R.id.refresh ->{
-                Toast.makeText(owner,"刷新",Toast.LENGTH_SHORT).show()
+                if(owner.refreshing){
+                    mDiscoverHelper?.prepare(owner,"",true,true)
+                    mDiscoverHelper?.start(true,true)
+                }else{
+                    mDiscoverHelper?.stop(true,true)
+                }
                 return true
             }
         }
@@ -261,6 +283,53 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
         if(str[str.length-1]=='"')
             str=str.dropLast(1)
         return str
+    }
+
+    fun doSearch(){
+        mDiscoverHelper=DiscoverHelper(owner,"8000","8000")
+        mDiscoverHelper?.setMessageListener { msg, deviceSet, handler ->
+            var state=owner.getMainApplication().getSavedStateInstance().get(Constants.AP_STATE)
+            when(msg){
+                DiscoverHelper.MSG_FIND_DEVICE->{
+                    if(state==Constants.NetWorkState.WIFI||state==Constants.NetWorkState.AP){
+                        var res=NetworkUtil.getWifiHostAndSelfIP(owner)
+                    }
+                    for(obj in deviceSet){
+
+                        if(mClientSet.indexOf(obj)<0){
+                            mClientSet.add(obj)
+                        }
+                    }
+//                    Log.e("tttttt",mClientSet.toString())
+                    if(owner.refreshing){
+                        handler.obtainMessage(DiscoverHelper.MSG_START_FIND_DEVICE).sendToTarget()
+                    }
+                }
+                DiscoverHelper.MSG_BEING_SEARCHED->{
+                    for(obj in deviceSet){
+                        if(mServerSet.indexOf(obj)<0){
+                            mServerSet.add(obj)
+                        }
+                    }
+//                    Log.e("tttttt",mServerSet.toString())
+                    if(owner.refreshing){
+                        handler.obtainMessage(DiscoverHelper.MSG_START_BEING_SEARCHED).sendToTarget()
+                    }
+                }
+                DiscoverHelper.MSG_START_FIND_DEVICE->{
+                    mDiscoverHelper?.prepare(owner,"",true,true)
+                    mDiscoverHelper?.start(true,true)
+                }
+                DiscoverHelper.MSG_START_BEING_SEARCHED->{
+                    mDiscoverHelper?.prepare(owner,"",true,true)
+                    mDiscoverHelper?.start(true,true)
+                }
+            }
+        }
+        if(owner.refreshing){
+            mDiscoverHelper?.prepare(owner,"",true,true)
+            mDiscoverHelper?.start(true,true)
+        }
     }
 
     companion object{

@@ -35,6 +35,8 @@ public abstract class DeviceWaitingSearch extends Thread{
     private String mDeviceName, deviceRoom;
     private DatagramSocket mSocket;
 
+    private String mPort="";
+
     public DeviceWaitingSearch(Context context, String name, String room) {
         mContext = context;
         mDeviceName = name;
@@ -63,7 +65,8 @@ public abstract class DeviceWaitingSearch extends Thread{
                         socket.receive(pack);
                         if (verifyCheckData(pack)) {
                             Log.i(TAG, String.format("@@@%s: 确认成功", mDeviceName));
-                            onDeviceSearched((InetSocketAddress) pack.getSocketAddress());
+
+                            onDeviceSearched((InetSocketAddress) pack.getSocketAddress(),mPort);
                             break;
                         }
                     } catch (SocketTimeoutException e) {
@@ -83,7 +86,7 @@ public abstract class DeviceWaitingSearch extends Thread{
     /**
      * 当设备被发现时执行
      */
-    public abstract void onDeviceSearched(InetSocketAddress socketAddr);
+    public abstract void onDeviceSearched(InetSocketAddress socketAddr,String port);
 
     /**
      * 打包响应报文
@@ -177,6 +180,14 @@ public abstract class DeviceWaitingSearch extends Thread{
         }
 
         String ip = new String(data, offset, pack.getLength() - offset, Charset.forName("UTF-8"));
+
+        int index=ip.indexOf(',');
+        String port=ip;
+        if(index>0){
+            ip=ip.substring(0,index);
+            port=port.substring(index+1,port.length());
+            mPort=port;
+        }
         Log.i(TAG, String.format("@@@%s: ip from host=%s", mDeviceName,ip));
         return ip.equals(getOwnWifiIP());
     }
