@@ -35,7 +35,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
 
-import org.ecjtu.easyserver.http.HTTPRequestListener;
 import org.ecjtu.easyserver.util.Debug;
 
 
@@ -380,9 +379,9 @@ public class HostInterface
 		return "EasyServer.http://" + hostAddr + ":" + Integer.toString(port) + uri;
 	}
 
-	private static List<IReady> sListener;
+	private static List<ICallback> sListener;
 
-	public static void addCallback(IReady listener){
+	public static void addCallback(ICallback listener){
 		if(sListener==null){
 			sListener=new ArrayList<>();
 		}
@@ -395,12 +394,12 @@ public class HostInterface
 		}
 	}
 
-	public static IReady getListener(int n){
+	public static ICallback getListener(int n){
 		if(sListener==null) return null;
 		return sListener.get(n);
 	}
 
-	public interface IReady <T>{
+	public interface ICallback<T>{
 		void ready(T server, String hostIP, int port);
 	}
 }

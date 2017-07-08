@@ -1,32 +1,29 @@
-package com.ecjtu.sharebox;
+package com.ecjtu.sharebox.ui.activity;
 
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+
+import com.ecjtu.sharebox.R;
 import com.ecjtu.sharebox.domain.DeviceInfo;
 import com.ecjtu.sharebox.server.impl.servlet.Info;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import static org.junit.Assert.*;
+public class TestActivityJava extends AppCompatActivity {
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
- */
-public class ExampleUnitTest {
-    @Test
-    public void addition_isCorrect() throws Exception {
-        assertEquals(4, 2 + 2);
-    }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_test_java);
 
-    @Test
-    public void testInfoServlet() throws Exception{
-        //只能测试Java代码
         Map<String,List<String>> map=new LinkedHashMap<>();
         List<String> lst=new ArrayList<>();
         lst.add("/sdcard/test.mp4");
@@ -37,9 +34,7 @@ public class ExampleUnitTest {
         lst2.add("/sdcard/test3.mp4");
         lst2.add("/sdcard/test4.mp4");
         map.put("Music",lst2);
-
         DeviceInfo info=new DeviceInfo("123","192.168.43.1",8080,"/icon",map);
-
         JSONObject root=Info.deviceInfo2Json(info);
         info=Info.json2DeviceInfo(root);
     }

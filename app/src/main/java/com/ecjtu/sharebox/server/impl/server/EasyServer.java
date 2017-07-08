@@ -258,12 +258,12 @@ public class EasyServer extends Thread implements HTTPRequestListener {
         super.interrupt();
     }
 
-    public static HostInterface.IReady sListener = null;
+    public static HostInterface.ICallback sListener = null;
 
     /**
      * only if listener invoked , the listener will be erased.
      */
-    public static void setServerListener(HostInterface.IReady listener) {
+    public static void setServerListener(HostInterface.ICallback listener) {
         HostInterface.clearCallback();
         sListener = listener;
         HostInterface.addCallback(listener);

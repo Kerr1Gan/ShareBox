@@ -13,8 +13,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 /**
- * Created by Ke on 2016/4/24.
+ * Created by KerriGan on 2016/4/24.
  */
+@Deprecated
 public class GetFiles implements BaseServlet {
 
     public static ArrayList<java.io.File> _shareFileList;

@@ -28,6 +28,7 @@ import static com.ecjtu.sharebox.server.impl.server.EasyServer.TYPE_P2P;
  * Created by KerriGan on 2016/4/24.
  */
 public class EasyServerService extends Service {
+
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
