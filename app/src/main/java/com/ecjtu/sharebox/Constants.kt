@@ -8,8 +8,6 @@ object Constants{
     //NetWorkState.NONE
     val AP_STATE="com.ecjtu.sharebox.AP_STATE"
 
-
-
     enum class NetWorkState{
         NONE,
         WIFI,

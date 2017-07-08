@@ -47,11 +47,9 @@ public class DiscoverHelper{
 
     private Context mContext;
 
-    private String mData;
-
+    private String mName;
 
     private DeviceSearcher mSearcher=null;
-
 
     private DeviceWaitingSearch mWaitingSearch=null;
 
@@ -61,17 +59,20 @@ public class DiscoverHelper{
 
     private String mPort="";
 
-    public DiscoverHelper(Context context,String name,String port){
+    private String mIcon="";
+
+    public DiscoverHelper(Context context,String name,String port,String icon){
         mContext=context;
-        mData=name;
+        mName =name;
         mPort=port;
-        prepare(mContext,mData,true,true);
+        mIcon=icon;
+        prepare(mContext,true,true);
     }
 
-    public void prepare(Context context,String name,boolean restartWaiting,boolean restartSearcher){
+    public void prepare(Context context,boolean restartWaiting,boolean restartSearcher){
         if(restartWaiting){
             if(mWaitingSearch!=null) mWaitingSearch.interrupt();
-            mWaitingSearch=new DeviceWaitingSearch(context,name,"") {
+            mWaitingSearch=new DeviceWaitingSearch(context,mName+","+mPort+","+mIcon,"") {
                 @Override
                 public void onDeviceSearched(InetSocketAddress socketAddr,String port) {
                     Set<DeviceSearcher.DeviceBean> set=new HashSet<>();
@@ -88,7 +89,7 @@ public class DiscoverHelper{
 
         if(restartSearcher){
             if(mSearcher!=null) mSearcher.interrupt();
-            mSearcher=new DeviceSearcher(mPort) {
+            mSearcher=new DeviceSearcher(mName+","+mPort+","+mIcon) {
                 @Override
                 public void onSearchStart() {
 
