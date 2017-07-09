@@ -55,7 +55,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
     private var mWifiImage: ImageView
     private var mTextName: TextView? = null
 
-    private val REQUEST_CODE = 0x10;
+    private val REQUEST_CODE = 0x10
 
     private var mServerSet = mutableSetOf<DeviceSearcher.DeviceBean>()
 
@@ -221,7 +221,9 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         }
     }
 
-    fun checkCurrentAp(info: WifiInfo?) {
+    fun checkCurrentAp(info: WifiInfo?):Boolean {
+        var hasAccess=false
+
         if (NetworkUtil.isWifi(owner) || info != null) {
             var wifiInfo: WifiInfo? = null
             if (info != null)
@@ -233,7 +235,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
             mWifiButton.isActivated = true
             mHotspotButton.isActivated = false
             mWifiImage.setImageResource(R.mipmap.wifi)
-
+            hasAccess=true
             owner.getMainApplication().getSavedStateInstance().put(Constants.AP_STATE, Constants.NetWorkState.WIFI)
         } else if (NetworkUtil.isHotSpot(owner)) {
             var config = NetworkUtil.getHotSpotConfiguration(owner)
@@ -241,7 +243,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
             mWifiButton.isActivated = false
             mHotspotButton.isActivated = true
             mWifiImage.setImageResource(R.mipmap.hotspot)
-
+            hasAccess=true
             owner.getMainApplication().getSavedStateInstance().put(Constants.AP_STATE, Constants.NetWorkState.AP)
         } else if (NetworkUtil.isMobile(owner)) {
             mApName.setText(getRealName("Cellular"))
@@ -249,16 +251,17 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
 
             mWifiButton.isActivated = false
             mHotspotButton.isActivated = false
-
+            hasAccess=false
             owner.getMainApplication().getSavedStateInstance().put(Constants.AP_STATE, Constants.NetWorkState.MOBILE)
         } else {
             mApName.setText(getRealName("No Internet"))
             mWifiImage.setImageResource(R.mipmap.wifi_off)
             mWifiButton.isActivated = false
             mHotspotButton.isActivated = false
-
+            hasAccess=false
             owner.getMainApplication().getSavedStateInstance().put(Constants.AP_STATE, Constants.NetWorkState.NONE)
         }
+        return hasAccess
     }
 
     private fun getRealName(name: String): String {
@@ -274,13 +277,17 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
     fun doSearch() {
         var name=PreferenceManager.getDefaultSharedPreferences(owner).
                 getString(PreferenceInfo.PREF_DEVICE_NAME,Build.MODEL)
-        mDiscoverHelper = DiscoverHelper(owner, name, "8000","192.168.43.1:8000/info")
+
+        mDiscoverHelper?.stop(true,true)
+
+        mDiscoverHelper = DiscoverHelper(owner, name, "8000","192.168.43.1:8000/Info")
         mDiscoverHelper?.setMessageListener { msg, deviceSet, handler ->
             var state = owner.getMainApplication().getSavedStateInstance().get(Constants.AP_STATE)
             when (msg) {
                 DiscoverHelper.MSG_FIND_DEVICE -> {
                     if (state == Constants.NetWorkState.WIFI || state == Constants.NetWorkState.AP) {
                         var res = NetworkUtil.getWifiHostAndSelfIP(owner)
+
                     }
                     for (obj in deviceSet) {
 

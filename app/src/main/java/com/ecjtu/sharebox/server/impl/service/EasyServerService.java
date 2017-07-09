@@ -85,7 +85,7 @@ public class EasyServerService extends Service {
         PendingIntent pi2 = PendingIntent.getBroadcast(this, 2, notificationIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-//        remoteView.setOnClickPendingIntent(R.id.image_view, pi);
+        remoteView.setOnClickPendingIntent(R.id.img_view_exit, pi);
         remoteView.setOnClickPendingIntent(R.id.main_content, pi2);
 
         mNotification = builder.build();
@@ -248,6 +248,24 @@ public class EasyServerService extends Service {
                 }
             }
         }
+    }
+
+    public static Intent getApIntent(Context context){
+        Intent i=new Intent(context,EasyServerService.class);
+        i.putExtra(EXTRA_SERVER_TYPE,TYPE_AP);
+        return i;
+    }
+
+    public static Intent getP2PIntent(Context context,String ip,int port){
+        Intent i=new Intent(context,EasyServerService.class);
+        i.putExtra(EXTRA_SERVER_TYPE,TYPE_P2P);
+        i.putExtra(EXTRA_SERVER_IP,ip);
+        i.putExtra(EXTRA_SERVER_PORT, port);
+        return i;
+    }
+
+    public boolean isServerAlive(){
+        return mEasyServer.isAlive();
     }
 
 }

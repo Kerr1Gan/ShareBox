@@ -73,7 +73,7 @@ public class EasyServer extends Thread implements HTTPRequestListener {
 
     private int mType = TYPE_AP;
 
-    private static final String AP_NAME = "ap";
+    private static final String AP = "ap";
 
     private final int mMaxRetryTimes = 100;
 
@@ -117,7 +117,7 @@ public class EasyServer extends Thread implements HTTPRequestListener {
         if (mType == TYPE_AP) {
             HTTPServerList hsl = new HTTPServerList();
             setHttpServerList(hsl);
-            while (hsl.open(bindPort, AP_NAME) == false) {
+            while (hsl.open(bindPort, AP) == false) {
                 retryCnt++;
                 if (mMaxRetryTimes < retryCnt) {
                     return;
@@ -268,5 +268,4 @@ public class EasyServer extends Thread implements HTTPRequestListener {
         sListener = listener;
         HostInterface.addCallback(listener);
     }
-
 }

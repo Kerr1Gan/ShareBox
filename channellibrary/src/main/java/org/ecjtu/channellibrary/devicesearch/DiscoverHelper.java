@@ -109,6 +109,7 @@ public class DiscoverHelper{
     }
 
     public void stop(boolean waiting,boolean search){
+        mHandler.removeCallbacksAndMessages(null);
         if(waiting) mWaitingSearch.interrupt();
         if(search) mSearcher.interrupt();
     }
@@ -122,9 +123,9 @@ public class DiscoverHelper{
     }
 
     public void release(){
+        mHandler.removeCallbacksAndMessages(null);
         if(mSearcher!=null) mSearcher.interrupt();
         if(mWaitingSearch!=null) mWaitingSearch.interrupt();
-        mHandler.removeCallbacksAndMessages(null);
         mHandler=null;
         mSearcher=null;
         mWaitingSearch=null;

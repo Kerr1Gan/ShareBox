@@ -1,15 +1,21 @@
 package com.ecjtu.sharebox.ui.activity
 
+import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Point
+import android.os.Build
 import android.os.Handler
 import android.os.Message
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatActivity
+import android.view.KeyCharacterMap
+import android.view.KeyEvent
+import android.view.ViewConfiguration
 import com.ecjtu.sharebox.async.MemoryUnLeakHandler
-import java.lang.ref.WeakReference
+
 
 /**
  * Created by KeriGan on 2017/6/25.
@@ -87,6 +93,44 @@ abstract class BaseActionActivity:AppCompatActivity,MemoryUnLeakHandler.IHandleM
     }
 
     class SimpleHandler(host:BaseActionActivity):
-            MemoryUnLeakHandler<BaseActionActivity>(host){
+            MemoryUnLeakHandler<BaseActionActivity>(host)
+
+    fun isNavigationBarShow(activity: Activity): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            val display = windowManager.defaultDisplay
+            val size = Point()
+            val realSize = Point()
+            display.getSize(size)
+            display.getRealSize(realSize)
+            return realSize.y !== size.y
+        } else {
+            val menu = ViewConfiguration.get(activity).hasPermanentMenuKey()
+            val back = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK)
+            return !(menu || back)
+        }
+    }
+
+    fun getNavigationBarHeight(activity: Activity): Int {
+        if (!isNavigationBarShow(activity)) {
+            return 0
+        }
+        val resources = activity.resources
+        val resourceId = resources.getIdentifier("navigation_bar_height",
+                "dimen", "android")
+        //获取NavigationBar的高度
+        val height = resources.getDimensionPixelSize(resourceId)
+        return height
+    }
+
+
+    fun getScreenHeight(activity: Activity): Int {
+        return activity.windowManager.defaultDisplay.height + getNavigationBarHeight(activity)
+    }
+
+    fun getStatusBarHeight():Int{
+        val resources = getResources()
+        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+        val height = resources.getDimensionPixelSize(resourceId)
+        return height
     }
 }
