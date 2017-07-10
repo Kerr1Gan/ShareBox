@@ -25,16 +25,18 @@ import android.view.ViewGroup
 import android.widget.*
 import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.R
+import com.ecjtu.sharebox.domain.DeviceInfo
 import com.ecjtu.sharebox.domain.PreferenceInfo
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.ui.activity.MainActivity
-import com.ecjtu.sharebox.ui.dialog.WifiBottomSheetDialog
-import org.ecjtu.channellibrary.wifiutil.NetworkUtil
+import com.ecjtu.sharebox.ui.adapter.DeviceRecyclerViewAdapter
 import com.ecjtu.sharebox.ui.dialog.ApDataDialog
 import com.ecjtu.sharebox.ui.dialog.EditNameDialog
+import com.ecjtu.sharebox.ui.dialog.WifiBottomSheetDialog
 import com.ecjtu.sharebox.ui.fragment.FilePickDialogFragment
 import org.ecjtu.channellibrary.devicesearch.DeviceSearcher
 import org.ecjtu.channellibrary.devicesearch.DiscoverHelper
+import org.ecjtu.channellibrary.wifiutil.NetworkUtil
 import org.ecjtu.channellibrary.wifiutil.WifiUtil
 import java.lang.Exception
 
@@ -69,6 +71,8 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
             Manifest.permission.CHANGE_WIFI_STATE)
 
     private var mRecyclerView:RecyclerView? =null
+
+    private var mDeviceInfoList:MutableList<DeviceInfo> = mutableListOf<DeviceInfo>()
 
     init {
         mToolbar = findViewById(R.id.toolbar) as Toolbar
@@ -126,31 +130,19 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
 
         mApName=findViewById(R.id.ap_name) as TextView
 
-        mRecyclerView=view1 as RecyclerView
-        mRecyclerView?.adapter=object : RecyclerView.Adapter<Holder>(){
+        mRecyclerView = view1 as RecyclerView
+        mRecyclerView?.adapter = DeviceRecyclerViewAdapter(mDeviceInfoList)
 
-            override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): Holder {
-                return Holder(Button(owner))
-            }
+        var manager: LinearLayoutManager = LinearLayoutManager(owner, LinearLayoutManager.VERTICAL, false)
+        mRecyclerView?.layoutManager = manager
 
-            override fun onBindViewHolder(holder: Holder?, position: Int) {
-                (holder!!.itemView as Button).setText(""+position)
-            }
-
-            override fun getItemCount(): Int = 1000
-
-
-        }
-        var manager: LinearLayoutManager = LinearLayoutManager(owner, LinearLayoutManager.VERTICAL,false)
-        mRecyclerView?.layoutManager=manager
-
-        mWifiImage=findViewById(R.id.image_wifi) as ImageView
+        mWifiImage = findViewById(R.id.image_wifi) as ImageView
 
         checkCurrentAp(null)
 
         initDrawerLayout()
 
-        doSearch()
+        doSearch(null)
     }
 
     private fun initDrawerLayout(){
@@ -203,7 +195,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
             }
             R.id.refresh ->{
                 if(owner.refreshing){
-                    mDiscoverHelper?.prepare(owner,"",true,true)
+                    mDiscoverHelper?.prepare(owner,true,true)
                     mDiscoverHelper?.start(true,true)
                 }else{
                     mDiscoverHelper?.stop(true,true)
@@ -285,56 +277,98 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
         return str
     }
 
-    fun doSearch(){
-        mDiscoverHelper=DiscoverHelper(owner,"8000","8000")
-        mDiscoverHelper?.setMessageListener { msg, deviceSet, handler ->
-            var state=owner.getMainApplication().getSavedStateInstance().get(Constants.AP_STATE)
-            when(msg){
-                DiscoverHelper.MSG_FIND_DEVICE->{
-                    if(state==Constants.NetWorkState.WIFI||state==Constants.NetWorkState.AP){
-                        var res=NetworkUtil.getWifiHostAndSelfIP(owner)
-                    }
-                    for(obj in deviceSet){
+    fun doSearch(ip:String?) {
 
-                        if(mClientSet.indexOf(obj)<0){
+//        if(!checkCurrentAp(null)) return
+
+        var ret=NetworkUtil.getWifiHostAndSelfIP(owner)
+
+        var name=PreferenceManager.getDefaultSharedPreferences(owner).
+                getString(PreferenceInfo.PREF_DEVICE_NAME,Build.MODEL)
+
+        mDiscoverHelper?.stop(true,true)
+
+        mDiscoverHelper = DiscoverHelper(owner, name, "8000","192.168.43.1:8000/Info")
+        mDiscoverHelper?.setMessageListener { msg, deviceSet, handler ->
+            var state = owner.getMainApplication().getSavedStateInstance().get(Constants.AP_STATE)
+            when (msg) {
+                DiscoverHelper.MSG_FIND_DEVICE -> {
+                    if (state == Constants.NetWorkState.WIFI || state == Constants.NetWorkState.AP) {
+                        var res = NetworkUtil.getWifiHostAndSelfIP(owner)
+
+                    }
+                    for (obj in deviceSet) {
+
+                        if (mClientSet.indexOf(obj) < 0) {
                             mClientSet.add(obj)
                         }
                     }
-//                    Log.e("tttttt",mClientSet.toString())
-                    if(owner.refreshing){
+                    applyDeviceInfo(mClientSet)
+                    if (owner.refreshing) {
                         handler.obtainMessage(DiscoverHelper.MSG_START_FIND_DEVICE).sendToTarget()
                     }
                 }
-                DiscoverHelper.MSG_BEING_SEARCHED->{
-                    for(obj in deviceSet){
-                        if(mServerSet.indexOf(obj)<0){
+                DiscoverHelper.MSG_BEING_SEARCHED -> {
+                    for (obj in deviceSet) {
+                        if (mServerSet.indexOf(obj) < 0) {
                             mServerSet.add(obj)
                         }
                     }
-//                    Log.e("tttttt",mServerSet.toString())
-                    if(owner.refreshing){
+                    applyDeviceInfo(mServerSet)
+                    if (owner.refreshing) {
                         handler.obtainMessage(DiscoverHelper.MSG_START_BEING_SEARCHED).sendToTarget()
                     }
                 }
-                DiscoverHelper.MSG_START_FIND_DEVICE->{
-                    mDiscoverHelper?.prepare(owner,"",true,true)
-                    mDiscoverHelper?.start(true,true)
+                DiscoverHelper.MSG_START_FIND_DEVICE -> {
+                    mDiscoverHelper?.prepare(owner, true, true)
+                    mDiscoverHelper?.start(true, true)
                 }
                 DiscoverHelper.MSG_START_BEING_SEARCHED->{
-                    mDiscoverHelper?.prepare(owner,"",true,true)
+                    mDiscoverHelper?.prepare(owner,true,true)
                     mDiscoverHelper?.start(true,true)
                 }
             }
         }
         if(owner.refreshing){
-            mDiscoverHelper?.prepare(owner,"",true,true)
+            mDiscoverHelper?.prepare(owner,true,true)
             mDiscoverHelper?.start(true,true)
         }
     }
 
-    companion object{
+    private fun applyDeviceInfo(mutableSet: MutableSet<DeviceSearcher.DeviceBean>){
+        var flag:Boolean
+        for(bean in mutableSet){
+            flag=false
+            for(info in mDeviceInfoList){
+                if(info.ip.equals(bean.ip)){
+                    flag=true
+                }
+            }
+            if(!flag){
+                var data=bean.name
+                var arr=data.split(",")
+                var deviceInfo=DeviceInfo(arr[0],bean.ip,Integer.parseInt(arr[1]),arr[2])
+                mDeviceInfoList.add(deviceInfo)
+                mRecyclerView?.adapter?.notifyDataSetChanged()
+            }
+        }
+
+        var index=mViewSwitcher?.indexOfChild(mRecyclerView)
+        var nextIndex=mViewSwitcher?.indexOfChild(mViewSwitcher?.nextView)
+        if(mDeviceInfoList.size!=0){
+            if(index==nextIndex){
+                mViewSwitcher?.showNext()
+            }
+        }else{
+            if(index!=nextIndex){
+                mViewSwitcher?.showNext()
+            }
+        }
+    }
+
+    companion object {
         //Settings.ACTION_APPLICATION_DETAIL_SETTING
-        fun getAppDetailSettingIntent(context: Context):Intent {
+        fun getAppDetailSettingIntent(context: Context): Intent {
             var localIntent = Intent()
             localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             if (Build.VERSION.SDK_INT >= 9) {
@@ -342,7 +376,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
                 localIntent.setData(Uri.fromParts("package", context.getPackageName(), null))
             } else if (Build.VERSION.SDK_INT <= 8) {
                 localIntent.setAction(Intent.ACTION_VIEW)
-                localIntent.setClassName("com.android.settings","com.android.settings.InstalledAppDetails")
+                localIntent.setClassName("com.android.settings", "com.android.settings.InstalledAppDetails")
                 localIntent.putExtra("com.android.settings.ApplicationPkgName", context.getPackageName())
             }
             return localIntent
