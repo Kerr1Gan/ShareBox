@@ -141,7 +141,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
 
         initDrawerLayout()
 
-        doSearch(null)
+        doSearch()
     }
 
     private fun initDrawerLayout() {
@@ -225,7 +225,6 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
     fun checkCurrentAp(info: WifiInfo?):Boolean {
         var hasAccess=false
 
-
         if (NetworkUtil.isWifi(owner) || info != null) {
             var wifiInfo: WifiInfo? = null
             if (info != null)
@@ -276,18 +275,14 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         return str
     }
 
-    fun doSearch(ip:String?) {
-
-//        if(!checkCurrentAp(null)) return
-
-        var ret=NetworkUtil.getWifiHostAndSelfIP(owner)
+    fun doSearch() {
 
         var name=PreferenceManager.getDefaultSharedPreferences(owner).
                 getString(PreferenceInfo.PREF_DEVICE_NAME,Build.MODEL)
 
         mDiscoverHelper?.stop(true,true)
 
-        mDiscoverHelper = DiscoverHelper(owner, name, "8000","192.168.43.1:8000/Info")
+        mDiscoverHelper = DiscoverHelper(owner, name, "8000","/head.png")
         mDiscoverHelper?.setMessageListener { msg, deviceSet, handler ->
             var state = owner.getMainApplication().getSavedStateInstance().get(Constants.AP_STATE)
             when (msg) {
