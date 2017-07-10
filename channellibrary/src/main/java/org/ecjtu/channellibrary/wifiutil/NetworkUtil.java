@@ -17,7 +17,13 @@ import android.net.wifi.WifiManager;
 import android.util.Log;
 
 import java.lang.reflect.Method;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
 /**
  * 判断网络状态的工具类
@@ -196,5 +202,47 @@ public class NetworkUtil {
                 (byte) ((a >> 8) & 0xFF),
                 (byte) (a & 0xFF)
         };
+    }
+
+    public static String[] getLocalWLANIps(){
+        return getIpFromInterface("wlan");
+    }
+
+    public static String[] getLocalApIps(){
+        return getIpFromInterface("ap");
+    }
+
+    public static String[] getIpFromInterface(String name){
+        List<String> result=new ArrayList<>();
+        try {
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+                NetworkInterface intf = en.nextElement();
+                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                    InetAddress inetAddress = enumIpAddr.nextElement();
+
+                    String iface = intf.getName();
+                    if(iface.contains(name)){
+                        if (inetAddress instanceof Inet4Address) { // fix for Galaxy Nexus. IPv4 is easy to use :-)
+                            result.add(getDottedDecimalIP(inetAddress.getAddress()));
+                        }
+                    }
+                }
+            }
+        } catch (SocketException ex) {
+        } catch (NullPointerException ex) {
+        }
+        return result.toArray(new String[result.size()]);
+    }
+
+
+    private static String getDottedDecimalIP(byte[] ipAddr) {
+        String ipAddrStr = "";
+        for (int i=0; i<ipAddr.length; i++) {
+            if (i > 0) {
+                ipAddrStr += ".";
+            }
+            ipAddrStr += ipAddr[i]&0xFF;
+        }
+        return ipAddrStr;
     }
 }

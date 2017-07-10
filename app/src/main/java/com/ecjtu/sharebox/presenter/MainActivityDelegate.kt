@@ -36,6 +36,7 @@ import com.ecjtu.sharebox.ui.fragment.FilePickDialogFragment
 import org.ecjtu.channellibrary.devicesearch.DeviceSearcher
 import org.ecjtu.channellibrary.devicesearch.DiscoverHelper
 import org.ecjtu.channellibrary.wifiutil.NetworkUtil
+import org.ecjtu.channellibrary.wifiutil.WifiUtil
 import java.lang.Exception
 
 
@@ -140,7 +141,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
 
         initDrawerLayout()
 
-        doSearch()
+        doSearch(null)
     }
 
     private fun initDrawerLayout() {
@@ -224,6 +225,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
     fun checkCurrentAp(info: WifiInfo?):Boolean {
         var hasAccess=false
 
+
         if (NetworkUtil.isWifi(owner) || info != null) {
             var wifiInfo: WifiInfo? = null
             if (info != null)
@@ -274,7 +276,12 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         return str
     }
 
-    fun doSearch() {
+    fun doSearch(ip:String?) {
+
+//        if(!checkCurrentAp(null)) return
+
+        var ret=NetworkUtil.getWifiHostAndSelfIP(owner)
+
         var name=PreferenceManager.getDefaultSharedPreferences(owner).
                 getString(PreferenceInfo.PREF_DEVICE_NAME,Build.MODEL)
 
