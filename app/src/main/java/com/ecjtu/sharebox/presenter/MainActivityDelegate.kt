@@ -17,6 +17,7 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -24,18 +25,16 @@ import android.view.ViewGroup
 import android.widget.*
 import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.R
-import com.ecjtu.sharebox.domain.DeviceInfo
 import com.ecjtu.sharebox.domain.PreferenceInfo
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.ui.activity.MainActivity
-import com.ecjtu.sharebox.ui.adapter.DeviceRecyclerViewAdapter
+import com.ecjtu.sharebox.ui.dialog.WifiBottomSheetDialog
+import org.ecjtu.channellibrary.wifiutil.NetworkUtil
 import com.ecjtu.sharebox.ui.dialog.ApDataDialog
 import com.ecjtu.sharebox.ui.dialog.EditNameDialog
-import com.ecjtu.sharebox.ui.dialog.WifiBottomSheetDialog
 import com.ecjtu.sharebox.ui.fragment.FilePickDialogFragment
 import org.ecjtu.channellibrary.devicesearch.DeviceSearcher
 import org.ecjtu.channellibrary.devicesearch.DiscoverHelper
-import org.ecjtu.channellibrary.wifiutil.NetworkUtil
 import org.ecjtu.channellibrary.wifiutil.WifiUtil
 import java.lang.Exception
 
@@ -43,35 +42,33 @@ import java.lang.Exception
 /**
  * Created by KerriGan on 2017/6/2.
  */
-class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner), ActivityCompat.OnRequestPermissionsResultCallback {
+class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),ActivityCompat.OnRequestPermissionsResultCallback{
 
-    private var mToolbar: Toolbar
-    private var mDrawerLayout: DrawerLayout
-    private var mDrawerToggle: ActionBarDrawerToggle
-    private var mFloatingActionButton: FloatingActionButton
-    private var mViewSwitcher: ViewSwitcher? = null
-    private var mWifiButton: Button
-    private var mHotspotButton: Button
-    private var mApName: TextView
-    private var mWifiImage: ImageView
-    private var mTextName: TextView? = null
+    private var mToolbar:Toolbar
+    private var mDrawerLayout:DrawerLayout
+    private var mDrawerToggle:ActionBarDrawerToggle
+    private var mFloatingActionButton:FloatingActionButton
+    private var mViewSwitcher:ViewSwitcher? = null
+    private var mWifiButton:Button
+    private var mHotspotButton:Button
+    private var mApName:TextView
+    private var mWifiImage:ImageView
+    private var mTextName:TextView? =null
 
-    private val REQUEST_CODE = 0x10
+    private val REQUEST_CODE=0x10;
 
-    private var mServerSet = mutableSetOf<DeviceSearcher.DeviceBean>()
+    private var mServerSet= mutableSetOf<DeviceSearcher.DeviceBean>()
 
-    private var mClientSet = mutableSetOf<DeviceSearcher.DeviceBean>()
+    private var mClientSet= mutableSetOf<DeviceSearcher.DeviceBean>()
 
-    private var mDiscoverHelper: DiscoverHelper? = null
+    private var mDiscoverHelper:DiscoverHelper? =null
 
-    private val mRequestPermission = arrayOf(Manifest.permission.ACCESS_NETWORK_STATE,
+    private val mRequestPermission= arrayOf(Manifest.permission.ACCESS_NETWORK_STATE,
             Manifest.permission.CHANGE_NETWORK_STATE,
             Manifest.permission.ACCESS_NETWORK_STATE,
             Manifest.permission.CHANGE_WIFI_STATE)
 
-    private var mRecyclerView: RecyclerView? = null
-
-    private var mDeviceInfoList:MutableList<DeviceInfo> = mutableListOf<DeviceInfo>()
+    private var mRecyclerView:RecyclerView? =null
 
     init {
         mToolbar = findViewById(R.id.toolbar) as Toolbar
@@ -81,17 +78,17 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         mDrawerToggle!!.syncState()
         mDrawerLayout!!.setDrawerListener(mDrawerToggle)
 
-        mFloatingActionButton = findViewById(R.id.floating_action_button) as FloatingActionButton
-        mFloatingActionButton.setOnClickListener({ view ->
-            //            mViewSwitcher?.showNext()
-            var dlg = FilePickDialogFragment(owner)
-            dlg.show(owner.supportFragmentManager, "FilePickDialogFragment")
+        mFloatingActionButton=findViewById(R.id.floating_action_button) as FloatingActionButton
+        mFloatingActionButton.setOnClickListener({view->
+//            mViewSwitcher?.showNext()
+            var dlg=FilePickDialogFragment(owner)
+            dlg.show(owner.supportFragmentManager,"FilePickDialogFragment")
         })
 
         //for view switcher
-        mViewSwitcher = findViewById(R.id.view_switcher) as ViewSwitcher
-        var view0: View = LayoutInflater.from(owner).inflate(R.layout.layout_main_activity_data, null)
-        var view1: View = LayoutInflater.from(owner).inflate(R.layout.layout_main_activity_list, null)
+        mViewSwitcher=findViewById(R.id.view_switcher) as ViewSwitcher
+        var view0:View=LayoutInflater.from(owner).inflate(R.layout.layout_main_activity_data,null)
+        var view1:View=LayoutInflater.from(owner).inflate(R.layout.layout_main_activity_list,null)
         mViewSwitcher?.addView(view0)
         mViewSwitcher?.addView(view1)
 
@@ -99,35 +96,35 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
 
         }
 
-        mWifiButton = findViewById(R.id.btn_wifi) as Button
-        mHotspotButton = findViewById(R.id.btn_hotspot) as Button
+        mWifiButton=findViewById(R.id.btn_wifi) as Button
+        mHotspotButton=findViewById(R.id.btn_hotspot) as Button
 
 
         mWifiButton.setOnClickListener {
             val intent = Intent()
-            val action = arrayOf(WifiManager.ACTION_PICK_WIFI_NETWORK, Settings.ACTION_WIFI_SETTINGS)
-            for (str in action) {
+            val action= arrayOf(WifiManager.ACTION_PICK_WIFI_NETWORK,Settings.ACTION_WIFI_SETTINGS)
+            for (str in action){
                 try {
-                    intent.action = Settings.ACTION_WIFI_SETTINGS
+                    intent.action =Settings.ACTION_WIFI_SETTINGS
                     owner.startActivity(intent)
                     break
-                } catch (ex: Exception) {
+                }catch (ex: Exception){
                 }
             }
         }
         mHotspotButton.setOnClickListener {
-            for (index in 0..mRequestPermission.size - 1) {
-                if (ActivityCompat.checkSelfPermission(owner, mRequestPermission[index]) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(owner, mRequestPermission, REQUEST_CODE)
+            for(index in 0..mRequestPermission.size-1){
+                if(ActivityCompat.checkSelfPermission(owner,mRequestPermission[index])!=PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(owner,mRequestPermission,REQUEST_CODE)
                     return@setOnClickListener
                 }
             }
 
-            var dlg = WifiBottomSheetDialog(owner, owner)
+            var dlg=WifiBottomSheetDialog(owner,owner)
             dlg.show()
         }
 
-        mApName = findViewById(R.id.ap_name) as TextView
+        mApName=findViewById(R.id.ap_name) as TextView
 
         mRecyclerView = view1 as RecyclerView
         mRecyclerView?.adapter = DeviceRecyclerViewAdapter(mDeviceInfoList)
@@ -144,8 +141,8 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         doSearch()
     }
 
-    private fun initDrawerLayout() {
-        mTextName = findViewById(R.id.text_name) as TextView
+    private fun initDrawerLayout(){
+        mTextName=findViewById(R.id.text_name) as TextView
 
         findViewById(R.id.text_faq)?.setOnClickListener {
 
@@ -160,7 +157,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         }
 
         findViewById(R.id.text_name)?.setOnClickListener {
-            var dlg = EditNameDialog(activity = owner, context = owner)
+            var dlg=EditNameDialog(activity = owner,context =owner )
             dlg.show()
             dlg.setOnDismissListener({
                 mTextName?.setText(PreferenceManager.getDefaultSharedPreferences(owner).
@@ -202,22 +199,22 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if (requestCode != REQUEST_CODE) return
-        var hasPermission = true
+        if(requestCode!=REQUEST_CODE) return
+        var hasPermission=true
 
-        for (index in 0..mRequestPermission.size - 1) {
-            if (grantResults[index] != PackageManager.PERMISSION_GRANTED) {
-                hasPermission = false
+        for(index in 0..mRequestPermission.size-1){
+            if(grantResults[index]!=PackageManager.PERMISSION_GRANTED){
+                hasPermission=false
             }
 
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(owner, mRequestPermission[index])) {
+            if(!ActivityCompat.shouldShowRequestPermissionRationale(owner,mRequestPermission[index])){
                 owner.startActivity(getAppDetailSettingIntent(owner))
                 return
             }
         }
 
-        if (hasPermission) {
-            var dialog = ApDataDialog(owner, owner)
+        if(hasPermission){
+            var dialog=ApDataDialog(owner,owner)
             dialog.show()
         }
     }
