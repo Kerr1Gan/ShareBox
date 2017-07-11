@@ -25,14 +25,17 @@ import android.view.ViewGroup
 import android.widget.*
 import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.R
+import com.ecjtu.sharebox.domain.DeviceInfo
 import com.ecjtu.sharebox.domain.PreferenceInfo
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.ui.activity.MainActivity
+import com.ecjtu.sharebox.ui.adapter.DeviceRecyclerViewAdapter
 import com.ecjtu.sharebox.ui.dialog.WifiBottomSheetDialog
 import org.ecjtu.channellibrary.wifiutil.NetworkUtil
 import com.ecjtu.sharebox.ui.dialog.ApDataDialog
 import com.ecjtu.sharebox.ui.dialog.EditNameDialog
 import com.ecjtu.sharebox.ui.fragment.FilePickDialogFragment
+import com.ecjtu.sharebox.util.photoutil.CapturePhotoHelper
 import org.ecjtu.channellibrary.devicesearch.DeviceSearcher
 import org.ecjtu.channellibrary.devicesearch.DiscoverHelper
 import org.ecjtu.channellibrary.wifiutil.WifiUtil
@@ -69,6 +72,27 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
             Manifest.permission.CHANGE_WIFI_STATE)
 
     private var mRecyclerView:RecyclerView? =null
+
+    private var mDeviceInfoList:MutableList<DeviceInfo> = mutableListOf<DeviceInfo>()
+
+    private var mPhotoHelper:CapturePhotoHelper?=null
+
+    companion object {
+        //Settings.ACTION_APPLICATION_DETAIL_SETTING
+        fun getAppDetailSettingIntent(context: Context): Intent {
+            var localIntent = Intent()
+            localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            if (Build.VERSION.SDK_INT >= 9) {
+                localIntent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                localIntent.setData(Uri.fromParts("package", context.getPackageName(), null))
+            } else if (Build.VERSION.SDK_INT <= 8) {
+                localIntent.setAction(Intent.ACTION_VIEW)
+                localIntent.setClassName("com.android.settings", "com.android.settings.InstalledAppDetails")
+                localIntent.putExtra("com.android.settings.ApplicationPkgName", context.getPackageName())
+            }
+            return localIntent
+        }
+    }
 
     init {
         mToolbar = findViewById(R.id.toolbar) as Toolbar
@@ -154,6 +178,11 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
 
         findViewById(R.id.text_help)?.setOnClickListener {
 
+        }
+
+        findViewById(R.id.icon)?.setOnClickListener {
+            mPhotoHelper= CapturePhotoHelper(owner)
+            mPhotoHelper?.takePhoto()
         }
 
         findViewById(R.id.text_name)?.setOnClickListener {
@@ -277,9 +306,13 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
         var name=PreferenceManager.getDefaultSharedPreferences(owner).
                 getString(PreferenceInfo.PREF_DEVICE_NAME,Build.MODEL)
 
+        var obj=owner.getMainApplication().getSavedStateInstance().get(MainActivity.KEY_SERVER_PORT)
+        var port=""
+        if(obj!=null)
+            port=obj as String
         mDiscoverHelper?.stop(true,true)
 
-        mDiscoverHelper = DiscoverHelper(owner, name, "8000","/head.png")
+        mDiscoverHelper = DiscoverHelper(owner, name, port,"/API/Icon")
         mDiscoverHelper?.setMessageListener { msg, deviceSet, handler ->
             var state = owner.getMainApplication().getSavedStateInstance().get(Constants.AP_STATE)
             when (msg) {
@@ -338,7 +371,13 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
             if(!flag){
                 var data=bean.name
                 var arr=data.split(",")
-                var deviceInfo=DeviceInfo(arr[0],bean.ip,Integer.parseInt(arr[1]),arr[2])
+                var port=0
+                try {
+                    port=Integer.parseInt(arr[1])
+                }catch (e:Exception){
+                    port=0
+                }
+                var deviceInfo= DeviceInfo(arr[0],bean.ip,port,arr[2])
                 mDeviceInfoList.add(deviceInfo)
                 mRecyclerView?.adapter?.notifyDataSetChanged()
             }
@@ -357,20 +396,9 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
         }
     }
 
-    companion object {
-        //Settings.ACTION_APPLICATION_DETAIL_SETTING
-        fun getAppDetailSettingIntent(context: Context): Intent {
-            var localIntent = Intent()
-            localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            if (Build.VERSION.SDK_INT >= 9) {
-                localIntent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                localIntent.setData(Uri.fromParts("package", context.getPackageName(), null))
-            } else if (Build.VERSION.SDK_INT <= 8) {
-                localIntent.setAction(Intent.ACTION_VIEW)
-                localIntent.setClassName("com.android.settings", "com.android.settings.InstalledAppDetails")
-                localIntent.putExtra("com.android.settings.ApplicationPkgName", context.getPackageName())
-            }
-            return localIntent
-        }
+    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        mPhotoHelper?.onActivityResult(requestCode,resultCode,data)
     }
+
+
 }

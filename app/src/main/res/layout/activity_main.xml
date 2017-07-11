@@ -153,6 +153,7 @@
                         android:layout_height="80dp"
                         android:src="@mipmap/logo"
                         android:layout_margin="45dp"
+                        android:id="@+id/icon"
                         android:layout_gravity="center_horizontal"/>
 
                     <TextView

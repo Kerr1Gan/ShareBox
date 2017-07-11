@@ -1,29 +1,22 @@
 package com.ecjtu.sharebox.ui.activity
 
 import android.animation.ObjectAnimator
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.graphics.drawable.RotateDrawable
 import android.net.NetworkInfo
 import android.net.wifi.WifiInfo
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.widget.Toolbar
-import android.util.Log
-import android.view.*
-import com.ecjtu.sharebox.R
-import com.ecjtu.sharebox.presenter.MainActivityDelegate
-import android.app.Activity
-import android.content.*
-import android.view.KeyCharacterMap
-import android.view.ViewConfiguration
-import android.graphics.Point
-import android.os.Build
 import android.os.IBinder
 import android.os.Message
+import android.support.v7.widget.Toolbar
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import com.ecjtu.sharebox.R
+import com.ecjtu.sharebox.getMainApplication
+import com.ecjtu.sharebox.presenter.MainActivityDelegate
 import com.ecjtu.sharebox.server.impl.service.EasyServerService
+import org.ecjtu.easyserver.net.HostInterface
 
 
 //http://www.tmtpost.com/195557.html 17.6.7
@@ -33,6 +26,8 @@ class MainActivity : BaseActionActivity() {
         private val TAG="MainActivity"
         private val MSG_SERVICE_STARTED=0x10
         private val MSG_START_SERVER=0x11
+
+        val KEY_SERVER_PORT="key_server_port"
     }
 
     private var mDelegate : MainActivityDelegate? =null
@@ -223,41 +218,59 @@ class MainActivity : BaseActionActivity() {
         }
     }
 
-    fun isNavigationBarShow(activity: Activity): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            val display = windowManager.defaultDisplay
-            val size = Point()
-            val realSize = Point()
-            display.getSize(size)
-            display.getRealSize(realSize)
-            return realSize.y !== size.y
-        } else {
-            val menu = ViewConfiguration.get(activity).hasPermanentMenuKey()
-            val back = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK)
-            return !(menu || back)
-        }
-    }
-
-    fun getNavigationBarHeight(activity: Activity): Int {
-        if (!isNavigationBarShow(activity)) {
-            return 0
-        }
-        val resources = activity.resources
-        val resourceId = resources.getIdentifier("navigation_bar_height",
-                "dimen", "android")
-        //获取NavigationBar的高度
-        val height = resources.getDimensionPixelSize(resourceId)
-        return height
-    }
-
-
-    fun getScreenHeight(activity: Activity): Int {
-        return activity.windowManager.defaultDisplay.height + getNavigationBarHeight(activity)
-    }
-
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         mDelegate?.onRequestPermissionsResult(requestCode,permissions,grantResults)
+    }
+
+
+    private val mServiceConnection=object :ServiceConnection{
+        override fun onServiceDisconnected(name: ComponentName?) {
+            Log.e(TAG,"onServiceDisconnected "+name.toString())
+        }
+
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            Log.e(TAG,"onServiceConnected "+name.toString())
+            mService=(service as EasyServerService.EasyServerBinder).service
+            getHandler()?.obtainMessage(MSG_SERVICE_STARTED)?.sendToTarget()
+        }
+    }
+
+    override fun handleMessage(msg: Message) {
+        super.handleMessage(msg)
+        when(msg.what){
+            MSG_SERVICE_STARTED->{
+                if(mDelegate?.checkCurrentAp(null) ?: false){
+                    getHandler()?.obtainMessage(MSG_START_SERVER)?.sendToTarget()
+                }
+            }
+            MSG_START_SERVER->{
+                if(mService==null) return
+                if(!mService?.isServerAlive()!!){
+                    Log.e(TAG,"isServerAlive false,start server")
+                    var intent=EasyServerService.getApIntent(this)
+                    HostInterface.clearCallback()
+                    HostInterface.addCallback { server, hostIP, port ->
+                        getMainApplication().getSavedStateInstance().put(KEY_SERVER_PORT,port)
+                    }
+                    startService(intent)
+                }else{
+                    getMainApplication().getSavedStateInstance().remove(KEY_SERVER_PORT)
+                }
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        try {
+            unbindService(mServiceConnection)
+        }catch (ignore:Exception){
+        }
+        super.onDestroy()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        mDelegate?.onActivityResult(requestCode,resultCode,data)
     }
 }
