@@ -7,6 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.ecjtu.sharebox.MainApplication
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.domain.DeviceInfo
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
@@ -33,10 +36,10 @@ class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerViewAdapter
 
     override fun onBindViewHolder(holder: VH?, position: Int) {
         var info=mDeviceList?.get(position)
-        TextUtils.isEmpty(info?.icon).let {
 
-        }
-        holder?.icon?.setImageResource(R.mipmap.ic_launcher)
+        Glide.with(holder?.itemView?.context).load(info?.icon).
+                apply(RequestOptions().placeholder(R.mipmap.ic_launcher)).
+                into(holder?.icon)
         holder?.name?.setText(info?.name)
     }
 
@@ -44,9 +47,13 @@ class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerViewAdapter
     class VH(item: View) : RecyclerView.ViewHolder(item) {
         var icon: ImageView? = null
         var name: TextView? =null
+        var thumb: ImageView? =null
+        var fileCount: TextView? =null
         init {
             icon=item.findViewById(R.id.icon) as ImageView
             name=item.findViewById(R.id.name) as TextView
+            thumb=item.findViewById(R.id.content) as ImageView
+            fileCount=item.findViewById(R.id.file_count) as TextView
         }
     }
 }
