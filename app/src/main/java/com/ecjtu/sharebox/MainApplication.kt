@@ -1,26 +1,19 @@
 package com.ecjtu.sharebox
 
-import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.Intent
-import android.os.Environment
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.cache.DiskLruCacheFactory
-import com.bumptech.glide.load.DecodeFormat
-import android.os.Environment.getExternalStorageDirectory
 import android.support.v4.content.LocalBroadcastManager
+import com.bumptech.glide.Glide
 import com.bumptech.glide.GlideBuilder
-import com.bumptech.glide.Registry
+import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory
 import com.bumptech.glide.load.engine.cache.LruResourceCache
-import com.bumptech.glide.load.engine.cache.MemoryCache
 import com.bumptech.glide.module.AppGlideModule
-import com.bumptech.glide.module.GlideModule
-import com.bumptech.glide.module.LibraryGlideModule
-import com.ecjtu.sharebox.service.DaemonService
 import com.ecjtu.sharebox.service.MainService
+import com.ecjtu.sharebox.util.fileutils.FileUtil
 import org.ecjtu.channellibrary.wifidirect.WifiDirectManager
+import java.io.File
 
 
 /**
@@ -56,11 +49,9 @@ class MainApplication:Application(){
     }
 
     private fun initSavedState(){
-
     }
 
-
-    inner class SimpleGlideModule : AppGlideModule() {
+    class SimpleGlideModule : AppGlideModule() {
         override fun applyOptions(context: Context, builder: GlideBuilder) {
             //定义缓存大小为100M
             val diskCacheSize = 100 * 1024 * 1024

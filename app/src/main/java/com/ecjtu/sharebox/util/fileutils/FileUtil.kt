@@ -4,12 +4,10 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import java.io.*
 
 
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileNotFoundException
-import java.io.IOException
+import java.lang.Exception
 import java.util.*
 
 
@@ -375,6 +373,28 @@ object FileUtil {
             }
         }
         return count
+    }
+
+    fun copyFile2InternalPath(file:File,name:String,context: Context):Boolean{
+        var root=context.filesDir
+        var fileInputStream:FileInputStream? = null
+        var buf:BufferedOutputStream? = null
+        try {
+            fileInputStream=FileInputStream(file)
+            buf=BufferedOutputStream(FileOutputStream(File(root.absoluteFile,name)))
+            var arr=ByteArray(1024*5)
+            var len=fileInputStream.read(arr)
+            while (len>0){
+                buf.write(arr)
+                len=fileInputStream.read(arr)
+            }
+        }catch (e:Exception){
+            return false
+        }finally {
+            fileInputStream?.close()
+            buf?.close()
+        }
+        return true
     }
 }
 
