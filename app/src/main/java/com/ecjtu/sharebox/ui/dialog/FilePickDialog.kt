@@ -264,7 +264,8 @@ class FilePickDialog :BaseBottomSheetDialog{
                     mTabItemHolders?.get("Music")?.fileList=list
                 }
                 FileUtil.MediaFileType.IMG->{
-                    list=FileUtil.getAllImageFile(mContext!!,null)
+//                    list=FileUtil.getAllImageFile(mContext!!,null)
+                    list=FileUtil.getImagesByDCIM(mContext!!)
                     mTabItemHolders?.get("Photo")?.fileList=list
                 }
                 FileUtil.MediaFileType.DOC->{

@@ -49,6 +49,7 @@ class MainApplication:Application(){
     }
 
     private fun initSavedState(){
+        FileUtil.getImagesByDCIM(this)
     }
 
     class SimpleGlideModule : AppGlideModule() {

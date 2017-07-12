@@ -201,6 +201,9 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
 
         ImageView icon=(ImageView) convertView.findViewById(R.id.icon);
         icon.setImageDrawable(null);
+
+        TextView text= (TextView) convertView.findViewById(R.id.text);
+        text.setText("");
         if(type == FileUtil.MediaFileType.MOVIE ||
                 type== FileUtil.MediaFileType.IMG){
             Glide.with(mContext).load(thumb.getAbsolutePath()).into(icon);
@@ -212,11 +215,11 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
             }else
                 icon.setImageBitmap(b);
         }else if(type== FileUtil.MediaFileType.MP3){
-            icon.setImageResource(R.mipmap.music);
+            text.setText(R.string.music);
         }else if(type== FileUtil.MediaFileType.DOC){
-            icon.setImageResource(R.mipmap.document);
+            text.setText(R.string.doc);
         }else if(type== FileUtil.MediaFileType.RAR){
-            icon.setImageResource(R.mipmap.rar);
+            text.setText(R.string.rar);
         }
 
         View child=convertView.findViewById(R.id.select_all);

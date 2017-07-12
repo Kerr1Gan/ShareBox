@@ -24,6 +24,18 @@
             android:layout_marginBottom="10dp"
             android:layout_marginTop="15dp"
             android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/text"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="15dp"
+            android:singleLine="true"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"/>
     </RelativeLayout>
 
     <TextView
