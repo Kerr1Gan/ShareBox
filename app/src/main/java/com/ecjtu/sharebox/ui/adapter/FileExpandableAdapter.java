@@ -20,7 +20,7 @@ import com.bumptech.glide.Glide;
 import com.ecjtu.sharebox.R;
 import com.ecjtu.sharebox.async.AppThumbTask;
 import com.ecjtu.sharebox.ui.activity.BaseFragmentActivity;
-import com.ecjtu.sharebox.ui.dialog.FileItemLongClickDialog;
+import com.ecjtu.sharebox.ui.dialog.TextItemDialog;
 import com.ecjtu.sharebox.ui.dialog.FilePickDialog;
 import com.ecjtu.sharebox.ui.fragment.VideoPlayerFragment;
 import com.ecjtu.sharebox.ui.view.FileExpandableListView;
@@ -108,11 +108,11 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
 
     @Override
     public boolean onLongClick(final View v) {
-        final FileItemLongClickDialog dlg=new FileItemLongClickDialog(mExpandableListView.getContext());
+        final TextItemDialog dlg=new TextItemDialog(mExpandableListView.getContext());
         dlg.setOnClickListener(new Function1<Integer, Void>() {
             @Override
             public Void invoke(Integer integer) {
-                if(integer==R.id.open){
+                if(integer==0){
                     String path=((File)v.getTag()).getAbsolutePath();
                     if(mTabHolder.getType()== FileUtil.MediaFileType.MOVIE){
                         Bundle bundle=new Bundle();
@@ -133,6 +133,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
                 return null;
             }
         });
+        dlg.setupItem(new String[]{"打开","取消"});
         dlg.show();
         return true;
     }

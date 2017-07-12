@@ -20,7 +20,7 @@ import org.ecjtu.easyserver.net.HostInterface
 
 
 //http://www.tmtpost.com/195557.html 17.6.7
-class MainActivity : BaseActionActivity() {
+class MainActivity : ImmersiveFragmentActivity() {
 
     companion object {
         private val TAG="MainActivity"

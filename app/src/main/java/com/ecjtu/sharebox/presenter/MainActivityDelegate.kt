@@ -36,6 +36,7 @@ import com.ecjtu.sharebox.ui.dialog.ApDataDialog
 import com.ecjtu.sharebox.ui.dialog.EditNameDialog
 import com.ecjtu.sharebox.ui.fragment.FilePickDialogFragment
 import com.ecjtu.sharebox.util.photoutil.CapturePhotoHelper
+import com.ecjtu.sharebox.util.photoutil.TakePhotoHelper
 import org.ecjtu.channellibrary.devicesearch.DeviceSearcher
 import org.ecjtu.channellibrary.devicesearch.DiscoverHelper
 import org.ecjtu.channellibrary.wifiutil.WifiUtil
@@ -76,6 +77,8 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
     private var mDeviceInfoList:MutableList<DeviceInfo> = mutableListOf<DeviceInfo>()
 
     private var mPhotoHelper:CapturePhotoHelper?=null
+
+    private var mImageHelper:TakePhotoHelper? =null
 
     companion object {
         //Settings.ACTION_APPLICATION_DETAIL_SETTING
@@ -181,8 +184,10 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
         }
 
         findViewById(R.id.icon)?.setOnClickListener {
-            mPhotoHelper= CapturePhotoHelper(owner)
-            mPhotoHelper?.takePhoto()
+//            mPhotoHelper= CapturePhotoHelper(owner)
+//            mPhotoHelper?.takePhoto()
+            mImageHelper= TakePhotoHelper(owner)
+            mImageHelper?.takePhoto()
         }
 
         findViewById(R.id.text_name)?.setOnClickListener {
@@ -398,6 +403,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
 
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         mPhotoHelper?.onActivityResult(requestCode,resultCode,data)
+        mImageHelper?.onActivityResult(requestCode,resultCode,data)
     }
 
 

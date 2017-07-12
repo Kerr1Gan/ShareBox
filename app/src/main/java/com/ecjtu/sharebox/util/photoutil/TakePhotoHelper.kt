@@ -2,23 +2,21 @@ package com.ecjtu.sharebox.util.photoutil
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.MediaStore
 import android.support.v4.app.FragmentActivity
 import java.io.File
 
-
 /**
- * Created by KerriGan on 2017/7/11.
+ * Created by KerriGan on 2017/7/12.
  */
-class CapturePhotoHelper(fragmentActivity: FragmentActivity) :CropPhotoHelper(){
-    private var mActivity: FragmentActivity? = null
+class TakePhotoHelper(fragmentActivity: FragmentActivity):CropPhotoHelper(){
 
     companion object {
-        private val TAKE_PHOTO = 0x1001
-        private val IMAGE_PATH = "/sdcard/"
+        val TAKE_PHOTO=0x1002
     }
+
+    private var mActivity: FragmentActivity?=null
 
     init {
         mActivity=fragmentActivity
@@ -27,8 +25,7 @@ class CapturePhotoHelper(fragmentActivity: FragmentActivity) :CropPhotoHelper(){
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == TAKE_PHOTO) {
-                val picture = File(IMAGE_PATH, "temp.jpg")
-                photoZoom(Uri.fromFile(picture),mActivity!!, IMAGE_PATH+"head.png")
+                photoZoom(data?.data!!,mActivity!!, "/sdcard/"+"head.png")
             }
 
             if (requestCode == PHOTO_RESULT) {
@@ -39,10 +36,8 @@ class CapturePhotoHelper(fragmentActivity: FragmentActivity) :CropPhotoHelper(){
 
 
     fun takePhoto(){
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        intent.putExtra(MediaStore.Images.Media.ORIENTATION, 0)
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(File(IMAGE_PATH, "temp.jpg")))
+        val intent = Intent(Intent.ACTION_PICK,null)
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
         mActivity?.startActivityForResult(intent, TAKE_PHOTO)
     }
-
 }

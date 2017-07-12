@@ -24,9 +24,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".ui.activity.BaseFragmentActivity"
-            android:theme="@style/ImageStatusBarStyle"></activity>
+            android:name=".ui.activity.ImmersiveFragmentActivity"
+            android:theme="@style/ImageStatusBarStyle"/>
+
         <activity android:name=".ui.activity.TestActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

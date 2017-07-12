@@ -1,23 +1,23 @@
 package com.ecjtu.sharebox.ui.dialog
 
-import android.app.Activity
 import android.content.Context
-import android.graphics.Paint
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.ecjtu.sharebox.R
-import org.w3c.dom.Text
 
 /**
  * Created by KerriGan on 2017/6/18.
  */
-class FileItemLongClickDialog(context: Context):BaseBottomSheetDialog(context){
+class TextItemDialog(context: Context):BaseBottomSheetDialog(context),View.OnClickListener{
+
 
     private var mBody:((id:Int)->Void)? =null
 
     private var mTitles:Array<String>? =null
+
+    private var mRoot:ViewGroup? =null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,18 +25,22 @@ class FileItemLongClickDialog(context: Context):BaseBottomSheetDialog(context){
     }
 
     override fun onCreateView(): View? {
-        return layoutInflater.inflate(R.layout.dialog_file_item_long_click,null)
+        return layoutInflater.inflate(R.layout.dialog_text_item,null)
     }
 
     override fun onViewCreated(view: View?): Boolean {
+        mRoot= view as ViewGroup?
 
-        view?.findViewById(R.id.open)?.setOnClickListener {
-            mBody?.invoke(R.id.open)
-        }
-
-
-        view?.findViewById(R.id.close)?.setOnClickListener {
-            mBody?.invoke(R.id.close)
+        for(index in 0..(mTitles!!.size-1)){
+            var child=layoutInflater.inflate(R.layout.layout_dialog_text_item,mRoot,false) as TextView
+            child.setText(mTitles!![index])
+            mRoot?.addView(child)
+            if(index!=mTitles!!.size-1){
+                var divider=layoutInflater.inflate(R.layout.layout_divider,mRoot,false)
+                mRoot?.addView(divider)
+            }
+            child.setOnClickListener(this)
+            child.setTag(index)
         }
 
         return super.onViewCreated(view)
@@ -48,5 +52,10 @@ class FileItemLongClickDialog(context: Context):BaseBottomSheetDialog(context){
 
     fun setupItem(titles: Array<String>){
         mTitles=titles
+    }
+
+    override fun onClick(v: View?) {
+        var index=v?.getTag() as Int
+        mBody?.invoke(index)
     }
 }
