@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.os.Environment
 import java.io.*
 
 
@@ -377,24 +378,61 @@ object FileUtil {
 
     fun copyFile2InternalPath(file:File,name:String,context: Context):Boolean{
         var root=context.filesDir
-        var fileInputStream:FileInputStream? = null
+        var fis:FileInputStream? = null
         var buf:BufferedOutputStream? = null
         try {
-            fileInputStream=FileInputStream(file)
+            fis=FileInputStream(file)
             buf=BufferedOutputStream(FileOutputStream(File(root.absoluteFile,name)))
             var arr=ByteArray(1024*5)
-            var len=fileInputStream.read(arr)
+            var len=fis.read(arr)
             while (len>0){
                 buf.write(arr)
-                len=fileInputStream.read(arr)
+                len=fis.read(arr)
             }
         }catch (e:Exception){
             return false
         }finally {
-            fileInputStream?.close()
+            fis?.close()
             buf?.close()
         }
         return true
+    }
+
+    fun getImagesByDCIM(context: Context): MutableList<File>{
+        var externalSd=StorageUtil.getStoragePath(context,true)
+        var internalSd=Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
+        var ret= mutableListOf<File>()
+
+        findAllImage(internalSd,ret)
+
+        externalSd=externalSd+"/"+Environment.DIRECTORY_DCIM
+
+        var extSd=File(externalSd)
+
+        if(extSd.isDirectory&&extSd.exists()){
+            findAllImage(extSd,ret)
+        }
+
+        return ret
+    }
+
+    fun findAllImage(file: File,ret: MutableList<File>){
+        findFilesByType(file,ret,MediaFileType.IMG)
+    }
+
+    fun findFilesByType(file: File,ret: MutableList<File>,type: MediaFileType){
+        var list=file.listFiles()
+        if(list!=null){
+            for(obj in list){
+                if(obj.isDirectory){
+                    findAllImage(obj,ret)
+                }else{
+                    if(getMediaFileTypeByName(obj.name)==type){
+                        ret.add(obj)
+                    }
+                }
+            }
+        }
     }
 }
 

@@ -17,7 +17,7 @@ import com.ecjtu.sharebox.presenter.MainActivityDelegate
 /**
  * Created by Ethan_Xiang on 2017/7/3.
  */
-class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerViewAdapter.VH> {
+class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerViewAdapter.VH>,View.OnClickListener{
 
     private var mDeviceList: MutableList<DeviceInfo>? = null
 
@@ -31,18 +31,23 @@ class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerViewAdapter
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): VH? {
         var v = LayoutInflater.from(parent?.context).inflate(R.layout.layout_device_item, parent, false)
+        v.setOnClickListener(this)
         return VH(v)
     }
 
     override fun onBindViewHolder(holder: VH?, position: Int) {
         var info=mDeviceList?.get(position)
 
+        holder?.itemView?.setTag(R.id.extra_tag,position)
         Glide.with(holder?.itemView?.context).load(info?.icon).
                 apply(RequestOptions().placeholder(R.mipmap.ic_launcher)).
                 into(holder?.icon)
         holder?.name?.setText(info?.name)
     }
 
+    override fun onClick(v: View?) {
+        var position=v?.getTag(R.id.extra_tag)
+    }
 
     class VH(item: View) : RecyclerView.ViewHolder(item) {
         var icon: ImageView? = null
