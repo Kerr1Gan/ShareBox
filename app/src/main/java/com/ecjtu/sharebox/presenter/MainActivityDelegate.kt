@@ -34,6 +34,7 @@ import com.ecjtu.sharebox.ui.dialog.WifiBottomSheetDialog
 import org.ecjtu.channellibrary.wifiutil.NetworkUtil
 import com.ecjtu.sharebox.ui.dialog.ApDataDialog
 import com.ecjtu.sharebox.ui.dialog.EditNameDialog
+import com.ecjtu.sharebox.ui.dialog.TextItemDialog
 import com.ecjtu.sharebox.ui.fragment.FilePickDialogFragment
 import com.ecjtu.sharebox.util.photoutil.CapturePhotoHelper
 import com.ecjtu.sharebox.util.photoutil.TakePhotoHelper
@@ -184,10 +185,19 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
         }
 
         findViewById(R.id.icon)?.setOnClickListener {
-//            mPhotoHelper= CapturePhotoHelper(owner)
-//            mPhotoHelper?.takePhoto()
-            mImageHelper= TakePhotoHelper(owner)
-            mImageHelper?.takePhoto()
+            var dlg=TextItemDialog(owner)
+            dlg.setupItem(arrayOf("从照相机选择","从相册选择"))
+            dlg.setOnClickListener { index ->
+                if (index == 0) {
+                    mPhotoHelper = CapturePhotoHelper(owner)
+                    mPhotoHelper?.takePhoto()
+                } else {
+                    mImageHelper = TakePhotoHelper(owner)
+                    mImageHelper?.takePhoto()
+                }
+                dlg.cancel()
+            }
+            dlg.show()
         }
 
         findViewById(R.id.text_name)?.setOnClickListener {

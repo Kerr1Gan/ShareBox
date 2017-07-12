@@ -13,7 +13,7 @@ import com.ecjtu.sharebox.R
 class TextItemDialog(context: Context):BaseBottomSheetDialog(context),View.OnClickListener{
 
 
-    private var mBody:((id:Int)->Void)? =null
+    private var mBody:((id:Int)->Unit)? =null
 
     private var mTitles:Array<String>? =null
 
@@ -46,7 +46,7 @@ class TextItemDialog(context: Context):BaseBottomSheetDialog(context),View.OnCli
         return super.onViewCreated(view)
     }
 
-    fun setOnClickListener(body:(id:Int)->Void){
+    fun setOnClickListener(body:(id:Int)->Unit){
         mBody=body
     }
 

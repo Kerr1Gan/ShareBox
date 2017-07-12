@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
 /**
@@ -109,9 +110,9 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
     @Override
     public boolean onLongClick(final View v) {
         final TextItemDialog dlg=new TextItemDialog(mExpandableListView.getContext());
-        dlg.setOnClickListener(new Function1<Integer, Void>() {
+        dlg.setOnClickListener(new Function1<Integer, Unit>() {
             @Override
-            public Void invoke(Integer integer) {
+            public Unit invoke(Integer integer) {
                 if(integer==0){
                     String path=((File)v.getTag()).getAbsolutePath();
                     if(mTabHolder.getType()== FileUtil.MediaFileType.MOVIE){
