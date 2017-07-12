@@ -1,38 +1,33 @@
 package com.ecjtu.sharebox.ui.activity
 
 import android.animation.ObjectAnimator
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.graphics.drawable.RotateDrawable
 import android.net.NetworkInfo
 import android.net.wifi.WifiInfo
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.widget.Toolbar
-import android.util.Log
-import android.view.*
-import com.ecjtu.sharebox.R
-import com.ecjtu.sharebox.presenter.MainActivityDelegate
-import android.app.Activity
-import android.content.*
-import android.view.KeyCharacterMap
-import android.view.ViewConfiguration
-import android.graphics.Point
-import android.os.Build
 import android.os.IBinder
 import android.os.Message
-//import com.ecjtu.sharebox.server.impl.service.EasyServerService
+import android.support.v7.widget.Toolbar
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import com.ecjtu.sharebox.R
+import com.ecjtu.sharebox.getMainApplication
+import com.ecjtu.sharebox.presenter.MainActivityDelegate
+import com.ecjtu.sharebox.server.impl.service.EasyServerService
+import org.ecjtu.easyserver.net.HostInterface
 
 
 //http://www.tmtpost.com/195557.html 17.6.7
-class MainActivity : BaseActionActivity() {
+class MainActivity : ImmersiveFragmentActivity() {
 
     companion object {
         private val TAG="MainActivity"
         private val MSG_SERVICE_STARTED=0x10
         private val MSG_START_SERVER=0x11
+
+        val KEY_SERVER_PORT="key_server_port"
     }
 
     private var mDelegate : MainActivityDelegate? =null
@@ -43,7 +38,7 @@ class MainActivity : BaseActionActivity() {
 
     var refreshing =true
 
-//    private var mService: EasyServerService? =null
+    private var mService: EasyServerService? =null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +57,7 @@ class MainActivity : BaseActionActivity() {
         }
 
         //init service
-//        var intent=Intent(this,EasyServerService::class.java)
+        var intent=Intent(this,EasyServerService::class.java)
         startService(intent)
         bindService(intent,mServiceConnection,Context.BIND_AUTO_CREATE)
     }
@@ -159,9 +154,9 @@ class MainActivity : BaseActionActivity() {
             if (action == ACTION_WIFI_AP_CHANGED) {
                 when (state) {
                     WIFI_AP_STATE_ENABLED -> {
-//                        if(mDelegate?.checkCurrentAp(null)?:false){
-//                            getHandler()?.obtainMessage(MSG_START_SERVER)?.sendToTarget()
-//                        }
+                        if(mDelegate?.checkCurrentAp(null)?:false){
+                            getHandler()?.obtainMessage(MSG_START_SERVER)?.sendToTarget()
+                        }
                         var s = ""
                         when (state) {
                             WIFI_AP_STATE_DISABLED -> s = "WIFI_AP_STATE_DISABLED"
@@ -176,7 +171,6 @@ class MainActivity : BaseActionActivity() {
                         mDelegate?.checkCurrentAp(null)
                     }
                     else -> {
-
                         var s = ""
                         when (state) {
                             WIFI_AP_STATE_DISABLED -> s = "WIFI_AP_STATE_DISABLED"
@@ -194,9 +188,9 @@ class MainActivity : BaseActionActivity() {
                 var state=intent.getIntExtra(EXTRA_WIFI_STATE, -1)
                 when(state){
                     WIFI_STATE_ENABLED->{
-//                        if(mDelegate?.checkCurrentAp(null)?:false){
-//                            getHandler()?.obtainMessage(MSG_START_SERVER)?.sendToTarget()
-//                        }
+                        if(mDelegate?.checkCurrentAp(null)?:false){
+                            getHandler()?.obtainMessage(MSG_START_SERVER)?.sendToTarget()
+                        }
                     }
                     WIFI_STATE_DISABLED->{
                         mDelegate?.checkCurrentAp(null)
@@ -229,6 +223,7 @@ class MainActivity : BaseActionActivity() {
         mDelegate?.onRequestPermissionsResult(requestCode,permissions,grantResults)
     }
 
+
     private val mServiceConnection=object :ServiceConnection{
         override fun onServiceDisconnected(name: ComponentName?) {
             Log.e(TAG,"onServiceDisconnected "+name.toString())
@@ -236,7 +231,7 @@ class MainActivity : BaseActionActivity() {
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             Log.e(TAG,"onServiceConnected "+name.toString())
-//            mService=(service as EasyServerService.EasyServerBinder).service
+            mService=(service as EasyServerService.EasyServerBinder).service
             getHandler()?.obtainMessage(MSG_SERVICE_STARTED)?.sendToTarget()
         }
     }
@@ -245,17 +240,23 @@ class MainActivity : BaseActionActivity() {
         super.handleMessage(msg)
         when(msg.what){
             MSG_SERVICE_STARTED->{
-//                if(mDelegate?.checkCurrentAp(null) ?: false){
-//
-//                }
+                if(mDelegate?.checkCurrentAp(null) ?: false){
+                    getHandler()?.obtainMessage(MSG_START_SERVER)?.sendToTarget()
+                }
             }
             MSG_START_SERVER->{
-//                if(mService==null) return
-//                if(!mService?.isServerAlive()!!){
-//                    Log.e(TAG,"isServerAlive false,start server")
-//                    var intent=EasyServerService.getApIntent(this)
-//                    startService(intent)
-//                }
+                if(mService==null) return
+                if(!mService?.isServerAlive()!!){
+                    Log.e(TAG,"isServerAlive false,start server")
+                    var intent=EasyServerService.getApIntent(this)
+                    HostInterface.clearCallback()
+                    HostInterface.addCallback { server, hostIP, port ->
+                        getMainApplication().getSavedStateInstance().put(KEY_SERVER_PORT,port)
+                    }
+                    startService(intent)
+                }else{
+                    getMainApplication().getSavedStateInstance().remove(KEY_SERVER_PORT)
+                }
             }
         }
     }
@@ -266,5 +267,10 @@ class MainActivity : BaseActionActivity() {
         }catch (ignore:Exception){
         }
         super.onDestroy()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        mDelegate?.onActivityResult(requestCode,resultCode,data)
     }
 }

@@ -30,13 +30,16 @@ import com.ecjtu.sharebox.domain.PreferenceInfo
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.ui.activity.MainActivity
 import com.ecjtu.sharebox.ui.adapter.DeviceRecyclerViewAdapter
+import com.ecjtu.sharebox.ui.dialog.WifiBottomSheetDialog
+import org.ecjtu.channellibrary.wifiutil.NetworkUtil
 import com.ecjtu.sharebox.ui.dialog.ApDataDialog
 import com.ecjtu.sharebox.ui.dialog.EditNameDialog
-import com.ecjtu.sharebox.ui.dialog.WifiBottomSheetDialog
+import com.ecjtu.sharebox.ui.dialog.TextItemDialog
 import com.ecjtu.sharebox.ui.fragment.FilePickDialogFragment
+import com.ecjtu.sharebox.util.photoutil.CapturePhotoHelper
+import com.ecjtu.sharebox.util.photoutil.TakePhotoHelper
 import org.ecjtu.channellibrary.devicesearch.DeviceSearcher
 import org.ecjtu.channellibrary.devicesearch.DiscoverHelper
-import org.ecjtu.channellibrary.wifiutil.NetworkUtil
 import org.ecjtu.channellibrary.wifiutil.WifiUtil
 import java.lang.Exception
 
@@ -74,6 +77,27 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
 
     private var mDeviceInfoList:MutableList<DeviceInfo> = mutableListOf<DeviceInfo>()
 
+    private var mPhotoHelper:CapturePhotoHelper?=null
+
+    private var mImageHelper:TakePhotoHelper? =null
+
+    companion object {
+        //Settings.ACTION_APPLICATION_DETAIL_SETTING
+        fun getAppDetailSettingIntent(context: Context): Intent {
+            var localIntent = Intent()
+            localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            if (Build.VERSION.SDK_INT >= 9) {
+                localIntent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                localIntent.setData(Uri.fromParts("package", context.getPackageName(), null))
+            } else if (Build.VERSION.SDK_INT <= 8) {
+                localIntent.setAction(Intent.ACTION_VIEW)
+                localIntent.setClassName("com.android.settings", "com.android.settings.InstalledAppDetails")
+                localIntent.putExtra("com.android.settings.ApplicationPkgName", context.getPackageName())
+            }
+            return localIntent
+        }
+    }
+
     init {
         mToolbar = findViewById(R.id.toolbar) as Toolbar
         mDrawerLayout = findViewById(R.id.drawer_layout) as DrawerLayout
@@ -84,7 +108,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
 
         mFloatingActionButton=findViewById(R.id.floating_action_button) as FloatingActionButton
         mFloatingActionButton.setOnClickListener({view->
-//            mViewSwitcher?.showNext()
+            //            mViewSwitcher?.showNext()
             var dlg=FilePickDialogFragment(owner)
             dlg.show(owner.supportFragmentManager,"FilePickDialogFragment")
         })
@@ -142,7 +166,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
 
         initDrawerLayout()
 
-        doSearch(null)
+        doSearch()
     }
 
     private fun initDrawerLayout(){
@@ -160,6 +184,22 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
 
         }
 
+        findViewById(R.id.icon)?.setOnClickListener {
+            var dlg=TextItemDialog(owner)
+            dlg.setupItem(arrayOf("从照相机选择","从相册选择"))
+            dlg.setOnClickListener { index ->
+                if (index == 0) {
+                    mPhotoHelper = CapturePhotoHelper(owner)
+                    mPhotoHelper?.takePhoto()
+                } else {
+                    mImageHelper = TakePhotoHelper(owner)
+                    mImageHelper?.takePhoto()
+                }
+                dlg.cancel()
+            }
+            dlg.show()
+        }
+
         findViewById(R.id.text_name)?.setOnClickListener {
             var dlg=EditNameDialog(activity = owner,context =owner )
             dlg.show()
@@ -173,32 +213,28 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
                 getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL))
     }
 
-    class Holder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
+    fun onOptionsItemSelected(item: MenuItem?): Boolean {
 
-    }
+        when (item?.getItemId()) {
+            R.id.qr_code -> {
 
-    fun onOptionsItemSelected(item: MenuItem?): Boolean{
+                var map = owner.getMainApplication().getSavedStateInstance()
+                var state = map.get(Constants.AP_STATE)
 
-        when(item?.getItemId()){
-            R.id.qr_code ->{
-
-                var map=owner.getMainApplication().getSavedStateInstance()
-                var state=map.get(Constants.AP_STATE)
-
-                if(state==Constants.NetWorkState.MOBILE||state==Constants.NetWorkState.NONE){
-                    Toast.makeText(owner,"需要连接WIFI或者开启热点",Toast.LENGTH_SHORT).show()
-                }else{
-                    var dialog=ApDataDialog(owner,owner)
+                if (state == Constants.NetWorkState.MOBILE || state == Constants.NetWorkState.NONE) {
+                    Toast.makeText(owner, "需要连接WIFI或者开启热点", Toast.LENGTH_SHORT).show()
+                } else {
+                    var dialog = ApDataDialog(owner, owner)
                     dialog.show()
                 }
                 return true
             }
-            R.id.refresh ->{
-                if(owner.refreshing){
-                    mDiscoverHelper?.prepare(owner,true,true)
-                    mDiscoverHelper?.start(true,true)
-                }else{
-                    mDiscoverHelper?.stop(true,true)
+            R.id.refresh -> {
+                if (owner.refreshing) {
+                    mDiscoverHelper?.prepare(owner, true, true)
+                    mDiscoverHelper?.start(true, true)
+                } else {
+                    mDiscoverHelper?.stop(true, true)
                 }
                 return true
             }
@@ -227,68 +263,71 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
         }
     }
 
-    fun checkCurrentAp(info:WifiInfo?){
-        if(NetworkUtil.isWifi(owner) || info!=null){
-            var wifiInfo:WifiInfo?=null
-            if(info!=null)
-                wifiInfo=info
+    fun checkCurrentAp(info: WifiInfo?):Boolean {
+        var hasAccess=false
+
+        if (NetworkUtil.isWifi(owner) || info != null) {
+            var wifiInfo: WifiInfo? = null
+            if (info != null)
+                wifiInfo = info
             else
-                wifiInfo=NetworkUtil.getConnectWifiInfo(owner)
+                wifiInfo = NetworkUtil.getConnectWifiInfo(owner)
 
             mApName.setText(getRealName(wifiInfo!!.ssid))
-            mWifiButton.isActivated=true
-            mHotspotButton.isActivated=false
+            mWifiButton.isActivated = true
+            mHotspotButton.isActivated = false
             mWifiImage.setImageResource(R.mipmap.wifi)
-
-            owner.getMainApplication().getSavedStateInstance().put(Constants.AP_STATE,Constants.NetWorkState.WIFI)
-        }else if(NetworkUtil.isHotSpot(owner)){
-            var config=NetworkUtil.getHotSpotConfiguration(owner)
+            hasAccess=true
+            owner.getMainApplication().getSavedStateInstance().put(Constants.AP_STATE, Constants.NetWorkState.WIFI)
+        } else if (NetworkUtil.isHotSpot(owner)) {
+            var config = NetworkUtil.getHotSpotConfiguration(owner)
             mApName.setText(getRealName(config.SSID))
-            mWifiButton.isActivated=false
-            mHotspotButton.isActivated=true
+            mWifiButton.isActivated = false
+            mHotspotButton.isActivated = true
             mWifiImage.setImageResource(R.mipmap.hotspot)
-
-            owner.getMainApplication().getSavedStateInstance().put(Constants.AP_STATE,Constants.NetWorkState.AP)
-        }else if(NetworkUtil.isMobile(owner)){
+            hasAccess=true
+            owner.getMainApplication().getSavedStateInstance().put(Constants.AP_STATE, Constants.NetWorkState.AP)
+        } else if (NetworkUtil.isMobile(owner)) {
             mApName.setText(getRealName("Cellular"))
             mWifiImage.setImageResource(R.mipmap.wifi_off)
 
-            mWifiButton.isActivated=false
-            mHotspotButton.isActivated=false
-
-            owner.getMainApplication().getSavedStateInstance().put(Constants.AP_STATE,Constants.NetWorkState.MOBILE)
-        }else{
+            mWifiButton.isActivated = false
+            mHotspotButton.isActivated = false
+            hasAccess=false
+            owner.getMainApplication().getSavedStateInstance().put(Constants.AP_STATE, Constants.NetWorkState.MOBILE)
+        } else {
             mApName.setText(getRealName("No Internet"))
             mWifiImage.setImageResource(R.mipmap.wifi_off)
-            mWifiButton.isActivated=false
-            mHotspotButton.isActivated=false
-
-            owner.getMainApplication().getSavedStateInstance().put(Constants.AP_STATE,Constants.NetWorkState.NONE)
+            mWifiButton.isActivated = false
+            mHotspotButton.isActivated = false
+            hasAccess=false
+            owner.getMainApplication().getSavedStateInstance().put(Constants.AP_STATE, Constants.NetWorkState.NONE)
         }
+        return hasAccess
     }
 
-    private fun getRealName(name:String):String{
-        var str=name
-        if(str[0]=='"')
-            str=str.drop(1)
+    private fun getRealName(name: String): String {
+        var str = name
+        if (str[0] == '"')
+            str = str.drop(1)
 
-        if(str[str.length-1]=='"')
-            str=str.dropLast(1)
+        if (str[str.length - 1] == '"')
+            str = str.dropLast(1)
         return str
     }
 
-    fun doSearch(ip:String?) {
-
-//        if(!checkCurrentAp(null)) return
-
-        var ret=NetworkUtil.getWifiHostAndSelfIP(owner)
+    fun doSearch() {
 
         var name=PreferenceManager.getDefaultSharedPreferences(owner).
                 getString(PreferenceInfo.PREF_DEVICE_NAME,Build.MODEL)
 
+        var obj=owner.getMainApplication().getSavedStateInstance().get(MainActivity.KEY_SERVER_PORT)
+        var port=""
+        if(obj!=null)
+            port=obj as String
         mDiscoverHelper?.stop(true,true)
 
-        mDiscoverHelper = DiscoverHelper(owner, name, "8000","192.168.43.1:8000/Info")
+        mDiscoverHelper = DiscoverHelper(owner, name, port,"/API/Icon")
         mDiscoverHelper?.setMessageListener { msg, deviceSet, handler ->
             var state = owner.getMainApplication().getSavedStateInstance().get(Constants.AP_STATE)
             when (msg) {
@@ -323,15 +362,15 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
                     mDiscoverHelper?.prepare(owner, true, true)
                     mDiscoverHelper?.start(true, true)
                 }
-                DiscoverHelper.MSG_START_BEING_SEARCHED->{
-                    mDiscoverHelper?.prepare(owner,true,true)
-                    mDiscoverHelper?.start(true,true)
+                DiscoverHelper.MSG_START_BEING_SEARCHED -> {
+                    mDiscoverHelper?.prepare(owner, true, true)
+                    mDiscoverHelper?.start(true, true)
                 }
             }
         }
-        if(owner.refreshing){
-            mDiscoverHelper?.prepare(owner,true,true)
-            mDiscoverHelper?.start(true,true)
+        if (owner.refreshing) {
+            mDiscoverHelper?.prepare(owner, true, true)
+            mDiscoverHelper?.start(true, true)
         }
     }
 
@@ -347,7 +386,13 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
             if(!flag){
                 var data=bean.name
                 var arr=data.split(",")
-                var deviceInfo=DeviceInfo(arr[0],bean.ip,Integer.parseInt(arr[1]),arr[2])
+                var port=0
+                try {
+                    port=Integer.parseInt(arr[1])
+                }catch (e:Exception){
+                    port=0
+                }
+                var deviceInfo= DeviceInfo(arr[0],bean.ip,port,arr[2])
                 mDeviceInfoList.add(deviceInfo)
                 mRecyclerView?.adapter?.notifyDataSetChanged()
             }
@@ -366,20 +411,10 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
         }
     }
 
-    companion object {
-        //Settings.ACTION_APPLICATION_DETAIL_SETTING
-        fun getAppDetailSettingIntent(context: Context): Intent {
-            var localIntent = Intent()
-            localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            if (Build.VERSION.SDK_INT >= 9) {
-                localIntent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                localIntent.setData(Uri.fromParts("package", context.getPackageName(), null))
-            } else if (Build.VERSION.SDK_INT <= 8) {
-                localIntent.setAction(Intent.ACTION_VIEW)
-                localIntent.setClassName("com.android.settings", "com.android.settings.InstalledAppDetails")
-                localIntent.putExtra("com.android.settings.ApplicationPkgName", context.getPackageName())
-            }
-            return localIntent
-        }
+    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        mPhotoHelper?.onActivityResult(requestCode,resultCode,data)
+        mImageHelper?.onActivityResult(requestCode,resultCode,data)
     }
+
+
 }
