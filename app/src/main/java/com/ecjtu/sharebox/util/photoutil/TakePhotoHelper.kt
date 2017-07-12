@@ -3,8 +3,10 @@ package com.ecjtu.sharebox.util.photoutil
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.os.Environment
 import android.provider.MediaStore
 import android.support.v4.app.FragmentActivity
+import com.ecjtu.sharebox.util.fileutils.FileUtil
 import java.io.File
 
 /**
@@ -24,12 +26,16 @@ class TakePhotoHelper(fragmentActivity: FragmentActivity):CropPhotoHelper(){
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
+            var path=Environment.getExternalStorageDirectory().absolutePath
             if (requestCode == TAKE_PHOTO) {
-                photoZoom(data?.data!!,mActivity!!, "/sdcard/"+"head.png")
+                photoZoom(data?.data!!,mActivity!!, path+"/head.png")
             }
 
             if (requestCode == PHOTO_RESULT) {
                 //get corp image
+                var file=File(path+"/head.png")
+                FileUtil.copyFile2InternalPath(file,"head.png",mActivity!!)
+                file.delete()
             }
         }
     }

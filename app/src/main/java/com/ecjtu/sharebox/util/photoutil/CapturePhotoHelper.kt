@@ -4,8 +4,10 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Environment
 import android.provider.MediaStore
 import android.support.v4.app.FragmentActivity
+import com.ecjtu.sharebox.util.fileutils.FileUtil
 import java.io.File
 
 
@@ -17,7 +19,7 @@ class CapturePhotoHelper(fragmentActivity: FragmentActivity) :CropPhotoHelper(){
 
     companion object {
         private val TAKE_PHOTO = 0x1001
-        private val IMAGE_PATH = "/sdcard/"
+        private val IMAGE_PATH = Environment.getExternalStorageDirectory().absolutePath
     }
 
     init {
@@ -28,12 +30,20 @@ class CapturePhotoHelper(fragmentActivity: FragmentActivity) :CropPhotoHelper(){
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == TAKE_PHOTO) {
                 val picture = File(IMAGE_PATH, "temp.jpg")
-                photoZoom(Uri.fromFile(picture),mActivity!!, IMAGE_PATH+"head.png")
+                photoZoom(Uri.fromFile(picture),mActivity!!, IMAGE_PATH+"/head.png")
             }
 
             if (requestCode == PHOTO_RESULT) {
                 //get corp image
+                var file=File(IMAGE_PATH+"/head.png")
+                FileUtil.copyFile2InternalPath(file,"head.png",mActivity!!)
+
+                File(IMAGE_PATH+"/temp.jpg").delete()
+                file.delete()
             }
+        }else{
+            File(IMAGE_PATH+"/temp.jpg").delete()
+            File(IMAGE_PATH+"/head.png").delete()
         }
     }
 
