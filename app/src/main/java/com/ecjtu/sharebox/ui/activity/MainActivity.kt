@@ -15,8 +15,6 @@ import android.view.MenuItem
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
-import com.ecjtu.sharebox.server.impl.service.EasyServerService
-import org.ecjtu.easyserver.net.HostInterface
 
 
 //http://www.tmtpost.com/195557.html 17.6.7
@@ -38,7 +36,7 @@ class MainActivity : ImmersiveFragmentActivity() {
 
     var refreshing =true
 
-    private var mService: EasyServerService? =null
+//    private var mService: EasyServerService? =null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,9 +55,9 @@ class MainActivity : ImmersiveFragmentActivity() {
         }
 
         //init service
-        var intent=Intent(this,EasyServerService::class.java)
-        startService(intent)
-        bindService(intent,mServiceConnection,Context.BIND_AUTO_CREATE)
+//        var intent=Intent(this,EasyServerService::class.java)
+//        startService(intent)
+//        bindService(intent,mServiceConnection,Context.BIND_AUTO_CREATE)
     }
 
 
@@ -231,7 +229,7 @@ class MainActivity : ImmersiveFragmentActivity() {
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             Log.e(TAG,"onServiceConnected "+name.toString())
-            mService=(service as EasyServerService.EasyServerBinder).service
+//            mService=(service as EasyServerService.EasyServerBinder).service
             getHandler()?.obtainMessage(MSG_SERVICE_STARTED)?.sendToTarget()
         }
     }
@@ -245,18 +243,18 @@ class MainActivity : ImmersiveFragmentActivity() {
                 }
             }
             MSG_START_SERVER->{
-                if(mService==null) return
-                if(!mService?.isServerAlive()!!){
-                    Log.e(TAG,"isServerAlive false,start server")
-                    var intent=EasyServerService.getApIntent(this)
-                    HostInterface.clearCallback()
-                    HostInterface.addCallback { server, hostIP, port ->
-                        getMainApplication().getSavedStateInstance().put(KEY_SERVER_PORT,port)
-                    }
-                    startService(intent)
-                }else{
-                    getMainApplication().getSavedStateInstance().remove(KEY_SERVER_PORT)
-                }
+//                if(mService==null) return
+//                if(!mService?.isServerAlive()!!){
+//                    Log.e(TAG,"isServerAlive false,start server")
+//                    var intent=EasyServerService.getApIntent(this)
+//                    HostInterface.clearCallback()
+//                    HostInterface.addCallback { server, hostIP, port ->
+//                        getMainApplication().getSavedStateInstance().put(KEY_SERVER_PORT,port)
+//                    }
+//                    startService(intent)
+//                }else{
+//                    getMainApplication().getSavedStateInstance().remove(KEY_SERVER_PORT)
+//                }
             }
         }
     }
