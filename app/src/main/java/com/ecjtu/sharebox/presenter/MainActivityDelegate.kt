@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
@@ -41,6 +42,7 @@ import com.ecjtu.sharebox.util.photoutil.TakePhotoHelper
 import org.ecjtu.channellibrary.devicesearch.DeviceSearcher
 import org.ecjtu.channellibrary.devicesearch.DiscoverHelper
 import org.ecjtu.channellibrary.wifiutil.WifiUtil
+import java.io.File
 import java.lang.Exception
 
 
@@ -211,6 +213,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
 
         mTextName?.setText(PreferenceManager.getDefaultSharedPreferences(owner).
                 getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL))
+        checkIconHead()
     }
 
     fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -411,10 +414,19 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
         }
     }
 
+
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         mPhotoHelper?.onActivityResult(requestCode,resultCode,data)
         mImageHelper?.onActivityResult(requestCode,resultCode,data)
+        checkIconHead()
     }
+
+    fun checkIconHead(){
+        var iconFile=File(owner.filesDir,Constants.ICON_HEAD)
+        if(iconFile.exists()){
+            var icon=findViewById(R.id.drawer_view)?.findViewById(R.id.icon) as ImageView //有相同id 找到错误的view
+            icon.setImageBitmap(BitmapFactory.decodeFile(iconFile.absolutePath))
+        }
 
 
 }
