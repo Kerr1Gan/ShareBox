@@ -382,7 +382,9 @@ object FileUtil {
         var buf:BufferedOutputStream? = null
         try {
             fis=FileInputStream(file)
-            buf=BufferedOutputStream(FileOutputStream(File(root.absoluteFile,name)))
+            var temp=File(root.absoluteFile,name)
+            if(temp.exists()) temp.delete()
+            buf=BufferedOutputStream(FileOutputStream(temp))
             var arr=ByteArray(1024*5)
             var len=fis.read(arr)
             while (len>0){
