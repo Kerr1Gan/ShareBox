@@ -6,9 +6,9 @@ package com.ecjtu.sharebox
 object Constants{
 
     //NetWorkState.NONE
-    val AP_STATE="com.ecjtu.sharebox.AP_STATE"
+    const val AP_STATE="com.ecjtu.sharebox.AP_STATE"
 
-
+    const val ICON_HEAD="head.png"
 
     enum class NetWorkState{
         NONE,
