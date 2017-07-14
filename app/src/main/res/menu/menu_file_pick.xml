@@ -7,6 +7,6 @@
 
     <item
         android:title="OK"
-        android:id="@+id/upload"
+        android:id="@+id/ok"
         app:showAsAction="always"/>
 </menu>

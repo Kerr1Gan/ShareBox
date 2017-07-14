@@ -56,8 +56,6 @@ class MainApplication:Application(){
     private fun initSavedState(){
         AssetsUtil.CONTEXT=applicationContext
         Icon.initPath(filesDir.absolutePath+"/"+Constants.ICON_HEAD)
-        var name=PreferenceManager.getDefaultSharedPreferences(this).getString(PreferenceInfo.PREF_DEVICE_NAME,Build.MODEL)
-        Info.init(DeviceInfo(name,""))
     }
 
     class SimpleGlideModule : AppGlideModule() {

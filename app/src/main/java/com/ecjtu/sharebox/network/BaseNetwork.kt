@@ -15,7 +15,7 @@ import java.net.URLConnection
  */
 abstract class BaseNetwork{
     companion object {
-        const val TIME_OUT= 3 * 1000
+        const val TIME_OUT= 5 * 1000
         const val CHARSET= "UTF-8"
         const val HEADER_CONTENT_ENCODING="Content-Encoding"
         const val HEADER_CONTENT_LENGTH="Content-Length"
@@ -56,7 +56,8 @@ abstract class BaseNetwork{
             setupRequest(mHttpUrlConnection!!)
             var paramStr=setParams(mHttpUrlConnection!!,mutableMap)
             connect()
-            ret=getContent(mHttpUrlConnection!!,paramStr)
+            pushContent(mHttpUrlConnection!!,paramStr)
+            ret=getContent(mHttpUrlConnection!!)
         }catch (e:Exception){
             e.printStackTrace()
             ex=e
@@ -77,6 +78,7 @@ abstract class BaseNetwork{
             requestMethod= Method.GET
             connectTimeout=TIME_OUT
             readTimeout= TIME_OUT
+            setRequestProperty("Content-Type","*/*")
             setRequestProperty(HEADER_CONTENT_ENCODING, CHARSET)
         }
     }
@@ -108,15 +110,9 @@ abstract class BaseNetwork{
         }
     }
 
-    open fun getContent(httpURLConnection: HttpURLConnection,param:String? =null):String{
+    open fun getContent(httpURLConnection: HttpURLConnection):String{
         var ret=""
         try {
-            if(httpURLConnection.requestMethod == Method.POST){
-                if(!TextUtils.isEmpty(param)){
-                    mOutputStream=httpURLConnection.outputStream
-                    mOutputStream?.write(param?.toByteArray())
-                }
-            }
             if(httpURLConnection.responseCode==HttpURLConnection.HTTP_OK){
                 var os=ByteArrayOutputStream()
                 var temp=ByteArray(CACHE_SIZE,{ index -> 0})
@@ -145,6 +141,15 @@ abstract class BaseNetwork{
             throw e
         }finally {
             mHttpUrlConnection?.disconnect()
+        }
+    }
+
+    fun pushContent(httpURLConnection: HttpURLConnection,param:String){
+        if(httpURLConnection.requestMethod == Method.POST){
+            if(!TextUtils.isEmpty(param)){
+                mOutputStream=httpURLConnection.outputStream
+                mOutputStream?.write(param?.toByteArray())
+            }
         }
     }
 }

@@ -14,6 +14,10 @@ import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
 import android.util.Log
 import android.widget.ProgressBar
+import com.ecjtu.sharebox.Constants
+import com.ecjtu.sharebox.domain.DeviceInfo
+import com.ecjtu.sharebox.getMainApplication
+import com.ecjtu.sharebox.server.impl.servlet.Info
 import com.ecjtu.sharebox.ui.view.FileExpandableListView
 import com.ecjtu.sharebox.util.fileutils.FileUtil
 import java.io.File
@@ -22,8 +26,7 @@ import java.io.File
 /**
  * Created by KerriGan on 2017/6/2.
  */
-class FilePickDialog :BaseBottomSheetDialog{
-
+class FilePickDialog :BaseBottomSheetDialog,Toolbar.OnMenuItemClickListener{
     constructor(context: Context,activity: Activity? = null):super(context,activity){
 
     }
@@ -112,6 +115,8 @@ class FilePickDialog :BaseBottomSheetDialog{
         }
 
         toolbar.inflateMenu(R.menu.menu_file_pick)
+
+        toolbar.setOnMenuItemClickListener(this)
 
         mBehavior?.setBottomSheetCallback(object :BottomSheetBehavior.BottomSheetCallback(){
             var mFitSystemWindow=false
@@ -387,4 +392,32 @@ class FilePickDialog :BaseBottomSheetDialog{
             obj?.value?.task?.cancel(true)
         }
     }
+
+    override fun onMenuItemClick(item: MenuItem?): Boolean {
+        var id=item?.itemId
+        when(id){
+            R.id.ok->{
+                var map= mutableMapOf<String,List<String>>()
+                if(mTabItemHolders==null) return true
+                for(element in mTabItemHolders!!.entries){
+                    var strList= mutableListOf<String>()
+                    if(element.value.fileList==null) continue
+                    for(child in element.value.fileList!!.iterator()){
+                        strList.add(child.absolutePath)
+                    }
+                    map.put(element.key,strList)
+                }
+                var deviceInfo=ownerActivity.getMainApplication().getSavedInstance().
+                        get(Constants.KEY_INFO_OBJECT) as DeviceInfo
+                deviceInfo.fileMap=map
+            }
+
+            R.id.select_all->{
+
+            }
+        }
+
+        return true
+    }
+
 }

@@ -12,7 +12,11 @@ import com.bumptech.glide.request.RequestOptions
 import com.ecjtu.sharebox.MainApplication
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.domain.DeviceInfo
+import com.ecjtu.sharebox.network.AsyncNetwork
+import com.ecjtu.sharebox.network.IRequestCallback
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
+import java.lang.Exception
+import java.net.HttpURLConnection
 
 /**
  * Created by Ethan_Xiang on 2017/7/3.
@@ -47,7 +51,18 @@ class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerViewAdapter
     }
 
     override fun onClick(v: View?) {
-        var position=v?.getTag(R.id.extra_tag)
+        var position=v?.getTag(R.id.extra_tag) as Int
+        var deviceInfo=mDeviceList?.get(position)
+        AsyncNetwork().requestDeviceInfo("${deviceInfo?.ip}:${deviceInfo?.port}",object :IRequestCallback{
+            override fun onSuccess(httpURLConnection: HttpURLConnection?, response: String) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onError(httpURLConnection: HttpURLConnection?, exception: Exception) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+        })
     }
 
     class VH(item: View) : RecyclerView.ViewHolder(item) {

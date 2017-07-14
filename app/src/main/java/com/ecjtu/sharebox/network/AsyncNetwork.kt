@@ -2,6 +2,7 @@ package com.ecjtu.sharebox.network
 
 import android.util.Log
 import java.lang.Exception
+import java.net.HttpURLConnection
 import kotlin.concurrent.thread
 
 /**
@@ -30,5 +31,14 @@ class AsyncNetwork:BaseNetwork(){
     override fun cancel() {
         super.cancel()
         mThread?.interrupt()
+    }
+
+    fun requestDeviceInfo(url:String,listener : IRequestCallback):AsyncNetwork{
+        var map= mutableMapOf<String,String>()
+        map.put("param","info")
+        return AsyncNetwork().apply {
+            setRequestCallback(listener)
+            request("http://${url}/API/Info", map)
+        }
     }
 }

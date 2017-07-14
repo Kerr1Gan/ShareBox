@@ -10,6 +10,8 @@ object Constants{
 
     const val ICON_HEAD="head.png"
 
+    const val KEY_INFO_OBJECT="com.ecjtu.sharebox.Info"
+
     enum class NetWorkState{
         NONE,
         WIFI,

@@ -34,6 +34,10 @@ public class Info implements BaseServlet{
         sDeviceInfo=info;
     }
 
+    public static DeviceInfo getDeviceInfo(){
+        return sDeviceInfo;
+    }
+
     @Override
     public void doGet(HTTPRequest httpReq, HTTPResponse httpRes) {
         doPost(httpReq,httpRes);

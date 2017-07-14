@@ -5,20 +5,26 @@ import android.content.*
 import android.graphics.drawable.RotateDrawable
 import android.net.NetworkInfo
 import android.net.wifi.WifiInfo
+import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.os.Message
+import android.preference.PreferenceManager
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.R
+import com.ecjtu.sharebox.domain.DeviceInfo
+import com.ecjtu.sharebox.domain.PreferenceInfo
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.network.AsyncNetwork
 import com.ecjtu.sharebox.network.IRequestCallback
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
 import com.ecjtu.sharebox.server.impl.server.EasyServer
 import com.ecjtu.sharebox.server.impl.service.EasyServerService
+import com.ecjtu.sharebox.server.impl.servlet.Info
 import java.net.HttpURLConnection
 
 
@@ -254,23 +260,10 @@ class MainActivity : ImmersiveFragmentActivity() {
                     var intent=EasyServerService.getApIntent(this)
                     EasyServer.setServerListener { server, hostIP, port ->
                         getMainApplication().getSavedInstance().put(KEY_SERVER_PORT, port.toString())
+                        var name= PreferenceManager.getDefaultSharedPreferences(this).getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
+                        Info.init(DeviceInfo(name,hostIP,port,"/API/Icon", mutableMapOf()))
+                        getMainApplication().getSavedInstance().put(Constants.KEY_INFO_OBJECT, Info.getDeviceInfo())
                         runOnUiThread { mDelegate?.doSearch() }
-
-                        var map= mutableMapOf<String,String>()
-                        map.put("param","info")
-                        AsyncNetwork().apply {
-                            setRequestCallback(object : IRequestCallback {
-                                override fun onError(httpURLConnection: HttpURLConnection?, exception: java.lang.Exception) {
-                                    var x=0;
-                                    x++
-                                }
-
-                                override fun onSuccess(httpURLConnection: HttpURLConnection?, response: String) {
-                                    var x=0;
-                                    x++
-                                } })
-                            request("http://${hostIP}:${port}/API/Info", map)
-                        }
                     }
                     startService(intent)
                 }else{
