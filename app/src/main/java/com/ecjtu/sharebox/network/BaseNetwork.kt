@@ -18,6 +18,7 @@ abstract class BaseNetwork{
         const val HEADER_CONTENT_ENCODING="Content-Encoding"
         const val HEADER_CONTENT_LENGTH="Content-Length"
         const val HTTP_PREFIX="http://"
+        const val CACHE_SIZE= 5 * 1024
     }
 
     object Method{
@@ -41,13 +42,10 @@ abstract class BaseNetwork{
     @JvmOverloads
     fun request(urlStr:String,mutableMap: MutableMap<String,String>? =null){
         var ex:Exception?=null
-        var temp=urlStr
-        if(!temp.startsWith(HTTP_PREFIX)){
-            temp="${HTTP_PREFIX}${urlStr}"
-        }
+
         var ret=""
         try {
-            var url=URL(temp)
+            var url=URL(urlStr)
             mHttpUrlConnection=url.openConnection() as HttpURLConnection
             setupRequest(mHttpUrlConnection!!)
             var paramStr=setParams(mHttpUrlConnection!!,mutableMap)
@@ -112,7 +110,7 @@ abstract class BaseNetwork{
             }
             if(httpURLConnection.responseCode==HttpURLConnection.HTTP_OK){
                 var os=ByteArrayOutputStream()
-                var temp=ByteArray(1024*5,{ index -> 0})
+                var temp=ByteArray(CACHE_SIZE,{ index -> 0})
                 var `is`=httpURLConnection.inputStream
 
                 var len:Int
