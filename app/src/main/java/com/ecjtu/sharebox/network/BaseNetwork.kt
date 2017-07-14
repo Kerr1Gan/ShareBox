@@ -3,6 +3,8 @@ package com.ecjtu.sharebox.network
 import android.text.TextUtils
 import java.io.ByteArrayOutputStream
 import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
 import java.lang.Exception
 import java.net.HttpURLConnection
 import java.net.URL
@@ -35,6 +37,10 @@ abstract class BaseNetwork{
 
     private var mHttpUrlConnection:HttpURLConnection? =null
 
+    private var mInputStream:InputStream? =null
+
+    private var mOutputStream:OutputStream? =null
+
     fun setRequestCallback(callback: IRequestCallback){
         mCallback=callback
     }
@@ -56,9 +62,9 @@ abstract class BaseNetwork{
             ex=e
         }finally {
             if(ex!=null){
-                mCallback?.onError(mHttpUrlConnection!!,ex)
+                mCallback?.onError(mHttpUrlConnection,ex)
             }else{
-                mCallback?.onSuccess(mHttpUrlConnection!!,ret)
+                mCallback?.onSuccess(mHttpUrlConnection,ret)
             }
             mHttpUrlConnection?.disconnect()
         }
@@ -80,10 +86,10 @@ abstract class BaseNetwork{
         mutableMap?.let {
             httpURLConnection.requestMethod=Method.POST
 
-            var param:String?=null
+            var param:String? = ""
 
             for(obj in mutableMap.entries){
-                if(param?.length!=0){
+                if(!TextUtils.isEmpty(param)){
                     param+="&"
                 }
                 param+="${obj.key}=${obj.value}"
@@ -107,14 +113,15 @@ abstract class BaseNetwork{
         try {
             if(httpURLConnection.requestMethod == Method.POST){
                 if(!TextUtils.isEmpty(param)){
-                    httpURLConnection.outputStream.write(param?.toByteArray())
+                    mOutputStream=httpURLConnection.outputStream
+                    mOutputStream?.write(param?.toByteArray())
                 }
             }
             if(httpURLConnection.responseCode==HttpURLConnection.HTTP_OK){
                 var os=ByteArrayOutputStream()
                 var temp=ByteArray(CACHE_SIZE,{ index -> 0})
                 var `is`=httpURLConnection.inputStream
-
+                mInputStream=`is`
                 var len:Int
                 len=`is`.read(temp)
                 while (len>0){
@@ -128,5 +135,16 @@ abstract class BaseNetwork{
             throw ex
         }
         return ret
+    }
+
+    open fun cancel(){
+        try {
+            mOutputStream?.close()
+            mInputStream?.close()
+        }catch (e:Exception){
+            throw e
+        }finally {
+            mHttpUrlConnection?.disconnect()
+        }
     }
 }

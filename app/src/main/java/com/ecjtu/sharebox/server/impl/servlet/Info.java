@@ -49,22 +49,24 @@ public class Info implements BaseServlet{
         String formParam=null;
         try {
             formParam = new String(httpReq.getContent(), "utf-8");
-        } catch (UnsupportedEncodingException e) {
-        }
-
-        if(!TextUtils.isEmpty(formParam)){
-            if(formParam.startsWith(sToken)){
-                JSONObject json=deviceInfo2Json(sDeviceInfo);
-                String jsonStr=json.toString();
-                httpRes.setContentType("*/*");
-                httpRes.setStatusCode(HTTPStatus.OK);
-                httpRes.setContentLength(jsonStr.length());
-                httpRes.setContent(jsonStr);
-                httpReq.post(httpRes);
+            if(!TextUtils.isEmpty(formParam)){
+                if(formParam.startsWith(sToken)){
+                    JSONObject json=deviceInfo2Json(sDeviceInfo);
+                    String jsonStr=json.toString();
+                    httpRes.setContentType("*/*");
+                    httpRes.setStatusCode(HTTPStatus.OK);
+                    httpRes.setContentLength(jsonStr.length());
+                    httpRes.setContent(jsonStr);
+                    httpReq.post(httpRes);
+                }
+            }else{
+                httpReq.returnResponse(HTTPStatus.BAD_REQUEST);
+                return;
             }
-        }else{
+        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e){
+            //ignore
             httpReq.returnResponse(HTTPStatus.BAD_REQUEST);
-            return;
         }
     }
 

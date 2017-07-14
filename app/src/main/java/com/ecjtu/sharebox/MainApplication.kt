@@ -3,6 +3,8 @@ package com.ecjtu.sharebox
 import android.app.Application
 import android.content.Context
 import android.content.Intent
+import android.os.Build
+import android.preference.PreferenceManager
 import android.support.v4.content.LocalBroadcastManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.GlideBuilder
@@ -10,7 +12,10 @@ import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory
 import com.bumptech.glide.load.engine.cache.LruResourceCache
 import com.bumptech.glide.module.AppGlideModule
+import com.ecjtu.sharebox.domain.DeviceInfo
+import com.ecjtu.sharebox.domain.PreferenceInfo
 import com.ecjtu.sharebox.server.impl.servlet.Icon
+import com.ecjtu.sharebox.server.impl.servlet.Info
 import com.ecjtu.sharebox.server.util.AssetsUtil
 import com.ecjtu.sharebox.service.MainService
 import org.ecjtu.channellibrary.wifidirect.WifiDirectManager
@@ -51,6 +56,8 @@ class MainApplication:Application(){
     private fun initSavedState(){
         AssetsUtil.CONTEXT=applicationContext
         Icon.initPath(filesDir.absolutePath+"/"+Constants.ICON_HEAD)
+        var name=PreferenceManager.getDefaultSharedPreferences(this).getString(PreferenceInfo.PREF_DEVICE_NAME,Build.MODEL)
+        Info.init(DeviceInfo(name,""))
     }
 
     class SimpleGlideModule : AppGlideModule() {

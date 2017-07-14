@@ -14,9 +14,12 @@ import android.view.Menu
 import android.view.MenuItem
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.getMainApplication
+import com.ecjtu.sharebox.network.AsyncNetwork
+import com.ecjtu.sharebox.network.IRequestCallback
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
 import com.ecjtu.sharebox.server.impl.server.EasyServer
 import com.ecjtu.sharebox.server.impl.service.EasyServerService
+import java.net.HttpURLConnection
 
 
 //http://www.tmtpost.com/195557.html 17.6.7
@@ -252,6 +255,22 @@ class MainActivity : ImmersiveFragmentActivity() {
                     EasyServer.setServerListener { server, hostIP, port ->
                         getMainApplication().getSavedInstance().put(KEY_SERVER_PORT, port.toString())
                         runOnUiThread { mDelegate?.doSearch() }
+
+                        var map= mutableMapOf<String,String>()
+                        map.put("param","info")
+                        AsyncNetwork().apply {
+                            setRequestCallback(object : IRequestCallback {
+                                override fun onError(httpURLConnection: HttpURLConnection?, exception: java.lang.Exception) {
+                                    var x=0;
+                                    x++
+                                }
+
+                                override fun onSuccess(httpURLConnection: HttpURLConnection?, response: String) {
+                                    var x=0;
+                                    x++
+                                } })
+                            request("http://${hostIP}:${port}/API/Info", map)
+                        }
                     }
                     startService(intent)
                 }else{
