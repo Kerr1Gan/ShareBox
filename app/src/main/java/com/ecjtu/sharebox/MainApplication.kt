@@ -10,10 +10,10 @@ import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory
 import com.bumptech.glide.load.engine.cache.LruResourceCache
 import com.bumptech.glide.module.AppGlideModule
+import com.ecjtu.sharebox.server.impl.servlet.Icon
+import com.ecjtu.sharebox.server.util.AssetsUtil
 import com.ecjtu.sharebox.service.MainService
-import com.ecjtu.sharebox.util.fileutils.FileUtil
 import org.ecjtu.channellibrary.wifidirect.WifiDirectManager
-import java.io.File
 
 
 /**
@@ -22,7 +22,7 @@ import java.io.File
 class MainApplication:Application(){
 
 
-    private val mSavedStateInstance=HashMap<String,Any>()
+    private val mSavedInstance =HashMap<String,Any>()
 
     override fun onCreate() {
         super.onCreate()
@@ -44,12 +44,13 @@ class MainApplication:Application(){
         startService(Intent(this,MainService::class.java))
     }
 
-    fun getSavedStateInstance():MutableMap<String,Any>{
-        return mSavedStateInstance
+    fun getSavedInstance():MutableMap<String,Any>{
+        return mSavedInstance
     }
 
     private fun initSavedState(){
-        FileUtil.getImagesByDCIM(this)
+        AssetsUtil.CONTEXT=applicationContext
+        Icon.initPath(filesDir.absolutePath+"/"+Constants.ICON_HEAD)
     }
 
     class SimpleGlideModule : AppGlideModule() {

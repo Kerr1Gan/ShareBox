@@ -15,19 +15,19 @@ import android.view.MenuItem
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
+import com.ecjtu.sharebox.server.impl.server.EasyServer
 import com.ecjtu.sharebox.server.impl.service.EasyServerService
-import org.ecjtu.easyserver.net.HostInterface
 
 
 //http://www.tmtpost.com/195557.html 17.6.7
 class MainActivity : ImmersiveFragmentActivity() {
 
     companion object {
-        private val TAG="MainActivity"
+        const private val TAG="MainActivity"
         private val MSG_SERVICE_STARTED=0x10
         private val MSG_START_SERVER=0x11
 
-        val KEY_SERVER_PORT="key_server_port"
+        const val KEY_SERVER_PORT="key_server_port"
     }
 
     private var mDelegate : MainActivityDelegate? =null
@@ -249,13 +249,13 @@ class MainActivity : ImmersiveFragmentActivity() {
                 if(!mService?.isServerAlive()!!){
                     Log.e(TAG,"isServerAlive false,start server")
                     var intent=EasyServerService.getApIntent(this)
-                    HostInterface.clearCallback()
-                    HostInterface.addCallback { server, hostIP, port ->
-                        getMainApplication().getSavedStateInstance().put(KEY_SERVER_PORT,port)
+                    EasyServer.setServerListener { server, hostIP, port ->
+                        getMainApplication().getSavedInstance().put(KEY_SERVER_PORT, port.toString())
+                        runOnUiThread { mDelegate?.doSearch() }
                     }
                     startService(intent)
                 }else{
-                    getMainApplication().getSavedStateInstance().remove(KEY_SERVER_PORT)
+                    getMainApplication().getSavedInstance().remove(KEY_SERVER_PORT)
                 }
             }
         }

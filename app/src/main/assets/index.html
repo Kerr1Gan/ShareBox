@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <title>Sync</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="./css/bootstrap-combined.min.css">
+    <link rel="stylesheet" type="text/css" href="./css/index.css">
+    <script type="text/javascript" src='./js/jquery-1.11.1.min.js'></script>
+    <script type="text/javascript" src='./js/vue.js'></script>
+    <script type="text/javascript" src='./js/index.js'></script>
+</head>
+
+<body>
+    <div class="header">
+        <h3>文件列表</h3>
+    </div>
+    <div class="container-fluid" id="LG">
+        <div class="row-fluid">
+            <div class="span12">
+                <ul class="thumbnails" id="file-list">
+                    <li v-for="file in files" class="span4">
+                        <a href="{{ file.path }}">
+                            <div class="thumbnail">
+                                <img alt="300x200" src="{{ file.cachePath }}" />
+                                <div class="caption">
+                                    <h3>{{ file.name }}</h3>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="bg"></div>
+</body>
+
+</html>

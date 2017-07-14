@@ -38,8 +38,9 @@ class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerViewAdapter
     override fun onBindViewHolder(holder: VH?, position: Int) {
         var info=mDeviceList?.get(position)
 
+        var iconUrl="${info?.ip}:${info?.port}${info?.icon}"
         holder?.itemView?.setTag(R.id.extra_tag,position)
-        Glide.with(holder?.itemView?.context).load(info?.icon).
+        Glide.with(holder?.itemView?.context).load("http://"+iconUrl).
                 apply(RequestOptions().placeholder(R.mipmap.ic_launcher)).
                 into(holder?.icon)
         holder?.name?.setText(info?.name)
