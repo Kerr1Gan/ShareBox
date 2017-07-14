@@ -40,7 +40,7 @@ abstract class BaseNetwork{
     }
 
     @JvmOverloads
-    fun request(urlStr:String,mutableMap: MutableMap<String,String>? =null){
+    open fun request(urlStr:String,mutableMap: MutableMap<String,String>? =null){
         var ex:Exception?=null
 
         var ret=""
@@ -65,12 +65,14 @@ abstract class BaseNetwork{
     }
 
     open fun setupRequest(httpURLConnection: HttpURLConnection){
-        httpURLConnection.doInput=true
-        httpURLConnection.doOutput=true
-        httpURLConnection.requestMethod= Method.GET
-        httpURLConnection.connectTimeout=TIME_OUT
-        httpURLConnection.readTimeout= TIME_OUT
-        httpURLConnection.setRequestProperty(HEADER_CONTENT_ENCODING, CHARSET)
+        httpURLConnection.apply {
+            doInput=true
+            doOutput=true
+            requestMethod= Method.GET
+            connectTimeout=TIME_OUT
+            readTimeout= TIME_OUT
+            setRequestProperty(HEADER_CONTENT_ENCODING, CHARSET)
+        }
     }
 
     open fun setParams(httpURLConnection: HttpURLConnection,mutableMap: MutableMap<String,String>?=null):String{
