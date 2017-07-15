@@ -1,12 +1,11 @@
-package com.ecjtu.sharebox.util.photoutil
+package com.ecjtu.sharebox.util.photo
 
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
 import android.support.v4.app.FragmentActivity
-import com.ecjtu.sharebox.util.fileutils.FileUtil
+import com.ecjtu.sharebox.util.file.FileUtil
 import java.io.File
 
 /**

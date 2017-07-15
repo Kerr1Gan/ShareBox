@@ -17,9 +17,9 @@ import android.widget.ProgressBar
 import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.domain.DeviceInfo
 import com.ecjtu.sharebox.getMainApplication
-import com.ecjtu.sharebox.server.impl.servlet.Info
+import com.ecjtu.sharebox.server.impl.servlet.GetFiles
 import com.ecjtu.sharebox.ui.view.FileExpandableListView
-import com.ecjtu.sharebox.util.fileutils.FileUtil
+import com.ecjtu.sharebox.util.file.FileUtil
 import java.io.File
 
 
@@ -397,26 +397,34 @@ class FilePickDialog :BaseBottomSheetDialog,Toolbar.OnMenuItemClickListener{
         var id=item?.itemId
         when(id){
             R.id.ok->{
-                var map= mutableMapOf<String,List<String>>()
                 if(mTabItemHolders==null) return true
+
+                var map= mutableMapOf<String,List<String>>()
+                var fileList= ArrayList<File>()
+
                 for(element in mTabItemHolders!!.entries){
                     var strList= mutableListOf<String>()
                     if(element.value.fileList==null) continue
                     for(child in element.value.fileList!!.iterator()){
                         strList.add(child.absolutePath)
+                        if(fileList.indexOf(child)<0){
+                            fileList.add(child)
+                        }
                     }
                     map.put(element.key,strList)
                 }
                 var deviceInfo=ownerActivity.getMainApplication().getSavedInstance().
                         get(Constants.KEY_INFO_OBJECT) as DeviceInfo
                 deviceInfo.fileMap=map
+
+                GetFiles.init(null,fileList,context.applicationContext)
+                com.ecjtu.sharebox.server.impl.servlet.File.addFiles(fileList)
             }
 
             R.id.select_all->{
 
             }
         }
-
         return true
     }
 

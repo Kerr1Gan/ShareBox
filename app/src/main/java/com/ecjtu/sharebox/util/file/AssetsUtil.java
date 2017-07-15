@@ -1,4 +1,4 @@
-package com.ecjtu.sharebox.util.fileutils;
+package com.ecjtu.sharebox.util.file;
 
 import android.content.Context;
 import android.content.res.AssetManager;

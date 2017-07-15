@@ -1,5 +1,11 @@
 package com.ecjtu.sharebox.server.impl.servlet;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+
+import com.ecjtu.sharebox.util.cache.CacheUtil;
+import com.ecjtu.sharebox.util.image.ImageUtil;
+
 import org.ecjtu.easyserver.http.HTTPRequest;
 import org.ecjtu.easyserver.http.HTTPResponse;
 import org.ecjtu.easyserver.http.HTTPStatus;
@@ -20,6 +26,7 @@ public class File implements BaseServlet {
 
     public static ArrayList<java.io.File> fileList = new ArrayList<>();
 
+    public static Context sContext=null;
     @Override
     public void doGet(HTTPRequest httpReq, HTTPResponse res) {
 
@@ -65,6 +72,8 @@ public class File implements BaseServlet {
             httpReq.returnBadRequest();
             return;
         }
+
+        doCache(filePaths);
 
         try {
             java.io.File file = new java.io.File(filePaths);
@@ -161,6 +170,15 @@ public class File implements BaseServlet {
             }
 
             hasSrc = false;
+        }
+    }
+
+    public void doCache(String filePaths){
+        Bitmap b=CacheUtil.getBitmapByCache(sContext,filePaths);
+        if(b==null){
+            b=ImageUtil.INSTANCE.createVideoThumbnail(filePaths,100,100);
+            if(b!=null)
+                CacheUtil.makeCache(filePaths,b,100,100,sContext);
         }
     }
 }

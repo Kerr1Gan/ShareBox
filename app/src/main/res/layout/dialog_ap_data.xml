@@ -14,7 +14,6 @@
             android:layout_height="match_parent"
             android:layout_margin="30dp"
             android:orientation="vertical">
-
             <TextView
                 android:id="@+id/text_ap"
                 android:layout_width="wrap_content"
@@ -38,30 +37,36 @@
                 android:layout_marginTop="5dp"
                 android:text="Password:"/>
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="35dp"
-                android:text="QRCode"
-                android:textColor="@android:color/black"
-                android:textSize="20sp"
-                android:textStyle="bold"/>
+                android:orientation="vertical"
+                android:id="@+id/qr_container">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="用浏览器扫描二维码连接热点"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="35dp"
+                    android:text="QRCode"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
 
-            <ImageView
-                android:id="@+id/image_qr"
-                android:layout_width="250dp"
-                android:layout_height="250dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="40dp"
-                android:scaleType="center"
-                android:src="@mipmap/unconnect"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="用浏览器扫描二维码连接热点"/>
 
+                <ImageView
+                    android:id="@+id/image_qr"
+                    android:layout_width="250dp"
+                    android:layout_height="250dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="40dp"
+                    android:scaleType="center"
+                    android:src="@mipmap/unconnect"/>
+            </LinearLayout>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -74,14 +79,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:text="用浏览器扫描二维码进入网页版:192.168.43.1:8000"/>
+                android:text="用浏览器扫描二维码进入网页版:"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:id="@+id/text_url"/>
 
             <ImageView
                 android:id="@+id/image_url"
                 android:layout_width="250dp"
                 android:layout_height="250dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_margin="40dp"
+                android:layout_margin="20dp"
                 android:scaleType="center"
                 android:src="@mipmap/unconnect"/>
 

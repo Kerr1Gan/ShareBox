@@ -121,8 +121,8 @@ abstract class BaseNetwork{
                 var len:Int
                 len=`is`.read(temp)
                 while (len>0){
-                    os.write(temp)
-                    `is`.read(temp)
+                    os.write(temp,0,len)
+                    len=`is`.read(temp)
                 }
                 ret= String(os.toByteArray())
             }
@@ -149,6 +149,7 @@ abstract class BaseNetwork{
             if(!TextUtils.isEmpty(param)){
                 mOutputStream=httpURLConnection.outputStream
                 mOutputStream?.write(param?.toByteArray())
+                mOutputStream?.flush()
             }
         }
     }

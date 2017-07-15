@@ -36,8 +36,8 @@ import com.ecjtu.sharebox.ui.dialog.ApDataDialog
 import com.ecjtu.sharebox.ui.dialog.EditNameDialog
 import com.ecjtu.sharebox.ui.dialog.TextItemDialog
 import com.ecjtu.sharebox.ui.fragment.FilePickDialogFragment
-import com.ecjtu.sharebox.util.photoutil.CapturePhotoHelper
-import com.ecjtu.sharebox.util.photoutil.TakePhotoHelper
+import com.ecjtu.sharebox.util.photo.CapturePhotoHelper
+import com.ecjtu.sharebox.util.photo.TakePhotoHelper
 import org.ecjtu.channellibrary.devicesearch.DeviceSearcher
 import org.ecjtu.channellibrary.devicesearch.DiscoverHelper
 import java.io.File
@@ -155,7 +155,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
         mApName=findViewById(R.id.ap_name) as TextView
 
         mRecyclerView = view1 as RecyclerView
-        mRecyclerView?.adapter = DeviceRecyclerViewAdapter(mDeviceInfoList)
+        mRecyclerView?.adapter = DeviceRecyclerViewAdapter(mDeviceInfoList,owner)
 
         var manager: LinearLayoutManager = LinearLayoutManager(owner, LinearLayoutManager.VERTICAL, false)
         mRecyclerView?.layoutManager = manager
@@ -322,7 +322,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
         var name=PreferenceManager.getDefaultSharedPreferences(owner).
                 getString(PreferenceInfo.PREF_DEVICE_NAME,Build.MODEL)
 
-        var obj=owner.getMainApplication().getSavedInstance().get(MainActivity.KEY_SERVER_PORT)
+        var obj=owner.getMainApplication().getSavedInstance().get(Constants.KEY_SERVER_PORT)
         var port=""
         if(obj!=null)
             port=obj as String

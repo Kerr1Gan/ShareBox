@@ -1,5 +1,6 @@
 package com.ecjtu.sharebox.ui.adapter
 
+import android.app.Activity
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -7,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.ecjtu.sharebox.MainApplication
@@ -15,18 +17,27 @@ import com.ecjtu.sharebox.domain.DeviceInfo
 import com.ecjtu.sharebox.network.AsyncNetwork
 import com.ecjtu.sharebox.network.IRequestCallback
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
+import com.ecjtu.sharebox.server.impl.servlet.Info
+import com.ecjtu.sharebox.ui.dialog.ApDataDialog
+import com.ecjtu.sharebox.ui.dialog.TextItemDialog
+import org.json.JSONObject
 import java.lang.Exception
+import java.lang.ref.WeakReference
 import java.net.HttpURLConnection
 
 /**
  * Created by Ethan_Xiang on 2017/7/3.
  */
-class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerViewAdapter.VH>,View.OnClickListener{
+class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerViewAdapter.VH>,View.OnClickListener,
+View.OnLongClickListener{
 
     private var mDeviceList: MutableList<DeviceInfo>? = null
 
-    constructor(list: MutableList<DeviceInfo>) : super() {
+    private var mWeakRef: WeakReference<Activity>? =null
+
+    constructor(list: MutableList<DeviceInfo>,activity: Activity) : super() {
         mDeviceList = list
+        mWeakRef= WeakReference(activity)
     }
 
     override fun getItemCount(): Int {
@@ -36,6 +47,7 @@ class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerViewAdapter
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): VH? {
         var v = LayoutInflater.from(parent?.context).inflate(R.layout.layout_device_item, parent, false)
         v.setOnClickListener(this)
+        v.setOnLongClickListener(this)
         return VH(v)
     }
 
@@ -55,15 +67,42 @@ class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerViewAdapter
         var deviceInfo=mDeviceList?.get(position)
         AsyncNetwork().requestDeviceInfo("${deviceInfo?.ip}:${deviceInfo?.port}",object :IRequestCallback{
             override fun onSuccess(httpURLConnection: HttpURLConnection?, response: String) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                Info.json2DeviceInfo(JSONObject(response)).apply {
+                    deviceInfo?.fileMap=fileMap
+                }
+                v.post {
+
+                }
             }
 
             override fun onError(httpURLConnection: HttpURLConnection?, exception: Exception) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                v.post {
+                    Toast.makeText(v.context,"对方还未准备好，请稍后再试",Toast.LENGTH_SHORT).show()
+                }
             }
-
         })
     }
+
+    override fun onLongClick(v: View?): Boolean {
+        var position=v?.getTag(R.id.extra_tag) as Int
+        var deviceInfo=mDeviceList?.get(position)
+        TextItemDialog(v.context).apply {
+            setupItem(arrayOf("详细信息","取消"))
+            setOnClickListener { index->
+                if(index==0){
+                    if(mWeakRef?.get()!=null&&mWeakRef!!.get()!=null){
+                        ApDataDialog(v.context,mWeakRef?.get()!!).apply {
+                            setup(deviceInfo!!.ip,deviceInfo!!.port)
+                        }.show()
+                    }
+                }
+                cancel()
+            }
+        }.show()
+
+        return true
+    }
+
 
     class VH(item: View) : RecyclerView.ViewHolder(item) {
         var icon: ImageView? = null

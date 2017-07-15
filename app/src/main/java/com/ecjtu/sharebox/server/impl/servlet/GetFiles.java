@@ -1,5 +1,9 @@
 package com.ecjtu.sharebox.server.impl.servlet;
 
+import android.content.Context;
+
+import com.ecjtu.sharebox.util.cache.CacheUtil;
+
 import org.ecjtu.easyserver.http.HTTPRequest;
 import org.ecjtu.easyserver.http.HTTPResponse;
 import org.ecjtu.easyserver.http.HTTPStatus;
@@ -8,8 +12,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -18,24 +22,29 @@ import java.util.ArrayList;
 @Deprecated
 public class GetFiles implements BaseServlet {
 
-    public static ArrayList<java.io.File> _shareFileList;
+    public static ArrayList<java.io.File> sShareFileList;
 
-    protected String _ip;
+    protected static String sIp;
 
     public GetFiles() {
-//        _ip= MainActivity.sHostIP;
+//        sIp= MainActivity.sHostIP;
+    }
+
+    public static void init(String ip, ArrayList<java.io.File> fileList, Context context){
+        sIp=ip;
+        sShareFileList=fileList;
+        File.sContext=context;
     }
 
     @Override
     public void doGet(HTTPRequest httpReq, HTTPResponse httpRes) {
-
         return;
     }
 
     @Override
     public void doPost(HTTPRequest httpReq, HTTPResponse httpRes) {
 
-//        _shareFileList= AppInstance.getInstance().getSharingFileList();
+//        sShareFileList= AppInstance.getInstance().getSharingFileList();
 
         String formParam = "";
         try {
@@ -45,52 +54,45 @@ public class GetFiles implements BaseServlet {
         }
 
 //        boolean localShareScreen=AppInstance.getInstance().isShareScreen();
-
+        boolean localShareScreen=false;
         if (httpReq.getHeaderValue("param").equals("getHttpFiles") || formParam.equals("param=getHttpFiles")) {
 
             try {
-                if (_shareFileList != null) {
+                if (sShareFileList != null) {
                     JSONArray array = new JSONArray();
 
                     JSONObject shareScreen = new JSONObject();
-                    if (_ip == null)
-                        _ip = "";
-//                    shareScreen.put("path","rtsp://"+_ip+":"+MainActivity.sRtspPort);
-//                    if(localShareScreen)
-//                    {
-//                        shareScreen.put("ShareScreen","true");
-//                    }
-//                    else
-//                    {
-//                        shareScreen.put("ShareScreen","false");
-//                    }
+                    if (sIp == null)
+                        sIp = "";
+                    shareScreen.put("path","rtsp://"+ sIp +":"+/*MainActivity.sRtspPort*/8001);
+                    if(localShareScreen)
+                    {
+                        shareScreen.put("ShareScreen","true");
+                    }
+                    else
+                    {
+                        shareScreen.put("ShareScreen","false");
+                    }
 
                     array.put(shareScreen);
 
-                    for (int i = 0; i < _shareFileList.size(); i++) {
-                        java.io.File file = _shareFileList.get(i);
+                    for (int i = 0; i < sShareFileList.size(); i++) {
+                        java.io.File file = sShareFileList.get(i);
                         JSONObject obj = new JSONObject();
 
                         obj.put("name", file.getName());
 
-//                        int hash= mobile.easyserver.servlet.File.getFileHashByPath(file.getPath());
-//                        obj.put("path", "/File/" + hash + mobile.easyserver.servlet.File.getSuffixByPath(file.getName()));
-//
-//                        ImageElement e = new ImageElement();
-//                        e.setKey(file.getPath());
-//                        String cachePath="/API/Cache"+e.getCachePath(AppInstance.getInstance().getAppContext());
-//
-//                        String uri=cachePath.substring(cachePath.lastIndexOf("/")+1);
-//
-//                        uri= URLEncoder.encode(uri,"utf-8");
-//
-//                        cachePath=cachePath.substring(0,cachePath.lastIndexOf(("/"))+1);
-//
-//                        cachePath=cachePath+uri;
-//
-//                        obj.put("cachePath",cachePath);
-//
-//                        array.put(obj);
+                        int hash= File.getFileHashByPath(file.getPath());
+                        obj.put("path", "/File/" + hash + File.getSuffixByPath(file.getName()));
+
+                        String cachePath="/API/Cache"+ CacheUtil.getCachePath(File.sContext,file.getPath());
+
+                        String uri=cachePath.substring(cachePath.lastIndexOf("/")+1);
+                        uri= URLEncoder.encode(uri,"utf-8");
+                        cachePath=cachePath.substring(0,cachePath.lastIndexOf(("/"))+1);
+                        cachePath=cachePath+uri;
+                        obj.put("cachePath",cachePath);
+                        array.put(obj);
                     }
 
                     byte[] content = array.toString().getBytes("utf-8");
@@ -113,8 +115,6 @@ public class GetFiles implements BaseServlet {
                 httpReq.returnBadRequest();
                 e.printStackTrace();
             }
-
-
         }
     }
 

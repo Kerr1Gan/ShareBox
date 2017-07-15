@@ -1,4 +1,4 @@
-package com.ecjtu.sharebox.util.photoutil
+package com.ecjtu.sharebox.util.photo
 
 import android.content.Intent
 import android.graphics.Bitmap

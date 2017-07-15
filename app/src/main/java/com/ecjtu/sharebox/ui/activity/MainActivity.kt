@@ -24,6 +24,7 @@ import com.ecjtu.sharebox.network.IRequestCallback
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
 import com.ecjtu.sharebox.server.impl.server.EasyServer
 import com.ecjtu.sharebox.server.impl.service.EasyServerService
+import com.ecjtu.sharebox.server.impl.servlet.GetFiles
 import com.ecjtu.sharebox.server.impl.servlet.Info
 import java.net.HttpURLConnection
 
@@ -35,8 +36,6 @@ class MainActivity : ImmersiveFragmentActivity() {
         const private val TAG="MainActivity"
         private val MSG_SERVICE_STARTED=0x10
         private val MSG_START_SERVER=0x11
-
-        const val KEY_SERVER_PORT="key_server_port"
     }
 
     private var mDelegate : MainActivityDelegate? =null
@@ -259,7 +258,7 @@ class MainActivity : ImmersiveFragmentActivity() {
                     Log.e(TAG,"isServerAlive false,start server")
                     var intent=EasyServerService.getApIntent(this)
                     EasyServer.setServerListener { server, hostIP, port ->
-                        getMainApplication().getSavedInstance().put(KEY_SERVER_PORT, port.toString())
+                        getMainApplication().getSavedInstance().put(Constants.KEY_SERVER_PORT, port.toString())
                         var name= PreferenceManager.getDefaultSharedPreferences(this).getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
                         Info.init(DeviceInfo(name,hostIP,port,"/API/Icon", mutableMapOf()))
                         getMainApplication().getSavedInstance().put(Constants.KEY_INFO_OBJECT, Info.getDeviceInfo())
@@ -267,7 +266,7 @@ class MainActivity : ImmersiveFragmentActivity() {
                     }
                     startService(intent)
                 }else{
-                    getMainApplication().getSavedInstance().remove(KEY_SERVER_PORT)
+                    getMainApplication().getSavedInstance().remove(Constants.KEY_SERVER_PORT)
                 }
             }
         }

@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 import android.os.AsyncTask
 import android.util.LruCache
 import android.widget.ImageView
-import com.ecjtu.sharebox.util.fileutils.FileUtil
+import com.ecjtu.sharebox.util.file.FileUtil
 import java.io.File
 
 /**

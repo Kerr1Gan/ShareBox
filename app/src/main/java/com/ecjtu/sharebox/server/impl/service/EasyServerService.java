@@ -101,6 +101,8 @@ public class EasyServerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if(intent==null)
+            return super.onStartCommand(intent,flags,startId);
 
         int type = intent.getIntExtra(EXTRA_SERVER_TYPE, SERVER_TYPE_AP);
 

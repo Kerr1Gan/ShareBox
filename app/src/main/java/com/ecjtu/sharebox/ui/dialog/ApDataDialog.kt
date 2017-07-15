@@ -12,7 +12,10 @@ import com.ecjtu.sharebox.util.qrimage.QrUtils
 import kotlin.concurrent.thread
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.ColorMatrix
+import android.preference.PreferenceManager
+import android.text.TextUtils
 import android.widget.TextView
+import com.ecjtu.sharebox.Constants
 import org.ecjtu.channellibrary.wifidirect.WifiDirectManager
 import org.ecjtu.channellibrary.wifiutil.NetworkUtil
 import org.ecjtu.channellibrary.wifiutil.WifiUtil
@@ -39,6 +42,11 @@ class ApDataDialog(context: Context,activity: Activity):BaseBottomSheetDialog(co
 
     private val mFormat ="%s %s"
 
+    private var mOthers=false
+
+    private var mPort=8000
+
+    private var mIp=""
 
     override fun onViewCreated(view: View?): Boolean {
         var behavior = BottomSheetBehavior.from(findViewById(android.support.design.R.id.design_bottom_sheet))
@@ -48,21 +56,27 @@ class ApDataDialog(context: Context,activity: Activity):BaseBottomSheetDialog(co
     }
 
     private fun initView(vg:ViewGroup){
-        var ip=WifiDirectManager.getInstance().localWLANIps
-        var port=8000
+        var ip=if(mOthers) mIp else ""
+        var port=if(mOthers) mPort else PreferenceManager.getDefaultSharedPreferences(ownerActivity).getInt(Constants.KEY_SERVER_PORT,mPort)
 
         var ap=vg.findViewById(R.id.text_ap) as TextView
         var name=vg.findViewById(R.id.text_name) as TextView
         var pwd=vg.findViewById(R.id.text_pwd) as TextView
 
         if(NetworkUtil.isWifi(context)){
+            if(TextUtils.isEmpty(ip))
+                ip=NetworkUtil.getLocalWLANIps()[0]
             ap.text="WIFI"
             var wifiInfo=NetworkUtil.getConnectWifiInfo(context)
             var ssid=wifiInfo.ssid.drop(1)
             ssid=ssid.dropLast(1)
             name.setText(String.format(mFormat,name.text.toString(),ssid))
             pwd.visibility=View.INVISIBLE
+
+            vg.findViewById(R.id.qr_container)?.visibility=View.GONE
         }else if(NetworkUtil.isHotSpot(context)){
+            if(TextUtils.isEmpty(ip))
+                ip=NetworkUtil.getLocalApIps()[0]
             ap.text="Hotspot"
             var config=NetworkUtil.getHotSpotConfiguration(context)
             var ssid=config.SSID
@@ -79,9 +93,11 @@ class ApDataDialog(context: Context,activity: Activity):BaseBottomSheetDialog(co
             }
         }
 
+        var url="http://$ip:$port"
+        (vg.findViewById(R.id.text_url) as TextView).setText(url)
         thread {
             var px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 250f, context.resources.displayMetrics)
-            val qr = QrUtils.createQRImage("http://$ip:$port", px.toInt(), px.toInt())
+            val qr = QrUtils.createQRImage(url, px.toInt(), px.toInt())
             ownerActivity.runOnUiThread {
                 darkImageView(vg.findViewById(R.id.image_url) as ImageView)
                         .setImageBitmap(qr)
@@ -96,5 +112,11 @@ class ApDataDialog(context: Context,activity: Activity):BaseBottomSheetDialog(co
         val filter = ColorMatrixColorFilter(matrix)
         img.setColorFilter(filter)
         return img
+    }
+
+    fun setup(ip:String,port:Int){
+        mOthers=true
+        mPort=port
+        mIp=ip
     }
 }

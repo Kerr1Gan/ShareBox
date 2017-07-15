@@ -24,8 +24,8 @@ import com.ecjtu.sharebox.ui.dialog.TextItemDialog;
 import com.ecjtu.sharebox.ui.dialog.FilePickDialog;
 import com.ecjtu.sharebox.ui.fragment.VideoPlayerFragment;
 import com.ecjtu.sharebox.ui.view.FileExpandableListView;
-import com.ecjtu.sharebox.util.fileutils.FileOpenIntentUtil;
-import com.ecjtu.sharebox.util.fileutils.FileUtil;
+import com.ecjtu.sharebox.util.file.FileOpenIntentUtil;
+import com.ecjtu.sharebox.util.file.FileUtil;
 
 import java.io.File;
 import java.util.ArrayList;
