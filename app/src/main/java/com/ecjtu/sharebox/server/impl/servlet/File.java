@@ -3,6 +3,7 @@ package com.ecjtu.sharebox.server.impl.servlet;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import com.ecjtu.sharebox.server.ServerManager;
 import com.ecjtu.sharebox.util.cache.CacheUtil;
 import com.ecjtu.sharebox.util.image.ImageUtil;
 
@@ -16,6 +17,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by KerriGan on 2016/4/24.
@@ -24,9 +26,6 @@ public class File implements BaseServlet {
 
     public static String TAG = "File";
 
-    public static ArrayList<java.io.File> fileList = new ArrayList<>();
-
-    public static Context sContext=null;
     @Override
     public void doGet(HTTPRequest httpReq, HTTPResponse res) {
 
@@ -120,6 +119,7 @@ public class File implements BaseServlet {
     }
 
     public static String getFilePathByHash(int hash) {
+        List<java.io.File> fileList= ServerManager.getInstance().getSharedFileList();
         if (fileList == null)
             return null;
 
@@ -133,6 +133,8 @@ public class File implements BaseServlet {
     }
 
     public static int getFileHashByPath(String path) {
+        List<java.io.File> fileList=ServerManager.getInstance().getSharedFileList();
+
         if (fileList == null)
             return 0;
 
@@ -150,7 +152,7 @@ public class File implements BaseServlet {
 
     public static void addFiles(ArrayList<java.io.File> files) {
         boolean hasSrc = false;
-
+        List<java.io.File> fileList=ServerManager.getInstance().getSharedFileList();
         if (fileList == null || files == null)
             return;
 
@@ -174,11 +176,12 @@ public class File implements BaseServlet {
     }
 
     public void doCache(String filePaths){
-        Bitmap b=CacheUtil.getBitmapByCache(sContext,filePaths);
+        Context context=ServerManager.getInstance().getApplicationContext();
+        Bitmap b=CacheUtil.getBitmapByCache(context,filePaths);
         if(b==null){
             b=ImageUtil.INSTANCE.createVideoThumbnail(filePaths,100,100);
             if(b!=null)
-                CacheUtil.makeCache(filePaths,b,100,100,sContext);
+                CacheUtil.makeCache(filePaths,b,100,100,context);
         }
     }
 }

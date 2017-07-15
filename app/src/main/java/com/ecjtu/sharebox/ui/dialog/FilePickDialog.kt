@@ -17,6 +17,7 @@ import android.widget.ProgressBar
 import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.domain.DeviceInfo
 import com.ecjtu.sharebox.getMainApplication
+import com.ecjtu.sharebox.server.ServerManager
 import com.ecjtu.sharebox.server.impl.servlet.GetFiles
 import com.ecjtu.sharebox.ui.view.FileExpandableListView
 import com.ecjtu.sharebox.util.file.FileUtil
@@ -417,8 +418,7 @@ class FilePickDialog :BaseBottomSheetDialog,Toolbar.OnMenuItemClickListener{
                         get(Constants.KEY_INFO_OBJECT) as DeviceInfo
                 deviceInfo.fileMap=map
 
-                GetFiles.init(null,fileList,context.applicationContext)
-                com.ecjtu.sharebox.server.impl.servlet.File.addFiles(fileList)
+                ServerManager.getInstance().setSharedFileList(fileList)
             }
 
             R.id.select_all->{

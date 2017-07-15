@@ -2,6 +2,7 @@ package com.ecjtu.sharebox.server.impl.servlet;
 
 import android.content.Context;
 
+import com.ecjtu.sharebox.server.ServerManager;
 import com.ecjtu.sharebox.util.cache.CacheUtil;
 
 import org.ecjtu.easyserver.http.HTTPRequest;
@@ -15,6 +16,7 @@ import org.json.JSONObject;
 import java.io.*;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by KerriGan on 2016/4/24.
@@ -22,18 +24,8 @@ import java.util.ArrayList;
 @Deprecated
 public class GetFiles implements BaseServlet {
 
-    public static ArrayList<java.io.File> sShareFileList;
-
-    protected static String sIp;
-
     public GetFiles() {
 //        sIp= MainActivity.sHostIP;
-    }
-
-    public static void init(String ip, ArrayList<java.io.File> fileList, Context context){
-        sIp=ip;
-        sShareFileList=fileList;
-        File.sContext=context;
     }
 
     @Override
@@ -56,15 +48,16 @@ public class GetFiles implements BaseServlet {
 //        boolean localShareScreen=AppInstance.getInstance().isShareScreen();
         boolean localShareScreen=false;
         if (httpReq.getHeaderValue("param").equals("getHttpFiles") || formParam.equals("param=getHttpFiles")) {
-
+            List<java.io.File> fileList= ServerManager.getInstance().getSharedFileList();
+            String ip=ServerManager.getInstance().getIp();
             try {
-                if (sShareFileList != null) {
+                if (fileList != null) {
                     JSONArray array = new JSONArray();
 
                     JSONObject shareScreen = new JSONObject();
-                    if (sIp == null)
-                        sIp = "";
-                    shareScreen.put("path","rtsp://"+ sIp +":"+/*MainActivity.sRtspPort*/8001);
+                    if (ip == null)
+                        ip = "";
+                    shareScreen.put("path","rtsp://"+ ip +":"+/*MainActivity.sRtspPort*/8001);
                     if(localShareScreen)
                     {
                         shareScreen.put("ShareScreen","true");
@@ -75,9 +68,9 @@ public class GetFiles implements BaseServlet {
                     }
 
                     array.put(shareScreen);
-
-                    for (int i = 0; i < sShareFileList.size(); i++) {
-                        java.io.File file = sShareFileList.get(i);
+                    Context context=ServerManager.getInstance().getApplicationContext();
+                    for (int i = 0; i < fileList.size(); i++) {
+                        java.io.File file = fileList.get(i);
                         JSONObject obj = new JSONObject();
 
                         obj.put("name", file.getName());
@@ -85,7 +78,7 @@ public class GetFiles implements BaseServlet {
                         int hash= File.getFileHashByPath(file.getPath());
                         obj.put("path", "/File/" + hash + File.getSuffixByPath(file.getName()));
 
-                        String cachePath="/API/Cache"+ CacheUtil.getCachePath(File.sContext,file.getPath());
+                        String cachePath="/API/Cache"+ CacheUtil.getCachePath(context,file.getPath());
 
                         String uri=cachePath.substring(cachePath.lastIndexOf("/")+1);
                         uri= URLEncoder.encode(uri,"utf-8");

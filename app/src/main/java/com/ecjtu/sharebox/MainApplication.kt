@@ -14,6 +14,7 @@ import com.bumptech.glide.load.engine.cache.LruResourceCache
 import com.bumptech.glide.module.AppGlideModule
 import com.ecjtu.sharebox.domain.DeviceInfo
 import com.ecjtu.sharebox.domain.PreferenceInfo
+import com.ecjtu.sharebox.server.ServerManager
 import com.ecjtu.sharebox.server.impl.servlet.Icon
 import com.ecjtu.sharebox.server.impl.servlet.Info
 import com.ecjtu.sharebox.server.util.AssetsUtil
@@ -55,7 +56,7 @@ class MainApplication:Application(){
 
     private fun initSavedState(){
         AssetsUtil.CONTEXT=applicationContext
-        Icon.initPath(filesDir.absolutePath+"/"+Constants.ICON_HEAD)
+        ServerManager.getInstance().setIconPath(filesDir.absolutePath+"/"+Constants.ICON_HEAD)
     }
 
     class SimpleGlideModule : AppGlideModule() {

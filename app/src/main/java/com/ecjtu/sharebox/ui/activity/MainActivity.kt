@@ -22,6 +22,7 @@ import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.network.AsyncNetwork
 import com.ecjtu.sharebox.network.IRequestCallback
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
+import com.ecjtu.sharebox.server.ServerManager
 import com.ecjtu.sharebox.server.impl.server.EasyServer
 import com.ecjtu.sharebox.server.impl.service.EasyServerService
 import com.ecjtu.sharebox.server.impl.servlet.GetFiles
@@ -260,7 +261,7 @@ class MainActivity : ImmersiveFragmentActivity() {
                     EasyServer.setServerListener { server, hostIP, port ->
                         getMainApplication().getSavedInstance().put(Constants.KEY_SERVER_PORT, port.toString())
                         var name= PreferenceManager.getDefaultSharedPreferences(this).getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
-                        Info.init(DeviceInfo(name,hostIP,port,"/API/Icon", mutableMapOf()))
+                        ServerManager.getInstance().setDeviceInfo(DeviceInfo(name,hostIP,port,"/API/Icon", mutableMapOf()))
                         getMainApplication().getSavedInstance().put(Constants.KEY_INFO_OBJECT, Info.getDeviceInfo())
                         runOnUiThread { mDelegate?.doSearch() }
                     }

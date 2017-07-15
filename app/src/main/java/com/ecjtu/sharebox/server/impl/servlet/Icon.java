@@ -1,5 +1,7 @@
 package com.ecjtu.sharebox.server.impl.servlet;
 
+import com.ecjtu.sharebox.server.ServerManager;
+
 import org.ecjtu.easyserver.http.HTTPRequest;
 import org.ecjtu.easyserver.http.HTTPResponse;
 import org.ecjtu.easyserver.http.HTTPStatus;
@@ -16,12 +18,6 @@ import java.io.File;
 
 public class Icon implements BaseServlet {
 
-    private static String sPath="";
-
-    public static void initPath(String path) {
-        sPath=path;
-    }
-
     @Override
     public void doGet(HTTPRequest httpReq, HTTPResponse httpRes) {
 //        String uri = httpReq.getURI();
@@ -32,12 +28,13 @@ public class Icon implements BaseServlet {
 //            filePaths = filePaths.substring(0, indexOf);
 //        }
 
+        String path= ServerManager.getInstance().getIconPath();
         try {
-            File file = new File(sPath);
+            File file = new File(path);
 
             long contentLen = file.length();
 
-            String contentType = FileUtil.getFileType(sPath);
+            String contentType = FileUtil.getFileType(path);
 
             FileInputStream contentIn = new FileInputStream(file);
 

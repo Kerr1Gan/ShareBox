@@ -3,6 +3,7 @@ package com.ecjtu.sharebox.server.impl.servlet;
 import android.text.TextUtils;
 
 import com.ecjtu.sharebox.domain.DeviceInfo;
+import com.ecjtu.sharebox.server.ServerManager;
 
 import org.ecjtu.easyserver.http.HTTPRequest;
 import org.ecjtu.easyserver.http.HTTPResponse;
@@ -26,17 +27,7 @@ import java.util.Set;
 
 public class Info implements BaseServlet{
 
-    private static DeviceInfo sDeviceInfo=null;
-
     private final String sToken="param=info";
-
-    public static void init(DeviceInfo info){
-        sDeviceInfo=info;
-    }
-
-    public static DeviceInfo getDeviceInfo(){
-        return sDeviceInfo;
-    }
 
     @Override
     public void doGet(HTTPRequest httpReq, HTTPResponse httpRes) {
@@ -45,7 +36,9 @@ public class Info implements BaseServlet{
 
     @Override
     public void doPost(HTTPRequest httpReq, HTTPResponse httpRes) {
-        if(sDeviceInfo==null){
+        DeviceInfo deviceInfo= ServerManager.getInstance().getDeviceInfo();
+
+        if(deviceInfo==null){
             httpReq.returnResponse(HTTPStatus.INTERNAL_SERVER_ERROR);
             return;
         }
@@ -55,7 +48,7 @@ public class Info implements BaseServlet{
             formParam = new String(httpReq.getContent(), "utf-8");
             if(!TextUtils.isEmpty(formParam)){
                 if(formParam.startsWith(sToken)){
-                    JSONObject json=deviceInfo2Json(sDeviceInfo);
+                    JSONObject json=deviceInfo2Json(deviceInfo);
                     String jsonStr=json.toString();
                     httpRes.setContentType("*/*");
                     httpRes.setStatusCode(HTTPStatus.OK);
