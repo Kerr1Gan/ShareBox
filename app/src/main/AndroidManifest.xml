@@ -25,6 +25,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ui.activity.BaseFragmentActivity"/>
+
         <activity
             android:name=".ui.activity.ImmersiveFragmentActivity"
             android:theme="@style/ImageStatusBarStyle"/>

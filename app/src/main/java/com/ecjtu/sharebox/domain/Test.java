@@ -46,6 +46,12 @@ public class Test {
                 j=0;
             }
         }
+
+        Integer iii=0;
+
+        if(iii instanceof Integer){
+
+        }
     }
 
     public <T extends String> void  addAll(T param){

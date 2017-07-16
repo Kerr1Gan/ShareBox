@@ -12,6 +12,7 @@ import android.os.AsyncTask
 import android.support.design.widget.TabLayout
 import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
+import android.text.TextUtils
 import android.util.Log
 import android.widget.ProgressBar
 import com.ecjtu.sharebox.Constants
@@ -27,7 +28,7 @@ import java.io.File
 /**
  * Created by KerriGan on 2017/6/2.
  */
-class FilePickDialog :BaseBottomSheetDialog,Toolbar.OnMenuItemClickListener{
+open class FilePickDialog :BaseBottomSheetDialog,Toolbar.OnMenuItemClickListener{
     constructor(context: Context,activity: Activity? = null):super(context,activity){
 
     }
@@ -83,7 +84,7 @@ class FilePickDialog :BaseBottomSheetDialog,Toolbar.OnMenuItemClickListener{
         return true
     }
 
-    private fun initData(){
+    open protected fun initData(){
         var item=TabItemHolder(context.getString(R.string.movie),string2MediaFileType("Movie"))
         mTabItemHolders?.put("Movie",item)
 
@@ -163,8 +164,26 @@ class FilePickDialog :BaseBottomSheetDialog,Toolbar.OnMenuItemClickListener{
         mViewPager=vg.findViewById(R.id.view_pager) as ViewPager
         mProgressBar=vg.findViewById(R.id.progress_bar) as ProgressBar
 
-        mViewPager?.adapter=object :PagerAdapter(){
+        mViewPager?.adapter=getViewPagerAdapter()
 
+        mViewPager?.setOnPageChangeListener(object :ViewPager.OnPageChangeListener{
+            override fun onPageScrollStateChanged(state: Int) {
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                mExpandableListView=mViewPagerViews.get(position) as FileExpandableListView
+                mExpandableListView?.loadedData()
+            }
+        })
+
+        mTabLayout?.setupWithViewPager(mViewPager)
+    }
+
+    open fun getViewPagerAdapter():PagerAdapter{
+        return object :PagerAdapter(){
 
             override fun isViewFromObject(view: View?, `object`: Any?): Boolean {
                 return view==`object`
@@ -224,21 +243,6 @@ class FilePickDialog :BaseBottomSheetDialog,Toolbar.OnMenuItemClickListener{
 //                mViewPagerViews.remove(position)
             }
         }
-
-        mViewPager?.setOnPageChangeListener(object :ViewPager.OnPageChangeListener{
-            override fun onPageScrollStateChanged(state: Int) {
-            }
-
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-            }
-
-            override fun onPageSelected(position: Int) {
-                mExpandableListView=mViewPagerViews.get(position) as FileExpandableListView
-                mExpandableListView?.loadedData()
-            }
-        })
-
-        mTabLayout?.setupWithViewPager(mViewPager)
     }
 
     inner class LoadingFilesTask:AsyncTask<List<File>?,Void,List<File>?>{
@@ -428,4 +432,7 @@ class FilePickDialog :BaseBottomSheetDialog,Toolbar.OnMenuItemClickListener{
         return true
     }
 
+    protected fun setTabItemsHolder(holder:MutableMap<String,TabItemHolder>){
+        mTabItemHolders=holder
+    }
 }
