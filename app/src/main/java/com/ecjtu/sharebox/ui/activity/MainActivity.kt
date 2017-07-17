@@ -31,7 +31,7 @@ import java.net.HttpURLConnection
 
 
 //http://www.tmtpost.com/195557.html 17.6.7
-class MainActivity : ImmersiveFragmentActivity() {
+class MainActivity: ImmersiveFragmentActivity() {
 
     companion object {
         const private val TAG="MainActivity"
@@ -62,7 +62,8 @@ class MainActivity : ImmersiveFragmentActivity() {
         var drawer=findViewById(R.id.drawer_view)
 
         if(isNavigationBarShow(this)){
-            drawer.setPadding(drawer.paddingLeft,drawer.paddingTop,drawer.paddingRight,getNavigationBarHeight(this))
+            drawer.setPadding(drawer.paddingLeft,drawer.paddingTop,drawer.paddingRight,
+                    drawer.paddingBottom+getNavigationBarHeight(this))
         }
 
         //init service
@@ -261,8 +262,9 @@ class MainActivity : ImmersiveFragmentActivity() {
                     EasyServer.setServerListener { server, hostIP, port ->
                         getMainApplication().getSavedInstance().put(Constants.KEY_SERVER_PORT, port.toString())
                         var name= PreferenceManager.getDefaultSharedPreferences(this).getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
-                        ServerManager.getInstance().setDeviceInfo(DeviceInfo(name,hostIP,port,"/API/Icon", mutableMapOf()))
-                        getMainApplication().getSavedInstance().put(Constants.KEY_INFO_OBJECT, Info.getDeviceInfo())
+                        var deviceInfo=DeviceInfo(name,hostIP,port,"/API/Icon", mutableMapOf())
+                        ServerManager.getInstance().setDeviceInfo(deviceInfo)
+                        getMainApplication().getSavedInstance().put(Constants.KEY_INFO_OBJECT, deviceInfo)
                         runOnUiThread { mDelegate?.doSearch() }
                     }
                     startService(intent)

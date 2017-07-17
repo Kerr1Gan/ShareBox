@@ -30,16 +30,16 @@ import com.ecjtu.sharebox.domain.PreferenceInfo
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.ui.activity.MainActivity
 import com.ecjtu.sharebox.ui.adapter.DeviceRecyclerViewAdapter
-import com.ecjtu.sharebox.ui.dialog.WifiBottomSheetDialog
-import org.ecjtu.channellibrary.wifiutil.NetworkUtil
 import com.ecjtu.sharebox.ui.dialog.ApDataDialog
 import com.ecjtu.sharebox.ui.dialog.EditNameDialog
 import com.ecjtu.sharebox.ui.dialog.TextItemDialog
+import com.ecjtu.sharebox.ui.dialog.WifiBottomSheetDialog
 import com.ecjtu.sharebox.ui.fragment.FilePickDialogFragment
 import com.ecjtu.sharebox.util.photo.CapturePhotoHelper
-import com.ecjtu.sharebox.util.photo.TakePhotoHelper
+import com.ecjtu.sharebox.util.photoutil.PickPhotoHelper
 import org.ecjtu.channellibrary.devicesearch.DeviceSearcher
 import org.ecjtu.channellibrary.devicesearch.DiscoverHelper
+import org.ecjtu.channellibrary.wifiutil.NetworkUtil
 import java.io.File
 import java.lang.Exception
 
@@ -79,7 +79,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
 
     private var mPhotoHelper:CapturePhotoHelper?=null
 
-    private var mImageHelper:TakePhotoHelper? =null
+    private var mImageHelper: PickPhotoHelper? =null
 
     companion object {
         //Settings.ACTION_APPLICATION_DETAIL_SETTING
@@ -96,6 +96,8 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
             }
             return localIntent
         }
+
+        const val DEBUG=true
     }
 
     init {
@@ -192,7 +194,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
                     mPhotoHelper = CapturePhotoHelper(owner)
                     mPhotoHelper?.takePhoto()
                 } else if(index==1){
-                    mImageHelper = TakePhotoHelper(owner)
+                    mImageHelper = PickPhotoHelper(owner)
                     mImageHelper?.takePhoto()
                 }
                 dlg.cancel()
@@ -334,13 +336,17 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
         mDiscoverHelper = DiscoverHelper(owner, name, port,"/API/Icon")
         mDiscoverHelper?.setMessageListener { msg, deviceSet, handler ->
             var state = owner.getMainApplication().getSavedInstance().get(Constants.AP_STATE)
+            var ip=""
+            if (state == Constants.NetWorkState.WIFI ) {
+                ip=NetworkUtil.getLocalWLANIps()[0]
+            }else if(state == Constants.NetWorkState.AP){
+                ip=NetworkUtil.getLocalApIps()[0]
+            }
             when (msg) {
                 DiscoverHelper.MSG_FIND_DEVICE -> {
-                    if (state == Constants.NetWorkState.WIFI || state == Constants.NetWorkState.AP) {
-                        var res = NetworkUtil.getWifiHostAndSelfIP(owner)
 
-                    }
                     for (obj in deviceSet) {
+                        if(isSelf(ip,obj)) continue
                         var index=mClientSet.indexOf(obj)
                         if (index < 0) {
                             mClientSet.add(obj)
@@ -357,6 +363,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
                 }
                 DiscoverHelper.MSG_BEING_SEARCHED -> {
                     for (obj in deviceSet) {
+                        if(isSelf(ip,obj)) continue
                         var index=mClientSet.indexOf(obj)
                         if (index < 0) {
                             mServerSet.add(obj)
@@ -462,4 +469,12 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
         }
     }
 
+    private fun isSelf(ip:String,device:DeviceSearcher.DeviceBean):Boolean{
+        if(DEBUG) return false
+
+        if(ip==device.ip){
+            return true
+        }
+        return false
+    }
 }

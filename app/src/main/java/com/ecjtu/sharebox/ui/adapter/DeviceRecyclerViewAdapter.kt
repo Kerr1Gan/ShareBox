@@ -57,7 +57,7 @@ View.OnLongClickListener{
         var iconUrl="${info?.ip}:${info?.port}${info?.icon}"
         holder?.itemView?.setTag(R.id.extra_tag,position)
         Glide.with(holder?.itemView?.context).load("http://"+iconUrl).
-                apply(RequestOptions().placeholder(R.mipmap.ic_launcher)).
+                apply(RequestOptions().placeholder(R.mipmap.logo)).
                 into(holder?.icon)
         holder?.name?.setText(info?.name)
     }
@@ -102,7 +102,6 @@ View.OnLongClickListener{
 
         return true
     }
-
 
     class VH(item: View) : RecyclerView.ViewHolder(item) {
         var icon: ImageView? = null

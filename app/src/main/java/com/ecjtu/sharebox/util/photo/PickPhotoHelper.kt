@@ -11,7 +11,7 @@ import java.io.File
 /**
  * Created by KerriGan on 2017/7/12.
  */
-class TakePhotoHelper(fragmentActivity: FragmentActivity):CropPhotoHelper(){
+class PickPhotoHelper(fragmentActivity: FragmentActivity):CropPhotoHelper(){
 
     companion object {
         val TAKE_PHOTO=0x1002

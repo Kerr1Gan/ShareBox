@@ -1,1 +1,1 @@
-include ':app', ':channellibrary', ':floatinglibrary', ':easyserver'
+include ':app', ':channellibrary', ':circularprogresslibrary', ':easyserver'

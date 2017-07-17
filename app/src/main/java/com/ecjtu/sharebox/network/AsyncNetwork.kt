@@ -38,7 +38,7 @@ class AsyncNetwork:BaseNetwork(){
         map.put("param","info")
         return AsyncNetwork().apply {
             setRequestCallback(listener)
-            request("http://${url}/API/Info", map)
+            request("${HTTP_PREFIX}${url}/API/Info", map)
         }
     }
 }

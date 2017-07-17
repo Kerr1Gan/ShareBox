@@ -18,6 +18,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import com.dd.CircularProgressButton
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
 import com.ecjtu.sharebox.ui.view.CircleProgressView
@@ -41,13 +42,19 @@ open class WifiBottomSheetDialog:CloseBottomSheetDialog{
 
     private var mPwdTextInput:TextInputLayout? =null
 
-    private var mCircleProgress:CircleProgressView? =null
-
     private var mReceiver:BroadcastReceiver? =null
 
     private var mHandler:Handler =Handler(ownerActivity.mainLooper)
 
     private val DELAY_TIME = 5 * 1000L
+
+    private var mCircularButton:CircularProgressButton? =null
+
+    companion object {
+        const val PROGRESS_START= 0
+        const val PROGRESS_MIDDLE= 50
+        const val PROGRESS_END=100
+    }
 
     override fun onCreateView(): View?{
         var vg = super.onCreateView() as ViewGroup
@@ -68,39 +75,17 @@ open class WifiBottomSheetDialog:CloseBottomSheetDialog{
         mHotspotName?.addTextChangedListener(mTextWatcherName)
         mHotspotPwd?.addTextChangedListener(mTextWatcherPwd)
 
-        mCircleProgress= vg.findViewById(R.id.circle_progress) as CircleProgressView?
-
-        mCircleProgress?.backgroundColor=context.resources.getColor(R.color.colorPrimary)
-        mCircleProgress?.progressColor=context.resources.getColor(android.R.color.holo_green_light)
-        mCircleProgress?.textColor=context.resources.getColor(android.R.color.white)
-        mCircleProgress?.setStartText("Start")
-        mCircleProgress?.setOnClickListener {
-
-            if(NetworkUtil.isHotSpot(context)){
-                WifiUtil.openHotSpot(context,false,mHotspotName?.text.toString(),mHotspotPwd?.text.toString())
-                return@setOnClickListener
-            }
-
-            if(!mCircleProgress?.isAnimated!!){
-                mCircleProgress?.setProgress(80,true,2000)
-            }
-
-            mHandler.postDelayed({
-                Toast.makeText(context,"No permission",Toast.LENGTH_SHORT).show()
-                context.startActivity(MainActivityDelegate.getAppDetailSettingIntent(context))
-                cancel()
-            },DELAY_TIME)
-            WifiUtil.openHotSpot(context,true,mHotspotName?.text.toString()
-                    ,mHotspotPwd?.text.toString())
-        }
+        setupCircularProgressButton(vg)
 
         var config=NetworkUtil.getHotSpotConfiguration(context)
         mHotspotName?.setText(config.SSID)
         mHotspotPwd?.setText(config.preSharedKey)
         if(NetworkUtil.isHotSpot(context)){
-            mCircleProgress?.setStartText("Close")
+            mCircularButton?.setText("关闭")
+            mCircularButton?.progress= PROGRESS_END
         }else{
-            mCircleProgress?.setStartText("Start")
+            mCircularButton?.setText("开启")
+            mCircularButton?.progress= PROGRESS_START
         }
 
         (vg.findViewById(R.id.text_title) as TextView).setText("Hotspot")
@@ -162,12 +147,14 @@ open class WifiBottomSheetDialog:CloseBottomSheetDialog{
                     var config=NetworkUtil.getHotSpotConfiguration(context)
                     mHotspotName?.setText(config.SSID)
                     mHotspotPwd?.setText(config.preSharedKey)
-                    mCircleProgress?.setStartText("Close")
+                    mCircularButton?.setText("关闭")
+                    mCircularButton?.progress= PROGRESS_END
 
                     mHandler.removeCallbacksAndMessages(null)
                 }else if(status==11){
                     //wifi ap disabled
-                    mCircleProgress?.setStartText("Start")
+                    mCircularButton?.setText("开启")
+                    mCircularButton?.progress= PROGRESS_START
                 }
             }
 
@@ -182,5 +169,36 @@ open class WifiBottomSheetDialog:CloseBottomSheetDialog{
         super.onStop()
         context.unregisterReceiver(mReceiver)
         mHandler.removeCallbacksAndMessages(null)
+    }
+
+    fun setupCircularProgressButton(vg:ViewGroup){
+        mCircularButton = vg.findViewById(R.id.circle_progress) as CircularProgressButton
+        mCircularButton?.isIndeterminateProgressMode = true
+        mCircularButton?.setOnClickListener {
+            if (mCircularButton?.progress == PROGRESS_START) {
+                mCircularButton?.progress = PROGRESS_MIDDLE
+
+                if (NetworkUtil.isHotSpot(context)) {
+                    WifiUtil.openHotSpot(context, false, mHotspotName?.text.toString(), mHotspotPwd?.text.toString())
+                    return@setOnClickListener
+                }
+
+                mHandler.postDelayed({
+                    Toast.makeText(context, "No permission", Toast.LENGTH_SHORT).show()
+                    context.startActivity(MainActivityDelegate.getAppDetailSettingIntent(context))
+                    mCircularButton?.progress= PROGRESS_START
+                    cancel()
+                }, DELAY_TIME)
+
+                WifiUtil.openHotSpot(context,true,mHotspotName?.text.toString()
+                        ,mHotspotPwd?.text.toString())
+            } else if (mCircularButton?.progress == PROGRESS_END) {
+                mCircularButton?.progress = PROGRESS_START
+                mCircularButton?.setText("开启")
+
+                WifiUtil.openHotSpot(context,false,mHotspotName?.text.toString()
+                        ,mHotspotPwd?.text.toString())
+            }
+        }
     }
 }

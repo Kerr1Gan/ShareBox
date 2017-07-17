@@ -13,7 +13,7 @@ import com.ecjtu.sharebox.R
  * Created by KerriGan on 2017/5/21.
  */
 
-class BaseFragmentActivity : BaseActionActivity() {
+open class BaseFragmentActivity : BaseActionActivity() {
 
     companion object {
 
