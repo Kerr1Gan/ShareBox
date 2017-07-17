@@ -13,11 +13,12 @@ import com.ecjtu.sharebox.MainApplication
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.domain.DeviceInfo
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
+import com.ecjtu.sharebox.ui.dialog.TextItemDialog
 
 /**
  * Created by Ethan_Xiang on 2017/7/3.
  */
-class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerViewAdapter.VH>,View.OnClickListener{
+class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerViewAdapter.VH>,View.OnClickListener,View.OnLongClickListener{
 
     private var mDeviceList: MutableList<DeviceInfo>? = null
 
@@ -32,6 +33,7 @@ class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerViewAdapter
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): VH? {
         var v = LayoutInflater.from(parent?.context).inflate(R.layout.layout_device_item, parent, false)
         v.setOnClickListener(this)
+        v.setOnLongClickListener(this)
         return VH(v)
     }
 
@@ -40,13 +42,33 @@ class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerViewAdapter
 
         holder?.itemView?.setTag(R.id.extra_tag,position)
         Glide.with(holder?.itemView?.context).load(info?.icon).
-                apply(RequestOptions().placeholder(R.mipmap.ic_launcher)).
+                apply(RequestOptions().placeholder(R.mipmap.logo)).
                 into(holder?.icon)
         holder?.name?.setText(info?.name)
     }
 
     override fun onClick(v: View?) {
         var position=v?.getTag(R.id.extra_tag)
+    }
+
+    override fun onLongClick(v: View?): Boolean {
+        var position=v?.getTag(R.id.extra_tag) as Int
+
+        var deviceInfo=mDeviceList?.get(position)
+
+        var items= arrayOf("网络信息","取消")
+
+        TextItemDialog(v?.context).apply {
+            setupItem(items)
+            setOnClickListener {index->
+                if(index==0){
+
+                }
+                cancel()
+            }
+        }
+
+        return true
     }
 
     class VH(item: View) : RecyclerView.ViewHolder(item) {

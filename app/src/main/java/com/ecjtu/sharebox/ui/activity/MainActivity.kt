@@ -18,7 +18,7 @@ import com.ecjtu.sharebox.presenter.MainActivityDelegate
 
 
 //http://www.tmtpost.com/195557.html 17.6.7
-class MainActivity : ImmersiveFragmentActivity() {
+class MainActivity: ImmersiveFragmentActivity() {
 
     companion object {
         private val TAG="MainActivity"
@@ -51,7 +51,8 @@ class MainActivity : ImmersiveFragmentActivity() {
         var drawer=findViewById(R.id.drawer_view)
 
         if(isNavigationBarShow(this)){
-            drawer.setPadding(drawer.paddingLeft,drawer.paddingTop,drawer.paddingRight,getNavigationBarHeight(this))
+            drawer.setPadding(drawer.paddingLeft,drawer.paddingTop,drawer.paddingRight,
+                    drawer.paddingBottom+getNavigationBarHeight(this))
         }
 
         //init service

@@ -11,7 +11,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/channellibrary" />
-            <option value="$PROJECT_DIR$/floatinglibrary" />
+            <option value="$PROJECT_DIR$/circularprogresslibrary" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

@@ -18,11 +18,9 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.widget.*
 import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.R
@@ -38,10 +36,9 @@ import com.ecjtu.sharebox.ui.dialog.EditNameDialog
 import com.ecjtu.sharebox.ui.dialog.TextItemDialog
 import com.ecjtu.sharebox.ui.fragment.FilePickDialogFragment
 import com.ecjtu.sharebox.util.photoutil.CapturePhotoHelper
-import com.ecjtu.sharebox.util.photoutil.TakePhotoHelper
+import com.ecjtu.sharebox.util.photoutil.PickPhotoHelper
 import org.ecjtu.channellibrary.devicesearch.DeviceSearcher
 import org.ecjtu.channellibrary.devicesearch.DiscoverHelper
-import org.ecjtu.channellibrary.wifiutil.WifiUtil
 import java.io.File
 import java.lang.Exception
 
@@ -81,7 +78,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
 
     private var mPhotoHelper:CapturePhotoHelper?=null
 
-    private var mImageHelper:TakePhotoHelper? =null
+    private var mImageHelper: PickPhotoHelper? =null
 
     companion object {
         //Settings.ACTION_APPLICATION_DETAIL_SETTING
@@ -98,6 +95,8 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
             }
             return localIntent
         }
+
+        const val DEBUG=true
     }
 
     init {
@@ -194,7 +193,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
                     mPhotoHelper = CapturePhotoHelper(owner)
                     mPhotoHelper?.takePhoto()
                 } else {
-                    mImageHelper = TakePhotoHelper(owner)
+                    mImageHelper = PickPhotoHelper(owner)
                     mImageHelper?.takePhoto()
                 }
                 dlg.cancel()
@@ -221,7 +220,6 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
 
         when (item?.getItemId()) {
             R.id.qr_code -> {
-
                 var map = owner.getMainApplication().getSavedStateInstance()
                 var state = map.get(Constants.AP_STATE)
 
@@ -334,15 +332,18 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
         mDiscoverHelper = DiscoverHelper(owner, name, port,"/API/Icon")
         mDiscoverHelper?.setMessageListener { msg, deviceSet, handler ->
             var state = owner.getMainApplication().getSavedStateInstance().get(Constants.AP_STATE)
+            var ip=""
+            if (state == Constants.NetWorkState.WIFI ) {
+                ip=NetworkUtil.getLocalWLANIps()[0]
+            }else if(state == Constants.NetWorkState.AP){
+                ip=NetworkUtil.getLocalApIps()[0]
+            }
+
             when (msg) {
                 DiscoverHelper.MSG_FIND_DEVICE -> {
-                    if (state == Constants.NetWorkState.WIFI || state == Constants.NetWorkState.AP) {
-                        var res = NetworkUtil.getWifiHostAndSelfIP(owner)
-
-                    }
                     for (obj in deviceSet) {
-
                         if (mClientSet.indexOf(obj) < 0) {
+                            if(isSelf(ip,obj)) continue
                             mClientSet.add(obj)
                         }
                     }
@@ -353,6 +354,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
                 }
                 DiscoverHelper.MSG_BEING_SEARCHED -> {
                     for (obj in deviceSet) {
+                        if(isSelf(ip,obj)) continue
                         if (mServerSet.indexOf(obj) < 0) {
                             mServerSet.add(obj)
                         }
@@ -427,5 +429,14 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
             var icon=findViewById(R.id.drawer_view)?.findViewById(R.id.icon) as ImageView //有相同id 找到错误的view
             icon.setImageBitmap(BitmapFactory.decodeFile(iconFile.absolutePath))
         }
+    }
+
+    private fun isSelf(ip:String,device:DeviceSearcher.DeviceBean):Boolean{
+        if(DEBUG) return false
+
+        if(ip==device.ip){
+            return true
+        }
+        return false
     }
 }

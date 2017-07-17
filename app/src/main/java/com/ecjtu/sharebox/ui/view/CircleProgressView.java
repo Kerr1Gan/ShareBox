@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -121,7 +122,11 @@ public class CircleProgressView extends View {
         mPaint.setTextSize(textHeight);
         int textWidth = (int) mPaint.measureText(text, 0, text.length());
         mPaint.setStyle(Paint.Style.FILL);
-        canvas.drawText(text, width / 2 - textWidth / 2, height / 2 + textHeight / 2, mPaint);
+
+        Rect bound=new Rect();
+        mPaint.getTextBounds(text, 0, text.length(), bound);
+        int textCenter = getHeight() / 2 + (bound.height() - bound.bottom) / 2;
+        canvas.drawText(text, width / 2 - textWidth / 2, textCenter, mPaint);
 
         if (!TextUtils.isEmpty(mTxtHint1)) {
             mPaint.setStrokeWidth(mTxtStrokeWidth);
