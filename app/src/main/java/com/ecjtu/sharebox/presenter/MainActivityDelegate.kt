@@ -36,7 +36,7 @@ import com.ecjtu.sharebox.ui.dialog.TextItemDialog
 import com.ecjtu.sharebox.ui.dialog.WifiBottomSheetDialog
 import com.ecjtu.sharebox.ui.fragment.FilePickDialogFragment
 import com.ecjtu.sharebox.util.photo.CapturePhotoHelper
-import com.ecjtu.sharebox.util.photoutil.PickPhotoHelper
+import com.ecjtu.sharebox.util.photo.PickPhotoHelper
 import org.ecjtu.channellibrary.devicesearch.DeviceSearcher
 import org.ecjtu.channellibrary.devicesearch.DiscoverHelper
 import org.ecjtu.channellibrary.wifiutil.NetworkUtil
