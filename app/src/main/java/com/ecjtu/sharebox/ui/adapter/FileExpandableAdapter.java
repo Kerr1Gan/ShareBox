@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide;
 import com.ecjtu.sharebox.R;
 import com.ecjtu.sharebox.async.AppThumbTask;
 import com.ecjtu.sharebox.ui.activity.BaseFragmentActivity;
+import com.ecjtu.sharebox.ui.activity.ImmersiveFragmentActivity;
 import com.ecjtu.sharebox.ui.dialog.TextItemDialog;
 import com.ecjtu.sharebox.ui.dialog.FilePickDialog;
 import com.ecjtu.sharebox.ui.fragment.VideoPlayerFragment;
@@ -118,7 +119,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
                     if(mTabHolder.getType()== FileUtil.MediaFileType.MOVIE){
                         Bundle bundle=new Bundle();
                         bundle.putString(VideoPlayerFragment.Companion.getEXTRA_URI_PATH(),path);
-                        Intent i= BaseFragmentActivity.Companion.newInstance(mContext, VideoPlayerFragment.class,bundle);
+                        Intent i= ImmersiveFragmentActivity.Companion.newInstance(mContext, VideoPlayerFragment.class,bundle);
                         mContext.startActivity(i);
                     }else{
                         Intent i= FileOpenIntentUtil.INSTANCE.openFile(path);
