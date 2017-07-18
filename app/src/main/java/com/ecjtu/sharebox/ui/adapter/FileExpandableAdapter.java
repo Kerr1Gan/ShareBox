@@ -43,9 +43,9 @@ import kotlin.jvm.functions.Function1;
 public class FileExpandableAdapter extends BaseExpandableListAdapter implements View.OnClickListener,
         View.OnLongClickListener{
 
-    private FilePickDialog.TabItemHolder mTabHolder;
+    protected FilePickDialog.TabItemHolder mTabHolder;
 
-    private List<File> mFileList;
+    protected List<File> mFileList;
 
     private static final int CACHE_SIZE=5 * 1024 *1024;
 

@@ -20,6 +20,7 @@ import com.ecjtu.sharebox.domain.DeviceInfo
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.server.ServerManager
 import com.ecjtu.sharebox.server.impl.servlet.GetFiles
+import com.ecjtu.sharebox.ui.adapter.FileExpandableAdapter
 import com.ecjtu.sharebox.ui.view.FileExpandableListView
 import com.ecjtu.sharebox.util.file.FileUtil
 import java.io.File
@@ -50,6 +51,59 @@ open class FilePickDialog :BaseBottomSheetDialog,Toolbar.OnMenuItemClickListener
     private var mExpandableListView:FileExpandableListView? =null
 
     private var mProgressBar:ProgressBar? =null
+
+    companion object {
+        fun string2MediaFileType(str:String):FileUtil.MediaFileType?{
+            var ret:FileUtil.MediaFileType?=null
+            when(str){
+                "Movie"->{
+                    ret=FileUtil.MediaFileType.MOVIE
+                }
+                "Music"->{
+                    ret=FileUtil.MediaFileType.MP3
+                }
+                "Photo"->{
+                    ret=FileUtil.MediaFileType.IMG
+                }
+                "Doc"->{
+                    ret=FileUtil.MediaFileType.DOC
+                }
+                "Apk"->{
+                    ret=FileUtil.MediaFileType.APP
+                }
+                "Rar"->{
+                    ret=FileUtil.MediaFileType.RAR
+                }
+            }
+            return ret
+        }
+
+        fun mediaFileType2String(type:FileUtil.MediaFileType):String?{
+            var ret:String?=null
+            when(type){
+                FileUtil.MediaFileType.MOVIE->{
+                    ret="Movie"
+                }
+                FileUtil.MediaFileType.MP3->{
+                    ret="Music"
+                }
+                FileUtil.MediaFileType.IMG->{
+                    ret="Photo"
+                }
+                FileUtil.MediaFileType.DOC->{
+                    ret="Doc"
+                }
+                FileUtil.MediaFileType.APP->{
+                    ret="Apk"
+                }
+                FileUtil.MediaFileType.RAR->{
+                    ret="Rar"
+                }
+            }
+            return ret
+        }
+
+    }
 
     override fun initializeDialog() {
         super.initializeDialog()
@@ -105,7 +159,7 @@ open class FilePickDialog :BaseBottomSheetDialog,Toolbar.OnMenuItemClickListener
 
     }
 
-    protected fun initView(vg:ViewGroup){
+    open protected fun initView(vg:ViewGroup){
         initData()
 
         var toolbar=vg.findViewById(R.id.toolbar) as Toolbar
@@ -174,7 +228,7 @@ open class FilePickDialog :BaseBottomSheetDialog,Toolbar.OnMenuItemClickListener
             }
 
             override fun onPageSelected(position: Int) {
-                mExpandableListView=mViewPagerViews.get(position) as FileExpandableListView
+                mExpandableListView=getListView(position)
                 mExpandableListView?.loadedData()
             }
         })
@@ -209,22 +263,23 @@ open class FilePickDialog :BaseBottomSheetDialog,Toolbar.OnMenuItemClickListener
                 }
 
                 container?.addView(vg)
+                mViewPagerViews.put(position,vg)
+                if(mExpandableListView==null)
+                    mExpandableListView=getListView(0) as FileExpandableListView
 
                 var title=mTabItemHolders?.keys?.elementAt(position) as String
 
                 var holder=mTabItemHolders?.get(title)
+                vg.fileExpandableAdapter=getFileAdapter(vg)
                 vg.initData(holder)
 
-                if(mTabItemHolders?.get(title)?.task==null){
+                if(mTabItemHolders?.get(title)?.task==null&&mTabItemHolders?.get(title)?.fileList==null){
                     var task=LoadingFilesTask(context,holder!!)
                     task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
                     mTabItemHolders?.get(title)?.task=task
                 }
+                refreshData()
 
-                mViewPagerViews.put(position,vg)
-
-                if(mExpandableListView==null)
-                    mExpandableListView=mViewPagerViews.get(0) as FileExpandableListView
                 return vg
             }
 
@@ -299,70 +354,20 @@ open class FilePickDialog :BaseBottomSheetDialog,Toolbar.OnMenuItemClickListener
 
         override fun onProgressUpdate(vararg values: Void?) {
             super.onProgressUpdate(*values)
-            mProgressBar?.visibility=View.VISIBLE
+            refresh(true)
         }
 
         override fun onPostExecute(result: List<File>?) {
             super.onPostExecute(result)
-            mProgressBar?.visibility=View.INVISIBLE
+            refresh(false)
             var index=mViewPager?.currentItem
-            (mViewPagerViews.get(index) as FileExpandableListView).loadedData()
+            getListView(index!!)?.loadedData()
         }
 
         override fun onCancelled(result: List<File>?) {
             super.onCancelled(result)
             Log.e(TAG,mediaFileType2String(mType!!)+" task cancelled")
         }
-    }
-
-    fun string2MediaFileType(str:String):FileUtil.MediaFileType?{
-        var ret:FileUtil.MediaFileType?=null
-        when(str){
-            "Movie"->{
-                ret=FileUtil.MediaFileType.MOVIE
-            }
-            "Music"->{
-                ret=FileUtil.MediaFileType.MP3
-            }
-            "Photo"->{
-                ret=FileUtil.MediaFileType.IMG
-            }
-            "Doc"->{
-                ret=FileUtil.MediaFileType.DOC
-            }
-            "Apk"->{
-                ret=FileUtil.MediaFileType.APP
-            }
-            "Rar"->{
-                ret=FileUtil.MediaFileType.RAR
-            }
-        }
-        return ret
-    }
-
-    fun mediaFileType2String(type:FileUtil.MediaFileType):String?{
-        var ret:String?=null
-        when(type){
-            FileUtil.MediaFileType.MOVIE->{
-                ret="Movie"
-            }
-            FileUtil.MediaFileType.MP3->{
-                ret="Music"
-            }
-            FileUtil.MediaFileType.IMG->{
-                ret="Photo"
-            }
-            FileUtil.MediaFileType.DOC->{
-                ret="Doc"
-            }
-            FileUtil.MediaFileType.APP->{
-                ret="Apk"
-            }
-            FileUtil.MediaFileType.RAR->{
-                ret="Rar"
-            }
-        }
-        return ret
     }
 
     data class TabItemHolder(var title:String?=null,var type:FileUtil.MediaFileType?=null
@@ -434,5 +439,29 @@ open class FilePickDialog :BaseBottomSheetDialog,Toolbar.OnMenuItemClickListener
 
     protected fun setTabItemsHolder(holder:MutableMap<String,TabItemHolder>){
         mTabItemHolders=holder
+    }
+
+    fun refreshData(){
+        var index=mViewPager?.currentItem as Int
+        getListView(index)?.loadedData()
+    }
+
+    fun refresh(refresh:Boolean){
+        if(refresh){
+            mProgressBar?.visibility=View.VISIBLE
+        }else{
+            mProgressBar?.visibility=View.INVISIBLE
+        }
+    }
+
+    open fun getListView(position:Int):FileExpandableListView?{
+        mViewPagerViews.get(position)?.let {
+            return mViewPagerViews.get(position) as FileExpandableListView
+        }
+        return null
+    }
+
+    open fun getFileAdapter(vg:FileExpandableListView):FileExpandableAdapter{
+        return vg.fileExpandableAdapter
     }
 }

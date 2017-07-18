@@ -19,8 +19,11 @@ import com.ecjtu.sharebox.network.IRequestCallback
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
 import com.ecjtu.sharebox.server.impl.servlet.Info
 import com.ecjtu.sharebox.ui.dialog.ApDataDialog
+import com.ecjtu.sharebox.ui.dialog.FilePickDialog
+import com.ecjtu.sharebox.ui.dialog.InternetFilePickDialog
 import com.ecjtu.sharebox.ui.dialog.TextItemDialog
 import org.json.JSONObject
+import java.io.File
 import java.lang.Exception
 import java.lang.ref.WeakReference
 import java.net.HttpURLConnection
@@ -60,23 +63,61 @@ View.OnLongClickListener{
                 apply(RequestOptions().placeholder(R.mipmap.logo)).
                 into(holder?.icon)
         holder?.name?.setText(info?.name)
+
+        if(info?.fileMap==null){
+            AsyncNetwork().requestDeviceInfo("${info?.ip}:${info?.port}",object :IRequestCallback{
+                override fun onSuccess(httpURLConnection: HttpURLConnection?, response: String) {
+                    Info.json2DeviceInfo(JSONObject(response)).apply {
+                        info?.fileMap=fileMap
+                    }
+                    mWeakRef?.get()?.runOnUiThread {
+
+                    }
+                }
+
+                override fun onError(httpURLConnection: HttpURLConnection?, exception: Exception) {
+                }
+            })
+        }else{
+            //do nothing
+        }
     }
 
     override fun onClick(v: View?) {
         var position=v?.getTag(R.id.extra_tag) as Int
         var deviceInfo=mDeviceList?.get(position)
+
         AsyncNetwork().requestDeviceInfo("${deviceInfo?.ip}:${deviceInfo?.port}",object :IRequestCallback{
             override fun onSuccess(httpURLConnection: HttpURLConnection?, response: String) {
                 Info.json2DeviceInfo(JSONObject(response)).apply {
                     deviceInfo?.fileMap=fileMap
                 }
-                v.post {
-
+                mWeakRef?.get()?.runOnUiThread {
+                    if(mWeakRef?.get()!=null){
+                        InternetFilePickDialog(mWeakRef?.get()!!,mWeakRef?.get()).apply {
+                            var holders:MutableMap<String, FilePickDialog.TabItemHolder> = mutableMapOf()
+                            if(deviceInfo?.fileMap?.entries!=null){
+                                for(entry in deviceInfo!!.fileMap!!.entries){
+                                    var type=FilePickDialog.string2MediaFileType(entry.key)
+                                    var fileList= mutableListOf<File>()
+                                    for(child in entry.value){
+                                        fileList.add(File(child))
+                                    }
+                                    var holder=FilePickDialog.TabItemHolder(entry.key,type,
+                                            null,
+                                            fileList)
+                                    holders.put(entry.key,holder)
+                                }
+                            }
+                            setup(deviceInfo?.name!!,holders)
+                            show()
+                        }
+                    }
                 }
             }
 
             override fun onError(httpURLConnection: HttpURLConnection?, exception: Exception) {
-                v.post {
+                mWeakRef?.get()?.runOnUiThread {
                     Toast.makeText(v.context,"对方还未准备好，请稍后再试",Toast.LENGTH_SHORT).show()
                 }
             }

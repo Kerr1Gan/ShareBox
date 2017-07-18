@@ -28,7 +28,7 @@ public class FileExpandableListView extends ExpandableListView {
         super(context, attrs, defStyleAttr);
     }
 
-    private FileExpandableAdapter mAdapter=new FileExpandableAdapter(this);
+    private FileExpandableAdapter mAdapter=getListAdapter();
 
     public void initData(FilePickDialog.TabItemHolder holder){
         mAdapter.initData(holder);
@@ -38,4 +38,16 @@ public class FileExpandableListView extends ExpandableListView {
         mAdapter.loadedData();
     }
 
+    public FileExpandableAdapter getListAdapter(){
+        if(mAdapter==null) mAdapter=new FileExpandableAdapter(this);
+        return mAdapter;
+    }
+
+    public void setFileExpandableAdapter(FileExpandableAdapter adapter){
+        mAdapter=adapter;
+    }
+
+    public FileExpandableAdapter getFileExpandableAdapter(){
+        return mAdapter;
+    }
 }
