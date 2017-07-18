@@ -31,13 +31,8 @@
             android:name=".ui.activity.ImmersiveFragmentActivity"
             android:theme="@style/ImageStatusBarStyle"/>
 
-        <activity android:name=".ui.activity.TestActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".ui.activity.TestActivity"
+            android:exported="true"/>
 
         <service
             android:name=".service.DaemonService"

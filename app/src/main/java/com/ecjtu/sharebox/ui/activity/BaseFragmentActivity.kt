@@ -1,5 +1,6 @@
 package com.ecjtu.sharebox.ui.activity
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -20,11 +21,16 @@ open class BaseFragmentActivity : BaseActionActivity() {
         private val EXTRA_FRAGMENT_NAME = "extra_fragment_name"
         private val EXTRA_FRAGMENT_ARG = "extra_fragment_arguments"
 
-        @JvmOverloads fun newInstance(context: Context, fragment: Class<*>, bundle: Bundle? = null): Intent {
-            val intent = Intent(context, BaseFragmentActivity::class.java)
+        @JvmOverloads fun newInstance(context: Context, fragment: Class<*>, bundle: Bundle? = null,
+                                      clazz:Class<out Activity> = getActivityClazz()): Intent {
+            val intent = Intent(context, clazz)
             intent.putExtra(EXTRA_FRAGMENT_NAME, fragment.name)
             intent.putExtra(EXTRA_FRAGMENT_ARG, bundle)
             return intent
+        }
+
+        protected open fun getActivityClazz():Class<out Activity>{
+            return BaseFragmentActivity::class.java
         }
     }
 
@@ -67,4 +73,5 @@ open class BaseFragmentActivity : BaseActionActivity() {
 
         return null
     }
+
 }
