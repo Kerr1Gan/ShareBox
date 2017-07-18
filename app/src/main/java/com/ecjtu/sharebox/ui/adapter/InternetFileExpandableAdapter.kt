@@ -25,7 +25,7 @@ class InternetFileExpandableAdapter(expandableListView: FileExpandableListView):
 
     override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup?): View {
         var ret=super.getChildView(groupPosition, childPosition, isLastChild, convertView, parent)
-//        ret.findViewById(R.id.check_box).visibility=View.INVISIBLE
+        ret.findViewById(R.id.check_box).visibility=View.INVISIBLE
         return ret
     }
 
@@ -39,9 +39,4 @@ class InternetFileExpandableAdapter(expandableListView: FileExpandableListView):
         super.onClick(v)
     }
 
-//    override fun loadedData() {
-//        mFileList = mTabHolder.fileList
-//        onFoldFiles()
-//        notifyDataSetChanged()
-//    }
 }
