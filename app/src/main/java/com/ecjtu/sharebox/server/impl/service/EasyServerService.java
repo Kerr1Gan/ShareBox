@@ -21,6 +21,7 @@ import com.ecjtu.sharebox.server.impl.server.EasyServer;
 import org.ecjtu.channellibrary.wifiutil.WifiUtil;
 
 import static com.ecjtu.sharebox.server.impl.server.EasyServer.TYPE_AP;
+import static com.ecjtu.sharebox.server.impl.server.EasyServer.TYPE_NOTHING;
 import static com.ecjtu.sharebox.server.impl.server.EasyServer.TYPE_P2P;
 
 
@@ -53,6 +54,8 @@ public class EasyServerService extends Service {
     public static final int SERVER_TYPE_AP = TYPE_AP;
 
     public static final int SERVER_TYPE_P2P = TYPE_P2P;
+
+    public static final int SERVER_TYPE_NOT= TYPE_NOTHING;
 
     @Override
     public void onCreate() {
@@ -104,7 +107,7 @@ public class EasyServerService extends Service {
         if(intent==null)
             return super.onStartCommand(intent,flags,startId);
 
-        int type = intent.getIntExtra(EXTRA_SERVER_TYPE, SERVER_TYPE_AP);
+        int type = intent.getIntExtra(EXTRA_SERVER_TYPE, SERVER_TYPE_NOT);
 
         if (type == SERVER_TYPE_AP) {
             if (mEasyServer != null) {
@@ -267,7 +270,8 @@ public class EasyServerService extends Service {
     }
 
     public boolean isServerAlive(){
-        return mEasyServer.isAlive();
+        if(mEasyServer==null) return false;
+        return mEasyServer.isRunning();
     }
 
 }

@@ -298,6 +298,7 @@ public class HTTPServer implements Runnable
 			}
 			Debug.message("httpServThread ...");
 		}
+		serverSock=null;
 	}
 
 	public boolean start()

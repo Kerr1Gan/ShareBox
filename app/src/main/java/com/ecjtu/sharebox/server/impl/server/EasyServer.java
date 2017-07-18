@@ -71,6 +71,8 @@ public class EasyServer extends Thread implements HTTPRequestListener {
 
     public static final int TYPE_P2P = 1 << 1;
 
+    public static final int TYPE_NOTHING= -1;
+
     private int mType = TYPE_AP;
 
     private static final String AP = "ap";
@@ -256,6 +258,22 @@ public class EasyServer extends Thread implements HTTPRequestListener {
             mHttpServerList = null;
         }
         super.interrupt();
+    }
+
+    public boolean isRunning(){
+        if (mHttpServer != null) {
+            if(mHttpServer.isOpened()){
+                return true;
+            }
+        }
+        if (mHttpServerList != null) {
+            for(HTTPServer server: mHttpServerList){
+                if(server.isOpened()){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public static HostInterface.ICallback sListener = null;

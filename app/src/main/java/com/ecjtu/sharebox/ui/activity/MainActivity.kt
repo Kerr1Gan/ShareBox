@@ -266,6 +266,7 @@ class MainActivity: ImmersiveFragmentActivity() {
                         ServerManager.getInstance().setDeviceInfo(deviceInfo)
                         getMainApplication().getSavedInstance().put(Constants.KEY_INFO_OBJECT, deviceInfo)
                         runOnUiThread { mDelegate?.doSearch() }
+                        EasyServer.setServerListener(null)
                     }
                     startService(intent)
                 }else{
