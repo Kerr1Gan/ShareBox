@@ -1,1 +1,1 @@
-include ':app', ':channellibrary', ':circularprogresslibrary', ':easyserver'
+include ':app', ':channellibrary', ':circularprogresslibrary'

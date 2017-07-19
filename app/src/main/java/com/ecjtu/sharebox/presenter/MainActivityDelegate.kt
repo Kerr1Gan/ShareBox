@@ -39,7 +39,6 @@ import com.ecjtu.sharebox.util.photo.PickPhotoHelper
 import org.ecjtu.channellibrary.devicesearch.DeviceSearcher
 import org.ecjtu.channellibrary.devicesearch.DiscoverHelper
 import org.ecjtu.channellibrary.wifiutil.NetworkUtil
-import org.ecjtu.easyserver.server.DeviceInfo
 import java.io.File
 import java.lang.Exception
 

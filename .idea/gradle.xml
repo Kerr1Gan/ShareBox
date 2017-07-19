@@ -12,7 +12,6 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/channellibrary" />
             <option value="$PROJECT_DIR$/circularprogresslibrary" />
-            <option value="$PROJECT_DIR$/easyserver" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
