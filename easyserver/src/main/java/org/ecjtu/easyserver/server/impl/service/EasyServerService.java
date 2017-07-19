@@ -16,6 +16,8 @@ import android.text.TextUtils;
 import android.widget.RemoteViews;
 
 import org.ecjtu.easyserver.R;
+import org.ecjtu.easyserver.server.DeviceInfo;
+import org.ecjtu.easyserver.server.ServerManager;
 import org.ecjtu.easyserver.server.impl.server.EasyServer;
 import org.ecjtu.easyserver.server.util.WifiUtil;
 
@@ -273,4 +275,11 @@ public class EasyServerService extends Service {
         return mEasyServer.isRunning();
     }
 
+    public String getIp(){
+        return mEasyServer.getBindIP();
+    }
+
+    public int getPort(){
+        return mEasyServer.getHTTPPort();
+    }
 }

@@ -477,4 +477,12 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
         }
         return false
     }
+
+    fun onDestroy(){
+        mDiscoverHelper?.stop(true,true)
+    }
+
+    fun hasDiscovered():Boolean{
+        return if(mDiscoverHelper!=null) return true else return false
+    }
 }

@@ -28,6 +28,7 @@ class InternetFilePickDialog:FilePickDialog{
         refresh(false)
         var toolbar=vg.findViewById(R.id.toolbar) as Toolbar
         toolbar.title=mName
+        toolbar.menu.clear()
     }
 
     override fun initData() {

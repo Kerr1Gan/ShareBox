@@ -26,57 +26,57 @@ import org.ecjtu.easyserver.server.impl.service.EasyServerService
 
 
 //http://www.tmtpost.com/195557.html 17.6.7
-class MainActivity: ImmersiveFragmentActivity() {
+class MainActivity : ImmersiveFragmentActivity() {
 
     companion object {
-        const private val TAG="MainActivity"
-        private val MSG_SERVICE_STARTED=0x10
-        private val MSG_START_SERVER=0x11
+        const private val TAG = "MainActivity"
+        private val MSG_SERVICE_STARTED = 0x10
+        private val MSG_START_SERVER = 0x11
     }
 
-    private var mDelegate : MainActivityDelegate? =null
+    private var mDelegate: MainActivityDelegate? = null
 
-    private var mAnimator : ObjectAnimator? =null
+    private var mAnimator: ObjectAnimator? = null
 
-    private var mReceiver : WifiApReceiver? =null
+    private var mReceiver: WifiApReceiver? = null
 
-    var refreshing =true
+    var refreshing = true
 
-    private var mService: EasyServerService? =null
+    private var mService: EasyServerService? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        var toolbar=findViewById(R.id.toolbar) as Toolbar
+        var toolbar = findViewById(R.id.toolbar) as Toolbar
 
         setSupportActionBar(toolbar)
 
-        mDelegate= MainActivityDelegate(this)
+        mDelegate = MainActivityDelegate(this)
 
-        var drawer=findViewById(R.id.drawer_view)
+        var drawer = findViewById(R.id.drawer_view)
 
-        if(isNavigationBarShow(this)){
-            drawer.setPadding(drawer.paddingLeft,drawer.paddingTop,drawer.paddingRight,
-                    drawer.paddingBottom+getNavigationBarHeight(this))
+        if (isNavigationBarShow(this)) {
+            drawer.setPadding(drawer.paddingLeft, drawer.paddingTop, drawer.paddingRight,
+                    drawer.paddingBottom + getNavigationBarHeight(this))
         }
 
         //init service
-        var intent=Intent(this,EasyServerService::class.java)
+        var intent = Intent(this, EasyServerService::class.java)
         startService(intent)
-        bindService(intent,mServiceConnection,Context.BIND_AUTO_CREATE)
+        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE)
     }
 
 
     override fun onResume() {
         super.onResume()
-        mReceiver=WifiApReceiver()
-        var filter= IntentFilter()
+        mReceiver = WifiApReceiver()
+        var filter = IntentFilter()
         filter.addAction(mReceiver?.ACTION_WIFI_AP_CHANGED)
         filter.addAction(mReceiver?.WIFI_STATE_CHANGED_ACTION)
         filter.addAction(mReceiver?.NETWORK_STATE_CHANGED_ACTION)
         filter.addAction(mReceiver?.CONNECTIVITY_ACTION)
-        registerReceiver(mReceiver,filter)
+        registerReceiver(mReceiver, filter)
     }
 
     override fun onStop() {
@@ -85,13 +85,13 @@ class MainActivity: ImmersiveFragmentActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_main_activity,menu)
-        var item=menu!!.findItem(R.id.refresh)
-        var rotateDrawable=item.icon as RotateDrawable
+        menuInflater.inflate(R.menu.menu_main_activity, menu)
+        var item = menu!!.findItem(R.id.refresh)
+        var rotateDrawable = item.icon as RotateDrawable
 
-        mAnimator=ObjectAnimator.ofInt(rotateDrawable, "level", 0, 10000) as ObjectAnimator?
+        mAnimator = ObjectAnimator.ofInt(rotateDrawable, "level", 0, 10000) as ObjectAnimator?
         mAnimator?.setRepeatMode(ObjectAnimator.RESTART)
-        mAnimator?.repeatCount=ObjectAnimator.INFINITE
+        mAnimator?.repeatCount = ObjectAnimator.INFINITE
         mAnimator?.setDuration(1000)
         mAnimator?.start()
 
@@ -100,20 +100,20 @@ class MainActivity: ImmersiveFragmentActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
 
-        when(item?.itemId){
-            R.id.refresh->{
-                if(mAnimator!!.isRunning){
-                    refreshing =false
+        when (item?.itemId) {
+            R.id.refresh -> {
+                if (mAnimator!!.isRunning) {
+                    refreshing = false
                     mAnimator?.cancel()
-                }else{
-                    refreshing =true
+                } else {
+                    refreshing = true
                     mAnimator?.start()
                 }
             }
         }
-        var result=mDelegate?.onOptionsItemSelected(item) ?: false
+        var result = mDelegate?.onOptionsItemSelected(item) ?: false
 
-        if(result){
+        if (result) {
             return result
         }
         return super.onOptionsItemSelected(item)
@@ -130,27 +130,27 @@ class MainActivity: ImmersiveFragmentActivity() {
 
         val WIFI_AP_STATE_FAILED = 14
 
-        val WIFI_STATE_ENABLED= 3
+        val WIFI_STATE_ENABLED = 3
 
-        val WIFI_STATE_DISABLED=1
+        val WIFI_STATE_DISABLED = 1
 
         val EXTRA_WIFI_AP_STATE = "wifi_state"
 
-        val EXTRA_WIFI_STATE= "wifi_state"
+        val EXTRA_WIFI_STATE = "wifi_state"
 
         val ACTION_WIFI_AP_CHANGED = "android.net.wifi.WIFI_AP_STATE_CHANGED"
 
-        val WIFI_STATE_CHANGED_ACTION ="android.net.wifi.WIFI_STATE_CHANGED"
+        val WIFI_STATE_CHANGED_ACTION = "android.net.wifi.WIFI_STATE_CHANGED"
 
-        val NETWORK_STATE_CHANGED_ACTION="android.net.wifi.STATE_CHANGE"
+        val NETWORK_STATE_CHANGED_ACTION = "android.net.wifi.STATE_CHANGE"
 
-        val CONNECTIVITY_ACTION= "android.net.conn.CONNECTIVITY_CHANGE"
+        val CONNECTIVITY_ACTION = "android.net.conn.CONNECTIVITY_CHANGE"
 
-        val EXTRA_WIFI_INFO="wifiInfo"
+        val EXTRA_WIFI_INFO = "wifiInfo"
 
         val EXTRA_NETWORK_INFO = "networkInfo"
 
-        val TYPE_MOBILE=0
+        val TYPE_MOBILE = 0
 
         override fun onReceive(context: Context, intent: Intent) {
             val state = intent.getIntExtra(EXTRA_WIFI_AP_STATE, -1)
@@ -159,7 +159,7 @@ class MainActivity: ImmersiveFragmentActivity() {
             if (action == ACTION_WIFI_AP_CHANGED) {
                 when (state) {
                     WIFI_AP_STATE_ENABLED -> {
-                        if(mDelegate?.checkCurrentAp(null)?:false){
+                        if (mDelegate?.checkCurrentAp(null) ?: false) {
                             getHandler()?.obtainMessage(MSG_START_SERVER)?.sendToTarget()
                         }
                         var s = ""
@@ -170,9 +170,9 @@ class MainActivity: ImmersiveFragmentActivity() {
                             WIFI_AP_STATE_ENABLING -> s = "WIFI_AP_STATE_ENABLED"
                             WIFI_AP_STATE_FAILED -> s = "WIFI_AP_STATE_FAILED"
                         }
-                        Log.i("WifiApReceiver","ap " +s)
+                        Log.i("WifiApReceiver", "ap " + s)
                     }
-                    WIFI_AP_STATE_DISABLED->{
+                    WIFI_AP_STATE_DISABLED -> {
                         mDelegate?.checkCurrentAp(null)
                     }
                     else -> {
@@ -184,39 +184,33 @@ class MainActivity: ImmersiveFragmentActivity() {
                             WIFI_AP_STATE_ENABLING -> s = "WIFI_AP_STATE_ENABLED"
                             WIFI_AP_STATE_FAILED -> s = "WIFI_AP_STATE_FAILED"
                         }
-                        Log.i("WifiApReceiver","ap " + s)
+                        Log.i("WifiApReceiver", "ap " + s)
                     }
                 }
-            }
-
-            else if(action==WIFI_STATE_CHANGED_ACTION){
-                var state=intent.getIntExtra(EXTRA_WIFI_STATE, -1)
-                when(state){
-                    WIFI_STATE_ENABLED->{
-                        if(mDelegate?.checkCurrentAp(null)?:false){
+            } else if (action == WIFI_STATE_CHANGED_ACTION) {
+                var state = intent.getIntExtra(EXTRA_WIFI_STATE, -1)
+                when (state) {
+                    WIFI_STATE_ENABLED -> {
+                        if (mDelegate?.checkCurrentAp(null) ?: false) {
                             getHandler()?.obtainMessage(MSG_START_SERVER)?.sendToTarget()
                         }
                     }
-                    WIFI_STATE_DISABLED->{
+                    WIFI_STATE_DISABLED -> {
                         mDelegate?.checkCurrentAp(null)
                     }
                 }
-            }
-
-            else if(action.equals(NETWORK_STATE_CHANGED_ACTION)){
-                var wifiInfo=intent.getParcelableExtra<WifiInfo>(EXTRA_WIFI_INFO)
-                Log.i("WifiApReceiver","WifiInfo "+  wifiInfo?.toString() ?: "null")
-                if(wifiInfo!=null){
-                    if(wifiInfo.bssid!=null && !wifiInfo.bssid.equals("<none>")) // is a bug in ui
+            } else if (action.equals(NETWORK_STATE_CHANGED_ACTION)) {
+                var wifiInfo = intent.getParcelableExtra<WifiInfo>(EXTRA_WIFI_INFO)
+                Log.i("WifiApReceiver", "WifiInfo " + wifiInfo?.toString() ?: "null")
+                if (wifiInfo != null) {
+                    if (wifiInfo.bssid != null && !wifiInfo.bssid.equals("<none>")) // is a bug in ui
                         mDelegate?.checkCurrentAp(wifiInfo)
                 }
-            }
-
-            else if(action.equals(CONNECTIVITY_ACTION)){
-                var info=intent.getParcelableExtra<NetworkInfo>(EXTRA_NETWORK_INFO)
-                Log.i("WifiApReceiver","NetworkInfo "+ info?.toString() ?: "null")
-                if(info!=null&&info.type==TYPE_MOBILE&&(info.state==NetworkInfo.State.CONNECTED||
-                        info.state==NetworkInfo.State.DISCONNECTED)){
+            } else if (action.equals(CONNECTIVITY_ACTION)) {
+                var info = intent.getParcelableExtra<NetworkInfo>(EXTRA_NETWORK_INFO)
+                Log.i("WifiApReceiver", "NetworkInfo " + info?.toString() ?: "null")
+                if (info != null && info.type == TYPE_MOBILE && (info.state == NetworkInfo.State.CONNECTED ||
+                        info.state == NetworkInfo.State.DISCONNECTED)) {
                     mDelegate?.checkCurrentAp(null)
                 }
             }
@@ -225,62 +219,82 @@ class MainActivity: ImmersiveFragmentActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        mDelegate?.onRequestPermissionsResult(requestCode,permissions,grantResults)
+        mDelegate?.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
 
-    private val mServiceConnection=object :ServiceConnection{
+    private val mServiceConnection = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName?) {
-            Log.e(TAG,"onServiceDisconnected "+name.toString())
+            Log.e(TAG, "onServiceDisconnected " + name.toString())
         }
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            Log.e(TAG,"onServiceConnected "+name.toString())
-            mService=(service as EasyServerService.EasyServerBinder).service
+            Log.e(TAG, "onServiceConnected " + name.toString())
+            mService = (service as EasyServerService.EasyServerBinder).service
             getHandler()?.obtainMessage(MSG_SERVICE_STARTED)?.sendToTarget()
+
         }
     }
 
     override fun handleMessage(msg: Message) {
         super.handleMessage(msg)
-        when(msg.what){
-            MSG_SERVICE_STARTED->{
-                if(mDelegate?.checkCurrentAp(null) ?: false){
+        when (msg.what) {
+            MSG_SERVICE_STARTED -> {
+                if (mDelegate?.checkCurrentAp(null) ?: false) {
                     getHandler()?.obtainMessage(MSG_START_SERVER)?.sendToTarget()
                 }
             }
-            MSG_START_SERVER->{
-                if(mService==null) return
-                if(!mService?.isServerAlive()!!){
-                    Log.e(TAG,"isServerAlive false,start server")
-                    var intent=EasyServerService.getApIntent(this)
+            MSG_START_SERVER -> {
+                if (mService == null) return
+                var flag = false
+                if (!mService?.isServerAlive()!!) {
+                    flag = true
+                    Log.e(TAG, "isServerAlive false,start server")
+                    var intent = EasyServerService.getApIntent(this)
                     EasyServer.setServerListener { server, hostIP, port ->
-                        getMainApplication().getSavedInstance().put(Constants.KEY_SERVER_PORT, port.toString())
-                        var name= PreferenceManager.getDefaultSharedPreferences(this).getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
-                        var deviceInfo= DeviceInfo(name,hostIP,port,"/API/Icon", mutableMapOf())
-                        ServerManager.getInstance().setDeviceInfo(deviceInfo)
-                        getMainApplication().getSavedInstance().put(Constants.KEY_INFO_OBJECT, deviceInfo)
-                        runOnUiThread { mDelegate?.doSearch() }
+                        var name = PreferenceManager.getDefaultSharedPreferences(this).
+                                getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
+                        registerServerInfo(hostIP, port, name, mutableMapOf())
                         EasyServer.setServerListener(null)
+
+                        runOnUiThread { mDelegate?.doSearch() }
                     }
                     startService(intent)
-                }else{
+                } else {
                     getMainApplication().getSavedInstance().remove(Constants.KEY_SERVER_PORT)
+                }
+
+                if (!flag && mDelegate != null && !mDelegate!!.hasDiscovered()) {
+                    var name = PreferenceManager.getDefaultSharedPreferences(this).
+                            getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
+                    if (mService != null && mService!!.ip != null && mService!!.port != null) {
+                        registerServerInfo(mService!!.ip, mService!!.port, name,
+                                ServerManager.getInstance().deviceInfo.fileMap)
+                    }
+                    runOnUiThread { mDelegate?.doSearch() }
                 }
             }
         }
     }
 
     override fun onDestroy() {
+        mDelegate?.onDestroy()
         try {
             unbindService(mServiceConnection)
-        }catch (ignore:Exception){
+        } catch (ignore: Exception) {
         }
         super.onDestroy()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        mDelegate?.onActivityResult(requestCode,resultCode,data)
+        mDelegate?.onActivityResult(requestCode, resultCode, data)
+    }
+
+    fun registerServerInfo(hostIP: String, port: Int, name: String, mutableMap: MutableMap<String, List<String>>) {
+        getMainApplication().getSavedInstance().put(Constants.KEY_SERVER_PORT, port.toString())
+        var deviceInfo = DeviceInfo(name, hostIP, port, "/API/Icon", mutableMap)
+        ServerManager.getInstance().setDeviceInfo(deviceInfo)
+        getMainApplication().getSavedInstance().put(Constants.KEY_INFO_OBJECT, deviceInfo)
     }
 }

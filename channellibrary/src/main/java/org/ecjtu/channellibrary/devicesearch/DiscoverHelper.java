@@ -70,6 +70,7 @@ public class DiscoverHelper{
     }
 
     public void prepare(Context context,boolean restartWaiting,boolean restartSearcher){
+        mHandler.removeCallbacksAndMessages(null);
         if(restartWaiting){
             if(mWaitingSearch!=null) mWaitingSearch.interrupt();
             mWaitingSearch=new DeviceWaitingSearch(context,mName+","+mPort+","+mIcon,"") {
