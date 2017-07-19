@@ -12,6 +12,7 @@ import android.os.Message
 import android.preference.PreferenceManager
 import android.support.v7.widget.Toolbar
 import android.util.Log
+import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import com.ecjtu.sharebox.Constants
@@ -19,6 +20,7 @@ import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.domain.PreferenceInfo
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
+import com.ecjtu.sharebox.service.MainService
 import org.ecjtu.easyserver.server.DeviceInfo
 import org.ecjtu.easyserver.server.ServerManager
 import org.ecjtu.easyserver.server.impl.server.EasyServer
@@ -32,6 +34,7 @@ class MainActivity : ImmersiveFragmentActivity() {
         const private val TAG = "MainActivity"
         private val MSG_SERVICE_STARTED = 0x10
         private val MSG_START_SERVER = 0x11
+        @JvmStatic val MSG_CLOSE_APP= -1
     }
 
     private var mDelegate: MainActivityDelegate? = null
@@ -274,6 +277,16 @@ class MainActivity : ImmersiveFragmentActivity() {
                     runOnUiThread { mDelegate?.doSearch() }
                 }
             }
+            MSG_CLOSE_APP->{
+                try {
+                    unbindService(mServiceConnection)
+                }catch (e:java.lang.Exception){
+                }finally {
+                    stopService(Intent(this,EasyServerService::class.java))
+                    stopService(Intent(this,MainService::class.java))
+                    System.exit(0)
+                }
+            }
         }
     }
 
@@ -296,5 +309,13 @@ class MainActivity : ImmersiveFragmentActivity() {
         var deviceInfo = DeviceInfo(name, hostIP, port, "/API/Icon", mutableMap)
         ServerManager.getInstance().setDeviceInfo(deviceInfo)
         getMainApplication().getSavedInstance().put(Constants.KEY_INFO_OBJECT, deviceInfo)
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            this.moveTaskToBack(true)
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
     }
 }

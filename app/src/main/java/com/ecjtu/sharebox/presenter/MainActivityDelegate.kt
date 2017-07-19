@@ -186,6 +186,10 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
 
         }
 
+        findViewById(R.id.btn_close)?.setOnClickListener{
+            owner.getHandler()?.obtainMessage(MainActivity.MSG_CLOSE_APP)?.sendToTarget()
+        }
+
         findViewById(R.id.icon)?.setOnClickListener {
             var dlg=TextItemDialog(owner)
             dlg.setupItem(arrayOf("从照相机选择","从相册选择","取消"))

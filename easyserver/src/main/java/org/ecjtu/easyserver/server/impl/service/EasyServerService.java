@@ -16,8 +16,6 @@ import android.text.TextUtils;
 import android.widget.RemoteViews;
 
 import org.ecjtu.easyserver.R;
-import org.ecjtu.easyserver.server.DeviceInfo;
-import org.ecjtu.easyserver.server.ServerManager;
 import org.ecjtu.easyserver.server.impl.server.EasyServer;
 import org.ecjtu.easyserver.server.util.WifiUtil;
 
@@ -66,8 +64,8 @@ public class EasyServerService extends Service {
         isBind = false;
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setSmallIcon(R.mipmap.ico_wifi_open);
-        builder.setContentTitle(APP_NAME);
+        builder.setSmallIcon(R.mipmap.notification_wifi);
+        builder.setContentTitle("ShareBox");
         builder.setTicker("正在运行");
         builder.setContentText("正在运行");
 
@@ -213,21 +211,20 @@ public class EasyServerService extends Service {
                             WifiManager manager = (WifiManager) EasyServerService.
                                     this.getSystemService(WIFI_SERVICE);
                             WifiUtil.openHotSpot(manager, false, "", "");
-
-                            if (mServerConnection != null && mContext != null && isBind)
-                                mContext.unbindService(mServerConnection);
-                            mBinder.getService().mContext.stopService
-                                    (new Intent(EasyServerService.this, EasyServerService.class));
+                            try {
+                                context.unbindService(mServerConnection);
+                            }catch (Exception e){
+                            }
+                            context.stopService
+                                    (new Intent(context, EasyServerService.class));
                             mServerConnection = null;
 
                             //finish app
-//                            ((Activity) mContext).finish();
                             // TODO: 2017/7/8
 //                            LocalBroadcastManager.getInstance(mContext)
 //                                    .sendBroadcast(new Intent
 //                                            (MainActivity.CloseBroadCastReceiver.ACTION_CLOSE_APP));
 
-                            mContext = null;
                         } catch (IllegalArgumentException e) {
                             mBinder.getService().stopService
                                     (new Intent(EasyServerService.this, EasyServerService.class));
@@ -241,15 +238,16 @@ public class EasyServerService extends Service {
 //                                                (MainActivity.CloseBroadCastReceiver.ACTION_CLOSE_APP));
                             }
                             mContext = null;
+                        }finally {
+                            System.exit(0);
                         }
-
                         break;
                     case 2:
                         // TODO: 2017/7/8
-//                        Intent i = new Intent(EasyServerService.this, MainActivity.class);
-//                        i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-//                        i.putExtra("mode", 1);
-//                        EasyServerService.this.mContext.startActivity(i);
+                        Intent i = context.getPackageManager().getLaunchIntentForPackage("com.ecjtu.sharebox");
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        i.putExtra("mode", 1);
+                        context.startActivity(i);
                         break;
                 }
             }
