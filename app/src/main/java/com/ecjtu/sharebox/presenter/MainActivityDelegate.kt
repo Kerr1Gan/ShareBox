@@ -24,6 +24,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import com.ecjtu.sharebox.Constants
+import com.ecjtu.sharebox.DeviceInfo
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.domain.PreferenceInfo
 import com.ecjtu.sharebox.getMainApplication
