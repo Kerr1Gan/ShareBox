@@ -1,9 +1,9 @@
-package com.ecjtu.sharebox.server.impl.servlet;
+package org.ecjtu.easyserver.server.impl.servlet;
 
 import android.content.res.AssetManager;
 
 
-import com.ecjtu.sharebox.server.util.AssetsUtil;
+import org.ecjtu.easyserver.server.util.AssetsUtil;
 
 import org.ecjtu.easyserver.http.HTTPRequest;
 import org.ecjtu.easyserver.http.HTTPResponse;

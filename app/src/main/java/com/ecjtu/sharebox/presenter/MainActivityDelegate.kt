@@ -25,7 +25,6 @@ import android.view.View
 import android.widget.*
 import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.R
-import com.ecjtu.sharebox.domain.DeviceInfo
 import com.ecjtu.sharebox.domain.PreferenceInfo
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.ui.activity.MainActivity
@@ -40,6 +39,7 @@ import com.ecjtu.sharebox.util.photo.PickPhotoHelper
 import org.ecjtu.channellibrary.devicesearch.DeviceSearcher
 import org.ecjtu.channellibrary.devicesearch.DiscoverHelper
 import org.ecjtu.channellibrary.wifiutil.NetworkUtil
+import org.ecjtu.easyserver.server.DeviceInfo
 import java.io.File
 import java.lang.Exception
 
@@ -398,7 +398,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
         var flag:Boolean
         for(bean in mutableSet){
             flag=false
-            var old:DeviceInfo?=null
+            var old: DeviceInfo?=null
             for(info in mDeviceInfoList){
                 if(info.ip.equals(bean.ip)){
                     flag=true

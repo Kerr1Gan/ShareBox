@@ -1,4 +1,4 @@
-package com.ecjtu.sharebox.server.impl.servlet;
+package org.ecjtu.easyserver.server.impl.servlet;
 
 
 import org.ecjtu.easyserver.http.HTTPRequest;

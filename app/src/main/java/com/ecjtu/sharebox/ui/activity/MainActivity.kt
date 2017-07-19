@@ -16,18 +16,13 @@ import android.view.Menu
 import android.view.MenuItem
 import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.R
-import com.ecjtu.sharebox.domain.DeviceInfo
 import com.ecjtu.sharebox.domain.PreferenceInfo
 import com.ecjtu.sharebox.getMainApplication
-import com.ecjtu.sharebox.network.AsyncNetwork
-import com.ecjtu.sharebox.network.IRequestCallback
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
-import com.ecjtu.sharebox.server.ServerManager
-import com.ecjtu.sharebox.server.impl.server.EasyServer
-import com.ecjtu.sharebox.server.impl.service.EasyServerService
-import com.ecjtu.sharebox.server.impl.servlet.GetFiles
-import com.ecjtu.sharebox.server.impl.servlet.Info
-import java.net.HttpURLConnection
+import org.ecjtu.easyserver.server.DeviceInfo
+import org.ecjtu.easyserver.server.ServerManager
+import org.ecjtu.easyserver.server.impl.server.EasyServer
+import org.ecjtu.easyserver.server.impl.service.EasyServerService
 
 
 //http://www.tmtpost.com/195557.html 17.6.7
@@ -262,7 +257,7 @@ class MainActivity: ImmersiveFragmentActivity() {
                     EasyServer.setServerListener { server, hostIP, port ->
                         getMainApplication().getSavedInstance().put(Constants.KEY_SERVER_PORT, port.toString())
                         var name= PreferenceManager.getDefaultSharedPreferences(this).getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
-                        var deviceInfo=DeviceInfo(name,hostIP,port,"/API/Icon", mutableMapOf())
+                        var deviceInfo= DeviceInfo(name,hostIP,port,"/API/Icon", mutableMapOf())
                         ServerManager.getInstance().setDeviceInfo(deviceInfo)
                         getMainApplication().getSavedInstance().put(Constants.KEY_INFO_OBJECT, deviceInfo)
                         runOnUiThread { mDelegate?.doSearch() }

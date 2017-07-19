@@ -1,7 +1,7 @@
 package com.ecjtu.sharebox;
 
-import com.ecjtu.sharebox.domain.DeviceInfo;
-import com.ecjtu.sharebox.server.impl.servlet.Info;
+import org.ecjtu.easyserver.server.DeviceInfo;
+import org.ecjtu.easyserver.server.impl.servlet.Info;
 
 import org.json.JSONObject;
 import org.junit.Test;

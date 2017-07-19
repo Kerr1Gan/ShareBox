@@ -1,4 +1,4 @@
-package com.ecjtu.sharebox.server.impl.service;
+package org.ecjtu.easyserver.server.impl.service;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -15,14 +15,13 @@ import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
 
-import com.ecjtu.sharebox.R;
-import com.ecjtu.sharebox.server.impl.server.EasyServer;
+import org.ecjtu.easyserver.R;
+import org.ecjtu.easyserver.server.impl.server.EasyServer;
+import org.ecjtu.easyserver.server.util.WifiUtil;
 
-import org.ecjtu.channellibrary.wifiutil.WifiUtil;
-
-import static com.ecjtu.sharebox.server.impl.server.EasyServer.TYPE_AP;
-import static com.ecjtu.sharebox.server.impl.server.EasyServer.TYPE_NOTHING;
-import static com.ecjtu.sharebox.server.impl.server.EasyServer.TYPE_P2P;
+import static org.ecjtu.easyserver.server.impl.server.EasyServer.TYPE_AP;
+import static org.ecjtu.easyserver.server.impl.server.EasyServer.TYPE_NOTHING;
+import static org.ecjtu.easyserver.server.impl.server.EasyServer.TYPE_P2P;
 
 
 /**

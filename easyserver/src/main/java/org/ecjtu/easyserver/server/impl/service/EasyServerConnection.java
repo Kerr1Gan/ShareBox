@@ -1,4 +1,4 @@
-package com.ecjtu.sharebox.server.impl.service;
+package org.ecjtu.easyserver.server.impl.service;
 
 import android.content.ComponentName;
 import android.content.Context;

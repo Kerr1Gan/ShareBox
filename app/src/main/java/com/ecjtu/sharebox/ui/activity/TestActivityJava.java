@@ -6,18 +6,6 @@ import android.view.View;
 
 import com.dd.CircularProgressButton;
 import com.ecjtu.sharebox.R;
-import com.ecjtu.sharebox.domain.DeviceInfo;
-import com.ecjtu.sharebox.server.impl.servlet.Info;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class TestActivityJava extends AppCompatActivity {
 

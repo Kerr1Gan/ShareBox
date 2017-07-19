@@ -1,4 +1,4 @@
-package com.ecjtu.sharebox.server.util;
+package org.ecjtu.easyserver.server.util;
 
 import android.content.Context;
 import android.content.res.AssetManager;

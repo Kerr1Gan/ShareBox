@@ -1,10 +1,10 @@
-package com.ecjtu.sharebox.server.impl.server;
+package org.ecjtu.easyserver.server.impl.server;
 
 import android.os.Environment;
 
-import com.ecjtu.sharebox.server.impl.servlet.AssetsHtml;
-import com.ecjtu.sharebox.server.impl.servlet.File;
-import com.ecjtu.sharebox.server.impl.servlet.Html;
+import org.ecjtu.easyserver.server.impl.servlet.AssetsHtml;
+import org.ecjtu.easyserver.server.impl.servlet.File;
+import org.ecjtu.easyserver.server.impl.servlet.Html;
 
 import org.ecjtu.easyserver.http.HTTPRequest;
 import org.ecjtu.easyserver.http.HTTPRequestListener;

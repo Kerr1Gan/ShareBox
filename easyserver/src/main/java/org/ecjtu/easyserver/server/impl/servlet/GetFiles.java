@@ -1,13 +1,13 @@
-package com.ecjtu.sharebox.server.impl.servlet;
+package org.ecjtu.easyserver.server.impl.servlet;
 
 import android.content.Context;
 
-import com.ecjtu.sharebox.server.ServerManager;
-import com.ecjtu.sharebox.util.cache.CacheUtil;
+import org.ecjtu.easyserver.server.ServerManager;
 
 import org.ecjtu.easyserver.http.HTTPRequest;
 import org.ecjtu.easyserver.http.HTTPResponse;
 import org.ecjtu.easyserver.http.HTTPStatus;
+import org.ecjtu.easyserver.server.util.CacheUtil;
 import org.ecjtu.easyserver.servlet.BaseServlet;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,7 +15,6 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

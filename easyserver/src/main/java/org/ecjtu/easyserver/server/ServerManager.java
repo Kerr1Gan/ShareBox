@@ -1,8 +1,7 @@
-package com.ecjtu.sharebox.server;
+package org.ecjtu.easyserver.server;
 
 import android.content.Context;
 
-import com.ecjtu.sharebox.domain.DeviceInfo;
 
 import java.io.File;
 import java.util.List;

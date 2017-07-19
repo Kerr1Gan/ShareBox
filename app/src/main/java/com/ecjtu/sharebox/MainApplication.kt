@@ -3,8 +3,6 @@ package com.ecjtu.sharebox
 import android.app.Application
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import android.preference.PreferenceManager
 import android.support.v4.content.LocalBroadcastManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.GlideBuilder
@@ -12,12 +10,8 @@ import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory
 import com.bumptech.glide.load.engine.cache.LruResourceCache
 import com.bumptech.glide.module.AppGlideModule
-import com.ecjtu.sharebox.domain.DeviceInfo
-import com.ecjtu.sharebox.domain.PreferenceInfo
-import com.ecjtu.sharebox.server.ServerManager
-import com.ecjtu.sharebox.server.impl.servlet.Icon
-import com.ecjtu.sharebox.server.impl.servlet.Info
-import com.ecjtu.sharebox.server.util.AssetsUtil
+import org.ecjtu.easyserver.server.ServerManager
+import org.ecjtu.easyserver.server.util.AssetsUtil
 import com.ecjtu.sharebox.service.MainService
 import org.ecjtu.channellibrary.wifidirect.WifiDirectManager
 

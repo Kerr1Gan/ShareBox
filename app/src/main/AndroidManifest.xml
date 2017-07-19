@@ -38,8 +38,6 @@
             android:name=".service.DaemonService"
             android:process=":daemon" />
         <service android:name=".service.MainService" />
-        <service android:name=".server.impl.service.EasyServerService"/>
-
         <activity android:name=".ui.activity.TestActivityJava"
             android:exported="true"/>
     </application>

@@ -12,17 +12,15 @@ import android.os.AsyncTask
 import android.support.design.widget.TabLayout
 import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
-import android.text.TextUtils
 import android.util.Log
 import android.widget.ProgressBar
 import com.ecjtu.sharebox.Constants
-import com.ecjtu.sharebox.domain.DeviceInfo
 import com.ecjtu.sharebox.getMainApplication
-import com.ecjtu.sharebox.server.ServerManager
-import com.ecjtu.sharebox.server.impl.servlet.GetFiles
+import org.ecjtu.easyserver.server.ServerManager
 import com.ecjtu.sharebox.ui.adapter.FileExpandableAdapter
 import com.ecjtu.sharebox.ui.view.FileExpandableListView
 import com.ecjtu.sharebox.util.file.FileUtil
+import org.ecjtu.easyserver.server.DeviceInfo
 import java.io.File
 
 

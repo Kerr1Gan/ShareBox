@@ -1,6 +1,6 @@
-package com.ecjtu.sharebox.server.impl.servlet;
+package org.ecjtu.easyserver.server.impl.servlet;
 
-import com.ecjtu.sharebox.server.impl.server.EasyServer;
+import org.ecjtu.easyserver.server.impl.server.EasyServer;
 
 import org.ecjtu.easyserver.http.HTTPRequest;
 import org.ecjtu.easyserver.http.HTTPResponse;

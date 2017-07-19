@@ -1,15 +1,15 @@
-package com.ecjtu.sharebox.server.impl.servlet;
+package org.ecjtu.easyserver.server.impl.servlet;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import com.ecjtu.sharebox.server.ServerManager;
-import com.ecjtu.sharebox.util.cache.CacheUtil;
-import com.ecjtu.sharebox.util.image.ImageUtil;
+import org.ecjtu.easyserver.server.ServerManager;
 
 import org.ecjtu.easyserver.http.HTTPRequest;
 import org.ecjtu.easyserver.http.HTTPResponse;
 import org.ecjtu.easyserver.http.HTTPStatus;
+import org.ecjtu.easyserver.server.util.CacheUtil;
+import org.ecjtu.easyserver.server.util.ImageUtil;
 import org.ecjtu.easyserver.servlet.BaseServlet;
 import org.ecjtu.easyserver.util.FileUtil;
 
@@ -177,9 +177,9 @@ public class File implements BaseServlet {
 
     public void doCache(String filePaths){
         Context context=ServerManager.getInstance().getApplicationContext();
-        Bitmap b=CacheUtil.getBitmapByCache(context,filePaths);
+        Bitmap b= CacheUtil.getBitmapByCache(context,filePaths);
         if(b==null){
-            b=ImageUtil.INSTANCE.createVideoThumbnail(filePaths,100,100);
+            b= ImageUtil.createVideoThumbnail(filePaths,100,100);
             if(b!=null)
                 CacheUtil.makeCache(filePaths,b,100,100,context);
         }

@@ -1,4 +1,6 @@
-package com.ecjtu.sharebox.server.impl.servlet;
+package org.ecjtu.easyserver.server.impl.servlet;
+
+import org.ecjtu.easyserver.server.ServerManager;
 
 import org.ecjtu.easyserver.http.HTTPRequest;
 import org.ecjtu.easyserver.http.HTTPResponse;
@@ -9,25 +11,30 @@ import org.ecjtu.easyserver.util.FileUtil;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
-
+import java.io.File;
 /**
- * Created by KerriGan on 2016/6/30.
+ * Created by KerriGan on 2017/7/12.
  */
-public class RealTimeVideo implements BaseServlet {
+
+public class Icon implements BaseServlet {
+
     @Override
     public void doGet(HTTPRequest httpReq, HTTPResponse httpRes) {
+//        String uri = httpReq.getURI();
+//        String filePaths = uri.substring("/API/Icon".length());
+//        int indexOf = filePaths.indexOf("&");
+//
+//        if (indexOf != -1) {
+//            filePaths = filePaths.substring(0, indexOf);
+//        }
 
-        String uri = httpReq.getURI();
-
-        String requestPath = uri.substring("/API/RealTimeVideo".length());
-
-
+        String path= ServerManager.getInstance().getIconPath();
         try {
-            java.io.File file = new java.io.File(requestPath);
+            File file = new File(path);
 
             long contentLen = file.length();
 
-            String contentType = FileUtil.getFileType(requestPath);
+            String contentType = FileUtil.getFileType(path);
 
             FileInputStream contentIn = new FileInputStream(file);
 
@@ -36,6 +43,7 @@ public class RealTimeVideo implements BaseServlet {
                 httpReq.returnBadRequest();
                 return;
             }
+
 
             httpRes.setContentType(contentType);
             httpRes.setStatusCode(HTTPStatus.OK);
@@ -55,13 +63,10 @@ public class RealTimeVideo implements BaseServlet {
             httpReq.returnBadRequest();
             return;
         }
-
-        return;
-
     }
 
     @Override
     public void doPost(HTTPRequest httpReq, HTTPResponse httpRes) {
-
+        doGet(httpReq,httpRes);
     }
 }

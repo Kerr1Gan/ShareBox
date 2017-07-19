@@ -1,6 +1,4 @@
-package com.ecjtu.sharebox.server.util;
-
-import org.ecjtu.easyserver.net.HostInterface;
+package org.ecjtu.easyserver.server.util;
 
 /**
  * Created by KerriGan on 2017/7/8.

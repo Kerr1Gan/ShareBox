@@ -1,9 +1,9 @@
-package com.ecjtu.sharebox.server.impl.servlet;
+package org.ecjtu.easyserver.server.impl.servlet;
 
 import android.text.TextUtils;
 
-import com.ecjtu.sharebox.domain.DeviceInfo;
-import com.ecjtu.sharebox.server.ServerManager;
+import org.ecjtu.easyserver.server.DeviceInfo;
+import org.ecjtu.easyserver.server.ServerManager;
 
 import org.ecjtu.easyserver.http.HTTPRequest;
 import org.ecjtu.easyserver.http.HTTPResponse;
@@ -13,7 +13,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
