@@ -18,6 +18,7 @@ import android.widget.RemoteViews;
 import org.ecjtu.easyserver.R;
 import org.ecjtu.easyserver.server.impl.server.EasyServer;
 import org.ecjtu.easyserver.server.util.WifiUtil;
+import org.ecjtu.easyserver.util.StatusBarUtil;
 
 import static org.ecjtu.easyserver.server.impl.server.EasyServer.TYPE_AP;
 import static org.ecjtu.easyserver.server.impl.server.EasyServer.TYPE_NOTHING;
@@ -248,6 +249,7 @@ public class EasyServerService extends Service {
                         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         i.putExtra("mode", 1);
                         context.startActivity(i);
+                        StatusBarUtil.collapseStatusBar(context);
                         break;
                 }
             }

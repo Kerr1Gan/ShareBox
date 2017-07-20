@@ -1,5 +1,6 @@
 package com.ecjtu.sharebox.ui.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -17,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.ecjtu.sharebox.MainApplication;
 import com.ecjtu.sharebox.R;
 import com.ecjtu.sharebox.async.AppThumbTask;
 import com.ecjtu.sharebox.ui.activity.BaseFragmentActivity;
@@ -41,13 +43,13 @@ import kotlin.jvm.functions.Function1;
  */
 
 public class FileExpandableAdapter extends BaseExpandableListAdapter implements View.OnClickListener,
-        View.OnLongClickListener{
+        View.OnLongClickListener {
 
     protected FilePickDialog.TabItemHolder mTabHolder;
 
     protected List<File> mFileList;
 
-    private static final int CACHE_SIZE=5 * 1024 *1024;
+    private static final int CACHE_SIZE = 5 * 1024 * 1024;
 
     private static LruCache<String, Bitmap> sLruCache = new LruCache<String, Bitmap>(CACHE_SIZE) {
         protected int sizeOf(String key, Bitmap value) {
@@ -55,36 +57,49 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         }
     };
 
-    private List<VH> mVHList=new ArrayList<>();
+    private List<VH> mVHList = new ArrayList<>();
 
-    private Worker mWorker=null;
+    private Worker mWorker = null;
 
     private FileExpandableListView mExpandableListView;
 
     private Context mContext;
 
-    public FileExpandableAdapter(FileExpandableListView expandableListView){
-        mExpandableListView=expandableListView;
-        mContext=expandableListView.getContext();
+    private static final String EXTRA_VH_LIST = "FileExpandableAdapter_extra_vh_list";
+
+    private Activity mActivity;
+
+    private String mTitle="";
+
+    public FileExpandableAdapter(FileExpandableListView expandableListView) {
+        mExpandableListView = expandableListView;
+        mContext = expandableListView.getContext();
     }
 
-    public void initData(FilePickDialog.TabItemHolder holder){
-        mTabHolder=holder;
-        mFileList=mTabHolder.getFileList();
+    public void initData(FilePickDialog.TabItemHolder holder) {
+        mTabHolder = holder;
+        mFileList = mTabHolder.getFileList();
 
         mExpandableListView.setGroupIndicator(null);
         mExpandableListView.setDivider(new ColorDrawable(Color.TRANSPARENT));
         mExpandableListView.setChildDivider(new ColorDrawable(Color.DKGRAY));
         mExpandableListView.setDividerHeight(1);
 
+        if(mActivity!=null){
+            MainApplication application= (MainApplication) mActivity.getApplication();
+            List<VH> vhList = (List<VH>) application.getSavedInstance().get(EXTRA_VH_LIST+mTitle);
+            if (vhList != null) {
+                mVHList = vhList;
+            }
+        }
         mExpandableListView.setAdapter(this);
     }
 
-    public void loadedData(){
-        mFileList=mTabHolder.getFileList();
+    public void loadedData() {
+        mFileList = mTabHolder.getFileList();
         notifyDataSetChanged();
-        if(mWorker==null&&mFileList!=null){
-            mWorker=new Worker();
+        if (mWorker == null && mFileList != null) {
+            mWorker = new Worker();
             mWorker.start();
         }
     }
@@ -94,12 +109,16 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         if (!(v.getTag() instanceof VH)) return;
         VH vh = (VH) v.getTag();
         int position = mVHList.indexOf(vh);
-        int id=v.getId();
+        int id = v.getId();
 
-        if(id==R.id.select_all){
-            vh.isActivated=!vh.isActivated;
+        if (id == R.id.select_all) {
+            if (vh.isActivated()) {
+                vh.activate(false);
+            } else {
+                vh.activate(true);
+            }
             notifyDataSetChanged();
-        }else{
+        } else {
             boolean isExpand = mExpandableListView.isGroupExpanded(position);
             if (isExpand)
                 mExpandableListView.collapseGroup(position);
@@ -110,36 +129,45 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
 
     @Override
     public boolean onLongClick(final View v) {
-        final TextItemDialog dlg=new TextItemDialog(mExpandableListView.getContext());
+        final TextItemDialog dlg = new TextItemDialog(mExpandableListView.getContext());
         dlg.setOnClickListener(new Function1<Integer, Unit>() {
             @Override
             public Unit invoke(Integer integer) {
-                if(integer==0){
-                    String path=((File)v.getTag()).getAbsolutePath();
+                if (integer == 0) {
+                    String path = ((File) v.getTag()).getAbsolutePath();
                     openFile(path);
                     dlg.cancel();
-                }else{
+                } else {
                     dlg.cancel();
                 }
                 return null;
             }
         });
-        dlg.setupItem(new String[]{"打开","取消"});
+        dlg.setupItem(new String[]{"打开", "取消"});
         dlg.show();
         return true;
     }
 
 
-    public void onFoldFiles(LinkedHashMap<String,List<File>> foldFiles,String[] names){
-        if(names==null) return;
+    public void onFoldFiles(LinkedHashMap<String, List<File>> foldFiles, String[] names) {
+        if (names == null) return;
+        List<VH> newArr = new ArrayList<>();
 
-        mVHList.clear();
-
-        for(String name:names){
-            VH vh=new VH(new File(name),foldFiles.get(name));
-            mVHList.add(vh);
+        for (String name : names) {
+            VH vh = new VH(new File(name), foldFiles.get(name));
+            for (VH last : mVHList) {
+                if (last.group.equals(vh.group)) {
+                    vh.activate(last.isActivated());
+                    vh.activatedList = last.activatedList;
+                }
+            }
+            newArr.add(vh);
         }
-
+        if(mActivity!=null){
+            MainApplication application = (MainApplication) mActivity.getApplication();
+            application.getSavedInstance().put(EXTRA_VH_LIST+mTitle, newArr);
+        }
+        mVHList=newArr;
         notifyDataSetChanged();
     }
 
@@ -170,7 +198,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
 
     @Override
     public long getChildId(int groupPosition, int childPosition) {
-        return getChild(groupPosition,childPosition).hashCode();
+        return getChild(groupPosition, childPosition).hashCode();
     }
 
     @Override
@@ -180,45 +208,45 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        VH vh= (VH) getGroup(groupPosition);
-        File f= (File) vh.group;
-        File thumb=null;
-        if(vh.childList.size()!=0)
-            thumb=vh.childList.get(0);
-        if(convertView==null)
-            convertView= LayoutInflater.from(mContext).inflate(R.layout.layout_file_group_item,parent,false);
+        VH vh = (VH) getGroup(groupPosition);
+        File f = (File) vh.group;
+        File thumb = null;
+        if (vh.childList.size() != 0)
+            thumb = vh.childList.get(0);
+        if (convertView == null)
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.layout_file_group_item, parent, false);
 
-        ((TextView)convertView.findViewById(R.id.text_name)).setText(f.getName());
-        FileUtil.MediaFileType type=mTabHolder.getType();
+        ((TextView) convertView.findViewById(R.id.text_name)).setText(f.getName());
+        FileUtil.MediaFileType type = mTabHolder.getType();
 
-        ImageView icon=(ImageView) convertView.findViewById(R.id.icon);
+        ImageView icon = (ImageView) convertView.findViewById(R.id.icon);
         icon.setImageDrawable(null);
 
-        TextView text= (TextView) convertView.findViewById(R.id.text);
+        TextView text = (TextView) convertView.findViewById(R.id.text);
         text.setText("");
-        if(type == FileUtil.MediaFileType.MOVIE ||
-                type== FileUtil.MediaFileType.IMG){
+        if (type == FileUtil.MediaFileType.MOVIE ||
+                type == FileUtil.MediaFileType.IMG) {
             Glide.with(mContext).load(thumb.getAbsolutePath()).into(icon);
-        }else if(type== FileUtil.MediaFileType.APP){
-            Bitmap b= sLruCache.get(thumb.getAbsolutePath());
-            if(b==null){
-                AppThumbTask task= new AppThumbTask(sLruCache,mContext,icon);
-                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,thumb);
-            }else
+        } else if (type == FileUtil.MediaFileType.APP) {
+            Bitmap b = sLruCache.get(thumb.getAbsolutePath());
+            if (b == null) {
+                AppThumbTask task = new AppThumbTask(sLruCache, mContext, icon);
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, thumb);
+            } else
                 icon.setImageBitmap(b);
-        }else if(type== FileUtil.MediaFileType.MP3){
+        } else if (type == FileUtil.MediaFileType.MP3) {
             text.setText(R.string.music);
-        }else if(type== FileUtil.MediaFileType.DOC){
+        } else if (type == FileUtil.MediaFileType.DOC) {
             text.setText(R.string.doc);
-        }else if(type== FileUtil.MediaFileType.RAR){
+        } else if (type == FileUtil.MediaFileType.RAR) {
             text.setText(R.string.rar);
         }
 
-        View child=convertView.findViewById(R.id.select_all);
-        child.setActivated(vh.isActivated);
+        View child = convertView.findViewById(R.id.select_all);
+        child.setActivated(vh.isActivated());
 
-        TextView fileCount= (TextView) convertView.findViewById(R.id.file_count);
-        fileCount.setText(""+vh.childList.size());
+        TextView fileCount = (TextView) convertView.findViewById(R.id.file_count);
+        fileCount.setText("" + vh.childList.size());
 
         convertView.setTag(getGroup(groupPosition));
         child.setTag(getGroup(groupPosition));
@@ -230,37 +258,40 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        File f= (File) getChild(groupPosition,childPosition);
-        VH vh= (VH) getGroup(groupPosition);
-        if(convertView==null)
-            convertView=LayoutInflater.from(mContext).inflate(R.layout.layout_file_item,parent,false);
+        File f = (File) getChild(groupPosition, childPosition);
+        VH vh = (VH) getGroup(groupPosition);
+        if (convertView == null)
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.layout_file_item, parent, false);
 
-        ((TextView)convertView.findViewById(R.id.text_name)).setText(f.getName());
-        FileUtil.MediaFileType type=mTabHolder.getType();
+        ((TextView) convertView.findViewById(R.id.text_name)).setText(f.getName());
+        FileUtil.MediaFileType type = mTabHolder.getType();
 
-        ImageView icon=(ImageView) convertView.findViewById(R.id.icon);
+        ImageView icon = (ImageView) convertView.findViewById(R.id.icon);
         icon.setImageDrawable(null);
-        if(type == FileUtil.MediaFileType.MOVIE ||
-                type== FileUtil.MediaFileType.IMG){
+        if (type == FileUtil.MediaFileType.MOVIE ||
+                type == FileUtil.MediaFileType.IMG) {
             Glide.with(mContext).load(f.getAbsolutePath()).into(icon);
-        }else if(type== FileUtil.MediaFileType.APP){
-            Bitmap b= sLruCache.get(f.getAbsolutePath());
-            if(b==null){
-                AppThumbTask task= new AppThumbTask(sLruCache,mContext,icon);
-                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,f);
-            }else
+        } else if (type == FileUtil.MediaFileType.APP) {
+            Bitmap b = sLruCache.get(f.getAbsolutePath());
+            if (b == null) {
+                AppThumbTask task = new AppThumbTask(sLruCache, mContext, icon);
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, f);
+            } else
                 icon.setImageBitmap(b);
-        }else if(type== FileUtil.MediaFileType.MP3){
+        } else if (type == FileUtil.MediaFileType.MP3) {
             icon.setImageResource(R.mipmap.music);
-        }else if(type== FileUtil.MediaFileType.DOC){
+        } else if (type == FileUtil.MediaFileType.DOC) {
             icon.setImageResource(R.mipmap.document);
-        }else if(type== FileUtil.MediaFileType.RAR){
+        } else if (type == FileUtil.MediaFileType.RAR) {
             icon.setImageResource(R.mipmap.rar);
         }
 
 
-        CheckBox check= (CheckBox) convertView.findViewById(R.id.check_box);
-        check.setChecked(vh.isActivated);
+        CheckBox check = (CheckBox) convertView.findViewById(R.id.check_box);
+        check.setChecked(vh.isItemActivated(f));
+        check.setTag(f);
+        check.setTag(R.id.extra_tag, vh);
+        check.setOnClickListener(mCheckOnClickListener);
 
         convertView.setTag(f);
         convertView.setOnClickListener(this);
@@ -273,55 +304,117 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         return true;
     }
 
-    public static class VH{
+    private static class VH {
 
         public List<File> childList;
 
         public File group;
 
-        public boolean isActivated=false;
+        private boolean isActivated = false;
 
-        public VH(File group,List<File> childList){
-            this.group=group;
-            this.childList=childList;
+        private List<File> activatedList = new ArrayList<>();
+
+        public VH(File group, List<File> childList) {
+            this.group = group;
+            this.childList = childList;
+        }
+
+        public boolean isActivated() {
+            return isActivated;
+        }
+
+        public void activate(boolean active) {
+            isActivated = active;
+            if (isActivated) {
+                activatedList.clear();
+                activatedList.addAll(childList);
+            } else {
+                activatedList.clear();
+            }
+        }
+
+        public void activateItem(boolean active, File file) {
+            if (active) {
+                if (activatedList.indexOf(file) < 0) {
+                    activatedList.add(file);
+                }
+            } else {
+                activatedList.remove(file);
+            }
+        }
+
+        public boolean isItemActivated(File file) {
+            return activatedList.indexOf(file) >= 0;
+        }
+
+        public List<File> getActivatedList() {
+            return activatedList;
         }
     }
 
-    class Worker extends Thread{
+    class Worker extends Thread {
 
         @Override
         public void run() {
 
-            final LinkedHashMap<String,List<File>> res=new LinkedHashMap<>();
-            boolean isFast=false;
-            if(mTabHolder.getType()== FileUtil.MediaFileType.IMG){
-                isFast=true;
+            final LinkedHashMap<String, List<File>> res = new LinkedHashMap<>();
+            boolean isFast = false;
+            if (mTabHolder.getType() == FileUtil.MediaFileType.IMG) {
+                isFast = true;
             }
-            final String[] names=FileUtil.INSTANCE.foldFiles(mFileList,res,isFast);
+            final String[] names = FileUtil.INSTANCE.foldFiles(mFileList, res, isFast);
 
 
             mExpandableListView.post(new Runnable() {
                 @Override
                 public void run() {
-                    onFoldFiles(res,names);
+                    onFoldFiles(res, names);
                 }
             });
-            mWorker=null;
+            mWorker = null;
         }
     }
 
-    protected void openFile(String path){
-        if(mTabHolder.getType()== FileUtil.MediaFileType.MOVIE){
-            Bundle bundle=new Bundle();
-            bundle.putString(VideoPlayerFragment.Companion.getEXTRA_URI_PATH(),path);
-            Intent i= ImmersiveFragmentActivity.Companion.newInstance(mContext, VideoPlayerFragment.class,bundle);
+    protected void openFile(String path) {
+        if (mTabHolder.getType() == FileUtil.MediaFileType.MOVIE) {
+            Bundle bundle = new Bundle();
+            bundle.putString(VideoPlayerFragment.Companion.getEXTRA_URI_PATH(), path);
+            Intent i = ImmersiveFragmentActivity.Companion.newInstance(mContext, VideoPlayerFragment.class, bundle);
             mContext.startActivity(i);
-        }else{
-            Intent i= FileOpenIntentUtil.INSTANCE.openFile(path);
+        } else {
+            Intent i = FileOpenIntentUtil.INSTANCE.openFile(path);
             try {
                 mContext.startActivity(i);
-            }catch (Exception ignore){
+            } catch (Exception ignore) {
             }
         }
+    }
+
+    private View.OnClickListener mCheckOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            File file = (File) v.getTag();
+            VH vh = (VH) v.getTag(R.id.extra_tag);
+
+            if (vh.isItemActivated(file)) {
+                vh.activateItem(false, file);
+            } else {
+                vh.activateItem(true, file);
+            }
+        }
+    };
+
+    public List<File> getSelectedFile() {
+        List<File> files = new ArrayList<>();
+        for (int i = 0; i < mVHList.size(); i++) {
+            VH vh = mVHList.get(i);
+            files.addAll(vh.getActivatedList());
+        }
+        return files;
+    }
+
+    public void setup(Activity activity,String title){
+        mActivity=activity;
+        mTitle=title;
     }
 }

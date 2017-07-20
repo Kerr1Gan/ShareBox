@@ -268,7 +268,7 @@ open class FilePickDialog :BaseBottomSheetDialog,Toolbar.OnMenuItemClickListener
                 var title=mTabItemHolders?.keys?.elementAt(position) as String
 
                 var holder=mTabItemHolders?.get(title)
-                vg.fileExpandableAdapter=getFileAdapter(vg)
+                vg.fileExpandableAdapter=getFileAdapter(vg,title)
                 vg.initData(holder)
 
                 if(mTabItemHolders?.get(title)?.task==null&&mTabItemHolders?.get(title)?.fileList==null){
@@ -410,14 +410,19 @@ open class FilePickDialog :BaseBottomSheetDialog,Toolbar.OnMenuItemClickListener
                 var map= mutableMapOf<String,List<String>>()
                 var fileList= ArrayList<File>()
 
+                var index=0
                 for(element in mTabItemHolders!!.entries){
                     var strList= mutableListOf<String>()
+                    var pager=mViewPagerViews.get(index++)
+                    if(pager==null) continue
+                    pager=pager as FileExpandableListView
                     if(element.value.fileList==null) continue
-                    for(child in element.value.fileList!!.iterator()){
-                        strList.add(child.absolutePath)
-                        if(fileList.indexOf(child)<0){
-                            fileList.add(child)
-                        }
+                    var fileArr=pager.fileExpandableAdapter.selectedFile
+                    for(file in fileArr){
+                        if(fileList.indexOf(file)<0)
+                            fileList.add(file)
+
+                        strList.add(file.absolutePath)
                     }
                     map.put(element.key,strList)
                 }
@@ -459,7 +464,7 @@ open class FilePickDialog :BaseBottomSheetDialog,Toolbar.OnMenuItemClickListener
         return null
     }
 
-    open fun getFileAdapter(vg:FileExpandableListView):FileExpandableAdapter{
-        return vg.fileExpandableAdapter
+    open fun getFileAdapter(vg:FileExpandableListView,title:String):FileExpandableAdapter{
+        return vg.fileExpandableAdapter.apply { setup(ownerActivity,title) }
     }
 }

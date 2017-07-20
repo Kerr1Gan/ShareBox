@@ -24,9 +24,13 @@ class MainApplication:Application(){
 
     private val mSavedInstance =HashMap<String,Any>()
 
+    companion object {
+        var sInstance:MainApplication? =null
+    }
+
     override fun onCreate() {
         super.onCreate()
-
+        sInstance=this
         var module=SimpleGlideModule()
         var builder=GlideBuilder()
         module.applyOptions(this,builder)

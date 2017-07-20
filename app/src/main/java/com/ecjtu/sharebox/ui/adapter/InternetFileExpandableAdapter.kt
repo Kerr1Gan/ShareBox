@@ -1,5 +1,6 @@
 package com.ecjtu.sharebox.ui.adapter
 
+import android.app.Activity
 import android.view.View
 import android.view.ViewGroup
 import com.ecjtu.sharebox.R
@@ -39,4 +40,7 @@ class InternetFileExpandableAdapter(expandableListView: FileExpandableListView):
         super.onClick(v)
     }
 
+    override fun setup(activity: Activity?) {
+        //do nothing
+    }
 }
