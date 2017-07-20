@@ -10,9 +10,9 @@ import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory
 import com.bumptech.glide.load.engine.cache.LruResourceCache
 import com.bumptech.glide.module.AppGlideModule
-import org.ecjtu.easyserver.server.ServerManager
-import org.ecjtu.easyserver.server.util.AssetsUtil
 import com.ecjtu.sharebox.service.MainService
+import com.ecjtu.sharebox.util.StatusBarUtil
+import com.ecjtu.sharebox.util.file.AssetsUtil
 import org.ecjtu.channellibrary.wifidirect.WifiDirectManager
 
 
@@ -50,9 +50,9 @@ class MainApplication:Application(){
 
     private fun initSavedState(){
         AssetsUtil.CONTEXT=applicationContext
-        ServerManager.getInstance().setIconPath(filesDir.absolutePath+"/"+Constants.ICON_HEAD)
-        ServerManager.getInstance().setApplicationContext(applicationContext)
-        getSystemService(Context.BLUETOOTH_SERVICE)
+//        ServerManager.getInstance().setIconPath(filesDir.absolutePath+"/"+Constants.ICON_HEAD)
+//        ServerManager.getInstance().setApplicationContext(applicationContext)
+        StatusBarUtil.collapseStatusBar(this)
     }
 
     class SimpleGlideModule : AppGlideModule() {

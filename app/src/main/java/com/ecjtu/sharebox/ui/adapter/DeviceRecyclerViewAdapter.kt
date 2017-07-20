@@ -10,15 +10,14 @@ import android.widget.TextView
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.ecjtu.sharebox.DeviceInfo
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.network.AsyncNetwork
 import com.ecjtu.sharebox.network.IRequestCallback
-import org.ecjtu.easyserver.server.impl.servlet.Info
 import com.ecjtu.sharebox.ui.dialog.ApDataDialog
 import com.ecjtu.sharebox.ui.dialog.FilePickDialog
 import com.ecjtu.sharebox.ui.dialog.InternetFilePickDialog
 import com.ecjtu.sharebox.ui.dialog.TextItemDialog
-import org.ecjtu.easyserver.server.DeviceInfo
 import org.json.JSONObject
 import java.io.File
 import java.lang.Exception
@@ -64,12 +63,12 @@ View.OnLongClickListener{
         if(info?.fileMap==null){
             AsyncNetwork().requestDeviceInfo("${info?.ip}:${info?.port}",object :IRequestCallback{
                 override fun onSuccess(httpURLConnection: HttpURLConnection?, response: String) {
-                    Info.json2DeviceInfo(JSONObject(response)).apply {
-                        info?.fileMap=fileMap
-                    }
-                    mWeakRef?.get()?.runOnUiThread {
-
-                    }
+//                    Info.json2DeviceInfo(JSONObject(response)).apply {
+//                        info?.fileMap=fileMap
+//                    }
+//                    mWeakRef?.get()?.runOnUiThread {
+//
+//                    }
                 }
 
                 override fun onError(httpURLConnection: HttpURLConnection?, exception: Exception) {
@@ -86,9 +85,9 @@ View.OnLongClickListener{
 
         AsyncNetwork().requestDeviceInfo("${deviceInfo?.ip}:${deviceInfo?.port}",object :IRequestCallback{
             override fun onSuccess(httpURLConnection: HttpURLConnection?, response: String) {
-                Info.json2DeviceInfo(JSONObject(response)).apply {
-                    deviceInfo?.fileMap=fileMap
-                }
+//                Info.json2DeviceInfo(JSONObject(response)).apply {
+//                    deviceInfo?.fileMap=fileMap
+//                }
                 mWeakRef?.get()?.runOnUiThread {
                     if(mWeakRef?.get()!=null){
                         InternetFilePickDialog(mWeakRef?.get()!!,mWeakRef?.get()).apply {
