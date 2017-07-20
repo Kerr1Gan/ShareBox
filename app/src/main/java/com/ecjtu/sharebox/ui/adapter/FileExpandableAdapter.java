@@ -97,7 +97,11 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         int id=v.getId();
 
         if(id==R.id.select_all){
-            vh.isActivated=!vh.isActivated;
+            if(vh.isActivated()){
+                vh.activate(false);
+            }else{
+                vh.activate(true);
+            }
             notifyDataSetChanged();
         }else{
             boolean isExpand = mExpandableListView.isGroupExpanded(position);
@@ -215,7 +219,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         }
 
         View child=convertView.findViewById(R.id.select_all);
-        child.setActivated(vh.isActivated);
+        child.setActivated(vh.isActivated());
 
         TextView fileCount= (TextView) convertView.findViewById(R.id.file_count);
         fileCount.setText(""+vh.childList.size());
@@ -260,7 +264,10 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
 
 
         CheckBox check= (CheckBox) convertView.findViewById(R.id.check_box);
-        check.setChecked(vh.isActivated);
+        check.setChecked(vh.isItemActivated(f));
+        check.setTag(f);
+        check.setTag(R.id.extra_tag,vh);
+        check.setOnClickListener(mCheckOnClickListener);
 
         convertView.setTag(f);
         convertView.setOnClickListener(this);
@@ -273,17 +280,47 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         return true;
     }
 
-    public static class VH{
+    private static class VH{
 
         public List<File> childList;
 
         public File group;
 
-        public boolean isActivated=false;
+        private boolean isActivated=false;
+
+        private List<File> activatedList=new ArrayList<>();
 
         public VH(File group,List<File> childList){
             this.group=group;
             this.childList=childList;
+        }
+
+        public boolean isActivated(){
+            return isActivated;
+        }
+
+        public void activate(boolean active){
+            isActivated=active;
+            if(isActivated){
+                activatedList.clear();
+                activatedList.addAll(childList);
+            }else{
+                activatedList.clear();
+            }
+        }
+
+        public void activateItem(boolean active,File file){
+            if(active){
+                if(activatedList.indexOf(file)<0){
+                    activatedList.add(file);
+                }
+            }else{
+                activatedList.remove(file);
+            }
+        }
+
+        public boolean isItemActivated(File file){
+            return activatedList.indexOf(file) >= 0;
         }
     }
 
@@ -324,4 +361,18 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
             }
         }
     }
+
+    private View.OnClickListener mCheckOnClickListener=new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            File file= (File) v.getTag();
+            VH vh= (VH) v.getTag(R.id.extra_tag);
+
+            if(vh.isItemActivated(file)){
+                vh.activateItem(false,file);
+            }else{
+                vh.activateItem(true,file);
+            }
+        }
+    };
 }
