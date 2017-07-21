@@ -12,6 +12,7 @@ import com.bumptech.glide.load.engine.cache.LruResourceCache
 import com.bumptech.glide.module.AppGlideModule
 import com.ecjtu.sharebox.service.MainService
 import com.ecjtu.sharebox.util.StatusBarUtil
+import com.ecjtu.sharebox.util.cache.FileCacheHelper
 import com.ecjtu.sharebox.util.file.AssetsUtil
 import org.ecjtu.channellibrary.wifidirect.WifiDirectManager
 
@@ -23,6 +24,8 @@ class MainApplication:Application(){
 
 
     private val mSavedInstance =HashMap<String,Any>()
+
+    private val mCacheHelper = FileCacheHelper(filesDir.absolutePath)
 
     override fun onCreate() {
         super.onCreate()
@@ -46,6 +49,14 @@ class MainApplication:Application(){
 
     fun getSavedInstance():MutableMap<String,Any>{
         return mSavedInstance
+    }
+
+    fun getPersistentObject(key:String):Any{
+        return mCacheHelper.get(key)
+    }
+
+    fun putPersistentObject(key: String,obj:Any):Boolean{
+        return mCacheHelper.put(key,obj)
     }
 
     private fun initSavedState(){
