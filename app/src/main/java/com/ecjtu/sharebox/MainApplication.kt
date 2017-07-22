@@ -13,6 +13,7 @@ import com.bumptech.glide.module.AppGlideModule
 import org.ecjtu.easyserver.server.ServerManager
 import org.ecjtu.easyserver.server.util.AssetsUtil
 import com.ecjtu.sharebox.service.MainService
+import com.ecjtu.sharebox.util.cache.FileCacheHelper
 import org.ecjtu.channellibrary.wifidirect.WifiDirectManager
 
 
@@ -46,6 +47,10 @@ class MainApplication:Application(){
         initSavedState()
 
         startService(Intent(this,MainService::class.java))
+
+        var lockHelper=FileCacheHelper(filesDir.absolutePath)
+        lockHelper.put("key","12341234123")
+        lockHelper.get("key")
     }
 
     fun getSavedInstance():MutableMap<String,Any>{
@@ -55,7 +60,7 @@ class MainApplication:Application(){
     private fun initSavedState(){
         AssetsUtil.CONTEXT=applicationContext
         ServerManager.getInstance().setIconPath(filesDir.absolutePath+"/"+Constants.ICON_HEAD)
-        ServerManager.getInstance().setApplicationContext(applicationContext)
+        ServerManager.getInstance().setContext(applicationContext)
         getSystemService(Context.BLUETOOTH_SERVICE)
     }
 

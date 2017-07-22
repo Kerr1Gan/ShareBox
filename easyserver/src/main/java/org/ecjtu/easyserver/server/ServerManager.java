@@ -17,7 +17,7 @@ public class ServerManager {
 
     private static ServerManager sInstance=null;
 
-    private Context mApplicationContext;
+    private Context mContext;
 
     private List<File> mSharedFileList;
 
@@ -35,8 +35,8 @@ public class ServerManager {
         return Inner.INSTANCE;
     }
 
-    public ServerManager setApplicationContext(Context context){
-        mApplicationContext=context;
+    public ServerManager setContext(Context context){
+        mContext =context;
         return this;
     }
 
@@ -60,8 +60,8 @@ public class ServerManager {
         return this;
     }
 
-    public Context getApplicationContext(){
-        return mApplicationContext;
+    public Context getContext(){
+        return mContext;
     }
 
     public List<File> getSharedFileList(){

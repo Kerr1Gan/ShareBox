@@ -176,7 +176,7 @@ public class File implements BaseServlet {
     }
 
     public void doCache(String filePaths){
-        Context context=ServerManager.getInstance().getApplicationContext();
+        Context context=ServerManager.getInstance().getContext();
         Bitmap b= CacheUtil.getBitmapByCache(context,filePaths);
         if(b==null){
             b= ImageUtil.createVideoThumbnail(filePaths,100,100);

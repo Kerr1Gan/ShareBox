@@ -11,11 +11,15 @@ import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
 import android.os.Binder;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
 
 import org.ecjtu.easyserver.R;
+import org.ecjtu.easyserver.net.HostInterface;
+import org.ecjtu.easyserver.server.ServerInfoCarrier;
+import org.ecjtu.easyserver.server.ServerManager;
 import org.ecjtu.easyserver.server.impl.server.EasyServer;
 import org.ecjtu.easyserver.server.util.WifiUtil;
 import org.ecjtu.easyserver.util.StatusBarUtil;
@@ -51,6 +55,8 @@ public class EasyServerService extends Service {
 
     public static final String EXTRA_SERVER_TYPE = "extra_server_type";
 
+    public static final String EXTRA_SETUP_SERVER= "extra_init_server";
+
     public static final int SERVER_TYPE_AP = TYPE_AP;
 
     public static final int SERVER_TYPE_P2P = TYPE_P2P;
@@ -64,42 +70,8 @@ public class EasyServerService extends Service {
         mBinder = new EasyServerBinder();
         isBind = false;
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setSmallIcon(R.mipmap.notification_wifi);
-        builder.setContentTitle("ShareBox");
-        builder.setTicker("正在运行");
-        builder.setContentText("正在运行");
-
-
-        final Intent notificationIntent = new Intent("action_onclick");
-
-
-        notificationIntent.putExtra("click", 1);
-        final PendingIntent pi = PendingIntent.getBroadcast(this, 1, notificationIntent
-                , PendingIntent.FLAG_UPDATE_CURRENT);
-
-        RemoteViews remoteView = new RemoteViews(this.getPackageName(), R.layout.custom_notification_view);
-
-        builder.setContent(remoteView);
-
-
-        remoteView.setOnClickPendingIntent(R.id.img_view_exit, pi);
-        notificationIntent.putExtra("click", 2);
-        PendingIntent pi2 = PendingIntent.getBroadcast(this, 2, notificationIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-
-        remoteView.setOnClickPendingIntent(R.id.img_view_exit, pi);
-        remoteView.setOnClickPendingIntent(R.id.main_content, pi2);
-
-        mNotification = builder.build();
-
-
-        startForeground(101, mNotification);
-
-
-        IntentFilter filter = new IntentFilter("action_onclick");
-        mReceiver = new NotificationClickReceiver();
-        this.registerReceiver(mReceiver, filter);
+        initNotification();
+        initEasyServer();
     }
 
     @Override
@@ -132,6 +104,17 @@ public class EasyServerService extends Service {
             }
         }
 
+        Object param=intent.getSerializableExtra(EXTRA_SETUP_SERVER);
+        if(param!=null){
+            ServerInfoCarrier carrier=(ServerInfoCarrier)param;
+            ServerManager manager=ServerManager.getInstance();
+            manager.setDeviceInfo(carrier.deviceInfo);
+            manager.setIconPath(carrier.iconPath);
+            manager.setIp(carrier.ip);
+            manager.setSharedFileList(carrier.sharedFileList);
+            manager.setContext(this);
+        }
+
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -157,6 +140,49 @@ public class EasyServerService extends Service {
     @Override
     public boolean onUnbind(Intent intent) {
         return super.onUnbind(intent);
+    }
+
+    public void initNotification(){
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        builder.setSmallIcon(R.mipmap.notification_wifi);
+        builder.setContentTitle("ShareBox");
+        builder.setTicker("正在运行");
+        builder.setContentText("正在运行");
+
+        final Intent notificationIntent = new Intent("action_onclick");
+
+        notificationIntent.putExtra("click", 1);
+        final PendingIntent pi = PendingIntent.getBroadcast(this, 1, notificationIntent
+                , PendingIntent.FLAG_UPDATE_CURRENT);
+
+        RemoteViews remoteView = new RemoteViews(this.getPackageName(), R.layout.custom_notification_view);
+
+        builder.setContent(remoteView);
+
+        remoteView.setOnClickPendingIntent(R.id.img_view_exit, pi);
+        notificationIntent.putExtra("click", 2);
+        PendingIntent pi2 = PendingIntent.getBroadcast(this, 2, notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        remoteView.setOnClickPendingIntent(R.id.img_view_exit, pi);
+        remoteView.setOnClickPendingIntent(R.id.main_content, pi2);
+
+        mNotification = builder.build();
+
+        startForeground(101, mNotification);
+
+        IntentFilter filter = new IntentFilter("action_onclick");
+        mReceiver = new NotificationClickReceiver();
+        this.registerReceiver(mReceiver, filter);
+    }
+
+    public void initEasyServer(){
+//        EasyServer.setServerListener(new HostInterface.ICallback() {
+//            @Override
+//            public void ready(Object server, String hostIP, int port) {
+//
+//            }
+//        });
     }
 
     public EasyServerBinder mBinder;

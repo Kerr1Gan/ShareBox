@@ -67,7 +67,7 @@ public class GetFiles implements BaseServlet {
                     }
 
                     array.put(shareScreen);
-                    Context context=ServerManager.getInstance().getApplicationContext();
+                    Context context=ServerManager.getInstance().getContext();
                     for (int i = 0; i < fileList.size(); i++) {
                         java.io.File file = fileList.get(i);
                         JSONObject obj = new JSONObject();

@@ -40,7 +40,7 @@ class InternetFileExpandableAdapter(expandableListView: FileExpandableListView):
         super.onClick(v)
     }
 
-    override fun setup(activity: Activity?) {
+    override fun setup(activity: Activity?,title:String) {
         //do nothing
     }
 }
