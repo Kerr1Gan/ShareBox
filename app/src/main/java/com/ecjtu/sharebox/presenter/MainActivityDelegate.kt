@@ -47,39 +47,39 @@ import java.lang.Exception
 /**
  * Created by KerriGan on 2017/6/2.
  */
-class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),ActivityCompat.OnRequestPermissionsResultCallback{
+class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner), ActivityCompat.OnRequestPermissionsResultCallback {
 
-    private var mToolbar:Toolbar
-    private var mDrawerLayout:DrawerLayout
-    private var mDrawerToggle:ActionBarDrawerToggle
-    private var mFloatingActionButton:FloatingActionButton
-    private var mViewSwitcher:ViewSwitcher? = null
-    private var mWifiButton:Button
-    private var mHotspotButton:Button
-    private var mApName:TextView
-    private var mWifiImage:ImageView
-    private var mTextName:TextView? =null
+    private var mToolbar: Toolbar
+    private var mDrawerLayout: DrawerLayout
+    private var mDrawerToggle: ActionBarDrawerToggle
+    private var mFloatingActionButton: FloatingActionButton
+    private var mViewSwitcher: ViewSwitcher? = null
+    private var mWifiButton: Button
+    private var mHotspotButton: Button
+    private var mApName: TextView
+    private var mWifiImage: ImageView
+    private var mTextName: TextView? = null
 
-    private val REQUEST_CODE=0x10;
+    private val REQUEST_CODE = 0x10;
 
-    private var mServerSet= mutableListOf<DeviceSearcher.DeviceBean>()
+    private var mServerSet = mutableListOf<DeviceSearcher.DeviceBean>()
 
-    private var mClientSet= mutableListOf<DeviceSearcher.DeviceBean>()
+    private var mClientSet = mutableListOf<DeviceSearcher.DeviceBean>()
 
-    private var mDiscoverHelper:DiscoverHelper? =null
+    private var mDiscoverHelper: DiscoverHelper? = null
 
-    private val mRequestPermission= arrayOf(Manifest.permission.ACCESS_NETWORK_STATE,
+    private val mRequestPermission = arrayOf(Manifest.permission.ACCESS_NETWORK_STATE,
             Manifest.permission.CHANGE_NETWORK_STATE,
             Manifest.permission.ACCESS_NETWORK_STATE,
             Manifest.permission.CHANGE_WIFI_STATE)
 
-    private var mRecyclerView:RecyclerView? =null
+    private var mRecyclerView: RecyclerView? = null
 
-    private var mDeviceInfoList:MutableList<DeviceInfo> = mutableListOf<DeviceInfo>()
+    private var mDeviceInfoList: MutableList<DeviceInfo> = mutableListOf<DeviceInfo>()
 
-    private var mPhotoHelper:CapturePhotoHelper?=null
+    private var mPhotoHelper: CapturePhotoHelper? = null
 
-    private var mImageHelper: PickPhotoHelper? =null
+    private var mImageHelper: PickPhotoHelper? = null
 
     companion object {
         //Settings.ACTION_APPLICATION_DETAIL_SETTING
@@ -97,7 +97,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
             return localIntent
         }
 
-        const val DEBUG=true
+        const val DEBUG = true
     }
 
     init {
@@ -108,17 +108,17 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
         mDrawerToggle!!.syncState()
         mDrawerLayout!!.setDrawerListener(mDrawerToggle)
 
-        mFloatingActionButton=findViewById(R.id.floating_action_button) as FloatingActionButton
-        mFloatingActionButton.setOnClickListener({view->
-//            mViewSwitcher?.showNext()
-            var dlg=FilePickDialogFragment(owner)
-            dlg.show(owner.supportFragmentManager,"FilePickDialogFragment")
+        mFloatingActionButton = findViewById(R.id.floating_action_button) as FloatingActionButton
+        mFloatingActionButton.setOnClickListener({ view ->
+            //            mViewSwitcher?.showNext()
+            var dlg = FilePickDialogFragment(owner)
+            dlg.show(owner.supportFragmentManager, "FilePickDialogFragment")
         })
 
         //for view switcher
-        mViewSwitcher=findViewById(R.id.view_switcher) as ViewSwitcher
-        var view0:View=LayoutInflater.from(owner).inflate(R.layout.layout_main_activity_data,null)
-        var view1:View=LayoutInflater.from(owner).inflate(R.layout.layout_main_activity_list,null)
+        mViewSwitcher = findViewById(R.id.view_switcher) as ViewSwitcher
+        var view0: View = LayoutInflater.from(owner).inflate(R.layout.layout_main_activity_data, null)
+        var view1: View = LayoutInflater.from(owner).inflate(R.layout.layout_main_activity_list, null)
         mViewSwitcher?.addView(view0)
         mViewSwitcher?.addView(view1)
 
@@ -126,38 +126,38 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
 
         }
 
-        mWifiButton=findViewById(R.id.btn_wifi) as Button
-        mHotspotButton=findViewById(R.id.btn_hotspot) as Button
+        mWifiButton = findViewById(R.id.btn_wifi) as Button
+        mHotspotButton = findViewById(R.id.btn_hotspot) as Button
 
 
         mWifiButton.setOnClickListener {
             val intent = Intent()
-            val action= arrayOf(WifiManager.ACTION_PICK_WIFI_NETWORK,Settings.ACTION_WIFI_SETTINGS)
-            for (str in action){
+            val action = arrayOf(WifiManager.ACTION_PICK_WIFI_NETWORK, Settings.ACTION_WIFI_SETTINGS)
+            for (str in action) {
                 try {
-                    intent.action =Settings.ACTION_WIFI_SETTINGS
+                    intent.action = Settings.ACTION_WIFI_SETTINGS
                     owner.startActivity(intent)
                     break
-                }catch (ex: Exception){
+                } catch (ex: Exception) {
                 }
             }
         }
         mHotspotButton.setOnClickListener {
-            for(index in 0..mRequestPermission.size-1){
-                if(ActivityCompat.checkSelfPermission(owner,mRequestPermission[index])!=PackageManager.PERMISSION_GRANTED){
-                    ActivityCompat.requestPermissions(owner,mRequestPermission,REQUEST_CODE)
+            for (index in 0..mRequestPermission.size - 1) {
+                if (ActivityCompat.checkSelfPermission(owner, mRequestPermission[index]) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(owner, mRequestPermission, REQUEST_CODE)
                     return@setOnClickListener
                 }
             }
 
-            var dlg=WifiBottomSheetDialog(owner,owner)
+            var dlg = WifiBottomSheetDialog(owner, owner)
             dlg.show()
         }
 
-        mApName=findViewById(R.id.ap_name) as TextView
+        mApName = findViewById(R.id.ap_name) as TextView
 
         mRecyclerView = view1 as RecyclerView
-        mRecyclerView?.adapter = DeviceRecyclerViewAdapter(mDeviceInfoList,owner)
+        mRecyclerView?.adapter = DeviceRecyclerViewAdapter(mDeviceInfoList, owner)
 
         var manager: LinearLayoutManager = LinearLayoutManager(owner, LinearLayoutManager.VERTICAL, false)
         mRecyclerView?.layoutManager = manager
@@ -171,8 +171,8 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
         doSearch()
     }
 
-    private fun initDrawerLayout(){
-        mTextName=findViewById(R.id.text_name) as TextView
+    private fun initDrawerLayout() {
+        mTextName = findViewById(R.id.text_name) as TextView
 
         findViewById(R.id.text_faq)?.setOnClickListener {
 
@@ -186,18 +186,18 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
 
         }
 
-        findViewById(R.id.btn_close)?.setOnClickListener{
+        findViewById(R.id.btn_close)?.setOnClickListener {
             owner.getHandler()?.obtainMessage(MainActivity.MSG_CLOSE_APP)?.sendToTarget()
         }
 
         findViewById(R.id.icon)?.setOnClickListener {
-            var dlg=TextItemDialog(owner)
-            dlg.setupItem(arrayOf("从照相机选择","从相册选择","取消"))
+            var dlg = TextItemDialog(owner)
+            dlg.setupItem(arrayOf("从照相机选择", "从相册选择", "取消"))
             dlg.setOnClickListener { index ->
                 if (index == 0) {
                     mPhotoHelper = CapturePhotoHelper(owner)
                     mPhotoHelper?.takePhoto()
-                } else if(index==1){
+                } else if (index == 1) {
                     mImageHelper = PickPhotoHelper(owner)
                     mImageHelper?.takePhoto()
                 }
@@ -207,7 +207,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
         }
 
         findViewById(R.id.text_name)?.setOnClickListener {
-            var dlg=EditNameDialog(activity = owner,context =owner )
+            var dlg = EditNameDialog(activity = owner, context = owner)
             dlg.show()
             dlg.setOnDismissListener({
                 mTextName?.setText(PreferenceManager.getDefaultSharedPreferences(owner).
@@ -250,28 +250,28 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if(requestCode!=REQUEST_CODE) return
-        var hasPermission=true
+        if (requestCode != REQUEST_CODE) return
+        var hasPermission = true
 
-        for(index in 0..mRequestPermission.size-1){
-            if(grantResults[index]!=PackageManager.PERMISSION_GRANTED){
-                hasPermission=false
+        for (index in 0..mRequestPermission.size - 1) {
+            if (grantResults[index] != PackageManager.PERMISSION_GRANTED) {
+                hasPermission = false
             }
 
-            if(!ActivityCompat.shouldShowRequestPermissionRationale(owner,mRequestPermission[index])){
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(owner, mRequestPermission[index])) {
                 owner.startActivity(getAppDetailSettingIntent(owner))
                 return
             }
         }
 
-        if(hasPermission){
-            var dialog=ApDataDialog(owner,owner)
+        if (hasPermission) {
+            var dialog = ApDataDialog(owner, owner)
             dialog.show()
         }
     }
 
-    fun checkCurrentAp(info: WifiInfo?):Boolean {
-        var hasAccess=false
+    fun checkCurrentAp(info: WifiInfo?): Boolean {
+        var hasAccess = false
 
         if (NetworkUtil.isWifi(owner) || info != null) {
             var wifiInfo: WifiInfo? = null
@@ -284,7 +284,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
             mWifiButton.isActivated = true
             mHotspotButton.isActivated = false
             mWifiImage.setImageResource(R.mipmap.wifi)
-            hasAccess=true
+            hasAccess = true
             owner.getMainApplication().getSavedInstance().put(Constants.AP_STATE, Constants.NetWorkState.WIFI)
         } else if (NetworkUtil.isHotSpot(owner)) {
             var config = NetworkUtil.getHotSpotConfiguration(owner)
@@ -292,7 +292,7 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
             mWifiButton.isActivated = false
             mHotspotButton.isActivated = true
             mWifiImage.setImageResource(R.mipmap.hotspot)
-            hasAccess=true
+            hasAccess = true
             owner.getMainApplication().getSavedInstance().put(Constants.AP_STATE, Constants.NetWorkState.AP)
         } else if (NetworkUtil.isMobile(owner)) {
             mApName.setText(getRealName("Cellular"))
@@ -300,14 +300,14 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
 
             mWifiButton.isActivated = false
             mHotspotButton.isActivated = false
-            hasAccess=false
+            hasAccess = false
             owner.getMainApplication().getSavedInstance().put(Constants.AP_STATE, Constants.NetWorkState.MOBILE)
         } else {
             mApName.setText(getRealName("No Internet"))
             mWifiImage.setImageResource(R.mipmap.wifi_off)
             mWifiButton.isActivated = false
             mHotspotButton.isActivated = false
-            hasAccess=false
+            hasAccess = false
             owner.getMainApplication().getSavedInstance().put(Constants.AP_STATE, Constants.NetWorkState.NONE)
         }
         return hasAccess
@@ -325,39 +325,39 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
 
     fun doSearch() {
 
-        var name=PreferenceManager.getDefaultSharedPreferences(owner).
-                getString(PreferenceInfo.PREF_DEVICE_NAME,Build.MODEL)
+        var name = PreferenceManager.getDefaultSharedPreferences(owner).
+                getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
 
-        var obj=owner.getMainApplication().getSavedInstance().get(Constants.KEY_SERVER_PORT)
-        var port=""
-        if(obj!=null)
-            port=obj as String
+        var obj = owner.getMainApplication().getSavedInstance().get(Constants.KEY_SERVER_PORT)
+        var port = ""
+        if (obj != null)
+            port = obj as String
 
-        if(TextUtils.isEmpty(port)) return
+        if (TextUtils.isEmpty(port)) return
 
-        mDiscoverHelper?.stop(true,true)
+        mDiscoverHelper?.stop(true, true)
 
-        mDiscoverHelper = DiscoverHelper(owner, name, port,"/API/Icon")
+        mDiscoverHelper = DiscoverHelper(owner, name, port, "/API/Icon")
         mDiscoverHelper?.setMessageListener { msg, deviceSet, handler ->
             var state = owner.getMainApplication().getSavedInstance().get(Constants.AP_STATE)
-            var ip=""
-            if (state == Constants.NetWorkState.WIFI ) {
-                ip=NetworkUtil.getLocalWLANIps()[0]
-            }else if(state == Constants.NetWorkState.AP){
-                ip=NetworkUtil.getLocalApIps()[0]
+            var ip = ""
+            if (state == Constants.NetWorkState.WIFI) {
+                ip = NetworkUtil.getLocalWLANIps()[0]
+            } else if (state == Constants.NetWorkState.AP) {
+                ip = NetworkUtil.getLocalApIps()[0]
             }
             when (msg) {
                 DiscoverHelper.MSG_FIND_DEVICE -> {
 
                     for (obj in deviceSet) {
-                        if(isSelf(ip,obj)) continue
-                        var index=mClientSet.indexOf(obj)
+                        if (isSelf(ip, obj)) continue
+                        var index = mClientSet.indexOf(obj)
                         if (index < 0) {
                             mClientSet.add(obj)
-                        }else{
-                            var old=mClientSet.get(index)
-                            old.name=obj.name
-                            old.room=obj.room
+                        } else {
+                            var old = mClientSet.get(index)
+                            old.name = obj.name
+                            old.room = obj.room
                         }
                     }
                     applyDeviceInfo(mClientSet)
@@ -367,14 +367,14 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
                 }
                 DiscoverHelper.MSG_BEING_SEARCHED -> {
                     for (obj in deviceSet) {
-                        if(isSelf(ip,obj)) continue
-                        var index=mClientSet.indexOf(obj)
+                        if (isSelf(ip, obj)) continue
+                        var index = mClientSet.indexOf(obj)
                         if (index < 0) {
                             mServerSet.add(obj)
-                        }else{
-                            var old=mClientSet.get(index)
-                            old.name=obj.name
-                            old.room=obj.room
+                        } else {
+                            var old = mClientSet.get(index)
+                            old.name = obj.name
+                            old.room = obj.room
                         }
                     }
                     applyDeviceInfo(mServerSet)
@@ -398,61 +398,61 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
         }
     }
 
-    private fun applyDeviceInfo(mutableSet: MutableList<DeviceSearcher.DeviceBean>){
-        var flag:Boolean
-        for(bean in mutableSet){
-            flag=false
-            var old: DeviceInfo?=null
-            for(info in mDeviceInfoList){
-                if(info.ip.equals(bean.ip)){
-                    flag=true
-                    old=info
+    private fun applyDeviceInfo(mutableSet: MutableList<DeviceSearcher.DeviceBean>) {
+        var flag: Boolean
+        for (bean in mutableSet) {
+            flag = false
+            var old: DeviceInfo? = null
+            for (info in mDeviceInfoList) {
+                if (info.ip.equals(bean.ip)) {
+                    flag = true
+                    old = info
                 }
             }
-            if(!flag){
-                var data=bean.name
-                var arr=data.split(",")
-                var port=0
+            if (!flag) {
+                var data = bean.name
+                var arr = data.split(",")
+                var port = 0
                 try {
-                    port=Integer.parseInt(arr[1])
-                }catch (e:Exception){
-                    port=0
+                    port = Integer.parseInt(arr[1])
+                } catch (e: Exception) {
+                    port = 0
                 }
-                var deviceInfo= DeviceInfo(arr[0],bean.ip,port,arr[2])
+                var deviceInfo = DeviceInfo(arr[0], bean.ip, port, arr[2])
                 mDeviceInfoList.add(deviceInfo)
                 mRecyclerView?.adapter?.notifyDataSetChanged()
-            }else{
-                var data=bean.name
-                var arr=data.split(",")
-                var port=0
+            } else {
+                var data = bean.name
+                var arr = data.split(",")
+                var port = 0
                 try {
-                    port=Integer.parseInt(arr[1])
-                }catch (e:Exception){
-                    port=0
+                    port = Integer.parseInt(arr[1])
+                } catch (e: Exception) {
+                    port = 0
                 }
-                if(port==0) continue
-                var needUpdate=false
+                if (port == 0) continue
+                var needUpdate = false
 
-                if(old?.port!=port || old?.icon!=arr[2]) needUpdate=true
+                if (old?.port != port || old?.icon != arr[2]) needUpdate = true
 
-                old?.name=arr[0]
-                old?.port=port
-                old?.icon=arr[2]
+                old?.name = arr[0]
+                old?.port = port
+                old?.icon = arr[2]
 
-                if(needUpdate){
+                if (needUpdate) {
                     mRecyclerView?.adapter?.notifyDataSetChanged()
                 }
             }
         }
 
-        var index=mViewSwitcher?.indexOfChild(mRecyclerView)
-        var nextIndex=mViewSwitcher?.indexOfChild(mViewSwitcher?.nextView)
-        if(mDeviceInfoList.size!=0){
-            if(index==nextIndex){
+        var index = mViewSwitcher?.indexOfChild(mRecyclerView)
+        var nextIndex = mViewSwitcher?.indexOfChild(mViewSwitcher?.nextView)
+        if (mDeviceInfoList.size != 0) {
+            if (index == nextIndex) {
                 mViewSwitcher?.showNext()
             }
-        }else{
-            if(index!=nextIndex){
+        } else {
+            if (index != nextIndex) {
                 mViewSwitcher?.showNext()
             }
         }
@@ -460,8 +460,8 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
 
 
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        mPhotoHelper?.onActivityResult(requestCode,resultCode,data)
-        mImageHelper?.onActivityResult(requestCode,resultCode,data)
+        mPhotoHelper?.onActivityResult(requestCode, resultCode, data)
+        mImageHelper?.onActivityResult(requestCode, resultCode, data)
         checkIconHead()
     }
 
@@ -473,20 +473,20 @@ class MainActivityDelegate(owner:MainActivity):Delegate<MainActivity>(owner),Act
         }
     }
 
-    private fun isSelf(ip:String,device:DeviceSearcher.DeviceBean):Boolean{
-        if(DEBUG) return false
+    private fun isSelf(ip: String, device: DeviceSearcher.DeviceBean): Boolean {
+        if (DEBUG) return false
 
-        if(ip==device.ip){
+        if (ip == device.ip) {
             return true
         }
         return false
     }
 
-    fun onDestroy(){
-        mDiscoverHelper?.stop(true,true)
+    fun onDestroy() {
+        mDiscoverHelper?.stop(true, true)
     }
 
-    fun hasDiscovered():Boolean{
-        return if(mDiscoverHelper!=null) return true else return false
+    fun hasDiscovered(): Boolean {
+        return if (mDiscoverHelper != null) return true else return false
     }
 }

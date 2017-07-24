@@ -69,7 +69,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
 
     private Activity mActivity;
 
-    private String mTitle="";
+    private String mTitle = "";
 
     public FileExpandableAdapter(FileExpandableListView expandableListView) {
         mExpandableListView = expandableListView;
@@ -85,9 +85,9 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         mExpandableListView.setChildDivider(new ColorDrawable(Color.DKGRAY));
         mExpandableListView.setDividerHeight(1);
 
-        if(mActivity!=null){
-            MainApplication application= (MainApplication) mActivity.getApplication();
-            List<VH> vhList = (List<VH>) application.getSavedInstance().get(EXTRA_VH_LIST+mTitle);
+        if (mActivity != null) {
+            MainApplication application = (MainApplication) mActivity.getApplication();
+            List<VH> vhList = (List<VH>) application.getSavedInstance().get(EXTRA_VH_LIST + mTitle);
             if (vhList != null) {
                 mVHList = vhList;
             }
@@ -163,11 +163,11 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
             }
             newArr.add(vh);
         }
-        if(mActivity!=null){
+        if (mActivity != null) {
             MainApplication application = (MainApplication) mActivity.getApplication();
-            application.getSavedInstance().put(EXTRA_VH_LIST+mTitle, newArr);
+            application.getSavedInstance().put(EXTRA_VH_LIST + mTitle, newArr);
         }
-        mVHList=newArr;
+        mVHList = newArr;
         notifyDataSetChanged();
     }
 
@@ -413,8 +413,14 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         return files;
     }
 
-    public void setup(Activity activity,String title){
-        mActivity=activity;
-        mTitle=title;
+    public void setup(Activity activity, String title) {
+        mActivity = activity;
+        mTitle = title;
+    }
+
+    public void selectAll(boolean select) {
+        for (VH vh : mVHList) {
+            vh.activate(select);
+        }
     }
 }

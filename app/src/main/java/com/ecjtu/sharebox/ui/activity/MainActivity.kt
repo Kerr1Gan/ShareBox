@@ -21,6 +21,7 @@ import com.ecjtu.sharebox.domain.PreferenceInfo
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
 import com.ecjtu.sharebox.service.MainService
+import com.ecjtu.sharebox.ui.dialog.ProgressDialog
 import org.ecjtu.easyserver.server.DeviceInfo
 import org.ecjtu.easyserver.server.ServerManager
 import org.ecjtu.easyserver.server.impl.server.EasyServer
@@ -34,7 +35,7 @@ class MainActivity : ImmersiveFragmentActivity() {
         const private val TAG = "MainActivity"
         private val MSG_SERVICE_STARTED = 0x10
         private val MSG_START_SERVER = 0x11
-        @JvmStatic val MSG_CLOSE_APP= -1
+        @JvmStatic val MSG_CLOSE_APP = -1
     }
 
     private var mDelegate: MainActivityDelegate? = null
@@ -68,6 +69,9 @@ class MainActivity : ImmersiveFragmentActivity() {
         var intent = Intent(this, EasyServerService::class.java)
         startService(intent)
         bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE)
+        ProgressDialog(this, this).apply {
+            show()
+        }
     }
 
 
@@ -277,13 +281,13 @@ class MainActivity : ImmersiveFragmentActivity() {
                     runOnUiThread { mDelegate?.doSearch() }
                 }
             }
-            MSG_CLOSE_APP->{
+            MSG_CLOSE_APP -> {
                 try {
                     unbindService(mServiceConnection)
-                }catch (e:java.lang.Exception){
-                }finally {
-                    stopService(Intent(this,EasyServerService::class.java))
-                    stopService(Intent(this,MainService::class.java))
+                } catch (e: java.lang.Exception) {
+                } finally {
+                    stopService(Intent(this, EasyServerService::class.java))
+                    stopService(Intent(this, MainService::class.java))
                     System.exit(0)
                 }
             }

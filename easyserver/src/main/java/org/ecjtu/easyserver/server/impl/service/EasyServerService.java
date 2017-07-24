@@ -55,7 +55,7 @@ public class EasyServerService extends Service {
 
     public static final String EXTRA_SERVER_TYPE = "extra_server_type";
 
-    public static final String EXTRA_SETUP_SERVER= "extra_init_server";
+    public static final String EXTRA_SETUP_SERVER= "extra_setup_server";
 
     public static final int SERVER_TYPE_AP = TYPE_AP;
 
@@ -177,12 +177,12 @@ public class EasyServerService extends Service {
     }
 
     public void initEasyServer(){
-//        EasyServer.setServerListener(new HostInterface.ICallback() {
-//            @Override
-//            public void ready(Object server, String hostIP, int port) {
-//
-//            }
-//        });
+        EasyServer.setServerListener(new HostInterface.ICallback() {
+            @Override
+            public void ready(Object server, String hostIP, int port) {
+
+            }
+        });
     }
 
     public EasyServerBinder mBinder;
