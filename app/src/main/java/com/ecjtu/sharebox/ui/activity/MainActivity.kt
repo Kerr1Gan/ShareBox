@@ -5,20 +5,27 @@ import android.content.*
 import android.graphics.drawable.RotateDrawable
 import android.net.NetworkInfo
 import android.net.wifi.WifiInfo
+import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.os.Message
+import android.preference.PreferenceManager
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import com.ecjtu.sharebox.Constants
-import com.ecjtu.sharebox.DeviceInfo
 import com.ecjtu.sharebox.R
+import com.ecjtu.sharebox.domain.PreferenceInfo
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
 import com.ecjtu.sharebox.service.MainService
+import com.ecjtu.sharebox.ui.dialog.ProgressDialog
+import org.ecjtu.easyserver.server.DeviceInfo
+import org.ecjtu.easyserver.server.ServerManager
+import org.ecjtu.easyserver.server.impl.server.EasyServer
+import org.ecjtu.easyserver.server.impl.service.EasyServerService
 
 
 //http://www.tmtpost.com/195557.html 17.6.7
@@ -28,7 +35,7 @@ class MainActivity : ImmersiveFragmentActivity() {
         const private val TAG = "MainActivity"
         private val MSG_SERVICE_STARTED = 0x10
         private val MSG_START_SERVER = 0x11
-        @JvmStatic val MSG_CLOSE_APP= -1
+        @JvmStatic val MSG_CLOSE_APP = -1
     }
 
     private var mDelegate: MainActivityDelegate? = null
@@ -39,7 +46,7 @@ class MainActivity : ImmersiveFragmentActivity() {
 
     var refreshing = true
 
-//    private var mService: EasyServerService? = null
+    private var mService: EasyServerService? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,9 +66,12 @@ class MainActivity : ImmersiveFragmentActivity() {
         }
 
         //init service
-//        var intent = Intent(this, EasyServerService::class.java)
-//        startService(intent)
-//        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE)
+        var intent = Intent(this, EasyServerService::class.java)
+        startService(intent)
+        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE)
+        ProgressDialog(this, this).apply {
+            show()
+        }
     }
 
 
@@ -227,7 +237,7 @@ class MainActivity : ImmersiveFragmentActivity() {
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             Log.e(TAG, "onServiceConnected " + name.toString())
-//            mService = (service as EasyServerService.EasyServerBinder).service
+            mService = (service as EasyServerService.EasyServerBinder).service
             getHandler()?.obtainMessage(MSG_SERVICE_STARTED)?.sendToTarget()
 
         }
@@ -242,42 +252,42 @@ class MainActivity : ImmersiveFragmentActivity() {
                 }
             }
             MSG_START_SERVER -> {
-//                if (mService == null) return
-//                var flag = false
-//                if (!mService?.isServerAlive()!!) {
-//                    flag = true
-//                    Log.e(TAG, "isServerAlive false,start server")
-//                    var intent = EasyServerService.getApIntent(this)
-//                    EasyServer.setServerListener { server, hostIP, port ->
-//                        var name = PreferenceManager.getDefaultSharedPreferences(this).
-//                                getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
-//                        registerServerInfo(hostIP, port, name, mutableMapOf())
-//                        EasyServer.setServerListener(null)
-//
-//                        runOnUiThread { mDelegate?.doSearch() }
-//                    }
-//                    startService(intent)
-//                } else {
-//                    getMainApplication().getSavedInstance().remove(Constants.KEY_SERVER_PORT)
-//                }
-//
-//                if (!flag && mDelegate != null && !mDelegate!!.hasDiscovered()) {
-//                    var name = PreferenceManager.getDefaultSharedPreferences(this).
-//                            getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
-//                    if (mService != null && mService!!.ip != null && mService!!.port != null) {
-//                        registerServerInfo(mService!!.ip, mService!!.port, name,
-//                                ServerManager.getInstance().deviceInfo.fileMap)
-//                    }
-//                    runOnUiThread { mDelegate?.doSearch() }
-//                }
+                if (mService == null) return
+                var flag = false
+                if (!mService?.isServerAlive()!!) {
+                    flag = true
+                    Log.e(TAG, "isServerAlive false,start server")
+                    var intent = EasyServerService.getApIntent(this)
+                    EasyServer.setServerListener { server, hostIP, port ->
+                        var name = PreferenceManager.getDefaultSharedPreferences(this).
+                                getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
+                        registerServerInfo(hostIP, port, name, mutableMapOf())
+                        EasyServer.setServerListener(null)
+
+                        runOnUiThread { mDelegate?.doSearch() }
+                    }
+                    startService(intent)
+                } else {
+                    getMainApplication().getSavedInstance().remove(Constants.KEY_SERVER_PORT)
+                }
+
+                if (!flag && mDelegate != null && !mDelegate!!.hasDiscovered()) {
+                    var name = PreferenceManager.getDefaultSharedPreferences(this).
+                            getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
+                    if (mService != null && mService!!.ip != null && mService!!.port != null) {
+                        registerServerInfo(mService!!.ip, mService!!.port, name,
+                                ServerManager.getInstance().deviceInfo.fileMap)
+                    }
+                    runOnUiThread { mDelegate?.doSearch() }
+                }
             }
-            MSG_CLOSE_APP->{
+            MSG_CLOSE_APP -> {
                 try {
                     unbindService(mServiceConnection)
-                }catch (e:java.lang.Exception){
-                }finally {
-//                    stopService(Intent(this,EasyServerService::class.java))
-                    stopService(Intent(this,MainService::class.java))
+                } catch (e: java.lang.Exception) {
+                } finally {
+                    stopService(Intent(this, EasyServerService::class.java))
+                    stopService(Intent(this, MainService::class.java))
                     System.exit(0)
                 }
             }
@@ -301,7 +311,7 @@ class MainActivity : ImmersiveFragmentActivity() {
     fun registerServerInfo(hostIP: String, port: Int, name: String, mutableMap: MutableMap<String, List<String>>) {
         getMainApplication().getSavedInstance().put(Constants.KEY_SERVER_PORT, port.toString())
         var deviceInfo = DeviceInfo(name, hostIP, port, "/API/Icon", mutableMap)
-//        ServerManager.getInstance().setDeviceInfo(deviceInfo)
+        ServerManager.getInstance().setDeviceInfo(deviceInfo)
         getMainApplication().getSavedInstance().put(Constants.KEY_INFO_OBJECT, deviceInfo)
     }
 

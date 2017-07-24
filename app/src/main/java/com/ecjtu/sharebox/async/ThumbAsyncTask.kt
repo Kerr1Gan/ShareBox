@@ -7,6 +7,9 @@ import android.os.AsyncTask
  */
 class ThumbAsyncTask:AsyncTask<Void,Void,Void>(){
 
+
+
+
     override fun doInBackground(vararg params: Void?): Void {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

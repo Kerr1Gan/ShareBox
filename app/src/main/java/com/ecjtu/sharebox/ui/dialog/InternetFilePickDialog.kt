@@ -35,7 +35,7 @@ class InternetFilePickDialog:FilePickDialog{
 //        super.initData()
     }
 
-    override fun getFileAdapter(vg: FileExpandableListView): FileExpandableAdapter {
+    override fun getFileAdapter(vg: FileExpandableListView,title:String): FileExpandableAdapter {
         return InternetFileExpandableAdapter(vg)
     }
 }

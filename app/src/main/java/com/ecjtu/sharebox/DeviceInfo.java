@@ -1,12 +1,13 @@
 package com.ecjtu.sharebox;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Created by KerriGan on 2017/7/19.
  */
-public class DeviceInfo {
+public class DeviceInfo implements Serializable{
     public String name;
     public String ip = "";
     int port = 0;

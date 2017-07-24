@@ -20,28 +20,29 @@ import com.ecjtu.sharebox.async.MemoryUnLeakHandler
 /**
  * Created by KeriGan on 2017/6/25.
  */
-abstract class BaseActionActivity:AppCompatActivity,MemoryUnLeakHandler.IHandleMessage{
+abstract class BaseActionActivity : AppCompatActivity, MemoryUnLeakHandler.IHandleMessage {
 
-    private var mLocalBroadcastManger:LocalBroadcastManager? =null
+    private var mLocalBroadcastManger: LocalBroadcastManager? = null
 
-    private var mIntentFilter: IntentFilter? =null
+    private var mIntentFilter: IntentFilter? = null
 
-    private var mBroadcastReceiver: SimpleReceiver? =null
+    private var mBroadcastReceiver: SimpleReceiver? = null
 
-    private var mSimpleHandler:SimpleHandler? =null
-    constructor():super(){
-        mLocalBroadcastManger= LocalBroadcastManager.getInstance(this)
-        mIntentFilter= IntentFilter()
-        mBroadcastReceiver=SimpleReceiver()
+    private var mSimpleHandler: SimpleHandler? = null
+
+    constructor() : super() {
+        mLocalBroadcastManger = LocalBroadcastManager.getInstance(this)
+        mIntentFilter = IntentFilter()
+        mBroadcastReceiver = SimpleReceiver()
         registerActions(mIntentFilter)
 
-        mSimpleHandler= SimpleHandler(this)
+        mSimpleHandler = SimpleHandler(this)
     }
 
 
     override fun onResume() {
         super.onResume()
-        mLocalBroadcastManger?.registerReceiver(mBroadcastReceiver,mIntentFilter)
+        mLocalBroadcastManger?.registerReceiver(mBroadcastReceiver, mIntentFilter)
     }
 
     override fun onStop() {
@@ -49,42 +50,42 @@ abstract class BaseActionActivity:AppCompatActivity,MemoryUnLeakHandler.IHandleM
         mLocalBroadcastManger?.unregisterReceiver(mBroadcastReceiver)
     }
 
-    inner class SimpleReceiver:BroadcastReceiver(){
+    inner class SimpleReceiver : BroadcastReceiver() {
 
         override fun onReceive(context: Context?, intent: Intent?) {
-            this@BaseActionActivity.handleActions(intent?.action,intent)
+            this@BaseActionActivity.handleActions(intent?.action, intent)
         }
     }
 
-    open fun registerActions(intentFilter:IntentFilter?){
+    open fun registerActions(intentFilter: IntentFilter?) {
         //to register action by override
     }
 
-    open fun handleActions(action:String?,intent: Intent?){
+    open fun handleActions(action: String?, intent: Intent?) {
         //override
     }
 
-    open fun unregisterActions(){
+    open fun unregisterActions() {
         mLocalBroadcastManger?.unregisterReceiver(mBroadcastReceiver)
     }
 
-    open fun getIntentFilter():IntentFilter?{
+    open fun getIntentFilter(): IntentFilter? {
         return mIntentFilter
     }
 
-    open fun registerActions(array: Array<String>,intentFilter:IntentFilter){
-        for(action in array){
+    open fun registerActions(array: Array<String>, intentFilter: IntentFilter) {
+        for (action in array) {
             intentFilter.addAction(action)
         }
-        mLocalBroadcastManger?.registerReceiver(mBroadcastReceiver,intentFilter)
-        mIntentFilter=intentFilter
+        mLocalBroadcastManger?.registerReceiver(mBroadcastReceiver, intentFilter)
+        mIntentFilter = intentFilter
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    fun getHandler():Handler?{
+    fun getHandler(): Handler? {
         return mSimpleHandler
     }
 
@@ -92,7 +93,7 @@ abstract class BaseActionActivity:AppCompatActivity,MemoryUnLeakHandler.IHandleM
         //do nothing
     }
 
-    class SimpleHandler(host:BaseActionActivity):
+    class SimpleHandler(host: BaseActionActivity) :
             MemoryUnLeakHandler<BaseActionActivity>(host)
 
     fun isNavigationBarShow(activity: Activity): Boolean {
@@ -127,7 +128,7 @@ abstract class BaseActionActivity:AppCompatActivity,MemoryUnLeakHandler.IHandleM
         return activity.windowManager.defaultDisplay.height + getNavigationBarHeight(activity)
     }
 
-    fun getStatusBarHeight():Int{
+    fun getStatusBarHeight(): Int {
         val resources = getResources()
         val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
         val height = resources.getDimensionPixelSize(resourceId)

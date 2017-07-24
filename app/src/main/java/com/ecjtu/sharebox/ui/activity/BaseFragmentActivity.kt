@@ -22,14 +22,14 @@ open class BaseFragmentActivity : BaseActionActivity() {
         private val EXTRA_FRAGMENT_ARG = "extra_fragment_arguments"
 
         @JvmOverloads fun newInstance(context: Context, fragment: Class<*>, bundle: Bundle? = null,
-                                      clazz:Class<out Activity> = getActivityClazz()): Intent {
+                                      clazz: Class<out Activity> = getActivityClazz()): Intent {
             val intent = Intent(context, clazz)
             intent.putExtra(EXTRA_FRAGMENT_NAME, fragment.name)
             intent.putExtra(EXTRA_FRAGMENT_ARG, bundle)
             return intent
         }
 
-        protected open fun getActivityClazz():Class<out Activity>{
+        protected open fun getActivityClazz(): Class<out Activity> {
             return BaseFragmentActivity::class.java
         }
     }
