@@ -69,9 +69,6 @@
 -keep class jcifs.http.**{*;}
 -keep class jcifs.**{*;}
 
--keep public class * extends javax.mobile.easyserver.servlet.http.HttpServlet
-
--keep public class * implements  org.ecjtu.easyserver.servlet.BaseServlet{*;}
 
 #忽略警告
 #-ignorewarning
@@ -92,3 +89,13 @@
 -keepclasseswithmembernames class * {
     native <methods>;
 }
+
+-keep public class * implements  org.ecjtu.easyserver.servlet.BaseServlet{*;}
+
+-keep public class org.ecjtu.easyserver.server.ServerManager{*;}
+-keep public class org.ecjtu.easyserver.server.util.AssetsUtil{*;}
+-keep public class org.ecjtu.easyserver.server.DeviceInfo{*;}
+-keep public class org.ecjtu.easyserver.server.impl.service.EasyServerService{*;}
+-keep public class org.ecjtu.easyserver.server.impl.server.EasyServer{*;}
+
+-keepnames class org.ecjtu.easyserver.server.impl.service.EasyServerService$* {*;}
