@@ -39,7 +39,11 @@ dependencies {
     compile 'com.android.support:design:24.2.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     testCompile 'junit:junit:4.12'
+    compile(name: 'easyserver-release', ext: 'aar')
 }
 repositories {
     mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
 }

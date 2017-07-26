@@ -16,7 +16,6 @@ import android.support.v4.view.ViewPager
 import android.util.Log
 import android.widget.ProgressBar
 import com.ecjtu.sharebox.Constants
-import com.ecjtu.sharebox.DeviceInfo
 import com.ecjtu.sharebox.async.MemoryUnLeakHandler
 import com.ecjtu.sharebox.getMainApplication
 import org.ecjtu.easyserver.server.ServerManager

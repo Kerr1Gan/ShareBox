@@ -10,7 +10,6 @@ import android.widget.TextView
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.ecjtu.sharebox.DeviceInfo
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.network.AsyncNetwork
 import com.ecjtu.sharebox.network.IRequestCallback
@@ -18,7 +17,7 @@ import com.ecjtu.sharebox.ui.dialog.ApDataDialog
 import com.ecjtu.sharebox.ui.dialog.FilePickDialog
 import com.ecjtu.sharebox.ui.dialog.InternetFilePickDialog
 import com.ecjtu.sharebox.ui.dialog.TextItemDialog
-import org.json.JSONObject
+import org.ecjtu.easyserver.server.DeviceInfo
 import java.io.File
 import java.lang.Exception
 import java.lang.ref.WeakReference

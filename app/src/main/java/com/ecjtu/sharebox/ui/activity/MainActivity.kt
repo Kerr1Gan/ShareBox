@@ -69,9 +69,6 @@ class MainActivity : ImmersiveFragmentActivity() {
         var intent = Intent(this, EasyServerService::class.java)
         startService(intent)
         bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE)
-        ProgressDialog(this, this).apply {
-            show()
-        }
     }
 
 

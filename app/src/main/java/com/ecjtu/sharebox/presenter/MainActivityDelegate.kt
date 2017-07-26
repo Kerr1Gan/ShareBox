@@ -24,7 +24,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import com.ecjtu.sharebox.Constants
-import com.ecjtu.sharebox.DeviceInfo
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.domain.PreferenceInfo
 import com.ecjtu.sharebox.getMainApplication
@@ -40,6 +39,7 @@ import com.ecjtu.sharebox.util.photo.PickPhotoHelper
 import org.ecjtu.channellibrary.devicesearch.DeviceSearcher
 import org.ecjtu.channellibrary.devicesearch.DiscoverHelper
 import org.ecjtu.channellibrary.wifiutil.NetworkUtil
+import org.ecjtu.easyserver.server.DeviceInfo
 import java.io.File
 import java.lang.Exception
 
