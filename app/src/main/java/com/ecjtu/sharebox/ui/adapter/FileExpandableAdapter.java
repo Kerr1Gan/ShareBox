@@ -286,6 +286,9 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
             icon.setImageResource(R.mipmap.rar);
         }
 
+        if(!vh.isActivated()){
+            int size=vh.getActivatedList().size();
+        }
 
         CheckBox check = (CheckBox) convertView.findViewById(R.id.check_box);
         check.setChecked(vh.isItemActivated(f));

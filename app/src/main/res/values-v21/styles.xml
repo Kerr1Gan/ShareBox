@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
@@ -63,6 +63,30 @@
         <item name="actionMenuTextColor">@android:color/white</item>
 
         <item name="colorControlHighlight">@android:color/white</item>
+    </style>
+
+    <style name="WhiteProgressBar" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminateTint">@android:color/white</item>
+        <!--<item name="indeterminateTint">@android:color/white</item>-->
+    </style>
+
+    <style name="ColorPrimaryProgressBar" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminateTint">@color/colorPrimary</item>
+    </style>
+
+    <style name="WhiteProgressDialogStyle" parent="Theme.Design.BottomSheetDialog">
+        <item name="android:indeterminateTint" tools:targetApi="lollipop">@color/colorPrimary</item>
+        <item name="android:colorControlHighlight">@color/colorDark</item>
+        <item name="android:colorAccent">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="drawerArrowStyle">@style/AppTheme.DrawerArrowToggle</item>
+
+        <item name="android:textColorHint">@color/colorPrimary</item>
+        <item name="colorControlNormal">@color/colorPrimary</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
+        <item name="colorControlHighlight">@color/colorPrimary</item>
     </style>
 
     <style name="CheckBoxStyle" parent="Widget.AppCompat.CompoundButton.CheckBox">
