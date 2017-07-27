@@ -13,7 +13,7 @@ import com.ecjtu.sharebox.R
  */
 open class CloseBottomSheetDialog:BaseBottomSheetDialog,View.OnClickListener{
 
-    constructor(context: Context, activity: Activity? = null):super(context,activity){
+    constructor(context: Context, activity: Activity? = null,theme :Int =0):super(context,activity,theme){
         //do nothing
     }
 

@@ -18,7 +18,7 @@ import com.ecjtu.sharebox.R
 
 abstract class BaseBottomSheetDialog:BottomSheetDialog{
 
-    constructor(context: Context,activity: Activity? = null):super(context){
+    constructor(context: Context,activity: Activity? = null,theme :Int =0):super(context,theme){
         //do nothing
         if(activity!=null)
             ownerActivity=activity
