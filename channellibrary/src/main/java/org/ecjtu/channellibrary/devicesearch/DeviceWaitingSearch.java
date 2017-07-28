@@ -57,14 +57,14 @@ public abstract class DeviceWaitingSearch extends Thread{
                 if (verifySearchData(pack)) {
                     byte[] sendData = packData();
                     DatagramPacket sendPack = new DatagramPacket(sendData, sendData.length, pack.getAddress(), pack.getPort());
-                    Log.i(TAG,String.format("@@@%s: 给主机回复信息", mDeviceName));
+                    Log.i(TAG,String.format("@@@%s %s: 给主机回复信息",TAG, mDeviceName));
                     socket.send(sendPack);
-                    Log.i(TAG, String.format("@@@%s: 等待主机接收确认", mDeviceName));
+                    Log.i(TAG, String.format("@@@%s %s: 等待主机接收确认",TAG, mDeviceName));
                     socket.setSoTimeout(RECEIVE_TIME_OUT);
                     try {
                         socket.receive(pack);
                         if (verifyCheckData(pack)) {
-                            Log.i(TAG, String.format("@@@%s: 确认成功", mDeviceName));
+                            Log.i(TAG, String.format("@@@%s %s: 确认成功",TAG, mDeviceName));
 
                             onDeviceSearched((InetSocketAddress) pack.getSocketAddress(),mPort);
                             break;
@@ -188,7 +188,7 @@ public abstract class DeviceWaitingSearch extends Thread{
             port=port.substring(index+1,port.length());
             mPort=port;
         }
-        Log.i(TAG, String.format("@@@%s: ip from host=%s", mDeviceName,ip));
+        Log.i(TAG, String.format("@@@%s %s: ip from host=%s",TAG, mDeviceName,ip));
         return ip.equals(getOwnWifiIP());
     }
 
@@ -205,7 +205,7 @@ public abstract class DeviceWaitingSearch extends Thread{
         WifiInfo wifiInfo = wm.getConnectionInfo();
         int ipInt = wifiInfo.getIpAddress();
         String ipAddr = int2Ip(ipInt);
-        Log.i(TAG, String.format("@@@%s: 本机IP=%s", mDeviceName,ipAddr));
+        Log.i(TAG, String.format("@@@%s %s: 本机IP=%s",TAG, mDeviceName,ipAddr));
         return int2Ip(ipInt);
     }
 
