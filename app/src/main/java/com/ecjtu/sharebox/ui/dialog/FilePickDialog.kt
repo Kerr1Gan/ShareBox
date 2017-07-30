@@ -352,6 +352,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
             var count = 0
             for (entry in mTabItemHolders!!.entries) {
                 var title = entry.key
+
                 if (mTabItemHolders?.get(title)?.task != null && mTabItemHolders?.get(title)?.fileList != null) {
                     count++
                 }
@@ -438,7 +439,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
             R.id.ok -> {
                 if (mTabItemHolders == null) return true
                 var fileList= mutableListOf<File>()
-                var map =updateFileMap(fileList,mTabItemHolders!!)
+                var map =if (!mHasFindAll) updateFileMap(fileList,mTabItemHolders!!) else updateAllFileList(fileList,mTabItemHolders!!)
                 var deviceInfo = ownerActivity.getMainApplication().getSavedInstance().
                         get(Constants.KEY_INFO_OBJECT) as DeviceInfo
                 deviceInfo.fileMap = map
@@ -505,6 +506,23 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         return map
     }
 
+    private fun updateAllFileList(fileList:MutableList<File>,itemHolder:MutableMap<String, FilePickDialog.TabItemHolder>):MutableMap<String,List<String>>{
+        var map = mutableMapOf<String, List<String>>()
+        for (element in itemHolder!!.entries) {
+            var strList = mutableListOf<String>()
+            var list=element.value.fileList
+            if (element.value.fileList == null) continue
+            var fileArr = list as List<File>
+            for (file in fileArr) {
+                if (fileList.indexOf(file) < 0)
+                    fileList.add(file)
+                strList.add(file.absolutePath)
+            }
+            map.put(element.key, strList)
+        }
+        return map
+    }
+
     protected fun setTabItemsHolder(holder: MutableMap<String, TabItemHolder>) {
         mTabItemHolders = holder
     }
@@ -547,13 +565,13 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                     selectViewPager(entry.value as FileExpandableListView)
                 }
 
-                var fileList= mutableListOf<File>()
-                var map =updateFileMap(fileList,mTabItemHolders!!)
-                var deviceInfo = ownerActivity.getMainApplication().getSavedInstance().
-                        get(Constants.KEY_INFO_OBJECT) as DeviceInfo
-                deviceInfo.fileMap = map
-
-                ServerManager.getInstance().setSharedFileList(fileList)
+//                var fileList= mutableListOf<File>()
+//                var map =updateFileMap(fileList,mTabItemHolders!!)
+//                var deviceInfo = ownerActivity.getMainApplication().getSavedInstance().
+//                        get(Constants.KEY_INFO_OBJECT) as DeviceInfo
+//                deviceInfo.fileMap = map
+//
+//                ServerManager.getInstance().setSharedFileList(fileList)
             }
             MSG_FIND_ALL -> {
             }
