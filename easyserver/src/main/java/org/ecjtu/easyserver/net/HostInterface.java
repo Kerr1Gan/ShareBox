@@ -272,7 +272,7 @@ public class HostInterface
 	}
 
 	// //////////////////////////////////////////////
-	// isIPv?Address
+	// isIPv6Address
 	// //////////////////////////////////////////////
 
 	public final static boolean isIPv6Address(String host)

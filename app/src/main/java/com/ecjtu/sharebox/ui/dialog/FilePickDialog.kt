@@ -15,7 +15,9 @@ import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
 import android.util.Log
 import android.widget.ProgressBar
+import android.widget.Toast
 import com.ecjtu.sharebox.Constants
+import com.ecjtu.sharebox.MainApplication
 import com.ecjtu.sharebox.async.MemoryUnLeakHandler
 import com.ecjtu.sharebox.getMainApplication
 import org.ecjtu.easyserver.server.ServerManager
@@ -54,6 +56,8 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
     private var mProgressBar: ProgressBar? = null
 
     private var mProgressDialog: ProgressDialog? = null
+
+    private var mHasFindAll = false
 
     companion object {
         fun string2MediaFileType(str: String): FileUtil.MediaFileType? {
@@ -280,6 +284,11 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                     task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
                     mTabItemHolders?.get(title)?.task = task
                 }
+
+                if(mHasFindAll){
+                    selectViewPager(vg)
+                }
+
                 refreshData()
 
                 return vg
@@ -428,32 +437,15 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         when (id) {
             R.id.ok -> {
                 if (mTabItemHolders == null) return true
-
-                var map = mutableMapOf<String, List<String>>()
-                var fileList = ArrayList<File>()
-
-                var index = 0
-                for (element in mTabItemHolders!!.entries) {
-                    var strList = mutableListOf<String>()
-                    var pager = mViewPagerViews.get(index++)
-                    if (pager == null) continue
-                    pager = pager as FileExpandableListView
-                    if (element.value.fileList == null) continue
-                    var fileArr = pager.fileExpandableAdapter.selectedFile
-                    for (file in fileArr) {
-                        if (fileList.indexOf(file) < 0)
-                            fileList.add(file)
-
-                        strList.add(file.absolutePath)
-                    }
-                    map.put(element.key, strList)
-                }
+                var fileList= mutableListOf<File>()
+                var map =updateFileMap(fileList,mTabItemHolders!!)
                 var deviceInfo = ownerActivity.getMainApplication().getSavedInstance().
                         get(Constants.KEY_INFO_OBJECT) as DeviceInfo
                 deviceInfo.fileMap = map
 
                 ServerManager.getInstance().setSharedFileList(fileList)
                 this@FilePickDialog.cancel()
+                Toast.makeText(context,"选择成功",Toast.LENGTH_SHORT).show()
             }
 
             R.id.select_all -> {
@@ -491,6 +483,26 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
             }
         }
         return true
+    }
+
+    private fun updateFileMap(fileList:MutableList<File>,itemHolder:MutableMap<String, FilePickDialog.TabItemHolder>):MutableMap<String, List<String>>{
+        var map = mutableMapOf<String, List<String>>()
+        var index = 0
+        for (element in itemHolder!!.entries) {
+            var strList = mutableListOf<String>()
+            var pager: View? = mViewPagerViews.get(index++) ?: continue
+            pager = pager as FileExpandableListView
+            if (element.value.fileList == null) continue
+            var fileArr = pager.fileExpandableAdapter.selectedFile
+            for (file in fileArr) {
+                if (fileList.indexOf(file) < 0)
+                    fileList.add(file)
+
+                strList.add(file.absolutePath)
+            }
+            map.put(element.key, strList)
+        }
+        return map
     }
 
     protected fun setTabItemsHolder(holder: MutableMap<String, TabItemHolder>) {
@@ -532,9 +544,16 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
             MSG_FIND_ALL_FINISH -> {
                 mProgressDialog?.cancel()
                 for (entry in mViewPagerViews) {
-                    var viewPager = (entry.value) as FileExpandableListView
-                    viewPager.fileExpandableAdapter.selectAll(true)
+                    selectViewPager(entry.value as FileExpandableListView)
                 }
+
+                var fileList= mutableListOf<File>()
+                var map =updateFileMap(fileList,mTabItemHolders!!)
+                var deviceInfo = ownerActivity.getMainApplication().getSavedInstance().
+                        get(Constants.KEY_INFO_OBJECT) as DeviceInfo
+                deviceInfo.fileMap = map
+
+                ServerManager.getInstance().setSharedFileList(fileList)
             }
             MSG_FIND_ALL -> {
             }
@@ -543,8 +562,14 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
 
     fun findFinish() {
         if (mHandler.hasMessages(MSG_FIND_ALL)) {
+            mHasFindAll=true
+
             mHandler.removeMessages(MSG_FIND_ALL)
             mHandler.obtainMessage(MSG_FIND_ALL_FINISH).sendToTarget()
         }
+    }
+
+    private fun selectViewPager(fileExpandableListView: FileExpandableListView){
+        fileExpandableListView.fileExpandableAdapter.selectAll(true)
     }
 }

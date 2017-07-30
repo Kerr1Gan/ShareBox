@@ -69,4 +69,14 @@ public class DeviceInfo implements Serializable{
     public void setFileMap(Map<String, List<String>> fileMap) {
         this.fileMap = fileMap;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof DeviceInfo)) return false;
+        DeviceInfo info= (DeviceInfo) obj;
+        if(info.ip.equals(this.ip)){
+            return true;
+        }
+        return super.equals(obj);
+    }
 }

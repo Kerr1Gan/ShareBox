@@ -1,7 +1,7 @@
 package org.ecjtu.channellibrary.wifiutil;
 
 /**
- * Created by 联想 on 2016/4/4.
+ * Created by KerriGan on 2016/4/4.
  */
 
 import android.content.ContentResolver;
@@ -222,7 +222,7 @@ public class NetworkUtil {
 
                     String iface = intf.getName();
                     if(iface.contains(name)){
-                        if (inetAddress instanceof Inet4Address) { // fix for Galaxy Nexus. IPv4 is easy to use :-)
+                        if (inetAddress instanceof Inet4Address && isUsableAddress(inetAddress)) { // fix for Galaxy Nexus. IPv4 is easy to use :-)
                             result.add(getDottedDecimalIP(inetAddress.getAddress()));
                         }
                     }
@@ -244,5 +244,14 @@ public class NetworkUtil {
             ipAddrStr += ipAddr[i]&0xFF;
         }
         return ipAddrStr;
+    }
+
+    private final static boolean isUsableAddress(InetAddress addr) {
+
+        if (addr.isLoopbackAddress() == true || addr.isLinkLocalAddress() == true) {
+            return false;
+        }
+
+        return true;
     }
 }

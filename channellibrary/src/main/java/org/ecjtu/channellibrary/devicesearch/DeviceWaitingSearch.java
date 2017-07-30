@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
 
@@ -32,7 +31,7 @@ public abstract class DeviceWaitingSearch extends Thread{
     private static final byte PACKET_DATA_TYPE_DEVICE_ROOM_21 = 0x21;
 
     private Context mContext;
-    private String mDeviceName, deviceRoom;
+    private String mDeviceName, mDeviceRoom;
     private DatagramSocket mSocket;
 
     private String mPort="";
@@ -40,7 +39,7 @@ public abstract class DeviceWaitingSearch extends Thread{
     public DeviceWaitingSearch(Context context, String name, String room) {
         mContext = context;
         mDeviceName = name;
-        deviceRoom = room;
+        mDeviceRoom = room;
     }
 
     @Override
@@ -57,17 +56,19 @@ public abstract class DeviceWaitingSearch extends Thread{
                 if (verifySearchData(pack)) {
                     byte[] sendData = packData();
                     DatagramPacket sendPack = new DatagramPacket(sendData, sendData.length, pack.getAddress(), pack.getPort());
-                    Log.i(TAG,String.format("@@@%s%s: 给主机回复信息",TAG, mDeviceName));
+                    Log.i(TAG,String.format("%s %s: 给主机回复信息",TAG, mDeviceName));
                     socket.send(sendPack);
-                    Log.i(TAG, String.format("@@@%s%s: 等待主机接收确认",TAG, mDeviceName));
+                    Log.i(TAG, String.format("%s %s: 等待主机接收确认",TAG, mDeviceName));
                     socket.setSoTimeout(RECEIVE_TIME_OUT);
                     try {
                         socket.receive(pack);
                         if (verifyCheckData(pack)) {
-                            Log.i(TAG, String.format("@@@%s%s: 确认成功",TAG, mDeviceName));
+                            Log.i(TAG, String.format("%s %s: 确认成功",TAG, mDeviceName));
 
                             onDeviceSearched((InetSocketAddress) pack.getSocketAddress(),mPort);
-                            break;
+                            //break; // we don't break here
+                        } else {
+                            Log.i(TAG, String.format("%s %s: 确认失败", TAG, mDeviceName));
                         }
                     } catch (SocketTimeoutException e) {
                     }
@@ -104,7 +105,7 @@ public abstract class DeviceWaitingSearch extends Thread{
         System.arraycopy(temp, 0, data, offset, temp.length);
         offset += temp.length;
 
-        temp = getBytesFromType(PACKET_DATA_TYPE_DEVICE_ROOM_21, deviceRoom);
+        temp = getBytesFromType(PACKET_DATA_TYPE_DEVICE_ROOM_21, mDeviceRoom);
         System.arraycopy(temp, 0, data, offset, temp.length);
         offset += temp.length;
 
@@ -188,7 +189,7 @@ public abstract class DeviceWaitingSearch extends Thread{
             port=port.substring(index+1,port.length());
             mPort=port;
         }
-        Log.i(TAG, String.format("@@@%s%s: ip from host=%s",TAG, mDeviceName,ip));
+        Log.i(TAG, String.format("%s %s: ip from host=%s",TAG, mDeviceName,ip));
         return ip.equals(getOwnWifiIP());
     }
 
@@ -205,7 +206,7 @@ public abstract class DeviceWaitingSearch extends Thread{
         WifiInfo wifiInfo = wm.getConnectionInfo();
         int ipInt = wifiInfo.getIpAddress();
         String ipAddr = int2Ip(ipInt);
-        Log.i(TAG, String.format("@@@%s%s: 本机IP=%s",TAG, mDeviceName,ipAddr));
+        Log.i(TAG, String.format("%s %s: 本机IP=%s",TAG, mDeviceName,ipAddr));
         return int2Ip(ipInt);
     }
 

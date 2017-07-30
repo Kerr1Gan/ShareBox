@@ -74,11 +74,6 @@
         <item name="actionMenuTextColor">@android:color/white</item>
         <item name="colorControlHighlight">@android:color/white</item>
     </style>
-    
-    <style name="WhiteProgressBar" parent="Widget.AppCompat.ProgressBar">
-        <item name="android:indeterminateTint" tools:targetApi="lollipop">@android:color/white</item>
-        <!--<item name="indeterminateTint">@android:color/white</item>-->
-    </style>
 
     <style name="ColorPrimaryProgressBar" parent="Widget.AppCompat.ProgressBar">
         <item name="android:indeterminateTint" tools:targetApi="lollipop">@color/colorPrimary</item>
@@ -105,5 +100,10 @@
         <!--选中的颜色-->
         <item name="colorAccent">@color/colorPrimary</item>
         <item name="colorControlHighlight">@color/colorPrimary</item>
+    </style>
+
+    <style name="WhiteProgressBar" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminateTint" tools:targetApi="lollipop">@color/colorPrimary</item>
+        <item name="android:indeterminateTintMode" tools:targetApi="lollipop">src_atop</item>
     </style>
 </resources>

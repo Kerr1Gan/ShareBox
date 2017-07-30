@@ -16,8 +16,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_centerInParent="true"
-            android:theme="@style/WhiteProgressDialogStyle"
-            style="@style/WhiteProgressDialogStyle"
+            style="@style/WhiteProgressBar"
             android:indeterminateTint="@color/colorPrimary"/>
     </RelativeLayout>
 </RelativeLayout>
