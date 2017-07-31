@@ -92,7 +92,7 @@ abstract class BaseBottomSheetDialog:BottomSheetDialog{
         val display = ownerActivity.getWindowManager().getDefaultDisplay()
         val width = display.getWidth()
         val height = display.height/*getScreenHeight(ownerActivity)+getStatusBarHeight(context)*/
-        var layoutParams=view?.layoutParams
+        var layoutParams= view?.layoutParams ?: ViewGroup.LayoutParams(width,height)
         view?.layoutParams= layoutParams.apply { this?.width=width;this?.height=height }
         return view
     }
