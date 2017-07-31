@@ -39,8 +39,6 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
 
     private var mBehavior: BottomSheetBehavior<View>? = null
 
-    private var mHeight = 0
-
     private var mTabLayout: TabLayout? = null
 
     private var mViewPager: ViewPager? = null
@@ -122,10 +120,6 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
 
         var vg = layoutInflater.inflate(R.layout.dialog_file_pick, null)
 
-        val display = ownerActivity.getWindowManager().getDefaultDisplay()
-        val height = display.height
-        mHeight = height
-
         fullScreenLayout(vg)
         return vg
     }
@@ -135,7 +129,8 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         mBehavior = BottomSheetBehavior.from(findViewById(android.support.design.R.id.design_bottom_sheet))
         mBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
 
-        mBehavior?.peekHeight = mHeight * 2 / 3
+        val display = ownerActivity.getWindowManager().getDefaultDisplay()
+        mBehavior?.peekHeight = display.height * 2 / 3
 
         mBottomSheet = findViewById(R.id.design_bottom_sheet)
 
