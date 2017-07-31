@@ -9,6 +9,7 @@ import android.net.Uri
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.os.Build
+import android.os.Message
 import android.preference.PreferenceManager
 import android.provider.Settings
 import android.support.design.widget.FloatingActionButton
@@ -80,6 +81,8 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
     private var mPhotoHelper: CapturePhotoHelper? = null
 
     private var mImageHelper: PickPhotoHelper? = null
+
+    private val DELAY_TIME=5000L
 
     companion object {
         //Settings.ACTION_APPLICATION_DETAIL_SETTING
@@ -362,7 +365,8 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
                     }
                     applyDeviceInfo(mClientSet)
                     if (owner.refreshing) {
-                        handler.obtainMessage(DiscoverHelper.MSG_START_FIND_DEVICE).sendToTarget()
+                        var msg=handler.obtainMessage(DiscoverHelper.MSG_START_FIND_DEVICE)
+                        handler.sendMessageDelayed(msg,DELAY_TIME)
                     }
                 }
                 DiscoverHelper.MSG_BEING_SEARCHED -> {
@@ -379,7 +383,8 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
                     }
                     applyDeviceInfo(mServerSet)
                     if (owner.refreshing) {
-                        handler.obtainMessage(DiscoverHelper.MSG_START_BEING_SEARCHED).sendToTarget()
+                        var msg=handler.obtainMessage(DiscoverHelper.MSG_START_BEING_SEARCHED)
+                        handler.sendMessageDelayed(msg,DELAY_TIME)
                     }
                 }
                 DiscoverHelper.MSG_START_FIND_DEVICE -> {

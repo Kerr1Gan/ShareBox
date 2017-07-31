@@ -62,6 +62,7 @@ public abstract class DeviceSearcher extends Thread{
                 // 发送搜索广播
                 mPackType = PACKET_TYPE_FIND_DEVICE_REQ_10;
                 sendPack.setData(packData(i + 1));
+                Log.i(TAG, String.format("%s: 发送搜索广播",TAG));
                 mHostSocket.send(sendPack);
 
                 // 监听来信
@@ -76,7 +77,7 @@ public abstract class DeviceSearcher extends Thread{
                         if (recePack.getLength() > 0) {
                             mDeviceIP = recePack.getAddress().getHostAddress();
                             if (parsePack(recePack)) {
-                                Log.i(TAG, String.format("@@@%s: 设备上线：%s",TAG,mDeviceIP));
+                                Log.i(TAG, String.format("%s: 设备上线：%s",TAG,mDeviceIP));
                                 // 发送一对一的确认信息。使用接收报，因为接收报中有对方的实际IP，发送报时广播IP
                                 mPackType = PACKET_TYPE_FIND_DEVICE_CHK_12;
                                 recePack.setData(packData(rspCount)); // 注意：设置数据的同时，把recePack.getLength()也改变了
@@ -86,12 +87,12 @@ public abstract class DeviceSearcher extends Thread{
                     }
                 } catch (SocketTimeoutException e) {
                 }
-                Log.i(TAG, String.format("@@@%s: 结束搜索 %d",TAG,i));
+                Log.i(TAG, String.format("%s: 结束搜索 %d",TAG,i));
             }
-            onSearchFinish(mDeviceSet);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
+            onSearchFinish(mDeviceSet);
             if (mHostSocket != null) {
                 mHostSocket.close();
             }

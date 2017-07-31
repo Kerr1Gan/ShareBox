@@ -2,6 +2,7 @@ package com.ecjtu.sharebox.ui.dialog
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.support.design.widget.BottomSheetBehavior
 import android.util.TypedValue
 import android.view.View
@@ -12,6 +13,8 @@ import com.ecjtu.sharebox.util.qrimage.QrUtils
 import kotlin.concurrent.thread
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.ColorMatrix
+import android.graphics.Paint
+import android.net.Uri
 import android.preference.PreferenceManager
 import android.text.TextUtils
 import android.widget.TextView
@@ -94,7 +97,18 @@ class ApDataDialog(context: Context,activity: Activity):BaseBottomSheetDialog(co
         }
 
         var url="http://$ip:$port"
-        (vg.findViewById(R.id.text_url) as TextView).setText(url)
+        (vg.findViewById(R.id.text_url) as TextView).apply {
+            paintFlags= Paint.UNDERLINE_TEXT_FLAG
+            setText(url)
+            setOnClickListener {
+                val i = Intent("android.intent.action.VIEW")
+                i.addCategory(Intent.CATEGORY_DEFAULT)
+                val u = getText().toString()
+                val uri = Uri.parse(u)
+                i.data = uri
+                context.startActivity(i)
+            }
+        }
         thread {
             var px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 250f, context.resources.displayMetrics)
             val qr = QrUtils.createQRImage(url, px.toInt(), px.toInt())

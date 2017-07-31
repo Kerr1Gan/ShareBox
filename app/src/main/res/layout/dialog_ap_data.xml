@@ -76,10 +76,11 @@
                 android:textStyle="bold"/>
 
             <TextView
+                android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:text="用浏览器扫描二维码进入网页版:"/>
+                android:text="用浏览器扫描二维码进入网页版:" />
 
             <TextView
                 android:layout_width="wrap_content"
