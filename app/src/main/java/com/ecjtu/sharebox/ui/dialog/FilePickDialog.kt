@@ -123,11 +123,10 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         var vg = layoutInflater.inflate(R.layout.dialog_file_pick, null)
 
         val display = ownerActivity.getWindowManager().getDefaultDisplay()
-        val width = display.getWidth()
-        val height = display.height/*getScreenHeight(ownerActivity)+getStatusBarHeight(context)*/
+        val height = display.height
         mHeight = height
 
-        vg.layoutParams = ViewGroup.LayoutParams(width, height)
+        fullScreenLayout(vg)
         return vg
     }
 
@@ -136,7 +135,6 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         mBehavior = BottomSheetBehavior.from(findViewById(android.support.design.R.id.design_bottom_sheet))
         mBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
 
-//        mBehavior?.skipCollapsed=true
         mBehavior?.peekHeight = mHeight * 2 / 3
 
         mBottomSheet = findViewById(R.id.design_bottom_sheet)
@@ -306,7 +304,6 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                     }
                 }
                 container?.removeView(`object` as View)
-//                mViewPagerViews.remove(position)
             }
         }
     }

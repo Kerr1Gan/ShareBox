@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.ecjtu.sharebox.Constants;
 import com.ecjtu.sharebox.MainApplication;
 import com.ecjtu.sharebox.R;
 import com.ecjtu.sharebox.async.AppThumbTask;
@@ -29,6 +30,8 @@ import com.ecjtu.sharebox.ui.fragment.VideoPlayerFragment;
 import com.ecjtu.sharebox.ui.view.FileExpandableListView;
 import com.ecjtu.sharebox.util.file.FileOpenIntentUtil;
 import com.ecjtu.sharebox.util.file.FileUtil;
+
+import org.ecjtu.easyserver.server.DeviceInfo;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -88,7 +91,8 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         mExpandableListView.setDividerHeight(1);
 
         if (mActivity != null) {
-            List<VH> vhList = readCache((MainApplication) mActivity.getApplication());
+            MainApplication application = (MainApplication) mActivity.getApplication();
+            List<VH> vhList = readCache(application);
             if (vhList != null) {
                 mVHList = vhList;
             }
@@ -96,7 +100,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         mExpandableListView.setAdapter(this);
     }
 
-    public List<VH> readCache(MainApplication application){
+    public List<VH> readCache(MainApplication application) {
         List<VH> vhList = (List<VH>) application.getSavedInstance().get(EXTRA_VH_LIST + mTitle);
         return vhList;
     }
@@ -159,11 +163,11 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         if (names == null) return;
         List<VH> newArr = new ArrayList<>();
 
-        boolean selectAll=mSelectAll;
-        mSelectAll=false;
+        boolean selectAll = mSelectAll;
+        mSelectAll = false;
         for (String name : names) {
             VH vh = new VH(new File(name), foldFiles.get(name));
-            if(selectAll){
+            if (selectAll) {
                 vh.activate(true);
             }
             for (VH last : mVHList) {
@@ -445,7 +449,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
     }
 
     public void selectAll(boolean select) {
-        mSelectAll=select;
+        mSelectAll = select;
         for (VH vh : mVHList) {
             vh.activate(select);
         }
