@@ -65,7 +65,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
 
     private Context mContext;
 
-    private static final String EXTRA_VH_LIST = "FileExpandableAdapter_extra_vh_list";
+    public static final String EXTRA_VH_LIST = "FileExpandableAdapter_extra_vh_list";
 
     private Activity mActivity;
 
