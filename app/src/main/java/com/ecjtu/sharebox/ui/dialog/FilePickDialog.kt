@@ -446,9 +446,14 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                 if (mTabItemHolders == null) return true
                 var fileList = mutableListOf<File>()
 
-                for(view in mViewPagerViews){
-                    var pager=view as FileExpandableListView
-                    pager.fileExpandableAdapter
+                for(entry in mViewPagerViews){
+                    var pager=entry.value as FileExpandableListView
+                    var adapter=pager.fileExpandableAdapter
+                    var save=pager.fileExpandableAdapter.vhList
+                    if (ownerActivity != null && save!=null) {
+                        var application = ownerActivity.getMainApplication()
+                        application.getSavedInstance().put(adapter.title, save)
+                    }
                 }
 
                 for (entry in mTabItemHolders!!.entries) {

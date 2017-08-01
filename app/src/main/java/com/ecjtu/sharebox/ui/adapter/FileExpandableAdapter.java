@@ -452,6 +452,10 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         mVHList=vhList;
     }
 
+    public List<VH> getVhList(){
+        return mVHList;
+    }
+
     public String getTitle(){
         return mTitle;
     }
