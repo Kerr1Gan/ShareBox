@@ -42,8 +42,6 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
 
     private var mBehavior: BottomSheetBehavior<View>? = null
 
-    private var mHeight = 0
-
     private var mTabLayout: TabLayout? = null
 
     private var mViewPager: ViewPager? = null
@@ -127,12 +125,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
 
         var vg = layoutInflater.inflate(R.layout.dialog_file_pick, null)
 
-        val display = ownerActivity.getWindowManager().getDefaultDisplay()
-        val width = display.getWidth()
-        val height = display.height/*getScreenHeight(ownerActivity)+getStatusBarHeight(context)*/
-        mHeight = height
-
-        vg.layoutParams = ViewGroup.LayoutParams(width, height)
+        fullScreenLayout(vg)
         return vg
     }
 
@@ -141,8 +134,8 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         mBehavior = BottomSheetBehavior.from(findViewById(android.support.design.R.id.design_bottom_sheet))
         mBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
 
-//        mBehavior?.skipCollapsed=true
-        mBehavior?.peekHeight = mHeight * 2 / 3
+        val display = ownerActivity.getWindowManager().getDefaultDisplay()
+        mBehavior?.peekHeight = display.height * 2 / 3
 
         mBottomSheet = findViewById(R.id.design_bottom_sheet)
 
@@ -311,7 +304,6 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                     }
                 }
                 container?.removeView(`object` as View)
-//                mViewPagerViews.remove(position)
             }
         }
     }
@@ -446,16 +438,6 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                 if (mTabItemHolders == null) return true
                 var fileList = mutableListOf<File>()
 
-                for(entry in mViewPagerViews){
-                    var pager=entry.value as FileExpandableListView
-                    var adapter=pager.fileExpandableAdapter
-                    var save=pager.fileExpandableAdapter.vhList
-                    if (ownerActivity != null && save!=null) {
-                        var application = ownerActivity.getMainApplication()
-                        application.getSavedInstance().put(adapter.title, save)
-                    }
-                }
-
                 for (entry in mTabItemHolders!!.entries) {
                     var title = entry.key
                     var key = FileExpandableAdapter.EXTRA_VH_LIST + title
@@ -466,6 +448,15 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                     }
                 }
 
+                for(entry in mViewPagerViews){
+                    var pager=entry.value as FileExpandableListView
+                    var adapter=pager.fileExpandableAdapter
+                    var save=pager.fileExpandableAdapter.vhList
+                    if (ownerActivity != null && save!=null) {
+                        var application = ownerActivity.getMainApplication()
+                        application.getSavedInstance().put(adapter.title, save)
+                    }
+                }
 
                 var map = if (!mHasFindAll) updateFileMap(fileList, mTabItemHolders!!) else updateAllFileList(fileList, mTabItemHolders!!)
                 var deviceInfo = ownerActivity.getMainApplication().getSavedInstance().
@@ -530,6 +521,27 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                 strList.add(file.absolutePath)
             }
             map.put(element.key, strList)
+        }
+        var application = if (ownerActivity != null) ownerActivity.getMainApplication() else null
+        for (element in itemHolder!!.entries) {
+            var title = element.key
+            var strList = mutableListOf<String>()
+
+            if (application == null) continue
+
+            var vhList = application.getSavedInstance().get(FileExpandableAdapter.EXTRA_VH_LIST + title) as List<FileExpandableAdapter.VH>
+
+            if (vhList != null) {
+                for (vh in vhList) {
+                    var fList = vh.activatedList
+                    for (file in fList) {
+                        if (fileList.indexOf(file) < 0)
+                            fileList.add(file)
+                        strList.add(file.absolutePath)
+                    }
+                }
+            }
+            map.put(title, strList)
         }
         return map
     }

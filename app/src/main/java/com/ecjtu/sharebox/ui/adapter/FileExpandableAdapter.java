@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.ecjtu.sharebox.Constants;
 import com.ecjtu.sharebox.MainApplication;
 import com.ecjtu.sharebox.R;
 import com.ecjtu.sharebox.async.AppThumbTask;
@@ -29,6 +30,8 @@ import com.ecjtu.sharebox.ui.fragment.VideoPlayerFragment;
 import com.ecjtu.sharebox.ui.view.FileExpandableListView;
 import com.ecjtu.sharebox.util.file.FileOpenIntentUtil;
 import com.ecjtu.sharebox.util.file.FileUtil;
+
+import org.ecjtu.easyserver.server.DeviceInfo;
 
 import java.io.File;
 import java.util.ArrayList;
