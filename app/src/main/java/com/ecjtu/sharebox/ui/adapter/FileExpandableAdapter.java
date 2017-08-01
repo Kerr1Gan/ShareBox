@@ -91,8 +91,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         mExpandableListView.setDividerHeight(1);
 
         if (mActivity != null) {
-            MainApplication application = (MainApplication) mActivity.getApplication();
-            List<VH> vhList = readCache(application);
+            List<VH> vhList = readCache((MainApplication) mActivity.getApplication());
             if (vhList != null) {
                 mVHList = vhList;
             }
@@ -100,7 +99,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         mExpandableListView.setAdapter(this);
     }
 
-    public List<VH> readCache(MainApplication application) {
+    public List<VH> readCache(MainApplication application){
         List<VH> vhList = (List<VH>) application.getSavedInstance().get(EXTRA_VH_LIST + mTitle);
         return vhList;
     }
@@ -163,11 +162,11 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         if (names == null) return;
         List<VH> newArr = new ArrayList<>();
 
-        boolean selectAll = mSelectAll;
-        mSelectAll = false;
+        boolean selectAll=mSelectAll;
+        mSelectAll=false;
         for (String name : names) {
             VH vh = new VH(new File(name), foldFiles.get(name));
-            if (selectAll) {
+            if(selectAll){
                 vh.activate(true);
             }
             for (VH last : mVHList) {
@@ -178,10 +177,10 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
             }
             newArr.add(vh);
         }
-        if (mActivity != null) {
-            MainApplication application = (MainApplication) mActivity.getApplication();
-            application.getSavedInstance().put(EXTRA_VH_LIST + mTitle, newArr);
-        }
+//        if (mActivity != null) {
+//            MainApplication application = (MainApplication) mActivity.getApplication();
+//            application.getSavedInstance().put(EXTRA_VH_LIST + mTitle, newArr);
+//        }
         mVHList = newArr;
         notifyDataSetChanged();
     }
@@ -326,7 +325,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         return true;
     }
 
-    private static class VH {
+    public static class VH {
 
         public List<File> childList;
 
@@ -386,12 +385,8 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         public void run() {
 
             final LinkedHashMap<String, List<File>> res = new LinkedHashMap<>();
-            boolean isFast = false;
-            if (mTabHolder.getType() == FileUtil.MediaFileType.IMG) {
-                isFast = true;
-            }
-            final String[] names = FileUtil.INSTANCE.foldFiles(mFileList, res, isFast);
 
+            final String[] names = FileUtil.INSTANCE.foldFiles(mFileList, res);
 
             mExpandableListView.post(new Runnable() {
                 @Override
@@ -449,10 +444,22 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
     }
 
     public void selectAll(boolean select) {
-        mSelectAll = select;
+        mSelectAll=select;
         for (VH vh : mVHList) {
             vh.activate(select);
         }
         notifyDataSetChanged();
+    }
+
+    public void replaceVhList(List<VH> vhList){
+        mVHList=vhList;
+    }
+
+    public List<VH> getVhList(){
+        return mVHList;
+    }
+
+    public String getTitle(){
+        return mTitle;
     }
 }
