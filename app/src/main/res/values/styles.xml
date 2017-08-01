@@ -75,10 +75,6 @@
         <item name="colorControlHighlight">@android:color/white</item>
     </style>
 
-    <style name="ColorPrimaryProgressBar" parent="Widget.AppCompat.ProgressBar">
-        <item name="android:indeterminateTint" tools:targetApi="lollipop">@color/colorPrimary</item>
-    </style>
-
     <style name="WhiteProgressDialogStyle" parent="Theme.Design.BottomSheetDialog">
         <item name="android:indeterminateTint" tools:targetApi="lollipop">@color/colorPrimary</item>
         <item name="android:colorControlHighlight">@color/colorDark</item>
@@ -102,8 +98,13 @@
         <item name="colorControlHighlight">@color/colorPrimary</item>
     </style>
 
-    <style name="WhiteProgressBar" parent="Widget.AppCompat.ProgressBar">
+    <style name="ColorPrimaryProgressBar" parent="Widget.AppCompat.ProgressBar">
         <item name="android:indeterminateTint" tools:targetApi="lollipop">@color/colorPrimary</item>
+        <item name="android:indeterminateTintMode" tools:targetApi="lollipop">src_atop</item>
+    </style>
+
+    <style name="WhiteProgressBar" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminateTint" tools:targetApi="lollipop">@android:color/white</item>
         <item name="android:indeterminateTintMode" tools:targetApi="lollipop">src_atop</item>
     </style>
 </resources>
