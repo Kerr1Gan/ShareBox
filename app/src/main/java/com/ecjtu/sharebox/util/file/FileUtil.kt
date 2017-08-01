@@ -284,23 +284,22 @@ object FileUtil {
         UNKNOWN
     }
 
-    val TX_PATH= arrayOf("/tencent/MicroMsg","/tencent/MobileQQ")
+    val TX_PATH = arrayOf("/tencent/MicroMsg", "/tencent/MobileQQ")
 
-    fun foldFiles(input: MutableList<File>?, output: LinkedHashMap<String, MutableList<File>>,isFast:Boolean=false): Array<String>? {
+    fun foldFiles(input: MutableList<File>?, output: LinkedHashMap<String, MutableList<File>>): Array<String>? {
         if (input == null || input.size == 0) return null
         val prefix = ArrayList<String>()
         output.put(TX_PATH[0], arrayListOf<File>())
         output.put(TX_PATH[1], arrayListOf<File>())
 
-        for(f in input){
-            var root=f.parent
+        for (f in input) {
+            var root = f.parent
 
-            if (prefix.indexOf(root) < 0){
+            if (prefix.indexOf(root) < 0) {
                 prefix.add(root)
                 var list = ArrayList<File>()
-                output.put(root,list)
+                output.put(root, list)
             }
-
         }
 
         for (f in input) {
@@ -312,36 +311,26 @@ object FileUtil {
 
             list?.add(f)
 
-            if(!isFast){
-                for (pre in prefix) {
-                    if (Thread.interrupted()) return null
-                    if (root.startsWith(pre)) {
-                        val lst = output[pre]
-                        if (lst?.indexOf(f) ?:0 < 0)
-                            lst?.add(f)
-                    }
-
-                    if(root.contains(TX_PATH[0]) || root.contains(TX_PATH[1])){
-                        val lst = output[if(root.contains(TX_PATH[0])) TX_PATH[0] else TX_PATH[1]]
-                        if (lst?.indexOf(f) ?:0 < 0)
-                            lst?.add(f)
-                    }
+            for (pre in prefix) {
+                if (Thread.interrupted()) return null
+                if (root.startsWith(pre)) {
+                    val lst = output[pre]
+                    if (lst?.indexOf(f) ?: 0 < 0)
+                        lst?.add(f)
                 }
-            }else{
-                if(root.contains(TX_PATH[0]) || root.contains(TX_PATH[1])){
-                    val lst = output[if(root.contains(TX_PATH[0])) TX_PATH[0] else TX_PATH[1]]
-                    if (lst?.indexOf(f) ?:0 < 0)
+                if (root.contains(TX_PATH[0]) || root.contains(TX_PATH[1])) {
+                    val lst = output[if (root.contains(TX_PATH[0])) TX_PATH[0] else TX_PATH[1]]
+                    if (lst?.indexOf(f) ?: 0 < 0)
                         lst?.add(f)
                 }
             }
-
         }
 
-        if(output.get(TX_PATH[0])?.size==0){
+        if (output.get(TX_PATH[0])?.size == 0) {
             output.remove(TX_PATH[0])
         }
 
-        if(output.get(TX_PATH[1])?.size==0){
+        if (output.get(TX_PATH[1])?.size == 0) {
             output.remove(TX_PATH[1])
         }
 
@@ -349,16 +338,14 @@ object FileUtil {
         val set = output.keys
         val names = set.toTypedArray()
 
-        if(!isFast){
-            for (i in names.indices) {
-                for (j in i + 1..names.size - 1) {
-                    val sizeF = sizeOfChar(names[i], '/')
-                    val sizeL = sizeOfChar(names[j], '/')
-                    if (sizeF > sizeL) {
-                        val tmp = names[i]
-                        names[i] = names[j]
-                        names[j] = tmp
-                    }
+        for (i in names.indices) {
+            for (j in i + 1..names.size - 1) {
+                val sizeF = sizeOfChar(names[i], '/')
+                val sizeL = sizeOfChar(names[j], '/')
+                if (sizeF > sizeL) {
+                    val tmp = names[i]
+                    names[i] = names[j]
+                    names[j] = tmp
                 }
             }
         }
@@ -376,60 +363,60 @@ object FileUtil {
         return count
     }
 
-    fun copyFile2InternalPath(file:File,name:String,context: Context):Boolean{
-        var root=context.filesDir
-        var fis:FileInputStream? = null
-        var buf:BufferedOutputStream? = null
+    fun copyFile2InternalPath(file: File, name: String, context: Context): Boolean {
+        var root = context.filesDir
+        var fis: FileInputStream? = null
+        var buf: BufferedOutputStream? = null
         try {
-            fis=FileInputStream(file)
-            var temp=File(root.absoluteFile,name)
-            if(temp.exists()) temp.delete()
-            buf=BufferedOutputStream(FileOutputStream(temp))
-            var arr=ByteArray(1024*5)
-            var len=fis.read(arr)
-            while (len>0){
+            fis = FileInputStream(file)
+            var temp = File(root.absoluteFile, name)
+            if (temp.exists()) temp.delete()
+            buf = BufferedOutputStream(FileOutputStream(temp))
+            var arr = ByteArray(1024 * 5)
+            var len = fis.read(arr)
+            while (len > 0) {
                 buf.write(arr)
-                len=fis.read(arr)
+                len = fis.read(arr)
             }
-        }catch (e:Exception){
+        } catch (e: Exception) {
             return false
-        }finally {
+        } finally {
             fis?.close()
             buf?.close()
         }
         return true
     }
 
-    fun getImagesByDCIM(context: Context): MutableList<File>{
-        var externalSd=StorageUtil.getStoragePath(context,true)
-        var internalSd=Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
-        var ret= mutableListOf<File>()
+    fun getImagesByDCIM(context: Context): MutableList<File> {
+        var externalSd = StorageUtil.getStoragePath(context, true)
+        var internalSd = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
+        var ret = mutableListOf<File>()
 
-        findAllImage(internalSd,ret)
+        findAllImage(internalSd, ret)
 
-        externalSd=externalSd+"/"+Environment.DIRECTORY_DCIM
+        externalSd = externalSd + "/" + Environment.DIRECTORY_DCIM
 
-        var extSd=File(externalSd)
+        var extSd = File(externalSd)
 
-        if(extSd.isDirectory&&extSd.exists()){
-            findAllImage(extSd,ret)
+        if (extSd.isDirectory && extSd.exists()) {
+            findAllImage(extSd, ret)
         }
 
         return ret
     }
 
-    fun findAllImage(file: File,ret: MutableList<File>){
-        findFilesByType(file,ret,MediaFileType.IMG)
+    fun findAllImage(file: File, ret: MutableList<File>) {
+        findFilesByType(file, ret, MediaFileType.IMG)
     }
 
-    fun findFilesByType(file: File,ret: MutableList<File>,type: MediaFileType){
-        var list=file.listFiles()
-        if(list!=null){
-            for(obj in list){
-                if(obj.isDirectory){
-                    findAllImage(obj,ret)
-                }else{
-                    if(getMediaFileTypeByName(obj.name)==type){
+    fun findFilesByType(file: File, ret: MutableList<File>, type: MediaFileType) {
+        var list = file.listFiles()
+        if (list != null) {
+            for (obj in list) {
+                if (obj.isDirectory) {
+                    findAllImage(obj, ret)
+                } else {
+                    if (getMediaFileTypeByName(obj.name) == type) {
                         ret.add(obj)
                     }
                 }

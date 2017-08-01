@@ -12,7 +12,7 @@ import com.ecjtu.sharebox.R
  */
 class ProgressDialog : CloseBottomSheetDialog {
 
-    constructor(context: Context, activity: Activity? = null) : super(context, activity,R.style.WhiteProgressDialog) {
+    constructor(context: Context, activity: Activity? = null) : super(context, activity) {
         setCanceledOnTouchOutside(false)
     }
 

@@ -26,6 +26,9 @@ import com.ecjtu.sharebox.ui.view.FileExpandableListView
 import com.ecjtu.sharebox.util.file.FileUtil
 import org.ecjtu.easyserver.server.DeviceInfo
 import java.io.File
+import java.util.ArrayList
+import java.util.LinkedHashMap
+import kotlin.concurrent.thread
 
 
 /**
@@ -58,6 +61,8 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
     private var mProgressDialog: ProgressDialog? = null
 
     private var mHasFindAll = false
+
+    private var mRetMap: MutableMap<String, ArrayList<FileExpandableAdapter.VH>> = mutableMapOf()
 
     companion object {
         fun string2MediaFileType(str: String): FileUtil.MediaFileType? {
@@ -285,7 +290,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                     mTabItemHolders?.get(title)?.task = task
                 }
 
-                if(mHasFindAll){
+                if (mHasFindAll) {
                     selectViewPager(vg)
                 }
 
@@ -430,7 +435,8 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
             var obj = iter?.next()
             obj?.value?.task?.cancel(true)
         }
-        mHandler.removeCallbacksAndMessages(null)
+        mHandler?.removeCallbacksAndMessages(null)
+        mHandler = null
     }
 
     override fun onMenuItemClick(item: MenuItem?): Boolean {
@@ -438,20 +444,37 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         when (id) {
             R.id.ok -> {
                 if (mTabItemHolders == null) return true
-                var fileList= mutableListOf<File>()
-                var map =if (!mHasFindAll) updateFileMap(fileList,mTabItemHolders!!) else updateAllFileList(fileList,mTabItemHolders!!)
+                var fileList = mutableListOf<File>()
+
+                for(view in mViewPagerViews){
+                    var pager=view as FileExpandableListView
+                    pager.fileExpandableAdapter
+                }
+
+                for (entry in mTabItemHolders!!.entries) {
+                    var title = entry.key
+                    var key = FileExpandableAdapter.EXTRA_VH_LIST + title
+                    var vhList = mRetMap.get(FileExpandableAdapter.EXTRA_VH_LIST + title)
+                    if (ownerActivity != null && vhList!=null) {
+                        var application = ownerActivity.getMainApplication()
+                        application.getSavedInstance().put(key, vhList!!)
+                    }
+                }
+
+
+                var map = if (!mHasFindAll) updateFileMap(fileList, mTabItemHolders!!) else updateAllFileList(fileList, mTabItemHolders!!)
                 var deviceInfo = ownerActivity.getMainApplication().getSavedInstance().
                         get(Constants.KEY_INFO_OBJECT) as DeviceInfo
                 deviceInfo.fileMap = map
 
                 ServerManager.getInstance().setSharedFileList(fileList)
                 this@FilePickDialog.cancel()
-                Toast.makeText(context,"选择成功",Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "选择成功", Toast.LENGTH_SHORT).show()
             }
 
             R.id.select_all -> {
-                var msg = mHandler.obtainMessage(MSG_FIND_ALL)
-                mHandler.sendMessageDelayed(msg, (Integer.MAX_VALUE).toLong())
+                var msg = mHandler?.obtainMessage(MSG_FIND_ALL)
+                mHandler?.sendMessageDelayed(msg, (Integer.MAX_VALUE).toLong())
                 mProgressDialog = ProgressDialog(context, ownerActivity).apply {
                     setOnCancelListener {
                         var iter = mTabItemHolders?.iterator()
@@ -459,7 +482,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                             var obj = iter?.next()
                             obj?.value?.task?.cancel(true)
                         }
-                        mHandler.removeCallbacksAndMessages(null)
+                        mHandler?.removeCallbacksAndMessages(null)
                     }
                     show()
                 }
@@ -469,7 +492,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                     var index = 0
                     for (entry in set) {
                         var title = entry.key
-                        if (mTabItemHolders?.get(title)?.task == null && mTabItemHolders?.get(title)?.fileList == null) {
+                        if (entry.value.task == null && entry.value.fileList == null) {
                             var task = LoadingFilesTask(context, entry.value)
                             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
                             mTabItemHolders?.get(title)?.task = task
@@ -486,7 +509,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         return true
     }
 
-    private fun updateFileMap(fileList:MutableList<File>,itemHolder:MutableMap<String, FilePickDialog.TabItemHolder>):MutableMap<String, List<String>>{
+    private fun updateFileMap(fileList: MutableList<File>, itemHolder: MutableMap<String, FilePickDialog.TabItemHolder>): MutableMap<String, List<String>> {
         var map = mutableMapOf<String, List<String>>()
         var index = 0
         for (element in itemHolder!!.entries) {
@@ -506,17 +529,26 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         return map
     }
 
-    private fun updateAllFileList(fileList:MutableList<File>,itemHolder:MutableMap<String, FilePickDialog.TabItemHolder>):MutableMap<String,List<String>>{
+    private fun updateAllFileList(fileList: MutableList<File>, itemHolder: MutableMap<String, FilePickDialog.TabItemHolder>): MutableMap<String, List<String>> {
         var map = mutableMapOf<String, List<String>>()
+        var application = if (ownerActivity != null) ownerActivity.getMainApplication() else null
         for (element in itemHolder!!.entries) {
+            var title = element.key
             var strList = mutableListOf<String>()
-            var list=element.value.fileList
             if (element.value.fileList == null) continue
-            var fileArr = list as List<File>
-            for (file in fileArr) {
-                if (fileList.indexOf(file) < 0)
-                    fileList.add(file)
-                strList.add(file.absolutePath)
+            if (application == null) continue
+
+            var vhList = application.getSavedInstance().get(FileExpandableAdapter.EXTRA_VH_LIST + title) as List<FileExpandableAdapter.VH>
+
+            if (vhList != null) {
+                for (vh in vhList) {
+                    var fList = vh.activatedList
+                    for (file in fList) {
+                        if (fileList.indexOf(file) < 0)
+                            fileList.add(file)
+                        strList.add(file.absolutePath)
+                    }
+                }
             }
             map.put(element.key, strList)
         }
@@ -551,7 +583,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         return vg.fileExpandableAdapter.apply { setup(ownerActivity, title) }
     }
 
-    private var mHandler = MemoryUnLeakHandler<FilePickDialog>(this)
+    private var mHandler: MemoryUnLeakHandler<FilePickDialog>? = MemoryUnLeakHandler<FilePickDialog>(this)
 
     private val MSG_FIND_ALL = 0x10
 
@@ -564,14 +596,6 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                 for (entry in mViewPagerViews) {
                     selectViewPager(entry.value as FileExpandableListView)
                 }
-
-//                var fileList= mutableListOf<File>()
-//                var map =updateFileMap(fileList,mTabItemHolders!!)
-//                var deviceInfo = ownerActivity.getMainApplication().getSavedInstance().
-//                        get(Constants.KEY_INFO_OBJECT) as DeviceInfo
-//                deviceInfo.fileMap = map
-//
-//                ServerManager.getInstance().setSharedFileList(fileList)
             }
             MSG_FIND_ALL -> {
             }
@@ -579,15 +603,44 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
     }
 
     fun findFinish() {
-        if (mHandler.hasMessages(MSG_FIND_ALL)) {
-            mHasFindAll=true
+        if (mHandler != null && mHandler!!.hasMessages(MSG_FIND_ALL)) {
+            mHasFindAll = true
 
-            mHandler.removeMessages(MSG_FIND_ALL)
-            mHandler.obtainMessage(MSG_FIND_ALL_FINISH).sendToTarget()
+            thread {
+                mRetMap.clear()
+                val res = LinkedHashMap<String, MutableList<File>>()
+                for (entry in mTabItemHolders!!.entries) {
+                    var title = entry.key
+
+                    var fileList = mTabItemHolders?.get(title)?.fileList
+                    if (fileList != null) {
+                        val names = FileUtil.foldFiles(fileList as MutableList<File>, res)
+                        names.let {
+                            val newArr = ArrayList<FileExpandableAdapter.VH>()
+
+                            for (name in names!!.iterator()) {
+                                val vh = FileExpandableAdapter.VH(File(name), res.get(name))
+                                vh.activate(true)
+                                newArr.add(vh)
+                            }
+
+                            for (view in mViewPagerViews) {
+                                var viewPager = view!!.value as FileExpandableListView
+                                if (viewPager.fileExpandableAdapter.title.equals(title)) {
+                                    viewPager.fileExpandableAdapter.replaceVhList(newArr)
+                                }
+                            }
+                            mRetMap.put(FileExpandableAdapter.EXTRA_VH_LIST + title, newArr)
+                        }
+                    }
+                }
+                mHandler?.removeMessages(MSG_FIND_ALL)
+                mHandler?.obtainMessage(MSG_FIND_ALL_FINISH)?.sendToTarget()
+            }
         }
     }
 
-    private fun selectViewPager(fileExpandableListView: FileExpandableListView){
+    private fun selectViewPager(fileExpandableListView: FileExpandableListView) {
         fileExpandableListView.fileExpandableAdapter.selectAll(true)
     }
 }

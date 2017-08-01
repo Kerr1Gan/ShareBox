@@ -174,10 +174,10 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
             }
             newArr.add(vh);
         }
-        if (mActivity != null) {
-            MainApplication application = (MainApplication) mActivity.getApplication();
-            application.getSavedInstance().put(EXTRA_VH_LIST + mTitle, newArr);
-        }
+//        if (mActivity != null) {
+//            MainApplication application = (MainApplication) mActivity.getApplication();
+//            application.getSavedInstance().put(EXTRA_VH_LIST + mTitle, newArr);
+//        }
         mVHList = newArr;
         notifyDataSetChanged();
     }
@@ -322,7 +322,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         return true;
     }
 
-    private static class VH {
+    public static class VH {
 
         public List<File> childList;
 
@@ -382,12 +382,8 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         public void run() {
 
             final LinkedHashMap<String, List<File>> res = new LinkedHashMap<>();
-            boolean isFast = false;
-            if (mTabHolder.getType() == FileUtil.MediaFileType.IMG) {
-                isFast = true;
-            }
-            final String[] names = FileUtil.INSTANCE.foldFiles(mFileList, res, isFast);
 
+            final String[] names = FileUtil.INSTANCE.foldFiles(mFileList, res);
 
             mExpandableListView.post(new Runnable() {
                 @Override
@@ -450,5 +446,13 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
             vh.activate(select);
         }
         notifyDataSetChanged();
+    }
+
+    public void replaceVhList(List<VH> vhList){
+        mVHList=vhList;
+    }
+
+    public String getTitle(){
+        return mTitle;
     }
 }

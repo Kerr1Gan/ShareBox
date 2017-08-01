@@ -113,7 +113,7 @@ View.OnLongClickListener{
 
             override fun onError(httpURLConnection: HttpURLConnection?, exception: Exception) {
                 mWeakRef?.get()?.runOnUiThread {
-                    Toast.makeText(v.context,"对方还未准备好，请稍后再试",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(mWeakRef?.get()!!,"对方还未准备好，请稍后再试",Toast.LENGTH_SHORT).show()
                 }
             }
         })
