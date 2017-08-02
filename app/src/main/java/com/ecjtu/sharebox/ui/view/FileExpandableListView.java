@@ -30,8 +30,8 @@ public class FileExpandableListView extends ExpandableListView {
 
     private FileExpandableAdapter mAdapter=getListAdapter();
 
-    public void initData(FilePickDialog.TabItemHolder holder){
-        mAdapter.initData(holder);
+    public void initData(FilePickDialog.TabItemHolder holder,List<FileExpandableAdapter.VH> oldCache){
+        mAdapter.initData(holder,oldCache);
     }
 
     public void loadedData(){

@@ -14,8 +14,8 @@ import java.io.File
 class InternetFileExpandableAdapter(expandableListView: FileExpandableListView):
         FileExpandableAdapter(expandableListView){
 
-    override fun initData(holder: FilePickDialog.TabItemHolder?) {
-        super.initData(holder)
+    override fun initData(holder: FilePickDialog.TabItemHolder?,oldCache:List<VH>? ) {
+        super.initData(holder,oldCache)
     }
 
     override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup?): View {
@@ -40,7 +40,7 @@ class InternetFileExpandableAdapter(expandableListView: FileExpandableListView):
         super.onClick(v)
     }
 
-    override fun setup(activity: Activity?,title:String) {
+    override fun setup(title:String) {
         //do nothing
     }
 }

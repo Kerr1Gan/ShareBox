@@ -18,6 +18,8 @@ import com.ecjtu.sharebox.ui.dialog.FilePickDialog
 import com.ecjtu.sharebox.ui.dialog.InternetFilePickDialog
 import com.ecjtu.sharebox.ui.dialog.TextItemDialog
 import org.ecjtu.easyserver.server.DeviceInfo
+import org.ecjtu.easyserver.server.impl.servlet.Info
+import org.json.JSONObject
 import java.io.File
 import java.lang.Exception
 import java.lang.ref.WeakReference
@@ -62,9 +64,9 @@ View.OnLongClickListener{
         if(info?.fileMap==null){
             AsyncNetwork().requestDeviceInfo("${info?.ip}:${info?.port}",object :IRequestCallback{
                 override fun onSuccess(httpURLConnection: HttpURLConnection?, response: String) {
-//                    Info.json2DeviceInfo(JSONObject(response)).apply {
-//                        info?.fileMap=fileMap
-//                    }
+                    Info.json2DeviceInfo(JSONObject(response)).apply {
+                        info?.fileMap=fileMap
+                    }
 //                    mWeakRef?.get()?.runOnUiThread {
 //
 //                    }
@@ -84,9 +86,9 @@ View.OnLongClickListener{
 
         AsyncNetwork().requestDeviceInfo("${deviceInfo?.ip}:${deviceInfo?.port}",object :IRequestCallback{
             override fun onSuccess(httpURLConnection: HttpURLConnection?, response: String) {
-//                Info.json2DeviceInfo(JSONObject(response)).apply {
-//                    deviceInfo?.fileMap=fileMap
-//                }
+                Info.json2DeviceInfo(JSONObject(response)).apply {
+                    deviceInfo?.fileMap=fileMap
+                }
                 mWeakRef?.get()?.runOnUiThread {
                     if(mWeakRef?.get()!=null){
                         InternetFilePickDialog(mWeakRef?.get()!!,mWeakRef?.get()).apply {
@@ -96,7 +98,9 @@ View.OnLongClickListener{
                                     var type=FilePickDialog.string2MediaFileType(entry.key)
                                     var fileList= mutableListOf<File>()
                                     for(child in entry.value){
-                                        fileList.add(File(child))
+                                        var file=File(child)
+                                        if(fileList.indexOf(file)<0)
+                                            fileList.add(File(child))
                                     }
                                     var holder=FilePickDialog.TabItemHolder(entry.key,type,
                                             null,

@@ -70,8 +70,6 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
 
     public static final String EXTRA_VH_LIST = "FileExpandableAdapter_extra_vh_list";
 
-    private Activity mActivity;
-
     private String mTitle = "";
 
     private boolean mSelectAll = false;
@@ -81,7 +79,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         mContext = expandableListView.getContext();
     }
 
-    public void initData(FilePickDialog.TabItemHolder holder) {
+    public void initData(FilePickDialog.TabItemHolder holder,List<VH> oldCache) {
         mTabHolder = holder;
         mFileList = mTabHolder.getFileList();
 
@@ -90,18 +88,10 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         mExpandableListView.setChildDivider(new ColorDrawable(Color.DKGRAY));
         mExpandableListView.setDividerHeight(1);
 
-        if (mActivity != null) {
-            List<VH> vhList = readCache((MainApplication) mActivity.getApplication());
-            if (vhList != null) {
-                mVHList = vhList;
-            }
+        if(oldCache!=null){
+            mVHList=oldCache;
         }
         mExpandableListView.setAdapter(this);
-    }
-
-    public List<VH> readCache(MainApplication application){
-        List<VH> vhList = (List<VH>) application.getSavedInstance().get(EXTRA_VH_LIST + mTitle);
-        return vhList;
     }
 
     public void loadedData() {
@@ -177,10 +167,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
             }
             newArr.add(vh);
         }
-//        if (mActivity != null) {
-//            MainApplication application = (MainApplication) mActivity.getApplication();
-//            application.getSavedInstance().put(EXTRA_VH_LIST + mTitle, newArr);
-//        }
+
         mVHList = newArr;
         notifyDataSetChanged();
     }
@@ -438,8 +425,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         return files;
     }
 
-    public void setup(Activity activity, String title) {
-        mActivity = activity;
+    public void setup( String title) {
         mTitle = title;
     }
 
