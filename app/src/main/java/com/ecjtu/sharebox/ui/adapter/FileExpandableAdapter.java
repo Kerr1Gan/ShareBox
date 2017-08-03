@@ -262,6 +262,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
             child.setBackgroundResource(R.mipmap.check_normal_pure);
             child.setText(String.valueOf(vh.activatedList.size()));
         }
+        if(isExpanded) mExpandableListView.expandGroup(groupPosition);
         return convertView;
     }
 
