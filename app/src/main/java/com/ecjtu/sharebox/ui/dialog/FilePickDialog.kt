@@ -4,31 +4,31 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import com.ecjtu.sharebox.R
-import android.support.design.widget.BottomSheetBehavior
-import android.support.v7.widget.Toolbar
-import android.view.*
 import android.os.AsyncTask
 import android.os.Message
+import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.TabLayout
 import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
+import android.support.v7.widget.Toolbar
 import android.util.Log
+import android.view.MenuItem
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
 import com.ecjtu.sharebox.Constants
-import com.ecjtu.sharebox.MainApplication
+import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.async.MemoryUnLeakHandler
 import com.ecjtu.sharebox.getMainApplication
-import org.ecjtu.easyserver.server.ServerManager
 import com.ecjtu.sharebox.ui.adapter.FileExpandableAdapter
-import com.ecjtu.sharebox.ui.adapter.InternetFileExpandableAdapter
 import com.ecjtu.sharebox.ui.view.FileExpandableListView
 import com.ecjtu.sharebox.util.file.FileUtil
 import org.ecjtu.easyserver.server.DeviceInfo
+import org.ecjtu.easyserver.server.ServerManager
 import java.io.File
-import java.util.ArrayList
-import java.util.LinkedHashMap
+import java.util.*
 import kotlin.concurrent.thread
 
 
@@ -277,8 +277,8 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                 var holder = mTabItemHolders?.get(title)
                 vg.fileExpandableAdapter = getFileAdapter(vg, title)
                 var oldCache :List<FileExpandableAdapter.VH>? =null
-                if(vg.fileExpandableAdapter !is InternetFileExpandableAdapter){
-                    oldCache= ownerActivity.getMainApplication().getSavedInstance().get(FileExpandableAdapter.EXTRA_VH_LIST + title) as List<FileExpandableAdapter.VH>?
+                if(isLoadCache()){
+                    oldCache= getOldCacheAndClone(title)
                 }else{
                     var fileList=mTabItemHolders?.get(title)?.fileList
                     if(fileList!=null){
@@ -416,7 +416,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         var ret = false
         if (mExpandableListView?.getFirstVisiblePosition() == 0) {
             val topChildView = mExpandableListView?.getChildAt(0)
-            ret = topChildView?.getTop() == 0
+            ret = topChildView?.getTop() ?:0 >= 0
         }
 
         if (mBehavior?.state != BottomSheetBehavior.STATE_EXPANDED) {
@@ -428,8 +428,6 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         } else {
             return mBottomSheet?.dispatchTouchEvent(ev)!!
         }
-
-        return super.dispatchTouchEvent(ev)
     }
 
     override fun onStop() {
@@ -688,5 +686,23 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
             return newArr
         }
         return null
+    }
+
+    open protected fun isLoadCache():Boolean{
+        return true
+    }
+
+    private fun getOldCacheAndClone(title:String): List<FileExpandableAdapter.VH>?{
+        var cache=ownerActivity.getMainApplication().getSavedInstance().get(FileExpandableAdapter.EXTRA_VH_LIST + title) as List<FileExpandableAdapter.VH>?
+        var newList= arrayListOf<FileExpandableAdapter.VH>()
+        if(cache!=null){
+            for(vh in cache){
+                var newVh=vh.clone() as FileExpandableAdapter.VH
+                if(newVh!=null){
+                    newList.add(newVh)
+                }
+            }
+        }
+        return newList
     }
 }

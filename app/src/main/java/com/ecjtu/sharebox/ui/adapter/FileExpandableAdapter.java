@@ -1,6 +1,5 @@
 package com.ecjtu.sharebox.ui.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -18,20 +17,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.ecjtu.sharebox.Constants;
-import com.ecjtu.sharebox.MainApplication;
 import com.ecjtu.sharebox.R;
 import com.ecjtu.sharebox.async.AppThumbTask;
-import com.ecjtu.sharebox.ui.activity.BaseFragmentActivity;
 import com.ecjtu.sharebox.ui.activity.ImmersiveFragmentActivity;
-import com.ecjtu.sharebox.ui.dialog.TextItemDialog;
 import com.ecjtu.sharebox.ui.dialog.FilePickDialog;
+import com.ecjtu.sharebox.ui.dialog.TextItemDialog;
 import com.ecjtu.sharebox.ui.fragment.VideoPlayerFragment;
 import com.ecjtu.sharebox.ui.view.FileExpandableListView;
 import com.ecjtu.sharebox.util.file.FileOpenIntentUtil;
 import com.ecjtu.sharebox.util.file.FileUtil;
-
-import org.ecjtu.easyserver.server.DeviceInfo;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -194,7 +188,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
 
     @Override
     public long getGroupId(int groupPosition) {
-        return getGroup(groupPosition).hashCode();
+        return groupPosition; // getGroup(groupPosition).hashCode() 返回这个会导致，返回值改变后，notifyDataSetChanged会使Group折叠，内部因为对象改变了导致折叠
     }
 
     @Override
@@ -262,6 +256,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
             child.setBackgroundResource(R.mipmap.check_normal_pure);
             child.setText(String.valueOf(vh.activatedList.size()));
         }
+        if(isExpanded) mExpandableListView.expandGroup(groupPosition);
         return convertView;
     }
 
@@ -312,7 +307,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         return true;
     }
 
-    public static class VH {
+    public static class VH implements Cloneable{
 
         public List<File> childList;
 
@@ -363,6 +358,15 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
 
         public List<File> getActivatedList() {
             return activatedList;
+        }
+
+        @Override
+        public Object clone(){
+            try {
+                return super.clone();
+            } catch (CloneNotSupportedException e) {
+                return null;
+            }
         }
     }
 

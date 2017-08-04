@@ -286,7 +286,7 @@ object FileUtil {
 
     val TX_PATH = arrayOf("/tencent/MicroMsg", "/tencent/MobileQQ")
 
-    fun foldFiles(input: MutableList<File>?, output: LinkedHashMap<String, MutableList<File>>): Array<String>? {
+    @JvmOverloads fun foldFiles(input: MutableList<File>?, output: LinkedHashMap<String, MutableList<File>>,ignoreWx:Boolean=false,ignoreQQ:Boolean=false): Array<String>? {
         if (input == null || input.size == 0) return null
         val prefix = ArrayList<String>()
         output.put(TX_PATH[0], arrayListOf<File>())
@@ -294,7 +294,6 @@ object FileUtil {
 
         for (f in input) {
             var root = f.parent
-
             if (prefix.indexOf(root) < 0) {
                 prefix.add(root)
                 var list = ArrayList<File>()
@@ -302,36 +301,45 @@ object FileUtil {
             }
         }
 
+        var wxList=output[TX_PATH[0]]
+        var qqList=output[TX_PATH[1]]
         for (f in input) {
             if (Thread.interrupted())
                 return null
             val root = f.parent
-
             var list: MutableList<File>? = output[root]
-
-            list?.add(f)
-
+            if (root.contains(TX_PATH[0]) && !ignoreWx) {
+                if (wxList?.indexOf(f) ?: -1 < 0)
+                    wxList?.add(f)
+            }
+            if (root.contains(TX_PATH[1]) && !ignoreQQ) {
+                if (qqList?.indexOf(f) ?: -1 < 0)
+                    qqList?.add(f)
+            }
+            if (wxList?.indexOf(f) ?:-1 <0 && qqList?.indexOf(f) ?:-1 <0) {
+                if(list?.indexOf(f)?:0 <0)
+                    list?.add(f)
+            }
             for (pre in prefix) {
                 if (Thread.interrupted()) return null
-                if (root.startsWith(pre)) {
+                if (root.startsWith(pre) && wxList?.indexOf(f) ?:-1 <0 && qqList?.indexOf(f) ?:-1 <0) {
                     val lst = output[pre]
-                    if (lst?.indexOf(f) ?: 0 < 0)
-                        lst?.add(f)
-                }
-                if (root.contains(TX_PATH[0]) || root.contains(TX_PATH[1])) {
-                    val lst = output[if (root.contains(TX_PATH[0])) TX_PATH[0] else TX_PATH[1]]
                     if (lst?.indexOf(f) ?: 0 < 0)
                         lst?.add(f)
                 }
             }
         }
-
-        if (output.get(TX_PATH[0])?.size == 0) {
-            output.remove(TX_PATH[0])
+        var iter=output.iterator()
+        while (iter.hasNext()){
+            var entry=iter.next()
+            if (entry.value?.size == 0) {
+                iter.remove()
+            }
         }
-
-        if (output.get(TX_PATH[1])?.size == 0) {
-            output.remove(TX_PATH[1])
+        for(key in output){
+            if (key.value?.size == 0) {
+                output.remove(key.key)
+            }
         }
 
         //sort paths

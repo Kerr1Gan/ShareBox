@@ -38,4 +38,8 @@ class InternetFilePickDialog:FilePickDialog{
     override fun getFileAdapter(vg: FileExpandableListView,title:String): FileExpandableAdapter {
         return InternetFileExpandableAdapter(vg)
     }
+
+    override fun isLoadCache(): Boolean {
+        return false
+    }
 }
