@@ -307,7 +307,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         return true;
     }
 
-    public static class VH {
+    public static class VH implements Cloneable{
 
         public List<File> childList;
 
@@ -358,6 +358,15 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
 
         public List<File> getActivatedList() {
             return activatedList;
+        }
+
+        @Override
+        public Object clone(){
+            try {
+                return super.clone();
+            } catch (CloneNotSupportedException e) {
+                return null;
+            }
         }
     }
 
