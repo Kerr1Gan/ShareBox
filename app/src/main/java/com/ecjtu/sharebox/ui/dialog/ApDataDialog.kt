@@ -33,11 +33,7 @@ class ApDataDialog(context: Context,activity: Activity):BaseBottomSheetDialog(co
     override fun onCreateView(): View? {
         var vg= layoutInflater.inflate(R.layout.dialog_ap_data,null)
 
-        val display = ownerActivity.getWindowManager().getDefaultDisplay()
-        val width = display.getWidth()
-        val height = display.height/*getScreenHeight(ownerActivity)+getStatusBarHeight(context)*/
-
-        vg.layoutParams= ViewGroup.LayoutParams(width,height)
+        fullScreenLayout(vg)
 
         initView(vg as ViewGroup)
         return vg
@@ -69,7 +65,7 @@ class ApDataDialog(context: Context,activity: Activity):BaseBottomSheetDialog(co
         if(NetworkUtil.isWifi(context)){
             if(TextUtils.isEmpty(ip))
                 ip=NetworkUtil.getLocalWLANIps()[0]
-            ap.text="WIFI"
+            ap.text=context.getString(R.string.wifi)
             var wifiInfo=NetworkUtil.getConnectWifiInfo(context)
             var ssid=wifiInfo.ssid.drop(1)
             ssid=ssid.dropLast(1)
@@ -80,7 +76,7 @@ class ApDataDialog(context: Context,activity: Activity):BaseBottomSheetDialog(co
         }else if(NetworkUtil.isHotSpot(context)){
             if(TextUtils.isEmpty(ip))
                 ip=NetworkUtil.getLocalApIps()[0]
-            ap.text="Hotspot"
+            ap.text=context.getString(R.string.hotspot)
             var config=NetworkUtil.getHotSpotConfiguration(context)
             var ssid=config.SSID
             var preSharedKey=config.preSharedKey

@@ -1,11 +1,13 @@
 package com.ecjtu.sharebox.ui.activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
 import com.dd.CircularProgressButton;
 import com.ecjtu.sharebox.R;
+import com.ecjtu.sharebox.ui.fragment.WebViewFragment;
 
 public class TestActivityJava extends AppCompatActivity {
 
@@ -43,5 +45,8 @@ public class TestActivityJava extends AppCompatActivity {
                 }
             }
         });
+
+        Intent intent=ImmersiveFragmentActivity.Companion.newInstance(this, WebViewFragment.class);
+        startActivity(intent);
     }
 }

@@ -32,7 +32,7 @@ abstract class BaseBottomSheetDialog:BottomSheetDialog{
         val screenHeight = getScreenHeight(ownerActivity)
         val statusBarHeight = getStatusBarHeight(context)
         val dialogHeight = if(immersive) screenHeight else screenHeight- statusBarHeight
-        window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, if (dialogHeight == 0) ViewGroup.LayoutParams.MATCH_PARENT else dialogHeight)
+        window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, if (dialogHeight == 0) ViewGroup.LayoutParams.MATCH_PARENT else dialogHeight)
     }
 
     private fun init():Boolean{

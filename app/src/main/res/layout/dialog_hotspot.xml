@@ -71,7 +71,8 @@
         android:layout_marginBottom="20dp"
         android:textColor="@android:color/white"
         app:cpb_cornerRadius="23dp"
-        app:cpb_textIdle="开启"
-        app:cpb_textComplete="关闭"
-        app:cpb_textError="失败"/>
+        app:cpb_textIdle="@string/open"
+        app:cpb_textComplete="@string/close"
+        app:cpb_textError="@string/failure"
+        app:cpb_selectorIdle="@color/selector_cpb_idle_state"/>
 </LinearLayout>
