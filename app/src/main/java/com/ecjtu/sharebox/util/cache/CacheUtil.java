@@ -83,4 +83,14 @@ public class CacheUtil {
         }
         return bmp;
     }
+
+    public static void clearCache(Context context){
+        File rootPath = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File[] list=rootPath.listFiles();
+        for(File f : list){
+            if(!f.isDirectory()){
+                f.delete();
+            }
+        }
+    }
 }

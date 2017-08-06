@@ -81,10 +81,10 @@ open class WifiBottomSheetDialog:CloseBottomSheetDialog{
         mHotspotName?.setText(config.SSID)
         mHotspotPwd?.setText(config.preSharedKey)
         if(NetworkUtil.isHotSpot(context)){
-            mCircularButton?.setText("关闭")
+            mCircularButton?.setText(R.string.close)
             mCircularButton?.progress= PROGRESS_END
         }else{
-            mCircularButton?.setText("开启")
+            mCircularButton?.setText(R.string.open)
             mCircularButton?.progress= PROGRESS_START
         }
 
@@ -106,7 +106,7 @@ open class WifiBottomSheetDialog:CloseBottomSheetDialog{
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int){
             var len=s.length
             if(len>mPwdTextInput!!.counterMaxLength){
-                mPwdTextInput!!.setError("名字太长啦呆逼")
+                mPwdTextInput!!.setError(context.getString(R.string.name_too_long))
             }else{
                 mPwdTextInput!!.setError(null)
             }
@@ -126,7 +126,7 @@ open class WifiBottomSheetDialog:CloseBottomSheetDialog{
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int){
             var len=s.length
             if(len>mPwdTextInput!!.counterMaxLength){
-                mPwdTextInput!!.setError("密码太长啦呆逼")
+                mPwdTextInput!!.setError(context.getString(R.string.name_too_long))
             }else{
                 mPwdTextInput!!.setError(null)
             }
@@ -147,13 +147,13 @@ open class WifiBottomSheetDialog:CloseBottomSheetDialog{
                     var config=NetworkUtil.getHotSpotConfiguration(context)
                     mHotspotName?.setText(config.SSID)
                     mHotspotPwd?.setText(config.preSharedKey)
-                    mCircularButton?.setText("关闭")
+                    mCircularButton?.setText(R.string.close)
                     mCircularButton?.progress= PROGRESS_END
 
                     mHandler.removeCallbacksAndMessages(null)
                 }else if(status==11){
                     //wifi ap disabled
-                    mCircularButton?.setText("开启")
+                    mCircularButton?.setText(R.string.open)
                     mCircularButton?.progress= PROGRESS_START
                 }
             }
@@ -184,7 +184,7 @@ open class WifiBottomSheetDialog:CloseBottomSheetDialog{
                 }
 
                 mHandler.postDelayed({
-                    Toast.makeText(context, "No permission", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, R.string.no_permission, Toast.LENGTH_SHORT).show()
                     context.startActivity(MainActivityDelegate.getAppDetailSettingIntent(context))
                     mCircularButton?.progress= PROGRESS_START
                     cancel()
@@ -194,7 +194,7 @@ open class WifiBottomSheetDialog:CloseBottomSheetDialog{
                         ,mHotspotPwd?.text.toString())
             } else if (mCircularButton?.progress == PROGRESS_END) {
                 mCircularButton?.progress = PROGRESS_START
-                mCircularButton?.setText("开启")
+                mCircularButton?.setText(R.string.open)
 
                 WifiUtil.openHotSpot(context,false,mHotspotName?.text.toString()
                         ,mHotspotPwd?.text.toString())

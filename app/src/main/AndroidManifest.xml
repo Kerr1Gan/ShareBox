@@ -6,8 +6,9 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.EXPAND_STATUS_BAR"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
+
     <application
         android:name=".MainApplication"
         android:allowBackup="true"
@@ -17,30 +18,35 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.activity.MainActivity"
-            android:theme="@style/ImageStatusBarStyle"
-            android:launchMode="singleInstance">
+            android:launchMode="singleInstance"
+            android:theme="@style/ImageStatusBarStyle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".ui.activity.BaseFragmentActivity"/>
-
+        <activity android:name=".ui.activity.BaseFragmentActivity" />
         <activity
             android:name=".ui.activity.ImmersiveFragmentActivity"
-            android:theme="@style/ImageStatusBarStyle"/>
-
-        <activity android:name=".ui.activity.TestActivity"
-            android:exported="true"/>
+            android:theme="@style/ImageStatusBarStyle" />
+        <activity
+            android:name=".ui.activity.TestActivity"
+            android:exported="true" />
 
         <service
             android:name=".service.DaemonService"
             android:process=":daemon" />
         <service android:name=".service.MainService" />
-        <activity android:name=".ui.activity.TestActivityJava"
-            android:exported="true"/>
+
+        <activity
+            android:name=".ui.activity.TestActivityJava"
+            android:exported="true" />
+        <activity
+            android:name=".ui.activity.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:exported="true"
+            android:theme="@style/AppPreferenceTheme"/>
     </application>
 
 </manifest>

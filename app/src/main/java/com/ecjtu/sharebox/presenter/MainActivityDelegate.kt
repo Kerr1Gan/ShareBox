@@ -345,20 +345,24 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
             var state = owner.getMainApplication().getSavedInstance().get(Constants.AP_STATE)
             var ip = ""
             if (state == Constants.NetWorkState.WIFI) {
-                ip = NetworkUtil.getLocalWLANIps()[0]
+                val ips=NetworkUtil.getLocalWLANIps()
+                if(ips.isNotEmpty())
+                    ip = NetworkUtil.getLocalWLANIps()[0]
             } else if (state == Constants.NetWorkState.AP) {
-                ip = NetworkUtil.getLocalApIps()[0]
+                val ips=NetworkUtil.getLocalApIps()
+                if(ips.isNotEmpty())
+                    ip = NetworkUtil.getLocalApIps()[0]
             }
             when (msg) {
                 DiscoverHelper.MSG_FIND_DEVICE -> {
 
                     for (obj in deviceSet) {
                         if (isSelf(ip, obj)) continue
-                        var index = mClientSet.indexOf(obj)
+                        val index = mClientSet.indexOf(obj)
                         if (index < 0) {
                             mClientSet.add(obj)
                         } else {
-                            var old = mClientSet.get(index)
+                            val old = mClientSet.get(index)
                             old.name = obj.name
                             old.room = obj.room
                         }

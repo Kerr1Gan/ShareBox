@@ -278,7 +278,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                 vg.fileExpandableAdapter = getFileAdapter(vg, title)
                 var oldCache :List<FileExpandableAdapter.VH>? =null
                 if(isLoadCache()){
-                    oldCache= ownerActivity.getMainApplication().getSavedInstance().get(FileExpandableAdapter.EXTRA_VH_LIST + title) as List<FileExpandableAdapter.VH>?
+                    oldCache= getOldCacheAndClone(title)
                 }else{
                     var fileList=mTabItemHolders?.get(title)?.fileList
                     if(fileList!=null){
@@ -690,5 +690,19 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
 
     open protected fun isLoadCache():Boolean{
         return true
+    }
+
+    private fun getOldCacheAndClone(title:String): List<FileExpandableAdapter.VH>?{
+        var cache=ownerActivity.getMainApplication().getSavedInstance().get(FileExpandableAdapter.EXTRA_VH_LIST + title) as List<FileExpandableAdapter.VH>?
+        var newList= arrayListOf<FileExpandableAdapter.VH>()
+        if(cache!=null){
+            for(vh in cache){
+                var newVh=vh.clone() as FileExpandableAdapter.VH
+                if(newVh!=null){
+                    newList.add(newVh)
+                }
+            }
+        }
+        return newList
     }
 }

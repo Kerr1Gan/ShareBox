@@ -8,6 +8,16 @@
         <item name="drawerArrowStyle">@style/AppTheme.DrawerArrowToggle</item>
     </style>
 
+    <style name="AppPreferenceTheme" parent="Theme.AppCompat.Light">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="drawerArrowStyle">@style/AppTheme.DrawerArrowToggle</item>
+        <item name="actionBarTheme">@style/WhiteToolbar</item>
+        <item name="toolbarStyle">@style/NoSpaceNavigationToolbar</item>
+    </style>
+
     <style name="ImageStatusBarStyle" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
@@ -18,12 +28,6 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="drawerArrowStyle">@style/AppTheme.DrawerArrowToggle</item>
-
-        <item name="android:textColorHint">@android:color/white</item>
-        <item name="colorControlNormal">@android:color/white</item>
-        <item name="colorControlActivated">@android:color/white</item>
-        <item name="colorControlHighlight">@android:color/white</item>
-
     </style>
 
     <style name="AppTheme.DrawerArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
@@ -63,6 +67,16 @@
         <item name="actionMenuTextColor">@android:color/white</item>
 
         <item name="colorControlHighlight">@android:color/white</item>
+
+        <item name="titleTextColor">@android:color/white</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetEnd">0dp</item>
+    </style>
+
+    <style name="NoSpaceNavigationToolbar" parent="Base.Widget.AppCompat.Toolbar">
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
     </style>
 
     <style name="WhiteProgressDialogStyle" parent="Theme.Design.BottomSheetDialog">

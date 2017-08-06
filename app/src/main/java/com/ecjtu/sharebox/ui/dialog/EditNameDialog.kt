@@ -42,7 +42,7 @@ class EditNameDialog(context: Context,activity: Activity):CloseBottomSheetDialog
         parent.layoutParams=params
         container.addView(parent,params)
 
-        setTitle("Edit Name",container)
+        setTitle(context.getString(R.string.edit_name),container)
 
         init(container)
         return container
