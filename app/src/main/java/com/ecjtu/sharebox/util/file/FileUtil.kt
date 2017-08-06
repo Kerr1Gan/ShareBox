@@ -293,7 +293,8 @@ object FileUtil {
         output.put(TX_PATH[1], arrayListOf<File>())
 
         for (f in input) {
-            var root = f.parent
+            var root = f.absolutePath
+            root= root.substring(0,root.lastIndexOf(File.separator))
             if (prefix.indexOf(root) < 0) {
                 prefix.add(root)
                 var list = ArrayList<File>()
@@ -306,20 +307,24 @@ object FileUtil {
         for (f in input) {
             if (Thread.interrupted())
                 return null
-            val root = f.parent
+            var root = f.absolutePath
+            root= root.substring(0,root.lastIndexOf(File.separator))
             var list: MutableList<File>? = output[root]
-            if (root.contains(TX_PATH[0]) && !ignoreWx) {
-                if (wxList?.indexOf(f) ?: -1 < 0)
-                    wxList?.add(f)
+            if( root != null){
+                if (root.contains(TX_PATH[0]) && !ignoreWx) {
+                    if (wxList?.indexOf(f) ?: -1 < 0)
+                        wxList?.add(f)
+                }
+                if (root.contains(TX_PATH[1]) && !ignoreQQ) {
+                    if (qqList?.indexOf(f) ?: -1 < 0)
+                        qqList?.add(f)
+                }
+                if (wxList?.indexOf(f) ?:-1 <0 && qqList?.indexOf(f) ?:-1 <0) {
+                    if(list?.indexOf(f)?:0 <0)
+                        list?.add(f)
+                }
             }
-            if (root.contains(TX_PATH[1]) && !ignoreQQ) {
-                if (qqList?.indexOf(f) ?: -1 < 0)
-                    qqList?.add(f)
-            }
-            if (wxList?.indexOf(f) ?:-1 <0 && qqList?.indexOf(f) ?:-1 <0) {
-                if(list?.indexOf(f)?:0 <0)
-                    list?.add(f)
-            }
+
             for (pre in prefix) {
                 if (Thread.interrupted()) return null
                 if (root.startsWith(pre) && wxList?.indexOf(f) ?:-1 <0 && qqList?.indexOf(f) ?:-1 <0) {
