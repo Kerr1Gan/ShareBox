@@ -8,13 +8,17 @@ import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.ui.adapter.FileExpandableAdapter
 import com.ecjtu.sharebox.ui.adapter.InternetFileExpandableAdapter
 import com.ecjtu.sharebox.ui.view.FileExpandableListView
+import org.ecjtu.easyserver.server.DeviceInfo
 
 /**
  * Created by KerriGan on 2017/7/16.
  */
 class InternetFilePickDialog:FilePickDialog{
-    constructor(context: Context, activity: Activity? = null):super(context,activity){
 
+    private val mDeviceInfo: DeviceInfo
+
+    constructor(context: Context, activity: Activity? = null,deviceInfo:DeviceInfo):super(context,activity){
+        mDeviceInfo=deviceInfo
     }
     private var mName:String? =null
 
@@ -36,7 +40,7 @@ class InternetFilePickDialog:FilePickDialog{
     }
 
     override fun getFileAdapter(vg: FileExpandableListView,title:String): FileExpandableAdapter {
-        return InternetFileExpandableAdapter(vg)
+        return InternetFileExpandableAdapter(vg).apply { setDeviceInfo(mDeviceInfo) }
     }
 
     override fun isLoadCache(): Boolean {

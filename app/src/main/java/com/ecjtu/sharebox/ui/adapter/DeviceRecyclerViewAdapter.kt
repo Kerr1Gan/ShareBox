@@ -91,7 +91,7 @@ View.OnLongClickListener{
                 }
                 mWeakRef?.get()?.runOnUiThread {
                     if(mWeakRef?.get()!=null){
-                        InternetFilePickDialog(mWeakRef?.get()!!,mWeakRef?.get()).apply {
+                        InternetFilePickDialog(mWeakRef?.get()!!,mWeakRef?.get(),deviceInfo!!).apply {
                             var holders:MutableMap<String, FilePickDialog.TabItemHolder> = mutableMapOf()
                             if(deviceInfo?.fileMap?.entries!=null){
                                 for(entry in deviceInfo!!.fileMap!!.entries){

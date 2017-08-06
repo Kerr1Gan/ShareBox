@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.ui.dialog.FilePickDialog
 import com.ecjtu.sharebox.ui.view.FileExpandableListView
+import org.ecjtu.easyserver.server.DeviceInfo
 import java.io.File
 
 /**
@@ -13,6 +14,8 @@ import java.io.File
  */
 class InternetFileExpandableAdapter(expandableListView: FileExpandableListView):
         FileExpandableAdapter(expandableListView){
+
+    private var mDeviceInfo:DeviceInfo? =null
 
     override fun initData(holder: FilePickDialog.TabItemHolder?,oldCache:List<VH>? ) {
         super.initData(holder,oldCache)
@@ -33,8 +36,8 @@ class InternetFileExpandableAdapter(expandableListView: FileExpandableListView):
     override fun onClick(v: View?) {
         var tag=v?.getTag()
         if(tag!=null && tag is File ){
-            var path=(tag as File).absolutePath
-            openFile(path)
+            var path=tag.absolutePath
+            openFile("${mDeviceInfo?.ip}:${mDeviceInfo?.port}/API/File/${path}")
             return
         }
         super.onClick(v)
@@ -42,5 +45,9 @@ class InternetFileExpandableAdapter(expandableListView: FileExpandableListView):
 
     override fun setup(title:String) {
         //do nothing
+    }
+
+    fun setDeviceInfo(deviceInfo:DeviceInfo){
+        mDeviceInfo=deviceInfo
     }
 }
