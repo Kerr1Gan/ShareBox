@@ -9,7 +9,6 @@ import android.net.Uri
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.os.Build
-import android.os.Message
 import android.preference.PreferenceManager
 import android.provider.Settings
 import android.support.design.widget.FloatingActionButton
@@ -29,6 +28,7 @@ import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.domain.PreferenceInfo
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.ui.activity.MainActivity
+import com.ecjtu.sharebox.ui.activity.SettingsActivity
 import com.ecjtu.sharebox.ui.adapter.DeviceRecyclerViewAdapter
 import com.ecjtu.sharebox.ui.dialog.ApDataDialog
 import com.ecjtu.sharebox.ui.dialog.EditNameDialog
@@ -182,7 +182,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         }
 
         findViewById(R.id.text_setting)?.setOnClickListener {
-
+            owner.startActivity(Intent(owner,SettingsActivity::class.java))
         }
 
         findViewById(R.id.text_help)?.setOnClickListener {
