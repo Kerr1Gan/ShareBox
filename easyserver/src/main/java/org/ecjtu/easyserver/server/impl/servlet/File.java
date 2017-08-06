@@ -65,7 +65,9 @@ public class File implements BaseServlet {
 
 
         try {
+            String cpy=filePaths;
             filePaths = getFilePathByHash(Integer.valueOf(filePaths));
+            if(filePaths==null) filePaths=cpy;
         } catch (Exception e) {
             e.printStackTrace();
             httpReq.returnBadRequest();
