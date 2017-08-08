@@ -21,14 +21,11 @@ import com.ecjtu.sharebox.domain.PreferenceInfo
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
 import com.ecjtu.sharebox.service.MainService
-import com.ecjtu.sharebox.ui.dialog.ProgressDialog
 import org.ecjtu.easyserver.server.DeviceInfo
 import org.ecjtu.easyserver.server.ServerManager
 import org.ecjtu.easyserver.server.impl.server.EasyServer
 import org.ecjtu.easyserver.server.impl.service.EasyServerService
 
-
-//http://www.tmtpost.com/195557.html 17.6.7
 class MainActivity : ImmersiveFragmentActivity() {
 
     companion object {
