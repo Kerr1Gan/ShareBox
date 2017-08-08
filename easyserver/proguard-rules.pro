@@ -97,5 +97,6 @@
 -keep public class org.ecjtu.easyserver.server.DeviceInfo{*;}
 -keep public class org.ecjtu.easyserver.server.impl.service.EasyServerService{*;}
 -keep public class org.ecjtu.easyserver.server.impl.server.EasyServer{*;}
+-keep public class org.ecjtu.easyserver.server.ConversionFactory{*;}
 
 -keepnames class org.ecjtu.easyserver.server.impl.service.EasyServerService$* {*;}

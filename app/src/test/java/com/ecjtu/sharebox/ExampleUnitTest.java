@@ -1,5 +1,6 @@
 package com.ecjtu.sharebox;
 
+import org.ecjtu.easyserver.server.ConversionFactory;
 import org.ecjtu.easyserver.server.DeviceInfo;
 import org.ecjtu.easyserver.server.impl.servlet.Info;
 
@@ -40,7 +41,7 @@ public class ExampleUnitTest {
 
         DeviceInfo info=new DeviceInfo("123","192.168.43.1",8080,"/icon",map);
 
-        JSONObject root=Info.deviceInfo2Json(info);
-        info=Info.json2DeviceInfo(root);
+        JSONObject root= ConversionFactory.deviceInfo2Json(info);
+        info=ConversionFactory.json2DeviceInfo(root);
     }
 }
