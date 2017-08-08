@@ -116,8 +116,7 @@ abstract class BaseActionActivity : AppCompatActivity, MemoryUnLeakHandler.IHand
             return 0
         }
         val resources = activity.resources
-        val resourceId = resources.getIdentifier("navigation_bar_height",
-                "dimen", "android")
+        val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
         //获取NavigationBar的高度
         val height = resources.getDimensionPixelSize(resourceId)
         return height

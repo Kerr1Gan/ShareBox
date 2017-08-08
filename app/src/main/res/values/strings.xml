@@ -19,6 +19,17 @@
     <string name="failure">失败</string>
     <string name="title_activity_settings">Settings</string>
 
+    <string name="client_has_not_yet_ready_try_later">对方还未准备好，请稍后再试</string>
+    <string name="details">详细信息</string>
+    <string name="cancel">取消</string>
+    <string name="select_success">选择成功</string>
+
+    <string name="pick_from_camera">从照相机选择</string>
+    <string name="pick_from_album">从相册选择</string>
+    <string name="need_wifi_or_hotspot">需要连接WIFI或者开启热点</string>
+    <string name="cellular">移动数据</string>
+    <string name="no_internet">"No Internet"</string>
+    
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->

@@ -82,7 +82,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
 
     private var mImageHelper: PickPhotoHelper? = null
 
-    private val DELAY_TIME=5000L
+    private val DELAY_TIME = 5000L
 
     companion object {
         //Settings.ACTION_APPLICATION_DETAIL_SETTING
@@ -195,7 +195,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
 
         findViewById(R.id.icon)?.setOnClickListener {
             var dlg = TextItemDialog(owner)
-            dlg.setupItem(arrayOf("从照相机选择", "从相册选择", "取消"))
+            dlg.setupItem(arrayOf(owner.getString(R.string.pick_from_camera), owner.getString(R.string.pick_from_album), owner.getString(R.string.cancel)))
             dlg.setOnClickListener { index ->
                 if (index == 0) {
                     mPhotoHelper = CapturePhotoHelper(owner)
@@ -232,7 +232,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
                 var state = map.get(Constants.AP_STATE)
 
                 if (state == Constants.NetWorkState.MOBILE || state == Constants.NetWorkState.NONE) {
-                    Toast.makeText(owner, "需要连接WIFI或者开启热点", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(owner, R.string.need_wifi_or_hotspot, Toast.LENGTH_SHORT).show()
                 } else {
                     var dialog = ApDataDialog(owner, owner)
                     dialog.show()
@@ -298,7 +298,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
             hasAccess = true
             owner.getMainApplication().getSavedInstance().put(Constants.AP_STATE, Constants.NetWorkState.AP)
         } else if (NetworkUtil.isMobile(owner)) {
-            mApName.setText(getRealName("Cellular"))
+            mApName.setText(R.string.cellular)
             mWifiImage.setImageResource(R.mipmap.wifi_off)
 
             mWifiButton.isActivated = false
@@ -306,7 +306,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
             hasAccess = false
             owner.getMainApplication().getSavedInstance().put(Constants.AP_STATE, Constants.NetWorkState.MOBILE)
         } else {
-            mApName.setText(getRealName("No Internet"))
+            mApName.setText(R.string.no_internet)
             mWifiImage.setImageResource(R.mipmap.wifi_off)
             mWifiButton.isActivated = false
             mHotspotButton.isActivated = false
@@ -345,12 +345,12 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
             var state = owner.getMainApplication().getSavedInstance().get(Constants.AP_STATE)
             var ip = ""
             if (state == Constants.NetWorkState.WIFI) {
-                val ips=NetworkUtil.getLocalWLANIps()
-                if(ips.isNotEmpty())
+                val ips = NetworkUtil.getLocalWLANIps()
+                if (ips.isNotEmpty())
                     ip = NetworkUtil.getLocalWLANIps()[0]
             } else if (state == Constants.NetWorkState.AP) {
-                val ips=NetworkUtil.getLocalApIps()
-                if(ips.isNotEmpty())
+                val ips = NetworkUtil.getLocalApIps()
+                if (ips.isNotEmpty())
                     ip = NetworkUtil.getLocalApIps()[0]
             }
             when (msg) {
@@ -369,8 +369,8 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
                     }
                     applyDeviceInfo(mClientSet)
                     if (owner.refreshing) {
-                        var msg=handler.obtainMessage(DiscoverHelper.MSG_START_FIND_DEVICE)
-                        handler.sendMessageDelayed(msg,DELAY_TIME)
+                        var msg = handler.obtainMessage(DiscoverHelper.MSG_START_FIND_DEVICE)
+                        handler.sendMessageDelayed(msg, DELAY_TIME)
                     }
                 }
                 DiscoverHelper.MSG_BEING_SEARCHED -> {
@@ -387,8 +387,8 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
                     }
                     applyDeviceInfo(mServerSet)
                     if (owner.refreshing) {
-                        var msg=handler.obtainMessage(DiscoverHelper.MSG_START_BEING_SEARCHED)
-                        handler.sendMessageDelayed(msg,DELAY_TIME)
+                        var msg = handler.obtainMessage(DiscoverHelper.MSG_START_BEING_SEARCHED)
+                        handler.sendMessageDelayed(msg, DELAY_TIME)
                     }
                 }
                 DiscoverHelper.MSG_START_FIND_DEVICE -> {
