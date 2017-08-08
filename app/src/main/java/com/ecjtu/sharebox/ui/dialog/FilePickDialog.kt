@@ -480,7 +480,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
 
                 ServerManager.getInstance().setSharedFileList(fileList)
                 this@FilePickDialog.cancel()
-                Toast.makeText(context, "选择成功", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, R.string.select_success, Toast.LENGTH_SHORT).show()
             }
 
             R.id.select_all -> {

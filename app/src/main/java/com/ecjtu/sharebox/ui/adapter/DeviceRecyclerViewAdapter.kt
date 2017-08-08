@@ -117,7 +117,7 @@ View.OnLongClickListener{
 
             override fun onError(httpURLConnection: HttpURLConnection?, exception: Exception) {
                 mWeakRef?.get()?.runOnUiThread {
-                    Toast.makeText(mWeakRef?.get()!!,"对方还未准备好，请稍后再试",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(mWeakRef?.get()!!,R.string.client_has_not_yet_ready_try_later,Toast.LENGTH_SHORT).show()
                 }
             }
         })
@@ -127,7 +127,7 @@ View.OnLongClickListener{
         var position=v?.getTag(R.id.extra_tag) as Int
         var deviceInfo=mDeviceList?.get(position)
         TextItemDialog(v.context).apply {
-            setupItem(arrayOf("详细信息","取消"))
+            setupItem(arrayOf(v.context.getString(R.string.details),v.context.getString(R.string.cancel)))
             setOnClickListener { index->
                 if(index==0){
                     if(mWeakRef?.get()!=null&&mWeakRef!!.get()!=null){

@@ -136,7 +136,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
                 return null;
             }
         });
-        dlg.setupItem(new String[]{"打开", "取消"});
+        dlg.setupItem(new String[]{mContext.getString(R.string.open), mContext.getString(R.string.cancel)});
         dlg.show();
         return true;
     }
