@@ -17,6 +17,7 @@ import com.ecjtu.sharebox.ui.dialog.ApDataDialog
 import com.ecjtu.sharebox.ui.dialog.FilePickDialog
 import com.ecjtu.sharebox.ui.dialog.InternetFilePickDialog
 import com.ecjtu.sharebox.ui.dialog.TextItemDialog
+import org.ecjtu.easyserver.server.ConversionFactory
 import org.ecjtu.easyserver.server.DeviceInfo
 import org.ecjtu.easyserver.server.impl.servlet.Info
 import org.json.JSONObject
@@ -64,7 +65,7 @@ View.OnLongClickListener{
         if(info?.fileMap==null){
             AsyncNetwork().requestDeviceInfo("${info?.ip}:${info?.port}",object :IRequestCallback{
                 override fun onSuccess(httpURLConnection: HttpURLConnection?, response: String) {
-                    Info.json2DeviceInfo(JSONObject(response)).apply {
+                    ConversionFactory.json2DeviceInfo(JSONObject(response)).apply {
                         info?.fileMap=fileMap
                     }
 //                    mWeakRef?.get()?.runOnUiThread {
@@ -86,7 +87,7 @@ View.OnLongClickListener{
 
         AsyncNetwork().requestDeviceInfo("${deviceInfo?.ip}:${deviceInfo?.port}",object :IRequestCallback{
             override fun onSuccess(httpURLConnection: HttpURLConnection?, response: String) {
-                Info.json2DeviceInfo(JSONObject(response)).apply {
+                ConversionFactory.json2DeviceInfo(JSONObject(response)).apply {
                     deviceInfo?.fileMap=fileMap
                 }
                 mWeakRef?.get()?.runOnUiThread {
