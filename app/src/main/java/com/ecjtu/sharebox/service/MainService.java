@@ -12,26 +12,27 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.util.List;
+
 /**
  * Created by KerriGan on 2017/6/18.
  */
 
-public class MainService extends Service{
+public class MainService extends Service {
 
-    private static final String TAG="MainService";
+    private static final String TAG = "MainService";
 
-    private boolean mDaemon=false;
+    private boolean mDaemon = false;
 
-    private ServiceConnection mServiceConnection=new ServiceConnection() {
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.e(TAG,"onServiceConnected");
+            Log.e(TAG, "onServiceConnected");
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            Log.e(TAG,"onServiceDisconnected restart DaemonService");
-            bindService(new Intent(MainService.this,DaemonService.class),mServiceConnection,Context.BIND_AUTO_CREATE);
+            Log.e(TAG, "onServiceDisconnected restart DaemonService");
+            bindService(new Intent(MainService.this, DaemonService.class), mServiceConnection, Context.BIND_AUTO_CREATE);
         }
     };
 
@@ -41,17 +42,17 @@ public class MainService extends Service{
         return (IBinder) mAidl;
     }
 
-    private IAidlInterface mAidl=new IAidlInterface.Stub(){
+    private IAidlInterface mAidl = new IAidlInterface.Stub() {
 
         @Override
         public void startService() throws RemoteException {
-            Intent i=new Intent(getBaseContext(),DaemonService.class);
+            Intent i = new Intent(getBaseContext(), DaemonService.class);
             getBaseContext().startService(i);
         }
 
         @Override
         public void stopService() throws RemoteException {
-            Intent i=new Intent(getBaseContext(),DaemonService.class);
+            Intent i = new Intent(getBaseContext(), DaemonService.class);
             getBaseContext().stopService(i);
         }
     };
@@ -59,15 +60,16 @@ public class MainService extends Service{
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.e(TAG,"onCreate");
-        if(mDaemon){
-            startService(new Intent(this,DaemonService.class));
-            bindService(new Intent(this,DaemonService.class),mServiceConnection,Context.BIND_AUTO_CREATE);
+        Log.e(TAG, "onCreate");
+        if (mDaemon) {
+            startService(new Intent(this, DaemonService.class));
+            bindService(new Intent(this, DaemonService.class), mServiceConnection, Context.BIND_AUTO_CREATE);
         }
     }
 
     /**
      * 判断进程是否运行
+     *
      * @return
      */
     public static boolean isProcessRunning(Context context, String processName) {
@@ -87,28 +89,28 @@ public class MainService extends Service{
     }
 
     @Override
-     public void onTrimMemory(int level){
+    public void onTrimMemory(int level) {
         if (isProcessRunning(getBaseContext(), "com.ecjtu.sharebox")) {
-            Log.e(TAG,"onTrimMemory restart MainService");
+            Log.e(TAG, "onTrimMemory restart MainService");
             Intent i = new Intent(getBaseContext(), MainService.class);
             getBaseContext().startService(i);
         }
-     }
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.e(TAG,"onStartCommand");
+        Log.e(TAG, "onStartCommand");
         return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
         try {
-            if(mDaemon)
+            if (mDaemon)
                 unbindService(mServiceConnection);
-        }catch (Exception e){
+        } catch (Exception e) {
         }
-        Log.e(TAG,"onDestroy");
+        Log.e(TAG, "onDestroy");
         super.onDestroy();
     }
 }

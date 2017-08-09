@@ -108,8 +108,8 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         mDrawerLayout = findViewById(R.id.drawer_layout) as DrawerLayout
 
         mDrawerToggle = ActionBarDrawerToggle(owner, mDrawerLayout, mToolbar, 0, 0)
-        mDrawerToggle!!.syncState()
-        mDrawerLayout!!.setDrawerListener(mDrawerToggle)
+        mDrawerToggle.syncState()
+        mDrawerLayout.setDrawerListener(mDrawerToggle)
 
         mFloatingActionButton = findViewById(R.id.floating_action_button) as FloatingActionButton
         mFloatingActionButton.setOnClickListener({ view ->
@@ -126,7 +126,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         mViewSwitcher?.addView(view1)
 
         view0.findViewById(R.id.button_help).setOnClickListener {
-
+            Toast.makeText(owner,"还没准备好",Toast.LENGTH_SHORT).show()
         }
 
         mWifiButton = findViewById(R.id.btn_wifi) as Button

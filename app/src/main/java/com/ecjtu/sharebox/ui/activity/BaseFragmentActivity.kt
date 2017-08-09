@@ -18,8 +18,8 @@ open class BaseFragmentActivity : BaseActionActivity() {
 
     companion object {
 
-        private val EXTRA_FRAGMENT_NAME = "extra_fragment_name"
-        private val EXTRA_FRAGMENT_ARG = "extra_fragment_arguments"
+        private const val EXTRA_FRAGMENT_NAME = "extra_fragment_name"
+        private const val EXTRA_FRAGMENT_ARG = "extra_fragment_arguments"
 
         @JvmOverloads fun newInstance(context: Context, fragment: Class<*>, bundle: Bundle? = null,
                                       clazz: Class<out Activity> = getActivityClazz()): Intent {

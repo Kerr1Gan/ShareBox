@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.domain.PreferenceInfo
@@ -33,6 +34,7 @@ class MainActivity : ImmersiveFragmentActivity() {
         private val MSG_SERVICE_STARTED = 0x10
         val MSG_START_SERVER = 0x11
         @JvmStatic val MSG_CLOSE_APP = -1
+        const val DEBUG = true
     }
 
     private var mDelegate: MainActivityDelegate? = null
@@ -289,6 +291,7 @@ class MainActivity : ImmersiveFragmentActivity() {
     }
 
     override fun onDestroy() {
+        refreshing=false
         mDelegate?.onDestroy()
         try {
             unbindService(mServiceConnection)
@@ -310,9 +313,11 @@ class MainActivity : ImmersiveFragmentActivity() {
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            this.moveTaskToBack(true)
-            return true
+        if (!DEBUG) {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                this.moveTaskToBack(true)
+                return true
+            }
         }
         return super.onKeyDown(keyCode, event)
     }

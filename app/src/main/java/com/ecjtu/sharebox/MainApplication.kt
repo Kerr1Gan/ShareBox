@@ -11,11 +11,10 @@ import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory
 import com.bumptech.glide.load.engine.cache.LruResourceCache
 import com.bumptech.glide.module.AppGlideModule
+import com.ecjtu.sharebox.service.MainService
+import org.ecjtu.channellibrary.wifidirect.WifiDirectManager
 import org.ecjtu.easyserver.server.ServerManager
 import org.ecjtu.easyserver.server.util.AssetsUtil
-import com.ecjtu.sharebox.service.MainService
-import com.ecjtu.sharebox.util.cache.FileCacheHelper
-import org.ecjtu.channellibrary.wifidirect.WifiDirectManager
 import java.io.*
 import java.lang.reflect.InvocationTargetException
 import java.util.*
@@ -24,23 +23,18 @@ import java.util.*
 /**
  * Created by KerriGan on 2017/6/9 0009.
  */
-class MainApplication:Application(){
+class MainApplication : Application() {
 
 
-    private val mSavedInstance =HashMap<String,Any>()
-
-    companion object {
-        var sInstance:MainApplication? =null
-    }
+    private val mSavedInstance = HashMap<String, Any>()
 
     override fun onCreate() {
         super.onCreate()
-        sInstance=this
-        var module=SimpleGlideModule()
-        var builder=GlideBuilder()
-        module.applyOptions(this,builder)
+        var module = SimpleGlideModule()
+        var builder = GlideBuilder()
+        module.applyOptions(this, builder)
 
-        var glide=builder.build(this)
+        var glide = builder.build(this)
 
         Glide.init(glide)
 
@@ -50,7 +44,7 @@ class MainApplication:Application(){
 
         initSavedState()
 
-        startService(Intent(this,MainService::class.java))
+        startService(Intent(this, MainService::class.java))
 
         Thread.currentThread().setUncaughtExceptionHandler { thread, ex ->
             //write error logs add in 2016/6/23 by KerriGan
@@ -100,15 +94,13 @@ class MainApplication:Application(){
         }
     }
 
-    fun getSavedInstance():MutableMap<String,Any>{
+    fun getSavedInstance(): MutableMap<String, Any> {
         return mSavedInstance
     }
 
-    private fun initSavedState(){
-        AssetsUtil.CONTEXT=applicationContext
-        ServerManager.getInstance().setIconPath(filesDir.absolutePath+"/"+Constants.ICON_HEAD)
+    private fun initSavedState() {
+        ServerManager.getInstance().setIconPath(filesDir.absolutePath + "/" + Constants.ICON_HEAD)
         ServerManager.getInstance().setContext(applicationContext)
-        getSystemService(Context.BLUETOOTH_SERVICE)
     }
 
     class SimpleGlideModule : AppGlideModule() {
@@ -123,13 +115,13 @@ class MainApplication:Application(){
             builder.setDecodeFormat(DecodeFormat.PREFER_ARGB_8888)
 
             //自定义磁盘缓存:这种缓存只有自己的app才能访问到
-             builder.setDiskCache(InternalCacheDiskCacheFactory( context , diskCacheSize )) ;
+            builder.setDiskCache(InternalCacheDiskCacheFactory(context, diskCacheSize));
             // builder.setDiskCache( new InternalCacheDiskCacheFactory( context , diskCachePath , diskCacheSize  )) ;
             //自定义磁盘缓存：这种缓存存在SD卡上，所有的应用都可以访问到
 //            builder.setDiskCache(DiskLruCacheFactory(diskCachePath, diskCacheSize))
 
             //Memory Cache
-            builder.setMemoryCache(LruResourceCache(24*1024*1024))
+            builder.setMemoryCache(LruResourceCache(24 * 1024 * 1024))
         }
     }
 

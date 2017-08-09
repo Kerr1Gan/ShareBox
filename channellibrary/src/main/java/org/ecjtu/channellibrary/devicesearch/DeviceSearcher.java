@@ -15,7 +15,7 @@ import java.util.Set;
  * Created by KerriGan on 2017/5/31.
  */
 
-public abstract class DeviceSearcher extends Thread{
+public abstract class DeviceSearcher extends Thread {
     private static final String TAG = "DeviceSearcher";
 
     private static final int DEVICE_FIND_PORT = 9000;
@@ -35,14 +35,15 @@ public abstract class DeviceSearcher extends Thread{
     private byte mPackType;
     private String mDeviceIP;
 
-    private String mPort="";
+    private String mPort = "";
+
     public DeviceSearcher() {
         mDeviceSet = new HashSet<>();
     }
 
-    public DeviceSearcher(String port){
+    public DeviceSearcher(String port) {
         this();
-        mPort=port;
+        mPort = port;
     }
 
 
@@ -59,10 +60,11 @@ public abstract class DeviceSearcher extends Thread{
             DatagramPacket sendPack = new DatagramPacket(sendData, sendData.length, broadIP, DEVICE_FIND_PORT);
 
             for (int i = 0; i < 3; i++) {
+
                 // 发送搜索广播
                 mPackType = PACKET_TYPE_FIND_DEVICE_REQ_10;
                 sendPack.setData(packData(i + 1));
-                Log.i(TAG, String.format("%s: 发送搜索广播",TAG));
+                Log.i(TAG, String.format("%s: 发送搜索广播", TAG));
                 mHostSocket.send(sendPack);
 
                 // 监听来信
@@ -77,7 +79,7 @@ public abstract class DeviceSearcher extends Thread{
                         if (recePack.getLength() > 0) {
                             mDeviceIP = recePack.getAddress().getHostAddress();
                             if (parsePack(recePack)) {
-                                Log.i(TAG, String.format("%s: 设备上线：%s",TAG,mDeviceIP));
+                                Log.i(TAG, String.format("%s: 设备上线：%s", TAG, mDeviceIP));
                                 // 发送一对一的确认信息。使用接收报，因为接收报中有对方的实际IP，发送报时广播IP
                                 mPackType = PACKET_TYPE_FIND_DEVICE_CHK_12;
                                 recePack.setData(packData(rspCount)); // 注意：设置数据的同时，把recePack.getLength()也改变了
@@ -87,7 +89,7 @@ public abstract class DeviceSearcher extends Thread{
                     }
                 } catch (SocketTimeoutException e) {
                 }
-                Log.i(TAG, String.format("%s: 结束搜索 %d",TAG,i));
+                Log.i(TAG, String.format("%s: 结束搜索 %d", TAG, i));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -107,6 +109,7 @@ public abstract class DeviceSearcher extends Thread{
 
     /**
      * 搜索结束后执行
+     *
      * @param deviceSet 搜索到的设备集合
      */
     public abstract void onSearchFinish(Set<DeviceBean> deviceSet);
@@ -114,8 +117,8 @@ public abstract class DeviceSearcher extends Thread{
     /**
      * 解析报文
      * 协议：$ + packType(1) + data(n)
-     *  data: 由n组数据，每组的组成结构type(1) + length(4) + data(length)
-     *  type类型中包含name、room类型，但name必须在最前面
+     * data: 由n组数据，每组的组成结构type(1) + length(4) + data(length)
+     * type类型中包含name、room类型，但name必须在最前面
      */
     private boolean parsePack(DatagramPacket pack) {
         if (pack == null || pack.getAddress() == null) {
@@ -175,7 +178,8 @@ public abstract class DeviceSearcher extends Thread{
                         device.setRoom(room);
                     }
                     break;
-                default: break;
+                default:
+                    break;
             }
             offset += len;
         }
@@ -189,9 +193,9 @@ public abstract class DeviceSearcher extends Thread{
     /**
      * 打包搜索报文
      * 协议：$ + packType(1) + sendSeq(4) + [deviceIP(n<=15)]
-     *  packType - 报文类型
-     *  sendSeq - 发送序列
-     *  deviceIP - 设备IP，仅确认时携带
+     * packType - 报文类型
+     * sendSeq - 发送序列
+     * deviceIP - 设备IP，仅确认时携带
      */
     private byte[] packData(int seq) {
         byte[] data = new byte[1024];
@@ -203,12 +207,12 @@ public abstract class DeviceSearcher extends Thread{
 
         seq = seq == 3 ? 1 : ++seq; // can't use findSeq++
         data[offset++] = (byte) seq;
-        data[offset++] = (byte) (seq >> 8 );
+        data[offset++] = (byte) (seq >> 8);
         data[offset++] = (byte) (seq >> 16);
         data[offset++] = (byte) (seq >> 24);
 
         if (mPackType == PACKET_TYPE_FIND_DEVICE_CHK_12) {
-            String content=mDeviceIP+","+mPort;
+            String content = mDeviceIP + "," + mPort;
             byte[] ips = content.getBytes(Charset.forName("UTF-8"));
             System.arraycopy(ips, 0, data, offset, ips.length);
             offset += ips.length;
@@ -221,7 +225,10 @@ public abstract class DeviceSearcher extends Thread{
 
     @Override
     public void interrupt() {
-        if(mHostSocket!=null) mHostSocket.close();
+        if (mHostSocket != null) {
+            mHostSocket.close();
+            mHostSocket = null;
+        }
         super.interrupt();
     }
 
@@ -229,7 +236,7 @@ public abstract class DeviceSearcher extends Thread{
      * 设备Bean
      * 只要IP一样，则认为是同一个设备
      */
-    public static class DeviceBean{
+    public static class DeviceBean {
         String ip;      // IP地址
         int port;       // 端口
         String name;    // 设备名称
@@ -243,7 +250,7 @@ public abstract class DeviceSearcher extends Thread{
         @Override
         public boolean equals(Object o) {
             if (o instanceof DeviceBean) {
-                return this.ip.equals(((DeviceBean)o).getIp());
+                return this.ip.equals(((DeviceBean) o).getIp());
             }
             return super.equals(o);
         }
