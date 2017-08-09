@@ -63,59 +63,6 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
 
     private var mRetMap: MutableMap<String, ArrayList<FileExpandableAdapter.VH>> = mutableMapOf()
 
-    companion object {
-        fun string2MediaFileType(str: String): FileUtil.MediaFileType? {
-            var ret: FileUtil.MediaFileType? = null
-            when (str) {
-                "Movie" -> {
-                    ret = FileUtil.MediaFileType.MOVIE
-                }
-                "Music" -> {
-                    ret = FileUtil.MediaFileType.MP3
-                }
-                "Photo" -> {
-                    ret = FileUtil.MediaFileType.IMG
-                }
-                "Doc" -> {
-                    ret = FileUtil.MediaFileType.DOC
-                }
-                "Apk" -> {
-                    ret = FileUtil.MediaFileType.APP
-                }
-                "Rar" -> {
-                    ret = FileUtil.MediaFileType.RAR
-                }
-            }
-            return ret
-        }
-
-        fun mediaFileType2String(type: FileUtil.MediaFileType): String? {
-            var ret: String? = null
-            when (type) {
-                FileUtil.MediaFileType.MOVIE -> {
-                    ret = "Movie"
-                }
-                FileUtil.MediaFileType.MP3 -> {
-                    ret = "Music"
-                }
-                FileUtil.MediaFileType.IMG -> {
-                    ret = "Photo"
-                }
-                FileUtil.MediaFileType.DOC -> {
-                    ret = "Doc"
-                }
-                FileUtil.MediaFileType.APP -> {
-                    ret = "Apk"
-                }
-                FileUtil.MediaFileType.RAR -> {
-                    ret = "Rar"
-                }
-            }
-            return ret
-        }
-
-    }
-
     override fun initializeDialog() {
         super.initializeDialog()
         context.setTheme(R.style.WhiteToolbar)
@@ -145,22 +92,22 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
     }
 
     open protected fun initData() {
-        var item = TabItemHolder(context.getString(R.string.movie), string2MediaFileType("Movie"))
+        var item = TabItemHolder(context.getString(R.string.movie), FileUtil.string2MediaFileType("Movie"))
         mTabItemHolders?.put("Movie", item)
 
-        item = TabItemHolder(context.getString(R.string.music), string2MediaFileType("Music"))
+        item = TabItemHolder(context.getString(R.string.music), FileUtil.string2MediaFileType("Music"))
         mTabItemHolders?.put("Music", item)
 
-        item = TabItemHolder(context.getString(R.string.photo), string2MediaFileType("Photo"))
+        item = TabItemHolder(context.getString(R.string.photo), FileUtil.string2MediaFileType("Photo"))
         mTabItemHolders?.put("Photo", item)
 
-        item = TabItemHolder(context.getString(R.string.doc), string2MediaFileType("Doc"))
+        item = TabItemHolder(context.getString(R.string.doc), FileUtil.string2MediaFileType("Doc"))
         mTabItemHolders?.put("Doc", item)
 
-        item = TabItemHolder(context.getString(R.string.apk), string2MediaFileType("Apk"))
+        item = TabItemHolder(context.getString(R.string.apk), FileUtil.string2MediaFileType("Apk"))
         mTabItemHolders?.put("Apk", item)
 
-        item = TabItemHolder(context.getString(R.string.rar), string2MediaFileType("Rar"))
+        item = TabItemHolder(context.getString(R.string.rar), FileUtil.string2MediaFileType("Rar"))
         mTabItemHolders?.put("Rar", item)
 
     }
@@ -336,14 +283,14 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         }
 
         override fun doInBackground(vararg params: List<File>?): List<File>? {
-            Log.e(TAG, mediaFileType2String(mType!!) + " task begin")
+            Log.e(TAG, FileUtil.mediaFileType2String(mType!!) + " task begin")
             publishProgress()
             var list: List<File>? = null
 
             findFilesWithType(mContext!!, mType!!, mTabItemHolders!!)
 
             if (!isCancelled)
-                Log.e(TAG, mediaFileType2String(mType!!) + " task finished")
+                Log.e(TAG, FileUtil.mediaFileType2String(mType!!) + " task finished")
             return list
         }
 
@@ -373,7 +320,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
 
         override fun onCancelled(result: List<File>?) {
             super.onCancelled(result)
-            Log.e(TAG, mediaFileType2String(mType!!) + " task cancelled")
+            Log.e(TAG, FileUtil.mediaFileType2String(mType!!) + " task cancelled")
         }
     }
 
@@ -384,28 +331,28 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         var list: MutableList<File>? = null
         when (type) {
             FileUtil.MediaFileType.MOVIE -> {
-                list = FileUtil.getAllMediaFile(context!!, null)
+                list = FileUtil.getAllMediaFile(context, null)
                 map.get("Movie")?.fileList = list
             }
             FileUtil.MediaFileType.MP3 -> {
-                list = FileUtil.getAllMusicFile(context!!, null)
+                list = FileUtil.getAllMusicFile(context, null)
                 map.get("Music")?.fileList = list
             }
             FileUtil.MediaFileType.IMG -> {
 //                    list=FileUtil.getAllImageFile(mContext!!,null)
-                list = FileUtil.getImagesByDCIM(context!!)
+                list = FileUtil.getImagesByDCIM(context)
                 map.get("Photo")?.fileList = list
             }
             FileUtil.MediaFileType.DOC -> {
-                list = FileUtil.getAllDocFile(context!!, null)
+                list = FileUtil.getAllDocFile(context, null)
                 map.get("Doc")?.fileList = list
             }
             FileUtil.MediaFileType.APP -> {
-                list = FileUtil.getAllApkFile(context!!, null)
+                list = FileUtil.getAllApkFile(context, null)
                 map.get("Apk")?.fileList = list
             }
             FileUtil.MediaFileType.RAR -> {
-                list = FileUtil.getAllRarFile(context!!, null)
+                list = FileUtil.getAllRarFile(context, null)
                 map.get("Rar")?.fileList = list
             }
         }

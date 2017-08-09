@@ -436,5 +436,55 @@ object FileUtil {
             }
         }
     }
+
+    fun string2MediaFileType(str: String): FileUtil.MediaFileType? {
+        var ret: FileUtil.MediaFileType? = null
+        when (str) {
+            "Movie" -> {
+                ret = FileUtil.MediaFileType.MOVIE
+            }
+            "Music" -> {
+                ret = FileUtil.MediaFileType.MP3
+            }
+            "Photo" -> {
+                ret = FileUtil.MediaFileType.IMG
+            }
+            "Doc" -> {
+                ret = FileUtil.MediaFileType.DOC
+            }
+            "Apk" -> {
+                ret = FileUtil.MediaFileType.APP
+            }
+            "Rar" -> {
+                ret = FileUtil.MediaFileType.RAR
+            }
+        }
+        return ret
+    }
+
+    fun mediaFileType2String(type: FileUtil.MediaFileType): String? {
+        var ret: String? = null
+        when (type) {
+            FileUtil.MediaFileType.MOVIE -> {
+                ret = "Movie"
+            }
+            FileUtil.MediaFileType.MP3 -> {
+                ret = "Music"
+            }
+            FileUtil.MediaFileType.IMG -> {
+                ret = "Photo"
+            }
+            FileUtil.MediaFileType.DOC -> {
+                ret = "Doc"
+            }
+            FileUtil.MediaFileType.APP -> {
+                ret = "Apk"
+            }
+            FileUtil.MediaFileType.RAR -> {
+                ret = "Rar"
+            }
+        }
+        return ret
+    }
 }
 
