@@ -229,7 +229,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                 }else{
                     var fileList=mTabItemHolders?.get(title)?.fileList
                     if(fileList!=null){
-                        var map=LinkedHashMap<String,MutableList<File>>()
+                        var map=LinkedHashMap<String,MutableList<String>>()
                         oldCache= makeVhList(fileList,map)
                     }
                 }
@@ -325,35 +325,59 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
     }
 
     data class TabItemHolder(var title: String? = null, var type: FileUtil.MediaFileType? = null
-                             , var task: LoadingFilesTask? = null, var fileList: List<File>? = null)
+                             , var task: LoadingFilesTask? = null, var fileList: List<String>? = null)
 
     private fun findFilesWithType(context: Context, type: FileUtil.MediaFileType, map: MutableMap<String, TabItemHolder>) {
         var list: MutableList<File>? = null
         when (type) {
             FileUtil.MediaFileType.MOVIE -> {
                 list = FileUtil.getAllMediaFile(context, null)
-                map.get("Movie")?.fileList = list
+                var strList= arrayListOf<String>()
+                for(path in list.iterator()){
+                    strList.add(path.absolutePath)
+                }
+                map.get("Movie")?.fileList = strList
             }
             FileUtil.MediaFileType.MP3 -> {
                 list = FileUtil.getAllMusicFile(context, null)
-                map.get("Music")?.fileList = list
+                var strList= arrayListOf<String>()
+                for(path in list.iterator()){
+                    strList.add(path.absolutePath)
+                }
+                map.get("Music")?.fileList = strList
             }
             FileUtil.MediaFileType.IMG -> {
 //                    list=FileUtil.getAllImageFile(mContext!!,null)
                 list = FileUtil.getImagesByDCIM(context)
-                map.get("Photo")?.fileList = list
+                var strList= arrayListOf<String>()
+                for(path in list.iterator()){
+                    strList.add(path.absolutePath)
+                }
+                map.get("Photo")?.fileList = strList
             }
             FileUtil.MediaFileType.DOC -> {
                 list = FileUtil.getAllDocFile(context, null)
-                map.get("Doc")?.fileList = list
+                var strList= arrayListOf<String>()
+                for(path in list.iterator()){
+                    strList.add(path.absolutePath)
+                }
+                map.get("Doc")?.fileList = strList
             }
             FileUtil.MediaFileType.APP -> {
                 list = FileUtil.getAllApkFile(context, null)
-                map.get("Apk")?.fileList = list
+                var strList= arrayListOf<String>()
+                for(path in list.iterator()){
+                    strList.add(path.absolutePath)
+                }
+                map.get("Apk")?.fileList = strList
             }
             FileUtil.MediaFileType.RAR -> {
                 list = FileUtil.getAllRarFile(context, null)
-                map.get("Rar")?.fileList = list
+                var strList= arrayListOf<String>()
+                for(path in list.iterator()){
+                    strList.add(path.absolutePath)
+                }
+                map.get("Rar")?.fileList = strList
             }
         }
     }
@@ -398,7 +422,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                     var obj = iter?.next()
                     obj?.value?.task?.cancel(true)
                 }
-                var fileList = mutableListOf<File>()
+                var fileList = mutableListOf<String>()
 
                 for (entry in mTabItemHolders!!.entries) {
                     var title = entry.key
@@ -406,7 +430,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                     var vhList = mRetMap.get(key)
                     if (ownerActivity != null && vhList!=null) {
                         var application = ownerActivity.getMainApplication()
-                        application.getSavedInstance().put(key, vhList!!)
+                        application.getSavedInstance().put(key, vhList)
                     }
                 }
 
@@ -425,7 +449,11 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                         get(Constants.KEY_INFO_OBJECT) as DeviceInfo
                 deviceInfo.fileMap = map
 
-                ServerManager.getInstance().setSharedFileList(fileList)
+                var serverList= arrayListOf<File>()
+                for(path in fileList){
+                    serverList.add(File(path))
+                }
+                ServerManager.getInstance().setSharedFileList(serverList)
                 this@FilePickDialog.cancel()
                 Toast.makeText(context, R.string.select_success, Toast.LENGTH_SHORT).show()
             }
@@ -467,7 +495,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         return true
     }
 
-    private fun updateFileMap(fileList: MutableList<File>, itemHolder: MutableMap<String, FilePickDialog.TabItemHolder>): MutableMap<String, List<String>> {
+    private fun updateFileMap(fileList: MutableList<String>, itemHolder: MutableMap<String, FilePickDialog.TabItemHolder>): MutableMap<String, List<String>> {
         var map = mutableMapOf<String, List<String>>()
         var index = 0
         for (element in itemHolder!!.entries) {
@@ -479,8 +507,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
             for (file in fileArr) {
                 if (fileList.indexOf(file) < 0)
                     fileList.add(file)
-
-                strList.add(file.absolutePath)
+                strList.add(file)
             }
             map.put(element.key, strList)
         }
@@ -500,7 +527,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                     for (file in fList) {
                         if (fileList.indexOf(file) < 0)
                             fileList.add(file)
-                        strList.add(file.absolutePath)
+                        strList.add(file)
                     }
                 }
             }
@@ -509,7 +536,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         return map
     }
 
-    private fun updateAllFileList(fileList: MutableList<File>, itemHolder: MutableMap<String, FilePickDialog.TabItemHolder>): MutableMap<String, List<String>> {
+    private fun updateAllFileList(fileList: MutableList<String>, itemHolder: MutableMap<String, FilePickDialog.TabItemHolder>): MutableMap<String, List<String>> {
         var map = mutableMapOf<String, List<String>>()
         var application = if (ownerActivity != null) ownerActivity.getMainApplication() else null
         for (element in itemHolder!!.entries) {
@@ -526,7 +553,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                     for (file in fList) {
                         if (fileList.indexOf(file) < 0)
                             fileList.add(file)
-                        strList.add(file.absolutePath)
+                        strList.add(file)
                     }
                 }
             }
@@ -588,7 +615,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
 
             thread {
                 mRetMap.clear()
-                val res = LinkedHashMap<String, MutableList<File>>()
+                val res = LinkedHashMap<String, MutableList<String>>()
                 for (entry in mTabItemHolders!!.entries) {
                     res.clear()
                     var title = entry.key
@@ -618,15 +645,15 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         fileExpandableListView.fileExpandableAdapter.selectAll(true)
     }
 
-    private fun makeVhList(fileList:List<File>,map :LinkedHashMap<String, MutableList<File>>? =null) : List<FileExpandableAdapter.VH>?{
-        var map2:LinkedHashMap<String, MutableList<File>>? =map
-        if(map2==null) map2=LinkedHashMap<String, MutableList<File>>()
-        val names = FileUtil.foldFiles(fileList as MutableList<File>, map2!!)
+    private fun makeVhList(fileList:List<String>,map :LinkedHashMap<String, MutableList<String>>? =null) : List<FileExpandableAdapter.VH>?{
+        var map2:LinkedHashMap<String, MutableList<String>>? =map
+        if(map2==null) map2=LinkedHashMap<String, MutableList<String>>()
+        val names = FileUtil.foldFiles(fileList as MutableList<String>, map2)
         names?.let {
             val newArr = ArrayList<FileExpandableAdapter.VH>()
 
             for (name in names!!.iterator()) {
-                val vh = FileExpandableAdapter.VH(File(name), map2!!.get(name))
+                val vh = FileExpandableAdapter.VH(name, map2!!.get(name))
                 vh.activate(true)
                 newArr.add(vh)
             }

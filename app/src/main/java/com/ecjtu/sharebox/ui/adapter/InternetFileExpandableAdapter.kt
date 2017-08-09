@@ -35,8 +35,8 @@ class InternetFileExpandableAdapter(expandableListView: FileExpandableListView):
 
     override fun onClick(v: View?) {
         var tag=v?.getTag()
-        if(tag!=null && tag is File ){
-            var path=tag.absolutePath
+        if(tag!=null && tag is String ){
+            var path=tag
             openFile("${mDeviceInfo?.ip}:${mDeviceInfo?.port}/API/File/${path}")
             return
         }

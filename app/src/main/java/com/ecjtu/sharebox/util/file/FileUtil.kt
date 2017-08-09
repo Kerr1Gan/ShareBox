@@ -286,31 +286,31 @@ object FileUtil {
 
     val TX_PATH = arrayOf("/tencent/MicroMsg", "/tencent/MobileQQ")
 
-    @JvmOverloads fun foldFiles(input: MutableList<File>?, output: LinkedHashMap<String, MutableList<File>>,ignoreWx:Boolean=false,ignoreQQ:Boolean=false): Array<String>? {
+    @JvmOverloads fun foldFiles(input: MutableList<String>?, output: LinkedHashMap<String, MutableList<String>>, ignoreWx: Boolean = false, ignoreQQ: Boolean = false): Array<String>? {
         if (input == null || input.size == 0) return null
         val prefix = ArrayList<String>()
-        output.put(TX_PATH[0], arrayListOf<File>())
-        output.put(TX_PATH[1], arrayListOf<File>())
+        output.put(TX_PATH[0], arrayListOf<String>())
+        output.put(TX_PATH[1], arrayListOf<String>())
 
         for (f in input) {
-            var root = f.absolutePath
-            root= root.substring(0,root.lastIndexOf(File.separator))
+            var root = f
+            root = root.substring(0, root.lastIndexOf(File.separator))
             if (prefix.indexOf(root) < 0) {
                 prefix.add(root)
-                var list = ArrayList<File>()
+                var list = ArrayList<String>()
                 output.put(root, list)
             }
         }
 
-        var wxList=output[TX_PATH[0]]
-        var qqList=output[TX_PATH[1]]
+        var wxList = output[TX_PATH[0]]
+        var qqList = output[TX_PATH[1]]
         for (f in input) {
             if (Thread.interrupted())
                 return null
-            var root = f.absolutePath
-            root= root.substring(0,root.lastIndexOf(File.separator))
-            var list: MutableList<File>? = output[root]
-            if( root != null){
+            var root = f
+            root = root.substring(0, root.lastIndexOf(File.separator))
+            var list: MutableList<String>? = output[root]
+            if (root != null) {
                 if (root.contains(TX_PATH[0]) && !ignoreWx) {
                     if (wxList?.indexOf(f) ?: -1 < 0)
                         wxList?.add(f)
@@ -319,29 +319,29 @@ object FileUtil {
                     if (qqList?.indexOf(f) ?: -1 < 0)
                         qqList?.add(f)
                 }
-                if (wxList?.indexOf(f) ?:-1 <0 && qqList?.indexOf(f) ?:-1 <0) {
-                    if(list?.indexOf(f)?:0 <0)
+                if (wxList?.indexOf(f) ?: -1 < 0 && qqList?.indexOf(f) ?: -1 < 0) {
+                    if (list?.indexOf(f) ?: 0 < 0)
                         list?.add(f)
                 }
             }
 
             for (pre in prefix) {
                 if (Thread.interrupted()) return null
-                if (root.startsWith(pre) && wxList?.indexOf(f) ?:-1 <0 && qqList?.indexOf(f) ?:-1 <0) {
+                if (root.startsWith(pre) && wxList?.indexOf(f) ?: -1 < 0 && qqList?.indexOf(f) ?: -1 < 0) {
                     val lst = output[pre]
                     if (lst?.indexOf(f) ?: 0 < 0)
                         lst?.add(f)
                 }
             }
         }
-        var iter=output.iterator()
-        while (iter.hasNext()){
-            var entry=iter.next()
+        var iter = output.iterator()
+        while (iter.hasNext()) {
+            var entry = iter.next()
             if (entry.value?.size == 0) {
                 iter.remove()
             }
         }
-        for(key in output){
+        for (key in output) {
             if (key.value?.size == 0) {
                 output.remove(key.key)
             }
@@ -485,6 +485,30 @@ object FileUtil {
             }
         }
         return ret
+    }
+
+    fun getFileName(filePath: String): String {
+        val index = filePath.lastIndexOf("/")
+        if (index < 0) {
+            return if (filePath.startsWith("/")) filePath.substring(1) else filePath
+        } else {
+            var ret = filePath.substring(index)
+            return if (ret.startsWith("/")) ret.substring(1) else ret
+        }
+    }
+
+    fun getParentFileName(filePath: String): String? {
+        var cpy = filePath
+        var index = cpy.lastIndexOf("/")
+        if (index < 0) return null
+        cpy = filePath.substring(0, index)
+        index = cpy.lastIndexOf("/")
+        if (index < 0) {
+            return if (filePath.startsWith("/")) filePath.substring(1) else filePath
+        } else {
+            var ret = filePath.substring(index)
+            return if (ret.startsWith("/")) ret.substring(1) else ret
+        }
     }
 }
 

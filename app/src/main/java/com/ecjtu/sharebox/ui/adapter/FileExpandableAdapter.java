@@ -44,7 +44,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
 
     protected FilePickDialog.TabItemHolder mTabHolder;
 
-    protected List<File> mFileList;
+    protected List<String> mFileList;
 
     private static final int CACHE_SIZE = 5 * 1024 * 1024;
 
@@ -73,7 +73,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         mContext = expandableListView.getContext();
     }
 
-    public void initData(FilePickDialog.TabItemHolder holder,List<VH> oldCache) {
+    public void initData(FilePickDialog.TabItemHolder holder, List<VH> oldCache) {
         mTabHolder = holder;
         mFileList = mTabHolder.getFileList();
 
@@ -82,8 +82,8 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         mExpandableListView.setChildDivider(new ColorDrawable(Color.DKGRAY));
         mExpandableListView.setDividerHeight(1);
 
-        if(oldCache!=null){
-            mVHList=oldCache;
+        if (oldCache != null) {
+            mVHList = oldCache;
         }
         mExpandableListView.setAdapter(this);
     }
@@ -127,7 +127,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
             @Override
             public Unit invoke(Integer integer) {
                 if (integer == 0) {
-                    String path = ((File) v.getTag()).getAbsolutePath();
+                    String path = (String) v.getTag();
                     openFile(path);
                     dlg.cancel();
                 } else {
@@ -142,15 +142,15 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
     }
 
 
-    public void onFoldFiles(LinkedHashMap<String, List<File>> foldFiles, String[] names) {
+    public void onFoldFiles(LinkedHashMap<String, List<String>> foldFiles, String[] names) {
         if (names == null) return;
         List<VH> newArr = new ArrayList<>();
 
-        boolean selectAll=mSelectAll;
-        mSelectAll=false;
+        boolean selectAll = mSelectAll;
+        mSelectAll = false;
         for (String name : names) {
-            VH vh = new VH(new File(name), foldFiles.get(name));
-            if(selectAll){
+            VH vh = new VH(name, foldFiles.get(name));
+            if (selectAll) {
                 vh.activate(true);
             }
             for (VH last : mVHList) {
@@ -204,14 +204,14 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         VH vh = (VH) getGroup(groupPosition);
-        File f = (File) vh.group;
-        File thumb = null;
+        String f = vh.group;
+        String thumb = null;
         if (vh.childList.size() != 0)
             thumb = vh.childList.get(0);
         if (convertView == null)
             convertView = LayoutInflater.from(mContext).inflate(R.layout.layout_file_group_item, parent, false);
 
-        ((TextView) convertView.findViewById(R.id.text_name)).setText(f.getName());
+        ((TextView) convertView.findViewById(R.id.text_name)).setText(FileUtil.INSTANCE.getFileName(f));
         FileUtil.MediaFileType type = mTabHolder.getType();
 
         ImageView icon = (ImageView) convertView.findViewById(R.id.icon);
@@ -221,12 +221,12 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         text.setText("");
         if (type == FileUtil.MediaFileType.MOVIE ||
                 type == FileUtil.MediaFileType.IMG) {
-            Glide.with(mContext).load(thumb.getAbsolutePath()).into(icon);
+            Glide.with(mContext).load(thumb).into(icon);
         } else if (type == FileUtil.MediaFileType.APP) {
-            Bitmap b = sLruCache.get(thumb.getAbsolutePath());
+            Bitmap b = sLruCache.get(thumb);
             if (b == null) {
                 AppThumbTask task = new AppThumbTask(sLruCache, mContext, icon);
-                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, thumb);
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new File(thumb));
             } else
                 icon.setImageBitmap(b);
         } else if (type == FileUtil.MediaFileType.MP3) {
@@ -256,30 +256,30 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
             child.setBackgroundResource(R.mipmap.check_normal_pure);
             child.setText(String.valueOf(vh.activatedList.size()));
         }
-        if(isExpanded) mExpandableListView.expandGroup(groupPosition);
+        if (isExpanded) mExpandableListView.expandGroup(groupPosition);
         return convertView;
     }
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        File f = (File) getChild(groupPosition, childPosition);
+        String f = (String) getChild(groupPosition, childPosition);
         VH vh = (VH) getGroup(groupPosition);
         if (convertView == null)
             convertView = LayoutInflater.from(mContext).inflate(R.layout.layout_file_item, parent, false);
 
-        ((TextView) convertView.findViewById(R.id.text_name)).setText(f.getName());
+        ((TextView) convertView.findViewById(R.id.text_name)).setText(FileUtil.INSTANCE.getFileName(f));
         FileUtil.MediaFileType type = mTabHolder.getType();
 
         ImageView icon = (ImageView) convertView.findViewById(R.id.icon);
         icon.setImageDrawable(null);
         if (type == FileUtil.MediaFileType.MOVIE ||
                 type == FileUtil.MediaFileType.IMG) {
-            Glide.with(mContext).load(f.getAbsolutePath()).into(icon);
+            Glide.with(mContext).load(f).into(icon);
         } else if (type == FileUtil.MediaFileType.APP) {
-            Bitmap b = sLruCache.get(f.getAbsolutePath());
+            Bitmap b = sLruCache.get(f);
             if (b == null) {
                 AppThumbTask task = new AppThumbTask(sLruCache, mContext, icon);
-                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, f);
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new File(f));
             } else
                 icon.setImageBitmap(b);
         } else if (type == FileUtil.MediaFileType.MP3) {
@@ -307,17 +307,17 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         return true;
     }
 
-    public static class VH implements Cloneable{
+    public static class VH implements Cloneable {
 
-        public List<File> childList;
+        public List<String> childList;
 
-        public File group;
+        public String group;
 
         private boolean isActivated = false;
 
-        private List<File> activatedList = new ArrayList<>();
+        private List<String> activatedList = new ArrayList<>();
 
-        public VH(File group, List<File> childList) {
+        public VH(String group, List<String> childList) {
             this.group = group;
             this.childList = childList;
         }
@@ -336,7 +336,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
             }
         }
 
-        public void activateItem(boolean active, File file) {
+        public void activateItem(boolean active, String file) {
             if (active) {
                 if (activatedList.indexOf(file) < 0) {
                     activatedList.add(file);
@@ -352,16 +352,16 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
             }
         }
 
-        public boolean isItemActivated(File file) {
+        public boolean isItemActivated(String file) {
             return activatedList.indexOf(file) >= 0;
         }
 
-        public List<File> getActivatedList() {
+        public List<String> getActivatedList() {
             return activatedList;
         }
 
         @Override
-        public Object clone(){
+        public Object clone() {
             try {
                 return super.clone();
             } catch (CloneNotSupportedException e) {
@@ -375,7 +375,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         @Override
         public void run() {
 
-            final LinkedHashMap<String, List<File>> res = new LinkedHashMap<>();
+            final LinkedHashMap<String, List<String>> res = new LinkedHashMap<>();
 
             final String[] names = FileUtil.INSTANCE.foldFiles(mFileList, res);
 
@@ -407,7 +407,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
     private View.OnClickListener mCheckOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            File file = (File) v.getTag();
+            String file = (String) v.getTag();
             CheckBox checkBox = (CheckBox) v;
             VH vh = (VH) v.getTag(R.id.extra_tag);
 
@@ -420,8 +420,8 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         }
     };
 
-    public List<File> getSelectedFile() {
-        List<File> files = new ArrayList<>();
+    public List<String> getSelectedFile() {
+        List<String> files = new ArrayList<>();
         for (int i = 0; i < mVHList.size(); i++) {
             VH vh = mVHList.get(i);
             files.addAll(vh.getActivatedList());
@@ -429,27 +429,28 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         return files;
     }
 
-    public void setup( String title) {
+    public void setup(String title) {
         mTitle = title;
     }
 
     public void selectAll(boolean select) {
-        mSelectAll=select;
+        mSelectAll = select;
         for (VH vh : mVHList) {
             vh.activate(select);
         }
         notifyDataSetChanged();
     }
 
-    public void replaceVhList(List<VH> vhList){
-        mVHList=vhList;
+    public void replaceVhList(List<VH> vhList) {
+        mVHList = vhList;
     }
 
-    public List<VH> getVhList(){
+    public List<VH> getVhList() {
         return mVHList;
     }
 
-    public String getTitle(){
+    public String getTitle() {
         return mTitle;
     }
+
 }
