@@ -105,10 +105,8 @@ class MainApplication:Application(){
     }
 
     private fun initSavedState(){
-        AssetsUtil.CONTEXT=applicationContext
         ServerManager.getInstance().setIconPath(filesDir.absolutePath+"/"+Constants.ICON_HEAD)
         ServerManager.getInstance().setContext(applicationContext)
-        getSystemService(Context.BLUETOOTH_SERVICE)
     }
 
     class SimpleGlideModule : AppGlideModule() {

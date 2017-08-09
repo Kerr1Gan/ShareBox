@@ -3,6 +3,7 @@ package org.ecjtu.easyserver.server.impl.servlet;
 import android.content.res.AssetManager;
 
 
+import org.ecjtu.easyserver.server.ServerManager;
 import org.ecjtu.easyserver.server.util.AssetsUtil;
 
 import org.ecjtu.easyserver.http.HTTPRequest;
@@ -51,7 +52,7 @@ public class AssetsHtml implements BaseServlet {
                 filePath = filePath.substring(1);
 
             BufferedInputStream input = new BufferedInputStream(AssetsUtil.
-                    getAssetsInputStreamByStreaming(AssetsUtil.CONTEXT, filePath));
+                    getAssetsInputStreamByStreaming(ServerManager.getInstance().getContext(), filePath));
 
             long contentLen = (long) input.available();
 
@@ -107,7 +108,7 @@ public class AssetsHtml implements BaseServlet {
         else
             assetsPath = "";
 
-        AssetManager manager = AssetsUtil.CONTEXT.getAssets();
+        AssetManager manager = ServerManager.getInstance().getContext().getAssets();
         String[] fileList = manager.list(assetsPath);
 
         for (int i = 0; i < fileList.length; i++) {
@@ -125,7 +126,7 @@ public class AssetsHtml implements BaseServlet {
         if (assetsPath.endsWith("/"))
             assetsPath = assetsPath.substring(0, assetsPath.length() - 1);
 
-        AssetManager manager = AssetsUtil.CONTEXT.getAssets();
+        AssetManager manager = ServerManager.getInstance().getContext().getAssets();
         try {
             String[] files = manager.list(assetsPath);
 

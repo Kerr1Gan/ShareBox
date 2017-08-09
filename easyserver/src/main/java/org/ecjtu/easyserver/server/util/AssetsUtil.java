@@ -11,8 +11,6 @@ import java.io.InputStream;
  */
 public class AssetsUtil {
 
-    public static Context CONTEXT;
-
     public static InputStream getAssetsInputStream(Context context,String path,int mode) throws IOException {
         AssetManager manager=context.getAssets();
 
