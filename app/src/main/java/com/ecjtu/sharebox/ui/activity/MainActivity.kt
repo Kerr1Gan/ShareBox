@@ -31,7 +31,7 @@ class MainActivity : ImmersiveFragmentActivity() {
     companion object {
         const private val TAG = "MainActivity"
         private val MSG_SERVICE_STARTED = 0x10
-        private val MSG_START_SERVER = 0x11
+        val MSG_START_SERVER = 0x11
         @JvmStatic val MSG_CLOSE_APP = -1
     }
 

@@ -289,6 +289,8 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
             mWifiImage.setImageResource(R.mipmap.wifi)
             hasAccess = true
             owner.getMainApplication().getSavedInstance().put(Constants.AP_STATE, Constants.NetWorkState.WIFI)
+
+            owner.getHandler()?.obtainMessage(MainActivity.MSG_START_SERVER)?.sendToTarget()
         } else if (NetworkUtil.isHotSpot(owner)) {
             var config = NetworkUtil.getHotSpotConfiguration(owner)
             mApName.setText(getRealName(config.SSID))
@@ -297,6 +299,8 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
             mWifiImage.setImageResource(R.mipmap.hotspot)
             hasAccess = true
             owner.getMainApplication().getSavedInstance().put(Constants.AP_STATE, Constants.NetWorkState.AP)
+
+            owner.getHandler()?.obtainMessage(MainActivity.MSG_START_SERVER)?.sendToTarget()
         } else if (NetworkUtil.isMobile(owner)) {
             mApName.setText(R.string.cellular)
             mWifiImage.setImageResource(R.mipmap.wifi_off)
