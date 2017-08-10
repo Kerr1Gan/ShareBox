@@ -17,4 +17,9 @@
         android:icon="@drawable/ic_sync_black_24dp"
         android:title="@string/pref_header_data_sync" />
 
+    <header
+        android:fragment="com.ecjtu.sharebox.ui.activity.SettingsActivity$PermissionPreferenceFragment"
+        android:icon="@drawable/ic_permission_black_24dp"
+        android:title="@string/pref_permission" />
+
 </preference-headers>

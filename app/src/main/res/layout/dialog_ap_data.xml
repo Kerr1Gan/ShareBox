@@ -18,7 +18,7 @@
                 android:id="@+id/text_ap"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="WIFI"
+                android:text="@string/wifi"
                 android:textColor="@android:color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"/>
@@ -28,14 +28,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:text="Name:"/>
+                android:text="@string/name_with_colon"/>
 
             <TextView
                 android:id="@+id/text_pwd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="Password:"/>
+                android:text="@string/password_with_colon"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -47,7 +47,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="35dp"
-                    android:text="QRCode"
+                    android:text="@string/qr_code"
                     android:textColor="@android:color/black"
                     android:textSize="20sp"
                     android:textStyle="bold"/>
@@ -56,7 +56,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:text="用浏览器扫描二维码连接热点"/>
+                    android:text="@string/use_browser_scanning_qr_code_to_connect"/>
 
                 <ImageView
                     android:id="@+id/image_qr"
@@ -70,7 +70,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Web"
+                android:text="@string/web"
                 android:textColor="@android:color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"/>
@@ -80,7 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:text="用浏览器扫描二维码进入网页版:" />
+                android:text="@string/use_browser_scanning_qr_code_to_enter" />
 
             <TextView
                 android:layout_width="wrap_content"

@@ -82,7 +82,6 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
                                     android:layout_marginLeft="10dp"
-                                    android:text="tp-link"
                                     android:textColor="@android:color/white"
                                     android:singleLine="true"
                                     android:textSize="20sp" />
@@ -98,7 +97,7 @@
                                 android:layout_marginRight="5dp"
                                 android:layout_marginTop="10dp"
                                 android:background="@drawable/selector_wifi_button"
-                                android:text="Wifi"
+                                android:text="@string/wifi"
                                 android:textColor="@android:color/white" />
 
                             <Button
@@ -111,7 +110,7 @@
                                 android:layout_marginRight="10dp"
                                 android:layout_marginTop="10dp"
                                 android:background="@drawable/selector_wifi_button"
-                                android:text="Hotspot"
+                                android:text="@string/hotspot"
                                 android:textColor="@android:color/white" />
                         </LinearLayout>
                     </android.support.design.widget.AppBarLayout>
@@ -160,21 +159,19 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="12.5dp"
-                        android:text="M3 note"
                         android:textSize="18sp"
                         android:gravity="center"
                         android:layout_gravity="center_horizontal"
                         android:background="@drawable/ripple_drawer_layout_item"
                         android:id="@+id/text_name"
                         android:textColor="@android:color/white"
-                        android:drawableRight="@mipmap/refactor"
                         android:singleLine="true"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="12.5dp"
-                        android:text="FAQ"
+                        android:text="@string/faq"
                         android:textSize="18sp"
                         android:textColor="@android:color/white"
                         android:drawableLeft="@mipmap/faq"
@@ -187,7 +184,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="12.5dp"
-                        android:text="Setting"
+                        android:text="@string/setting"
                         android:textSize="18sp"
                         android:textColor="@android:color/white"
                         android:drawableLeft="@mipmap/setting"
@@ -200,7 +197,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="12.5dp"
-                        android:text="Help"
+                        android:text="@string/help"
                         android:textSize="18sp"
                         android:textColor="@android:color/white"
                         android:drawableLeft="@mipmap/help"
@@ -212,11 +209,18 @@
                 </LinearLayout>
             </ScrollView>
 
-            <Button
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="exit"
-                android:id="@+id/btn_close"/>
+                android:padding="12.5dp"
+                android:textAllCaps="true"
+                android:text="@string/exit"
+                android:id="@+id/btn_close"
+                android:textSize="18sp"
+                android:textColor="@android:color/white"
+                android:drawablePadding="15dp"
+                android:background="@drawable/ripple_drawer_layout_item"
+                android:gravity="center" />
         </LinearLayout>
     </android.support.v4.widget.DrawerLayout>
 

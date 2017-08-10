@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="No server,connect to another wifi"
+                android:text="@string/no_server_connect_to_another_wifi"
                 android:textSize="15sp"/>
 
             <FrameLayout
@@ -37,7 +37,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Also,you can share videos"
+                android:text="@string/also_you_can_share_videos"
                 android:layout_gravity="center_horizontal"
                 android:id="@+id/text_view_2"
                 android:textSize="15sp"/>
@@ -50,7 +50,7 @@
             <Button
                 android:layout_width="100dp"
                 android:layout_height="40dp"
-                android:text="View help"
+                android:text="@string/view_help"
                 android:id="@+id/button_help"
                 android:layout_gravity="left"
                 android:textColor="@android:color/white"

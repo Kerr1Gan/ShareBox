@@ -4,7 +4,6 @@
     android:layout_height="55dp"
     android:orientation="horizontal">
 
-
     <ImageView
         android:id="@+id/icon"
         android:layout_width="30dp"

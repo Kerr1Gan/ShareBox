@@ -4,25 +4,23 @@ package com.ecjtu.sharebox.ui.activity
 import android.annotation.TargetApi
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.media.Ringtone
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.preference.ListPreference
-import android.preference.Preference
-import android.preference.PreferenceActivity
+import android.preference.*
 import android.support.v7.app.ActionBar
-import android.preference.PreferenceFragment
-import android.preference.PreferenceManager
-import android.preference.RingtonePreference
 import android.support.v7.widget.Toolbar
 import android.text.TextUtils
 import android.view.MenuItem
 import android.view.ViewGroup
 
 import com.ecjtu.sharebox.R
+import com.ecjtu.sharebox.domain.PreferenceInfo
+import com.ecjtu.sharebox.util.activity.ActivityUtil
 
 /**
  * A [PreferenceActivity] that presents a set of application settings. On
@@ -39,6 +37,8 @@ class SettingsActivity : AppCompatPreferenceActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupActionBar()
+        var pref = PreferenceManager.getDefaultSharedPreferences(this)
+        pref.edit().putString(getString(R.string.key_device_name), pref.getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)).apply()
     }
 
     /**
@@ -50,7 +50,7 @@ class SettingsActivity : AppCompatPreferenceActivity() {
     }
 
     override fun onMenuItemSelected(featureId: Int, item: MenuItem?): Boolean {
-        if(item?.itemId == android.R.id.home){
+        if (item?.itemId == android.R.id.home) {
             finish()
             return true
         }
@@ -81,6 +81,7 @@ class SettingsActivity : AppCompatPreferenceActivity() {
                 || GeneralPreferenceFragment::class.java.name == fragmentName
                 || DataSyncPreferenceFragment::class.java.name == fragmentName
                 || NotificationPreferenceFragment::class.java.name == fragmentName
+                || PermissionPreferenceFragment::class.java.name == fragmentName
     }
 
     /**
@@ -98,16 +99,11 @@ class SettingsActivity : AppCompatPreferenceActivity() {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("example_text"))
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.key_device_name)))
             bindPreferenceSummaryToValue(findPreference("example_list"))
         }
 
         override fun onOptionsItemSelected(item: MenuItem): Boolean {
-            val id = item.itemId
-            if (id == android.R.id.home) {
-                startActivity(Intent(activity, SettingsActivity::class.java))
-                return true
-            }
             return super.onOptionsItemSelected(item)
         }
     }
@@ -131,11 +127,6 @@ class SettingsActivity : AppCompatPreferenceActivity() {
         }
 
         override fun onOptionsItemSelected(item: MenuItem): Boolean {
-            val id = item.itemId
-            if (id == android.R.id.home) {
-                startActivity(Intent(activity, SettingsActivity::class.java))
-                return true
-            }
             return super.onOptionsItemSelected(item)
         }
     }
@@ -159,11 +150,21 @@ class SettingsActivity : AppCompatPreferenceActivity() {
         }
 
         override fun onOptionsItemSelected(item: MenuItem): Boolean {
-            val id = item.itemId
-            if (id == android.R.id.home) {
-                startActivity(Intent(activity, SettingsActivity::class.java))
-                return true
-            }
+            return super.onOptionsItemSelected(item)
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    class PermissionPreferenceFragment : PreferenceFragment() {
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            //jump to system and close self
+            var intent = ActivityUtil.getAppDetailSettingIntent(activity)
+            startActivity(intent)
+            activity.finish()
+        }
+
+        override fun onOptionsItemSelected(item: MenuItem): Boolean {
             return super.onOptionsItemSelected(item)
         }
     }
@@ -220,6 +221,10 @@ class SettingsActivity : AppCompatPreferenceActivity() {
                     }
                 }
 
+            } else if (preference is EditTextPreference && preference.key == preference.context.getString(R.string.key_device_name)) {
+                PreferenceManager.getDefaultSharedPreferences(preference.context).edit().
+                        putString(PreferenceInfo.PREF_DEVICE_NAME, stringValue).apply()
+                preference.summary = stringValue
             } else {
                 // For all other preferences, set the summary to the value's
                 // simple string representation.

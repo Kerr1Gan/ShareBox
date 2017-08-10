@@ -22,6 +22,7 @@ import com.dd.CircularProgressButton
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
 import com.ecjtu.sharebox.ui.view.CircleProgressView
+import com.ecjtu.sharebox.util.activity.ActivityUtil
 import org.ecjtu.channellibrary.wifiutil.NetworkUtil
 import org.ecjtu.channellibrary.wifiutil.WifiUtil
 import kotlin.concurrent.thread
@@ -78,9 +79,10 @@ open class WifiBottomSheetDialog : CloseBottomSheetDialog {
 
         setupCircularProgressButton(vg)
 
-        var config = NetworkUtil.getHotSpotConfiguration(context)
-        mHotspotName?.setText(config.SSID)
-        mHotspotPwd?.setText(config.preSharedKey)
+        vg.findViewById(R.id.text_use_last).setOnClickListener {
+            usingLast()
+        }
+
         if (NetworkUtil.isHotSpot(context)) {
             mCircularButton?.setText(R.string.close)
             mCircularButton?.progress = PROGRESS_END
@@ -90,6 +92,12 @@ open class WifiBottomSheetDialog : CloseBottomSheetDialog {
         }
 
         (vg.findViewById(R.id.text_title) as TextView).setText(R.string.hotspot)
+    }
+
+    private fun usingLast(){
+        var config = NetworkUtil.getHotSpotConfiguration(context)
+        mHotspotName?.setText(config.SSID)
+        mHotspotPwd?.setText(config.preSharedKey)
     }
 
     override fun dismiss() {
@@ -186,7 +194,7 @@ open class WifiBottomSheetDialog : CloseBottomSheetDialog {
 
                 mHandler.postDelayed({
                     Toast.makeText(context, R.string.no_permission, Toast.LENGTH_SHORT).show()
-                    context.startActivity(MainActivityDelegate.getAppDetailSettingIntent(context))
+                    context.startActivity(ActivityUtil.getAppDetailSettingIntent(context))
                     mCircularButton?.progress = PROGRESS_START
                     cancel()
                 }, DELAY_TIME)
