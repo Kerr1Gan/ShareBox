@@ -35,6 +35,7 @@ import com.ecjtu.sharebox.ui.dialog.EditNameDialog
 import com.ecjtu.sharebox.ui.dialog.TextItemDialog
 import com.ecjtu.sharebox.ui.dialog.WifiBottomSheetDialog
 import com.ecjtu.sharebox.ui.fragment.FilePickDialogFragment
+import com.ecjtu.sharebox.util.activity.ActivityUtil
 import com.ecjtu.sharebox.util.photo.CapturePhotoHelper
 import com.ecjtu.sharebox.util.photo.PickPhotoHelper
 import org.ecjtu.channellibrary.devicesearch.DeviceSearcher
@@ -82,24 +83,9 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
 
     private var mImageHelper: PickPhotoHelper? = null
 
-    private val DELAY_TIME = 5000L
+    private val DELAY_TIME = 8000L
 
     companion object {
-        //Settings.ACTION_APPLICATION_DETAIL_SETTING
-        fun getAppDetailSettingIntent(context: Context): Intent {
-            var localIntent = Intent()
-            localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            if (Build.VERSION.SDK_INT >= 9) {
-                localIntent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                localIntent.setData(Uri.fromParts("package", context.getPackageName(), null))
-            } else if (Build.VERSION.SDK_INT <= 8) {
-                localIntent.setAction(Intent.ACTION_VIEW)
-                localIntent.setClassName("com.android.settings", "com.android.settings.InstalledAppDetails")
-                localIntent.putExtra("com.android.settings.ApplicationPkgName", context.getPackageName())
-            }
-            return localIntent
-        }
-
         const val DEBUG = true
     }
 
@@ -262,7 +248,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
             }
 
             if (!ActivityCompat.shouldShowRequestPermissionRationale(owner, mRequestPermission[index])) {
-                owner.startActivity(getAppDetailSettingIntent(owner))
+                owner.startActivity(ActivityUtil.getAppDetailSettingIntent(owner))
                 return
             }
         }

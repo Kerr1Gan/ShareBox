@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         app:navigationIcon="?android:attr/homeAsUpIndicator"
-        app:title="选择文件"
+        app:title="@string/select_file"
         app:titleTextColor="@android:color/white"
         app:contentInsetStartWithNavigation="0dp"
         app:contentInsetStart="0dp">

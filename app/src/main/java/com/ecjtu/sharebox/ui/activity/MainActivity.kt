@@ -16,6 +16,7 @@ import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.domain.PreferenceInfo
@@ -80,6 +81,9 @@ class MainActivity : ImmersiveFragmentActivity() {
         filter.addAction(mReceiver?.NETWORK_STATE_CHANGED_ACTION)
         filter.addAction(mReceiver?.CONNECTIVITY_ACTION)
         registerReceiver(mReceiver, filter)
+
+        var name=PreferenceManager.getDefaultSharedPreferences(this).getString(PreferenceInfo.PREF_DEVICE_NAME,Build.MODEL)
+        (findViewById(R.id.text_name) as TextView).setText(name)
     }
 
     override fun onStop() {

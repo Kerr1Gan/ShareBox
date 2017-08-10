@@ -12,7 +12,7 @@
         android:capitalize="words"
         android:defaultValue="@string/pref_default_display_name"
         android:inputType="textCapWords"
-        android:key="example_text"
+        android:key="@string/key_device_name"
         android:maxLines="1"
         android:selectAllOnFocus="true"
         android:singleLine="true"

@@ -20,7 +20,7 @@ public abstract class DeviceWaitingSearch extends Thread{
     private final String TAG = "DeviceWaitingSearch";
 
     private static final int DEVICE_FIND_PORT = 9000;
-    private static final int RECEIVE_TIME_OUT = 1500; // 接收超时时间，应小于等于主机的超时时间1500
+    private static final int RECEIVE_TIME_OUT = 2500; // 接收超时时间，应小于等于主机的超时时间1500
     private static final int RESPONSE_DEVICE_MAX = 200; // 响应设备的最大个数，防止UDP广播攻击
 
     private static final byte PACKET_TYPE_FIND_DEVICE_REQ_10 = 0x10; // 搜索请求
