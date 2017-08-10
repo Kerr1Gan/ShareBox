@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -73,5 +74,45 @@ public class ConversionFactory {
         }
 
         return null;
+    }
+
+    public static JSONObject files2TreeJson(File root, JSONObject json) throws JSONException {
+        if (json == null) {
+            json = new JSONObject();
+            json.put("path", root.getAbsolutePath().replace("\\", "/"));
+        }
+        if (!root.exists()) return json;
+
+        if (root.isDirectory()) {
+            File[] listFile = root.listFiles();
+            if (listFile != null) {
+                json.put("name", root.getName());
+                json.put("type", "dir");
+                JSONArray arr = new JSONArray();
+                for (File child : listFile) {
+                    if (child.exists()) {
+                        if (child.isDirectory()) {
+                            JSONObject inner=new JSONObject();
+                            inner = files2TreeJson(new File(child.getAbsolutePath()), inner);
+                            arr.put(inner);
+                        } else {
+                            JSONObject typeFile = new JSONObject();
+                            try {
+                                typeFile.put("name", child.getName());
+                                typeFile.put("type", "file");
+                            } catch (JSONException e) {
+                            }
+                            arr.put(typeFile);
+                        }
+                    }
+                }
+                json.put("child",arr);
+            }
+        } else {
+            json.put("name", root.getName());
+            json.put("type", "file");
+            return json;
+        }
+        return json;
     }
 }
