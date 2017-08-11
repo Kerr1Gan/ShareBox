@@ -93,4 +93,8 @@ public class CacheUtil {
             }
         }
     }
+
+    public static String getCacheRootPath(Context context){
+        return context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath();
+    }
 }

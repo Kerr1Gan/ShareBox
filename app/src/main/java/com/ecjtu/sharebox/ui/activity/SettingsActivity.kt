@@ -15,12 +15,17 @@ import android.preference.*
 import android.support.v7.app.ActionBar
 import android.support.v7.widget.Toolbar
 import android.text.TextUtils
+import android.text.format.Formatter
 import android.view.MenuItem
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
 
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.domain.PreferenceInfo
+import com.ecjtu.sharebox.ui.preference.SelectPreference
 import com.ecjtu.sharebox.util.activity.ActivityUtil
+import com.ecjtu.sharebox.util.cache.CacheUtil
+import java.io.File
 
 /**
  * A [PreferenceActivity] that presents a set of application settings. On
@@ -95,12 +100,25 @@ class SettingsActivity : AppCompatPreferenceActivity() {
             addPreferencesFromResource(R.xml.pref_general)
             setHasOptionsMenu(true)
 
+            var cacheFile = File(activity.cacheDir.absolutePath + "/image_manager_disk_cache")
+            var size = 0L
+            if (cacheFile.exists()) {
+                size += cacheFile.length()
+            }
+            cacheFile = File(CacheUtil.getCacheRootPath(activity))
+            if (cacheFile.exists()) {
+                size += cacheFile.length()
+            }
+
+            PreferenceManager.getDefaultSharedPreferences(activity).edit().
+                    putString(getString(R.string.key_clear_cache), Formatter.formatFileSize(activity, size)).commit()
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
             bindPreferenceSummaryToValue(findPreference(getString(R.string.key_device_name)))
             bindPreferenceSummaryToValue(findPreference("example_list"))
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.key_clear_cache)))
         }
 
         override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -224,6 +242,8 @@ class SettingsActivity : AppCompatPreferenceActivity() {
             } else if (preference is EditTextPreference && preference.key == preference.context.getString(R.string.key_device_name)) {
                 PreferenceManager.getDefaultSharedPreferences(preference.context).edit().
                         putString(PreferenceInfo.PREF_DEVICE_NAME, stringValue).apply()
+                preference.summary = stringValue
+            } else if (preference is SelectPreference) {
                 preference.summary = stringValue
             } else {
                 // For all other preferences, set the summary to the value's
