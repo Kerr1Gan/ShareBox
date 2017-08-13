@@ -3,6 +3,7 @@ package org.ecjtu.easyserver.util;
 import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
+import android.webkit.MimeTypeMap;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -25,7 +26,6 @@ public class FileUtil {
         if (uri == null) {
             return type;
         }
-
         if (uri.endsWith(".mp3")) {
             return "audio/mpeg";
         }
@@ -34,7 +34,12 @@ public class FileUtil {
             return "video/mp4";
         }
 
-        return type;
+        if (uri.endsWith(".avi")) {
+            return "video/avi";
+        }
+        String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(uri));
+        return mime == null ? type : mime;
+//        return type;
     }
 
     public static String getDeviceDMRUDN() {

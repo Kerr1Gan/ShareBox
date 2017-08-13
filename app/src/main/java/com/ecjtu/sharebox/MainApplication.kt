@@ -11,11 +11,9 @@ import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory
 import com.bumptech.glide.load.engine.cache.LruResourceCache
 import com.bumptech.glide.module.AppGlideModule
-import org.ecjtu.easyserver.server.ServerManager
-import org.ecjtu.easyserver.server.util.AssetsUtil
 import com.ecjtu.sharebox.service.MainService
-import com.ecjtu.sharebox.util.cache.FileCacheHelper
 import org.ecjtu.channellibrary.wifidirect.WifiDirectManager
+import org.ecjtu.easyserver.server.ServerManager
 import java.io.*
 import java.lang.reflect.InvocationTargetException
 import java.util.*

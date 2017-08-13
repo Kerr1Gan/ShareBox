@@ -1,5 +1,6 @@
 package org.ecjtu.easyserver;
 
+import org.ecjtu.easyserver.util.FileUtil;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
