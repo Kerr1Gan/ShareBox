@@ -21,6 +21,7 @@
 
     <string name="client_has_not_yet_ready_try_later">对方还未准备好，请稍后再试</string>
     <string name="details">详细信息</string>
+    <string name="positive">确定</string>
     <string name="cancel">取消</string>
     <string name="select_success">选择成功</string>
 
@@ -46,6 +47,9 @@
     <string name="view_help">View Help</string>
     <string name="no_server_connect_to_another_wifi">No server,connect to another wifi</string>
     <string name="also_you_can_share_videos">Also,you can share videos</string>
+    <string name="clear_cache">Clear cache</string>
+    <string name="do_you_want_to_clear_the_cache">Do you want to clear the cache?</string>
+    <string name="you_will_clear_cache">you will clear %s cache</string>
 
     <!-- Strings related to Settings -->
 
@@ -61,6 +65,7 @@
     <string name="pref_default_display_name">KerriGan</string>
 
     <string name="key_device_name">device_name</string>
+    <string name="key_clear_cache">clear_cache</string>
 
     <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
     <string-array name="pref_example_list_titles">
