@@ -40,7 +40,5 @@ public class ExampleUnitTest {
 
         DeviceInfo info=new DeviceInfo("123","192.168.43.1",8080,"/icon",map);
 
-        JSONObject root=Info.deviceInfo2Json(info);
-        info=Info.json2DeviceInfo(root);
     }
 }

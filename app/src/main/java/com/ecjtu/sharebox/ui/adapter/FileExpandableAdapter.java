@@ -219,23 +219,8 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
 
         TextView text = (TextView) convertView.findViewById(R.id.text);
         text.setText("");
-        if (type == FileUtil.MediaFileType.MOVIE ||
-                type == FileUtil.MediaFileType.IMG) {
-            Glide.with(mContext).load(thumb).into(icon);
-        } else if (type == FileUtil.MediaFileType.APP) {
-            Bitmap b = sLruCache.get(thumb);
-            if (b == null) {
-                AppThumbTask task = new AppThumbTask(sLruCache, mContext, icon);
-                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new File(thumb));
-            } else
-                icon.setImageBitmap(b);
-        } else if (type == FileUtil.MediaFileType.MP3) {
-            text.setText(R.string.music);
-        } else if (type == FileUtil.MediaFileType.DOC) {
-            text.setText(R.string.doc);
-        } else if (type == FileUtil.MediaFileType.RAR) {
-            text.setText(R.string.rar);
-        }
+
+        setGroupViewThumb(type,thumb,icon,text);
 
         TextView child = (TextView) convertView.findViewById(R.id.select_all);
         child.setBackgroundResource(R.drawable.selector_file_group_item);
@@ -272,6 +257,47 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
 
         ImageView icon = (ImageView) convertView.findViewById(R.id.icon);
         icon.setImageDrawable(null);
+
+        setChildViewThumb(type,f,icon);
+
+        CheckBox check = (CheckBox) convertView.findViewById(R.id.check_box);
+        check.setChecked(vh.isItemActivated(f));
+        check.setTag(f);
+        check.setTag(R.id.extra_tag, vh);
+        check.setOnClickListener(mCheckOnClickListener);
+
+        convertView.setTag(f);
+        convertView.setOnClickListener(this);
+        convertView.setOnLongClickListener(this);
+        return convertView;
+    }
+
+    @Override
+    public boolean isChildSelectable(int groupPosition, int childPosition) {
+        return true;
+    }
+
+    protected void setGroupViewThumb(FileUtil.MediaFileType type,String thumb,ImageView icon,TextView text){
+        if (type == FileUtil.MediaFileType.MOVIE ||
+                type == FileUtil.MediaFileType.IMG) {
+            Glide.with(mContext).load(thumb).into(icon);
+        } else if (type == FileUtil.MediaFileType.APP) {
+            Bitmap b = sLruCache.get(thumb);
+            if (b == null) {
+                AppThumbTask task = new AppThumbTask(sLruCache, mContext, icon);
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new File(thumb));
+            } else
+                icon.setImageBitmap(b);
+        } else if (type == FileUtil.MediaFileType.MP3) {
+            text.setText(R.string.music);
+        } else if (type == FileUtil.MediaFileType.DOC) {
+            text.setText(R.string.doc);
+        } else if (type == FileUtil.MediaFileType.RAR) {
+            text.setText(R.string.rar);
+        }
+    }
+
+    protected void setChildViewThumb(FileUtil.MediaFileType type,String f,ImageView icon){
         if (type == FileUtil.MediaFileType.MOVIE ||
                 type == FileUtil.MediaFileType.IMG) {
             Glide.with(mContext).load(f).into(icon);
@@ -289,22 +315,6 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         } else if (type == FileUtil.MediaFileType.RAR) {
             icon.setImageResource(R.mipmap.rar);
         }
-
-        CheckBox check = (CheckBox) convertView.findViewById(R.id.check_box);
-        check.setChecked(vh.isItemActivated(f));
-        check.setTag(f);
-        check.setTag(R.id.extra_tag, vh);
-        check.setOnClickListener(mCheckOnClickListener);
-
-        convertView.setTag(f);
-        convertView.setOnClickListener(this);
-        convertView.setOnLongClickListener(this);
-        return convertView;
-    }
-
-    @Override
-    public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return true;
     }
 
     public static class VH implements Cloneable {

@@ -5,6 +5,7 @@ import android.text.TextWatcher;
 import android.view.View;
 
 import java.io.IOError;
+import java.io.IOException;
 
 /**
  * Created by KerriGan on 2017/6/2.
@@ -66,7 +67,7 @@ public class Test {
 
     }
 
-    protected void add(){
+    protected void add() throws IOException{
 
     }
 
@@ -91,7 +92,11 @@ public class Test {
 
         @Override
         protected void add() {
-            super.add();
+            try {
+                super.add();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -376,21 +376,23 @@ object FileUtil {
         return count
     }
 
-    fun copyFile2InternalPath(file: File, name: String, context: Context): Boolean {
+    fun copyFile2InternalPath(file: File, name: String, context: Context, internalUrl: String = ""): Boolean {
         var root = context.filesDir
+        root = File(root, internalUrl)
+        if(!root.isDirectory()) root.mkdirs()
+        val temp = File(root.absoluteFile, name)
+        if (temp.exists()) temp.delete()
+        return copyFile2Path(file, temp)
+    }
+
+    fun copyFile2Path(src: File, dest: File): Boolean {
         var fis: FileInputStream? = null
         var buf: BufferedOutputStream? = null
+
         try {
-            fis = FileInputStream(file)
-            var temp = File(root.absoluteFile, name)
-            if (temp.exists()) temp.delete()
-            buf = BufferedOutputStream(FileOutputStream(temp))
-            var arr = ByteArray(1024 * 5)
-            var len = fis.read(arr)
-            while (len > 0) {
-                buf.write(arr)
-                len = fis.read(arr)
-            }
+            fis = FileInputStream(src)
+            buf = BufferedOutputStream(FileOutputStream(dest))
+            copyFile(fis, buf)
         } catch (e: Exception) {
             return false
         } finally {
@@ -398,6 +400,16 @@ object FileUtil {
             buf?.close()
         }
         return true
+    }
+
+    @Throws(IOException::class)
+    fun copyFile(inputStream: InputStream, outputStream: BufferedOutputStream) {
+        val arr = ByteArray(1024 * 5)
+        var len = inputStream.read(arr)
+        while (len > 0) {
+            outputStream.write(arr)
+            len = inputStream.read(arr)
+        }
     }
 
     fun getImagesByDCIM(context: Context): MutableList<File> {
