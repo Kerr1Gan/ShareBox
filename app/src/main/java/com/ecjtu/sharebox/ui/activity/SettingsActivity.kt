@@ -3,25 +3,18 @@ package com.ecjtu.sharebox.ui.activity
 
 import android.annotation.TargetApi
 import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
 import android.content.res.Configuration
-import android.media.Ringtone
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.preference.*
-import android.support.v7.app.ActionBar
-import android.support.v7.widget.Toolbar
 import android.text.TextUtils
 import android.text.format.Formatter
 import android.view.MenuItem
-import android.view.ViewGroup
-import com.bumptech.glide.Glide
 
 import com.ecjtu.sharebox.R
-import com.ecjtu.sharebox.domain.PreferenceInfo
+import com.ecjtu.sharebox.PreferenceInfo
 import com.ecjtu.sharebox.ui.preference.SelectPreference
 import com.ecjtu.sharebox.util.activity.ActivityUtil
 import com.ecjtu.sharebox.util.cache.CacheUtil

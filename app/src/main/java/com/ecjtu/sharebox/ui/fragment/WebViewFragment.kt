@@ -1,5 +1,6 @@
 package com.ecjtu.sharebox.ui.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import com.ecjtu.sharebox.R
+import com.ecjtu.sharebox.ui.activity.ImmersiveFragmentActivity
 import com.ecjtu.sharebox.ui.view.webview.SimpleWebChromeClient
 import com.ecjtu.sharebox.ui.view.webview.SimpleWebViewClient
 import com.ecjtu.sharebox.util.file.FileUtil
@@ -22,10 +24,24 @@ class WebViewFragment : Fragment() {
     companion object {
         const val TAG = "WebViewFragment"
         const val EXTRA_URL = "extra_url"
-        const val WEB_ROOT_PATH = "web"
         const val EXTRA_TYPE = "extra_type"
+        const val WEB_ROOT_PATH = "web"
         const val TYPE_INNER_WEB = 0x10
         const val TYPE_DEFAULT = TYPE_INNER_WEB shl 1
+
+        fun openUrl(context: Context,url:String){
+            var intent= ImmersiveFragmentActivity.newInstance(context,WebViewFragment::class.java,Bundle().apply {
+                putString(WebViewFragment.EXTRA_URL,url)})
+            context.startActivity(intent)
+        }
+
+        fun openInnerUrl(context: Context,url: String){
+            var intent= ImmersiveFragmentActivity.newInstance(context,WebViewFragment::class.java,Bundle().apply {
+                putString(WebViewFragment.EXTRA_URL,url)
+                putInt(WebViewFragment.EXTRA_TYPE,WebViewFragment.TYPE_INNER_WEB)
+            })
+            context.startActivity(intent)
+        }
     }
 
     private var mWebView: WebView? = null
