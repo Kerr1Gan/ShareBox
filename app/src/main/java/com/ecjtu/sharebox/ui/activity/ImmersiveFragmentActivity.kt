@@ -15,7 +15,7 @@ open class ImmersiveFragmentActivity:BaseFragmentActivity(){
             return BaseFragmentActivity.newInstance(context,fragment,bundle,clazz)
         }
 
-        protected open fun getActivityClazz():Class<out Activity>{
+        fun getActivityClazz():Class<out Activity>{
             return ImmersiveFragmentActivity::class.java
         }
     }

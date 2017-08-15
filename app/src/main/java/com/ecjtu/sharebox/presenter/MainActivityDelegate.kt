@@ -25,6 +25,7 @@ import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.PreferenceInfo
 import com.ecjtu.sharebox.getMainApplication
+import com.ecjtu.sharebox.ui.activity.ActionBarFragmentActivity
 import com.ecjtu.sharebox.ui.activity.MainActivity
 import com.ecjtu.sharebox.ui.activity.SettingsActivity
 import com.ecjtu.sharebox.ui.adapter.DeviceRecyclerViewAdapter
@@ -33,6 +34,7 @@ import com.ecjtu.sharebox.ui.dialog.EditNameDialog
 import com.ecjtu.sharebox.ui.dialog.TextItemDialog
 import com.ecjtu.sharebox.ui.dialog.WifiBottomSheetDialog
 import com.ecjtu.sharebox.ui.fragment.FilePickDialogFragment
+import com.ecjtu.sharebox.ui.fragment.WebViewFragment
 import com.ecjtu.sharebox.util.activity.ActivityUtil
 import com.ecjtu.sharebox.util.photo.CapturePhotoHelper
 import com.ecjtu.sharebox.util.photo.PickPhotoHelper
@@ -110,7 +112,9 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         mViewSwitcher?.addView(view1)
 
         view0.findViewById(R.id.button_help).setOnClickListener {
-            Toast.makeText(owner,"还没准备好",Toast.LENGTH_SHORT).show()
+            val intent=ActionBarFragmentActivity.newInstance(owner,WebViewFragment::class.java,
+                    WebViewFragment.openInnerUrl("help.html"))
+            owner.startActivity(intent)
         }
 
         mWifiButton = findViewById(R.id.btn_wifi) as Button
@@ -162,7 +166,9 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         mTextName = findViewById(R.id.text_name) as TextView
 
         findViewById(R.id.text_faq)?.setOnClickListener {
-
+            var intent=ActionBarFragmentActivity.newInstance(owner,WebViewFragment::class.java,
+                    WebViewFragment.openInnerUrl("faq.html"))
+            owner.startActivity(intent)
         }
 
         findViewById(R.id.text_setting)?.setOnClickListener {
@@ -170,7 +176,9 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         }
 
         findViewById(R.id.text_help)?.setOnClickListener {
-
+            var intent=ActionBarFragmentActivity.newInstance(owner,WebViewFragment::class.java,
+                    WebViewFragment.openInnerUrl("help.html"))
+            owner.startActivity(intent)
         }
 
         findViewById(R.id.btn_close)?.setOnClickListener {

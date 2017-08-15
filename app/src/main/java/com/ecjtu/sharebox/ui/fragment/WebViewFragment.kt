@@ -29,18 +29,15 @@ class WebViewFragment : Fragment() {
         const val TYPE_INNER_WEB = 0x10
         const val TYPE_DEFAULT = TYPE_INNER_WEB shl 1
 
-        fun openUrl(context: Context,url:String){
-            var intent= ImmersiveFragmentActivity.newInstance(context,WebViewFragment::class.java,Bundle().apply {
-                putString(WebViewFragment.EXTRA_URL,url)})
-            context.startActivity(intent)
+        fun openUrl(url:String):Bundle{
+            return Bundle().apply { putString(WebViewFragment.EXTRA_URL,url)}
         }
 
-        fun openInnerUrl(context: Context,url: String){
-            var intent= ImmersiveFragmentActivity.newInstance(context,WebViewFragment::class.java,Bundle().apply {
+        fun openInnerUrl(url: String):Bundle{
+            return Bundle().apply {
                 putString(WebViewFragment.EXTRA_URL,url)
                 putInt(WebViewFragment.EXTRA_TYPE,WebViewFragment.TYPE_INNER_WEB)
-            })
-            context.startActivity(intent)
+            }
         }
     }
 
