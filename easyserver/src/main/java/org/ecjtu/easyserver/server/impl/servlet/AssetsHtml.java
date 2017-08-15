@@ -1,6 +1,7 @@
 package org.ecjtu.easyserver.server.impl.servlet;
 
 import android.content.res.AssetManager;
+import android.util.Log;
 
 
 import org.ecjtu.easyserver.server.ServerManager;
@@ -20,18 +21,18 @@ import java.io.IOException;
  */
 public class AssetsHtml implements BaseServlet {
 
+    private static final String ROOT_PATH="web";
+
     @Override
     public void doGet(HTTPRequest req, HTTPResponse httpRes) {
         String uri = req.getURI();
 
-
         String filePath = "";
         if (uri.length() <= 1) {
-            filePath = "index.html";
+            filePath = ROOT_PATH+"/index.html";
         } else {
-            filePath = filePath + uri;
+            filePath = ROOT_PATH+filePath + uri;
         }
-
 
         BufferedInputStream contentIn = null;
         try {
@@ -44,7 +45,6 @@ public class AssetsHtml implements BaseServlet {
                 uri += "index.html";
                 req.setURI(uri);
                 doGet(req, httpRes);
-
                 return;
             }
 
@@ -70,15 +70,11 @@ public class AssetsHtml implements BaseServlet {
                 httpRes.setContentType("application/x-javascript");
             }
 
-
             httpRes.setHeader("Accept-Ranges", "bytes");
             httpRes.setStatusCode(HTTPStatus.OK);
             httpRes.setContentLength(contentLen);
             httpRes.setContentInputStream(contentIn);
-
-
             req.post(httpRes);
-
             contentIn.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
