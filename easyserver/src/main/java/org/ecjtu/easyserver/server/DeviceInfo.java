@@ -8,11 +8,12 @@ import java.util.Map;
  * Created by KerriGan on 2017/7/19.
  */
 public class DeviceInfo implements Serializable{
-    public String name;
-    public String ip = "";
-    int port = 0;
-    String icon = "";
-    Map<String, List<String>> fileMap;
+    private String name;
+    private String ip = "";
+    private int port = 0;
+    private String icon = "";
+    private Map<String, List<String>> fileMap;
+    private long updateTime;
 
     public DeviceInfo(String name, String ip, int port, String icon, Map<String, List<String>> fileMap) {
         this.name = name;
@@ -20,6 +21,7 @@ public class DeviceInfo implements Serializable{
         this.port = port;
         this.icon = icon;
         this.fileMap = fileMap;
+        this.updateTime= System.currentTimeMillis();
     }
 
     public DeviceInfo(String name, String ip) {
@@ -36,6 +38,7 @@ public class DeviceInfo implements Serializable{
 
     public void setName(String name) {
         this.name = name;
+        setUpdateTime(System.currentTimeMillis());
     }
 
     public String getIp() {
@@ -44,6 +47,7 @@ public class DeviceInfo implements Serializable{
 
     public void setIp(String ip) {
         this.ip = ip;
+        setUpdateTime(System.currentTimeMillis());
     }
 
     public int getPort() {
@@ -52,6 +56,7 @@ public class DeviceInfo implements Serializable{
 
     public void setPort(int port) {
         this.port = port;
+        setUpdateTime(System.currentTimeMillis());
     }
 
     public String getIcon() {
@@ -60,6 +65,7 @@ public class DeviceInfo implements Serializable{
 
     public void setIcon(String icon) {
         this.icon = icon;
+        setUpdateTime(System.currentTimeMillis());
     }
 
     public Map<String, List<String>> getFileMap() {
@@ -68,6 +74,15 @@ public class DeviceInfo implements Serializable{
 
     public void setFileMap(Map<String, List<String>> fileMap) {
         this.fileMap = fileMap;
+        setUpdateTime(System.currentTimeMillis());
+    }
+
+    public long getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(long updateTime) {
+        this.updateTime = updateTime;
     }
 
     @Override
