@@ -12,6 +12,7 @@ import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory
 import com.bumptech.glide.load.engine.cache.LruResourceCache
 import com.bumptech.glide.module.AppGlideModule
 import com.ecjtu.sharebox.service.MainService
+import com.tencent.bugly.crashreport.CrashReport
 import org.ecjtu.channellibrary.wifidirect.WifiDirectManager
 import org.ecjtu.easyserver.server.ServerManager
 import org.ecjtu.easyserver.server.util.AssetsUtil
@@ -44,8 +45,31 @@ class MainApplication : Application() {
 
         initSavedState()
 
+        initError()
+
+        initSDK()
+
         startService(Intent(this, MainService::class.java))
 
+    }
+
+    fun getSavedInstance(): MutableMap<String, Any> {
+        return mSavedInstance
+    }
+
+    private fun initSavedState() {
+
+    }
+
+    private fun initSDK(){
+        CrashReport.initCrashReport(getApplicationContext(), "18b1313e86", true)
+
+        ServerManager.getInstance().setIconPath(filesDir.absolutePath + "/" + Constants.ICON_HEAD)
+        ServerManager.getInstance().setContext(applicationContext)
+    }
+
+    private fun initError(){
+        val exHandler=Thread.currentThread().uncaughtExceptionHandler
         Thread.currentThread().setUncaughtExceptionHandler { thread, ex ->
             //write error logs add in 2016/6/23 by KerriGan
             if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
@@ -91,16 +115,9 @@ class MainApplication : Application() {
                 }
 
             }
+
+            exHandler.uncaughtException(thread,ex)
         }
-    }
-
-    fun getSavedInstance(): MutableMap<String, Any> {
-        return mSavedInstance
-    }
-
-    private fun initSavedState() {
-        ServerManager.getInstance().setIconPath(filesDir.absolutePath + "/" + Constants.ICON_HEAD)
-        ServerManager.getInstance().setContext(applicationContext)
     }
 
     class SimpleGlideModule : AppGlideModule() {

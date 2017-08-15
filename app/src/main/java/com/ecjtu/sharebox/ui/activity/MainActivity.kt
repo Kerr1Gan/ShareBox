@@ -50,7 +50,6 @@ class MainActivity : ImmersiveFragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         var toolbar = findViewById(R.id.toolbar) as Toolbar
 
         setSupportActionBar(toolbar)
