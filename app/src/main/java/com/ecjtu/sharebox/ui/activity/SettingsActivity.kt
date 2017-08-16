@@ -18,6 +18,7 @@ import com.ecjtu.sharebox.PreferenceInfo
 import com.ecjtu.sharebox.ui.preference.SelectPreference
 import com.ecjtu.sharebox.util.activity.ActivityUtil
 import com.ecjtu.sharebox.util.cache.CacheUtil
+import com.ecjtu.sharebox.util.file.FileUtil
 import java.io.File
 
 /**
@@ -96,11 +97,11 @@ class SettingsActivity : AppCompatPreferenceActivity() {
             var cacheFile = File(activity.cacheDir.absolutePath + "/image_manager_disk_cache")
             var size = 0L
             if (cacheFile.exists()) {
-                size += cacheFile.length()
+                size += getFolderSize(cacheFile)
             }
             cacheFile = File(CacheUtil.getCacheRootPath(activity))
             if (cacheFile.exists()) {
-                size += cacheFile.length()
+                size += getFolderSize(cacheFile)
             }
 
             PreferenceManager.getDefaultSharedPreferences(activity).edit().
@@ -116,6 +117,15 @@ class SettingsActivity : AppCompatPreferenceActivity() {
 
         override fun onOptionsItemSelected(item: MenuItem): Boolean {
             return super.onOptionsItemSelected(item)
+        }
+
+        fun getFolderSize(root: File): Long {
+            var list = FileUtil.getFilesByFolder(root)
+            var ret = 0L
+            for (child in list) {
+                ret += child.length()
+            }
+            return ret
         }
     }
 

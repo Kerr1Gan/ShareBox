@@ -22,8 +22,8 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import com.ecjtu.sharebox.Constants
-import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.PreferenceInfo
+import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.ui.activity.ActionBarFragmentActivity
 import com.ecjtu.sharebox.ui.activity.MainActivity
@@ -112,8 +112,8 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         mViewSwitcher?.addView(view1)
 
         view0.findViewById(R.id.button_help).setOnClickListener {
-            val intent=ActionBarFragmentActivity.newInstance(owner,WebViewFragment::class.java,
-                    WebViewFragment.openInnerUrl("help.html"))
+            val intent = ActionBarFragmentActivity.newInstance(owner, WebViewFragment::class.java,
+                    WebViewFragment.openInnerUrl("help.html"),"Help")
             owner.startActivity(intent)
         }
 
@@ -166,18 +166,18 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         mTextName = findViewById(R.id.text_name) as TextView
 
         findViewById(R.id.text_faq)?.setOnClickListener {
-            var intent=ActionBarFragmentActivity.newInstance(owner,WebViewFragment::class.java,
-                    WebViewFragment.openInnerUrl("faq.html"))
+            var intent = ActionBarFragmentActivity.newInstance(owner, WebViewFragment::class.java,
+                    WebViewFragment.openInnerUrl("faq.html"),"FAQ")
             owner.startActivity(intent)
         }
 
         findViewById(R.id.text_setting)?.setOnClickListener {
-            owner.startActivity(Intent(owner,SettingsActivity::class.java))
+            owner.startActivity(Intent(owner, SettingsActivity::class.java))
         }
 
         findViewById(R.id.text_help)?.setOnClickListener {
-            var intent=ActionBarFragmentActivity.newInstance(owner,WebViewFragment::class.java,
-                    WebViewFragment.openInnerUrl("help.html"))
+            var intent = ActionBarFragmentActivity.newInstance(owner, WebViewFragment::class.java,
+                    WebViewFragment.openInnerUrl("help.html"),"Help")
             owner.startActivity(intent)
         }
 
@@ -438,7 +438,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
                 if (port == 0) continue
                 var needUpdate = false
 
-                if (old?.port != port || old?.icon != arr[2]) needUpdate = true
+                if (old?.port != port || old.icon != arr[2]) needUpdate = true
 
                 old?.name = arr[0]
                 old?.port = port

@@ -14,8 +14,11 @@
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="drawerArrowStyle">@style/AppTheme.DrawerArrowToggle</item>
+        <item name="titleTextColor">@android:color/white</item>
         <item name="actionBarTheme">@style/WhiteToolbar</item>
         <item name="toolbarStyle">@style/NoSpaceNavigationToolbar</item>
+
+        <item name="android:actionModeBackground">@color/colorPrimary</item>
     </style>
 
     <style name="ImageStatusBarStyle" parent="Theme.AppCompat.Light.NoActionBar">

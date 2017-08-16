@@ -286,7 +286,8 @@ object FileUtil {
 
     val TX_PATH = arrayOf("/tencent/MicroMsg", "/tencent/MobileQQ")
 
-    @JvmOverloads fun foldFiles(input: MutableList<String>?, output: LinkedHashMap<String, MutableList<String>>, ignoreWx: Boolean = false, ignoreQQ: Boolean = false): Array<String>? {
+    @JvmOverloads
+    fun foldFiles(input: MutableList<String>?, output: LinkedHashMap<String, MutableList<String>>, ignoreWx: Boolean = false, ignoreQQ: Boolean = false): Array<String>? {
         if (input == null || input.size == 0) return null
         val prefix = ArrayList<String>()
         output.put(TX_PATH[0], arrayListOf<String>())
@@ -379,7 +380,7 @@ object FileUtil {
     fun copyFile2InternalPath(file: File, name: String, context: Context, internalUrl: String = ""): Boolean {
         var root = context.filesDir
         root = File(root, internalUrl)
-        if(!root.isDirectory()) root.mkdirs()
+        if (!root.isDirectory()) root.mkdirs()
         val temp = File(root.absoluteFile, name)
         if (temp.exists()) temp.delete()
         return copyFile2Path(file, temp)
@@ -521,6 +522,28 @@ object FileUtil {
             var ret = filePath.substring(index)
             return if (ret.startsWith("/")) ret.substring(1) else ret
         }
+    }
+
+    fun getFilesByFolder(root:File,out:MutableList<File>?=null):MutableList<File>{
+        var list=out
+        if(list==null){
+            list=mutableListOf<File>()
+        }
+
+        if(!root.exists()) return list
+        if(root.isDirectory){
+            var childList=root.listFiles()
+            for(child in childList){
+                if(child.isDirectory){
+                    list=getFilesByFolder(child,list)
+                }else{
+                    list?.add(child)
+                }
+            }
+        }else{
+            list.add(root)
+        }
+        return list!!
     }
 }
 
