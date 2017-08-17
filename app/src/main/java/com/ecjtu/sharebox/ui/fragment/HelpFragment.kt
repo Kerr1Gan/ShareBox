@@ -7,7 +7,6 @@ import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.provider.Settings
 import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,8 +42,8 @@ class HelpFragment : Fragment(), IStepperAdapter {
     }
 
     private fun initContent() {
-        mTitles = arrayOf("Step One", "Step two", "Step three", "Start")
-        mSummaries = arrayOf("Go to set name", "Connect network", "Pick files", "Start")
+        mTitles = arrayOf("Step One", "Step two", "Step three", "Finish")
+        mSummaries = arrayOf("Go to set name", "Connect network", "Pick files", "准备完毕")
     }
 
     override fun getTitle(index: Int): String {
@@ -65,8 +64,8 @@ class HelpFragment : Fragment(), IStepperAdapter {
         initEventListener(index, inflateView)
         val nextButton = inflateView.findViewById(R.id.button_next) as Button
         nextButton.setOnClickListener {
-            if(!mVerticalStepperView!!.nextStep()){
-               activity.finish()
+            if (!mVerticalStepperView!!.nextStep()) {
+                activity.finish()
             }
         }
         val prevButton = inflateView.findViewById(R.id.button_prev) as Button
