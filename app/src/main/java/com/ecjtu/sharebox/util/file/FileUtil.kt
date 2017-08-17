@@ -524,26 +524,50 @@ object FileUtil {
         }
     }
 
-    fun getFilesByFolder(root:File,out:MutableList<File>?=null):MutableList<File>{
-        var list=out
-        if(list==null){
-            list=mutableListOf<File>()
+    fun getFilesByFolder(root: File, out: MutableList<File>? = null): MutableList<File> {
+        var list = out
+        if (list == null) {
+            list = mutableListOf<File>()
         }
 
-        if(!root.exists()) return list
-        if(root.isDirectory){
-            var childList=root.listFiles()
-            for(child in childList){
-                if(child.isDirectory){
-                    list=getFilesByFolder(child,list)
-                }else{
+        if (!root.exists()) return list
+        if (root.isDirectory) {
+            var childList = root.listFiles()
+            for (child in childList) {
+                if (child.isDirectory) {
+                    list = getFilesByFolder(child, list)
+                } else {
                     list?.add(child)
                 }
             }
-        }else{
+        } else {
             list.add(root)
         }
         return list!!
+    }
+
+    fun readFileContent(file: File): String? {
+        var fis: FileInputStream? = null
+        var buf: ByteArrayOutputStream? = null
+        var ret: String? = null
+        try {
+            fis = FileInputStream(file)
+            buf = ByteArrayOutputStream()
+            var byteArr = ByteArray(1024 * 2)
+            var len = fis.read(byteArr)
+            while (len > 0) {
+                buf.write(byteArr, 0, len)
+                len = fis.read(byteArr)
+            }
+            ret = String(buf.toByteArray())
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            ret = null
+        } finally {
+            fis?.close()
+            buf?.close()
+        }
+        return ret
     }
 }
 

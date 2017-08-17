@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
+import android.webkit.MimeTypeMap
 import android.webkit.WebView
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.ui.activity.ImmersiveFragmentActivity
@@ -18,6 +19,7 @@ import com.ecjtu.sharebox.ui.view.webview.SimpleWebViewClient
 import com.ecjtu.sharebox.util.activity.ActivityUtil
 import com.ecjtu.sharebox.util.file.FileUtil
 import java.io.*
+import java.lang.Exception
 
 
 /**
@@ -32,6 +34,7 @@ class WebViewFragment : Fragment() {
         const val WEB_ROOT_PATH = "web"
         const val TYPE_INNER_WEB = 0x10
         const val TYPE_DEFAULT = TYPE_INNER_WEB shl 1
+        const val TYPE_MIME = TYPE_DEFAULT shl 1
         const val INTERFACE_NAME = "android"
 
         fun openUrl(url: String): Bundle {
@@ -42,6 +45,13 @@ class WebViewFragment : Fragment() {
             return Bundle().apply {
                 putString(WebViewFragment.EXTRA_URL, url)
                 putInt(WebViewFragment.EXTRA_TYPE, WebViewFragment.TYPE_INNER_WEB)
+            }
+        }
+
+        fun openWithMIME(url: String): Bundle {
+            return Bundle().apply {
+                putString(WebViewFragment.EXTRA_URL, url)
+                putInt(WebViewFragment.EXTRA_TYPE, WebViewFragment.TYPE_MIME)
             }
         }
     }
@@ -79,6 +89,10 @@ class WebViewFragment : Fragment() {
                 }
                 mWebView?.loadUrl("file:///android_asset/${WEB_ROOT_PATH}/${url}")
                 Log.e(TAG, "load by static")
+            } else if (type == TYPE_MIME) {
+                val extension = MimeTypeMap.getFileExtensionFromUrl(url)
+                val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension) ?: "text/html"
+                toDoWithMIME(mime, url)
             }
         }
     }
@@ -96,6 +110,14 @@ class WebViewFragment : Fragment() {
         mWebView?.addJavascriptInterface(mJsInterface, INTERFACE_NAME)
     }
 
+    private fun toDoWithMIME(mime: String?, url: String) {
+        if (mime?.startsWith("text") == true) {
+            mWebView?.loadDataWithBaseURL(null, FileUtil.readFileContent(File(url)), mime, "utf-8", null)
+        } else if (mime?.startsWith("image") == true || mime?.startsWith("video") == true) {
+            mWebView?.loadUrl("file://${url}")
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         mWebView?.removeJavascriptInterface(INTERFACE_NAME)
@@ -104,7 +126,7 @@ class WebViewFragment : Fragment() {
     class JavaScriptInterface(val context: Context) {
 
         @JavascriptInterface
-        fun gotoAppDetailSettings(){
+        fun gotoAppDetailSettings() {
             context.startActivity(ActivityUtil.getAppDetailSettingIntent(context))
         }
     }

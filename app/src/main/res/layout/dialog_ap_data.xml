@@ -86,7 +86,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:id="@+id/text_url"/>
+                android:id="@+id/text_url" />
 
             <ImageView
                 android:id="@+id/image_url"

@@ -19,10 +19,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.ecjtu.sharebox.R;
 import com.ecjtu.sharebox.async.AppThumbTask;
+import com.ecjtu.sharebox.ui.activity.ActionBarFragmentActivity;
 import com.ecjtu.sharebox.ui.activity.ImmersiveFragmentActivity;
 import com.ecjtu.sharebox.ui.dialog.FilePickDialog;
 import com.ecjtu.sharebox.ui.dialog.TextItemDialog;
 import com.ecjtu.sharebox.ui.fragment.VideoPlayerFragment;
+import com.ecjtu.sharebox.ui.fragment.WebViewFragment;
 import com.ecjtu.sharebox.ui.view.FileExpandableListView;
 import com.ecjtu.sharebox.util.file.FileOpenIntentUtil;
 import com.ecjtu.sharebox.util.file.FileUtil;
@@ -126,17 +128,19 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         dlg.setOnClickListener(new Function1<Integer, Unit>() {
             @Override
             public Unit invoke(Integer integer) {
+                String path = (String) v.getTag();
                 if (integer == 0) {
-                    String path = (String) v.getTag();
+                    Bundle bundle = WebViewFragment.Companion.openWithMIME(path);
+                    Intent intent = ActionBarFragmentActivity.Companion.newInstance(mContext, WebViewFragment.class, bundle);
+                    mContext.startActivity(intent);
+                } else if (integer == 1) {
                     openFile(path);
-                    dlg.cancel();
-                } else {
-                    dlg.cancel();
                 }
+                dlg.cancel();
                 return null;
             }
         });
-        dlg.setupItem(new String[]{mContext.getString(R.string.open), mContext.getString(R.string.cancel)});
+        dlg.setupItem(new String[]{mContext.getString(R.string.open), "其他方式打开", mContext.getString(R.string.cancel)});
         dlg.show();
         return true;
     }
@@ -220,7 +224,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         TextView text = (TextView) convertView.findViewById(R.id.text);
         text.setText("");
 
-        setGroupViewThumb(type,thumb,icon,text);
+        setGroupViewThumb(type, thumb, icon, text);
 
         TextView child = (TextView) convertView.findViewById(R.id.select_all);
         child.setBackgroundResource(R.drawable.selector_file_group_item);
@@ -258,7 +262,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         ImageView icon = (ImageView) convertView.findViewById(R.id.icon);
         icon.setImageDrawable(null);
 
-        setChildViewThumb(type,f,icon);
+        setChildViewThumb(type, f, icon);
 
         CheckBox check = (CheckBox) convertView.findViewById(R.id.check_box);
         check.setChecked(vh.isItemActivated(f));
@@ -277,7 +281,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         return true;
     }
 
-    protected void setGroupViewThumb(FileUtil.MediaFileType type,String thumb,ImageView icon,TextView text){
+    protected void setGroupViewThumb(FileUtil.MediaFileType type, String thumb, ImageView icon, TextView text) {
         if (type == FileUtil.MediaFileType.MOVIE ||
                 type == FileUtil.MediaFileType.IMG) {
             Glide.with(mContext).load(thumb).into(icon);
@@ -297,7 +301,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         }
     }
 
-    protected void setChildViewThumb(FileUtil.MediaFileType type,String f,ImageView icon){
+    protected void setChildViewThumb(FileUtil.MediaFileType type, String f, ImageView icon) {
         if (type == FileUtil.MediaFileType.MOVIE ||
                 type == FileUtil.MediaFileType.IMG) {
             Glide.with(mContext).load(f).into(icon);

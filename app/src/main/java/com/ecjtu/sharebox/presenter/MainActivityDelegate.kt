@@ -34,6 +34,7 @@ import com.ecjtu.sharebox.ui.dialog.EditNameDialog
 import com.ecjtu.sharebox.ui.dialog.TextItemDialog
 import com.ecjtu.sharebox.ui.dialog.WifiBottomSheetDialog
 import com.ecjtu.sharebox.ui.fragment.FilePickDialogFragment
+import com.ecjtu.sharebox.ui.fragment.HelpFragment
 import com.ecjtu.sharebox.ui.fragment.WebViewFragment
 import com.ecjtu.sharebox.util.activity.ActivityUtil
 import com.ecjtu.sharebox.util.photo.CapturePhotoHelper
@@ -100,7 +101,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         mFloatingActionButton = findViewById(R.id.floating_action_button) as FloatingActionButton
         mFloatingActionButton.setOnClickListener({ view ->
             //            mViewSwitcher?.showNext()
-            var dlg = FilePickDialogFragment(owner)
+            val dlg = FilePickDialogFragment(owner)
             dlg.show(owner.supportFragmentManager, "FilePickDialogFragment")
         })
 
@@ -112,8 +113,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         mViewSwitcher?.addView(view1)
 
         view0.findViewById(R.id.button_help).setOnClickListener {
-            val intent = ActionBarFragmentActivity.newInstance(owner, WebViewFragment::class.java,
-                    WebViewFragment.openInnerUrl("help.html"),"Help")
+            val intent = ActionBarFragmentActivity.newInstance(owner, HelpFragment::class.java,title = "Help")
             owner.startActivity(intent)
         }
 
@@ -134,14 +134,14 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
             }
         }
         mHotspotButton.setOnClickListener {
-            for (index in 0..mRequestPermission.size - 1) {
+            for (index in 0 until mRequestPermission.size) {
                 if (ActivityCompat.checkSelfPermission(owner, mRequestPermission[index]) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(owner, mRequestPermission, REQUEST_CODE)
                     return@setOnClickListener
                 }
             }
 
-            var dlg = WifiBottomSheetDialog(owner, owner)
+            val dlg = WifiBottomSheetDialog(owner, owner)
             dlg.show()
         }
 
@@ -176,8 +176,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         }
 
         findViewById(R.id.text_help)?.setOnClickListener {
-            var intent = ActionBarFragmentActivity.newInstance(owner, WebViewFragment::class.java,
-                    WebViewFragment.openInnerUrl("help.html"),"Help")
+            val intent = ActionBarFragmentActivity.newInstance(owner, HelpFragment::class.java,title = "Help")
             owner.startActivity(intent)
         }
 
@@ -226,7 +225,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
                 if (state == Constants.NetWorkState.MOBILE || state == Constants.NetWorkState.NONE) {
                     Toast.makeText(owner, R.string.need_wifi_or_hotspot, Toast.LENGTH_SHORT).show()
                 } else {
-                    var dialog = ApDataDialog(owner, owner)
+                    val dialog = ApDataDialog(owner, owner)
                     dialog.show()
                 }
                 return true
@@ -248,7 +247,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         if (requestCode != REQUEST_CODE) return
         var hasPermission = true
 
-        for (index in 0..mRequestPermission.size - 1) {
+        for (index in 0 until mRequestPermission.size) {
             if (grantResults[index] != PackageManager.PERMISSION_GRANTED) {
                 hasPermission = false
             }

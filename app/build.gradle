@@ -26,6 +26,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    testCompile 'junit:junit:4.12'
     //compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile project(':channellibrary')
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
@@ -43,7 +44,7 @@ dependencies {
     compile 'com.android.support:support-v4:23.4.0'
     compile 'com.android.support:support-vector-drawable:23.4.0'
     compile 'com.tencent.bugly:crashreport:latest.release'
-    testCompile 'junit:junit:4.12'
+    compile project(':materialstepper')
 }
 repositories {
     mavenCentral()
