@@ -112,7 +112,10 @@ class WebViewFragment : Fragment() {
 
     private fun toDoWithMIME(mime: String?, url: String) {
         if (mime?.startsWith("text") == true) {
-            mWebView?.loadDataWithBaseURL(null, FileUtil.readFileContent(File(url)), mime, "utf-8", null)
+            var arr=FileUtil.readFileContent(File(url))
+            if (arr != null) {
+                mWebView?.loadDataWithBaseURL(null, String(arr), mime, "utf-8", null)
+            }
         } else if (mime?.startsWith("image") == true || mime?.startsWith("video") == true) {
             mWebView?.loadUrl("file://${url}")
         }

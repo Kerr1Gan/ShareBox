@@ -70,7 +70,7 @@ public class FileCacheHelper {
             fos=new FileOutputStream(file);
             fileLock=fos.getChannel().lock();
             os = new ObjectOutputStream(fos);
-            os.writeObject(object);
+            writeObjectFromStream(os,os);
             ret = true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -104,7 +104,7 @@ public class FileCacheHelper {
             fis=new FileInputStream(file);
             fileLock=fis.getChannel().lock(0L, Long.MAX_VALUE, true);
             is = new ObjectInputStream(fis);
-            ret = is.readObject();
+            ret = readObjectFromStream(is);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -122,5 +122,13 @@ public class FileCacheHelper {
             }
         }
         return ret;
+    }
+
+    public Object readObjectFromStream(ObjectInputStream is) throws IOException, ClassNotFoundException {
+        return is.readObject();
+    }
+
+    public void writeObjectFromStream(ObjectOutputStream os,Object object) throws IOException, ClassNotFoundException {
+        os.writeObject(object);
     }
 }

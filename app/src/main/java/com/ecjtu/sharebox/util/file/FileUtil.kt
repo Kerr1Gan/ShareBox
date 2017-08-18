@@ -1,13 +1,14 @@
 package com.ecjtu.sharebox.util.file
 
+
 import android.content.Context
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.os.Environment
 import java.io.*
-
-
 import java.lang.Exception
 import java.util.*
 
@@ -546,10 +547,10 @@ object FileUtil {
         return list!!
     }
 
-    fun readFileContent(file: File): String? {
+    fun readFileContent(file: File): ByteArray? {
         var fis: FileInputStream? = null
         var buf: ByteArrayOutputStream? = null
-        var ret: String? = null
+        var ret: ByteArray? = null
         try {
             fis = FileInputStream(file)
             buf = ByteArrayOutputStream()
@@ -559,7 +560,7 @@ object FileUtil {
                 buf.write(byteArr, 0, len)
                 len = fis.read(byteArr)
             }
-            ret = String(buf.toByteArray())
+            ret = buf.toByteArray()
         } catch (ex: Exception) {
             ex.printStackTrace()
             ret = null
@@ -568,6 +569,22 @@ object FileUtil {
             buf?.close()
         }
         return ret
+    }
+
+    fun getInstalledApps(context: Context, includeSystem: Boolean):List<PackageInfo> {
+        val appList = ArrayList<PackageInfo>() //用来存储获取的应用信息数据
+        val manager = context.getPackageManager()
+        val packages = manager.getInstalledPackages(0)
+
+        for (i in 0 until packages.size) {
+            val packageInfo = packages.get(i)
+            //Only display the non-system app info
+            if (!includeSystem && packageInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM == 0) {
+                appList.add(packageInfo)//如果非系统应用，则添加至appList
+            }
+
+        }
+        return appList
     }
 }
 

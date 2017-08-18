@@ -16,6 +16,4 @@ class SimpleWebViewClient:WebViewClient(){
         view?.loadUrl(url)
         return true
     }
-
-
 }

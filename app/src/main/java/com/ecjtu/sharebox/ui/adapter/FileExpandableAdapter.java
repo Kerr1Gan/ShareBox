@@ -2,6 +2,7 @@ package com.ecjtu.sharebox.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -390,6 +391,15 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         public void run() {
 
             final LinkedHashMap<String, List<String>> res = new LinkedHashMap<>();
+
+            if (mTitle.equalsIgnoreCase("Apk")) {
+                List<String> arrayList = new ArrayList<String>();
+                List<PackageInfo> installedApps = FileUtil.INSTANCE.getInstalledApps(mContext, false);
+                for (PackageInfo packageInfo : installedApps) {
+                    arrayList.add(packageInfo.applicationInfo.sourceDir);
+                }
+                res.put("已安装", arrayList);
+            }
 
             final String[] names = FileUtil.INSTANCE.foldFiles(mFileList, res);
 
