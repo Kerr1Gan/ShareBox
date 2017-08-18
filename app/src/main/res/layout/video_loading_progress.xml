@@ -16,7 +16,7 @@
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:layout_gravity="center"
-           android:text="@string/zl_website_loading_video"
+           android:text="loading"
            android:textSize="14sp"
            android:textColor="?android:attr/textColorPrimary" />
  </LinearLayout>
