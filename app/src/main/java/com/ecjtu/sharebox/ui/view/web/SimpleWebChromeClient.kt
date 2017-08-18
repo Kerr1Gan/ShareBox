@@ -1,4 +1,4 @@
-package com.ecjtu.sharebox.ui.view.webview
+package com.ecjtu.sharebox.ui.view.web
 
 import android.webkit.WebChromeClient
 

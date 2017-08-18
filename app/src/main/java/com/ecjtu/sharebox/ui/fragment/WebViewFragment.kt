@@ -2,7 +2,6 @@ package com.ecjtu.sharebox.ui.fragment
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
@@ -13,13 +12,11 @@ import android.webkit.JavascriptInterface
 import android.webkit.MimeTypeMap
 import android.webkit.WebView
 import com.ecjtu.sharebox.R
-import com.ecjtu.sharebox.ui.activity.ImmersiveFragmentActivity
-import com.ecjtu.sharebox.ui.view.webview.SimpleWebChromeClient
-import com.ecjtu.sharebox.ui.view.webview.SimpleWebViewClient
+import com.ecjtu.sharebox.ui.view.web.SimpleWebChromeClient
+import com.ecjtu.sharebox.ui.view.web.SimpleWebViewClient
 import com.ecjtu.sharebox.util.activity.ActivityUtil
 import com.ecjtu.sharebox.util.file.FileUtil
 import java.io.*
-import java.lang.Exception
 
 
 /**
