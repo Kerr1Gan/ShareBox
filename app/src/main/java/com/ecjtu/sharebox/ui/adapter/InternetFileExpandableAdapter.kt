@@ -1,12 +1,18 @@
 package com.ecjtu.sharebox.ui.adapter
 
+import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.ecjtu.sharebox.R
+import com.ecjtu.sharebox.ui.activity.ImmersiveFragmentActivity
+import com.ecjtu.sharebox.ui.activity.RotateNoCreateActivity
 import com.ecjtu.sharebox.ui.dialog.FilePickDialog
+import com.ecjtu.sharebox.ui.fragment.IjkVideoFragment
+import com.ecjtu.sharebox.ui.fragment.VideoPlayerFragment
 import com.ecjtu.sharebox.ui.view.FileExpandableListView
+import com.ecjtu.sharebox.util.file.FileOpenIntentUtil
 import com.ecjtu.sharebox.util.file.FileUtil
 import org.ecjtu.easyserver.server.DeviceInfo
 
@@ -38,7 +44,7 @@ class InternetFileExpandableAdapter(expandableListView: FileExpandableListView) 
         var tag = v?.getTag()
         if (tag != null && tag is String) {
             var path = java.lang.String(tag)
-            openFile("${mDeviceInfo?.ip}:${mDeviceInfo?.port}/API/File/${path.hashCode()}")
+            openFile("http://${mDeviceInfo?.ip}:${mDeviceInfo?.port}/API/File/${path.hashCode()}")
             return
         }
         super.onClick(v)
@@ -60,5 +66,14 @@ class InternetFileExpandableAdapter(expandableListView: FileExpandableListView) 
     override fun setChildViewThumb(type: FileUtil.MediaFileType?, f: String?, icon: ImageView?) {
         val baseUrl="${mDeviceInfo?.getIp()}:${mDeviceInfo?.port}/API/Cache/${f?.hashCode()}"
         super.setChildViewThumb(type, baseUrl, icon)
+    }
+
+    override fun openFile(path: String?) {
+        if (mTabHolder.type === FileUtil.MediaFileType.MOVIE) {
+            val bundle = Bundle()
+            bundle.putString(VideoPlayerFragment.EXTRA_URI_PATH, path)
+            val i = RotateNoCreateActivity.newInstance(context, IjkVideoFragment::class.java, bundle)
+            context.startActivity(i)
+        }
     }
 }

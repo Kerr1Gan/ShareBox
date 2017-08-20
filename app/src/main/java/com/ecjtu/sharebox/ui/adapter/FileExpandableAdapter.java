@@ -477,4 +477,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         return mTitle;
     }
 
+    public Context getContext(){
+        return mContext;
+    }
 }

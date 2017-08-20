@@ -3,6 +3,7 @@ package com.ecjtu.sharebox.ui.fragment
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,8 +37,18 @@ class IjkVideoFragment:Fragment(){
         mVideoView = view?.findViewById(R.id.video_view) as IjkVideoView
         mVideoView?.setMediaController(mMediaController)
 
-        mVideoView?.setVideoPath("http://wvideo.spriteapp.cn/video/2016/1119/e9a47928-ae5c-11e6-a7e5-d4ae5296039d_wpc.mp4")
-        mVideoView?.start()
+        var arg=arguments
+        if(arg!=null){
+            val uri=arg.getString("extra_uri_path","")
+            if(!TextUtils.isEmpty(uri)){
+                mVideoView?.setVideoPath(uri)
+                mVideoView?.start()
+            }else{
+                activity.finish()
+            }
+        }else{
+            activity.finish()
+        }
     }
 
     private val mCallback = AsusMediaController.MediaPlayerCallback {
