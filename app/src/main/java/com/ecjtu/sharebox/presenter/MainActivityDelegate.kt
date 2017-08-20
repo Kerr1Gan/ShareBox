@@ -1,15 +1,12 @@
 package com.ecjtu.sharebox.presenter
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
-import android.net.Uri
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.os.Build
-import android.os.Message
 import android.preference.PreferenceManager
 import android.provider.Settings
 import android.support.design.widget.FloatingActionButton
@@ -25,16 +22,21 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import com.ecjtu.sharebox.Constants
+import com.ecjtu.sharebox.PreferenceInfo
 import com.ecjtu.sharebox.R
-import com.ecjtu.sharebox.domain.PreferenceInfo
 import com.ecjtu.sharebox.getMainApplication
+import com.ecjtu.sharebox.ui.activity.ActionBarFragmentActivity
 import com.ecjtu.sharebox.ui.activity.MainActivity
+import com.ecjtu.sharebox.ui.activity.SettingsActivity
 import com.ecjtu.sharebox.ui.adapter.DeviceRecyclerViewAdapter
 import com.ecjtu.sharebox.ui.dialog.ApDataDialog
 import com.ecjtu.sharebox.ui.dialog.EditNameDialog
 import com.ecjtu.sharebox.ui.dialog.TextItemDialog
 import com.ecjtu.sharebox.ui.dialog.WifiBottomSheetDialog
 import com.ecjtu.sharebox.ui.fragment.FilePickDialogFragment
+import com.ecjtu.sharebox.ui.fragment.HelpFragment
+import com.ecjtu.sharebox.ui.fragment.WebViewFragment
+import com.ecjtu.sharebox.util.activity.ActivityUtil
 import com.ecjtu.sharebox.util.photo.CapturePhotoHelper
 import com.ecjtu.sharebox.util.photo.PickPhotoHelper
 import org.ecjtu.channellibrary.devicesearch.DeviceSearcher
@@ -82,24 +84,9 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
 
     private var mImageHelper: PickPhotoHelper? = null
 
-    private val DELAY_TIME=5000L
+    private val DELAY_TIME = 8000L
 
     companion object {
-        //Settings.ACTION_APPLICATION_DETAIL_SETTING
-        fun getAppDetailSettingIntent(context: Context): Intent {
-            var localIntent = Intent()
-            localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            if (Build.VERSION.SDK_INT >= 9) {
-                localIntent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                localIntent.setData(Uri.fromParts("package", context.getPackageName(), null))
-            } else if (Build.VERSION.SDK_INT <= 8) {
-                localIntent.setAction(Intent.ACTION_VIEW)
-                localIntent.setClassName("com.android.settings", "com.android.settings.InstalledAppDetails")
-                localIntent.putExtra("com.android.settings.ApplicationPkgName", context.getPackageName())
-            }
-            return localIntent
-        }
-
         const val DEBUG = true
     }
 
@@ -108,13 +95,13 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         mDrawerLayout = findViewById(R.id.drawer_layout) as DrawerLayout
 
         mDrawerToggle = ActionBarDrawerToggle(owner, mDrawerLayout, mToolbar, 0, 0)
-        mDrawerToggle!!.syncState()
-        mDrawerLayout!!.setDrawerListener(mDrawerToggle)
+        mDrawerToggle.syncState()
+        mDrawerLayout.setDrawerListener(mDrawerToggle)
 
         mFloatingActionButton = findViewById(R.id.floating_action_button) as FloatingActionButton
         mFloatingActionButton.setOnClickListener({ view ->
             //            mViewSwitcher?.showNext()
-            var dlg = FilePickDialogFragment(owner)
+            val dlg = FilePickDialogFragment(owner)
             dlg.show(owner.supportFragmentManager, "FilePickDialogFragment")
         })
 
@@ -126,7 +113,8 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         mViewSwitcher?.addView(view1)
 
         view0.findViewById(R.id.button_help).setOnClickListener {
-
+            val intent = ActionBarFragmentActivity.newInstance(owner, HelpFragment::class.java,title = "Help")
+            owner.startActivity(intent)
         }
 
         mWifiButton = findViewById(R.id.btn_wifi) as Button
@@ -146,14 +134,14 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
             }
         }
         mHotspotButton.setOnClickListener {
-            for (index in 0..mRequestPermission.size - 1) {
+            for (index in 0 until mRequestPermission.size) {
                 if (ActivityCompat.checkSelfPermission(owner, mRequestPermission[index]) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(owner, mRequestPermission, REQUEST_CODE)
                     return@setOnClickListener
                 }
             }
 
-            var dlg = WifiBottomSheetDialog(owner, owner)
+            val dlg = WifiBottomSheetDialog(owner, owner)
             dlg.show()
         }
 
@@ -178,15 +166,18 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         mTextName = findViewById(R.id.text_name) as TextView
 
         findViewById(R.id.text_faq)?.setOnClickListener {
-
+            var intent = ActionBarFragmentActivity.newInstance(owner, WebViewFragment::class.java,
+                    WebViewFragment.openInnerUrl("faq.html"),"FAQ")
+            owner.startActivity(intent)
         }
 
         findViewById(R.id.text_setting)?.setOnClickListener {
-
+            owner.startActivity(Intent(owner, SettingsActivity::class.java))
         }
 
         findViewById(R.id.text_help)?.setOnClickListener {
-
+            val intent = ActionBarFragmentActivity.newInstance(owner, HelpFragment::class.java,title = "Help")
+            owner.startActivity(intent)
         }
 
         findViewById(R.id.btn_close)?.setOnClickListener {
@@ -195,7 +186,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
 
         findViewById(R.id.icon)?.setOnClickListener {
             var dlg = TextItemDialog(owner)
-            dlg.setupItem(arrayOf("从照相机选择", "从相册选择", "取消"))
+            dlg.setupItem(arrayOf(owner.getString(R.string.pick_from_camera), owner.getString(R.string.pick_from_album), owner.getString(R.string.cancel)))
             dlg.setOnClickListener { index ->
                 if (index == 0) {
                     mPhotoHelper = CapturePhotoHelper(owner)
@@ -232,9 +223,9 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
                 var state = map.get(Constants.AP_STATE)
 
                 if (state == Constants.NetWorkState.MOBILE || state == Constants.NetWorkState.NONE) {
-                    Toast.makeText(owner, "需要连接WIFI或者开启热点", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(owner, R.string.need_wifi_or_hotspot, Toast.LENGTH_SHORT).show()
                 } else {
-                    var dialog = ApDataDialog(owner, owner)
+                    val dialog = ApDataDialog(owner, owner)
                     dialog.show()
                 }
                 return true
@@ -256,13 +247,13 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         if (requestCode != REQUEST_CODE) return
         var hasPermission = true
 
-        for (index in 0..mRequestPermission.size - 1) {
+        for (index in 0 until mRequestPermission.size) {
             if (grantResults[index] != PackageManager.PERMISSION_GRANTED) {
                 hasPermission = false
             }
 
             if (!ActivityCompat.shouldShowRequestPermissionRationale(owner, mRequestPermission[index])) {
-                owner.startActivity(getAppDetailSettingIntent(owner))
+                owner.startActivity(ActivityUtil.getAppDetailSettingIntent(owner))
                 return
             }
         }
@@ -289,6 +280,8 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
             mWifiImage.setImageResource(R.mipmap.wifi)
             hasAccess = true
             owner.getMainApplication().getSavedInstance().put(Constants.AP_STATE, Constants.NetWorkState.WIFI)
+
+            owner.getHandler()?.obtainMessage(MainActivity.MSG_START_SERVER)?.sendToTarget()
         } else if (NetworkUtil.isHotSpot(owner)) {
             var config = NetworkUtil.getHotSpotConfiguration(owner)
             mApName.setText(getRealName(config.SSID))
@@ -297,8 +290,10 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
             mWifiImage.setImageResource(R.mipmap.hotspot)
             hasAccess = true
             owner.getMainApplication().getSavedInstance().put(Constants.AP_STATE, Constants.NetWorkState.AP)
+
+            owner.getHandler()?.obtainMessage(MainActivity.MSG_START_SERVER)?.sendToTarget()
         } else if (NetworkUtil.isMobile(owner)) {
-            mApName.setText(getRealName("Cellular"))
+            mApName.setText(R.string.cellular)
             mWifiImage.setImageResource(R.mipmap.wifi_off)
 
             mWifiButton.isActivated = false
@@ -306,7 +301,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
             hasAccess = false
             owner.getMainApplication().getSavedInstance().put(Constants.AP_STATE, Constants.NetWorkState.MOBILE)
         } else {
-            mApName.setText(getRealName("No Internet"))
+            mApName.setText(R.string.no_internet)
             mWifiImage.setImageResource(R.mipmap.wifi_off)
             mWifiButton.isActivated = false
             mHotspotButton.isActivated = false
@@ -345,28 +340,32 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
             var state = owner.getMainApplication().getSavedInstance().get(Constants.AP_STATE)
             var ip = ""
             if (state == Constants.NetWorkState.WIFI) {
-                ip = NetworkUtil.getLocalWLANIps()[0]
+                val ips = NetworkUtil.getLocalWLANIps()
+                if (ips.isNotEmpty())
+                    ip = NetworkUtil.getLocalWLANIps()[0]
             } else if (state == Constants.NetWorkState.AP) {
-                ip = NetworkUtil.getLocalApIps()[0]
+                val ips = NetworkUtil.getLocalApIps()
+                if (ips.isNotEmpty())
+                    ip = NetworkUtil.getLocalApIps()[0]
             }
             when (msg) {
                 DiscoverHelper.MSG_FIND_DEVICE -> {
 
                     for (obj in deviceSet) {
                         if (isSelf(ip, obj)) continue
-                        var index = mClientSet.indexOf(obj)
+                        val index = mClientSet.indexOf(obj)
                         if (index < 0) {
                             mClientSet.add(obj)
                         } else {
-                            var old = mClientSet.get(index)
+                            val old = mClientSet.get(index)
                             old.name = obj.name
                             old.room = obj.room
                         }
                     }
                     applyDeviceInfo(mClientSet)
                     if (owner.refreshing) {
-                        var msg=handler.obtainMessage(DiscoverHelper.MSG_START_FIND_DEVICE)
-                        handler.sendMessageDelayed(msg,DELAY_TIME)
+                        var msg = handler.obtainMessage(DiscoverHelper.MSG_START_FIND_DEVICE)
+                        handler.sendMessageDelayed(msg, DELAY_TIME)
                     }
                 }
                 DiscoverHelper.MSG_BEING_SEARCHED -> {
@@ -383,8 +382,8 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
                     }
                     applyDeviceInfo(mServerSet)
                     if (owner.refreshing) {
-                        var msg=handler.obtainMessage(DiscoverHelper.MSG_START_BEING_SEARCHED)
-                        handler.sendMessageDelayed(msg,DELAY_TIME)
+                        var msg = handler.obtainMessage(DiscoverHelper.MSG_START_BEING_SEARCHED)
+                        handler.sendMessageDelayed(msg, DELAY_TIME)
                     }
                 }
                 DiscoverHelper.MSG_START_FIND_DEVICE -> {
@@ -438,7 +437,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
                 if (port == 0) continue
                 var needUpdate = false
 
-                if (old?.port != port || old?.icon != arr[2]) needUpdate = true
+                if (old?.port != port || old.icon != arr[2]) needUpdate = true
 
                 old?.name = arr[0]
                 old?.port = port

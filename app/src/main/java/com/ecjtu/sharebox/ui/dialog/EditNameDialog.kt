@@ -12,7 +12,7 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.RelativeLayout.CENTER_IN_PARENT
 import com.ecjtu.sharebox.R
-import com.ecjtu.sharebox.domain.PreferenceInfo
+import com.ecjtu.sharebox.PreferenceInfo
 
 /**
  * Created by KerriGan on 2017/6/11.
@@ -42,7 +42,7 @@ class EditNameDialog(context: Context,activity: Activity):CloseBottomSheetDialog
         parent.layoutParams=params
         container.addView(parent,params)
 
-        setTitle("Edit Name",container)
+        setTitle(context.getString(R.string.edit_name),container)
 
         init(container)
         return container

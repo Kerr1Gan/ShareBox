@@ -8,6 +8,16 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Using last"
+        android:gravity="right"
+        android:layout_marginTop="30dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:id="@+id/text_use_last"/>
+
     <android.support.design.widget.TextInputLayout
         android:id="@+id/text_input_ap"
         style="@style/BottomSheetDialogStyle"
@@ -15,7 +25,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_marginTop="30dp"
         app:counterEnabled="true"
         app:counterMaxLength="12"
         app:errorEnabled="true"
@@ -71,7 +80,8 @@
         android:layout_marginBottom="20dp"
         android:textColor="@android:color/white"
         app:cpb_cornerRadius="23dp"
-        app:cpb_textIdle="开启"
-        app:cpb_textComplete="关闭"
-        app:cpb_textError="失败"/>
+        app:cpb_textIdle="@string/open"
+        app:cpb_textComplete="@string/close"
+        app:cpb_textError="@string/failure"
+        app:cpb_selectorIdle="@color/selector_cpb_idle_state"/>
 </LinearLayout>

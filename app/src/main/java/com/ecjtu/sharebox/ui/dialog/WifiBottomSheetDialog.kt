@@ -22,73 +22,82 @@ import com.dd.CircularProgressButton
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
 import com.ecjtu.sharebox.ui.view.CircleProgressView
+import com.ecjtu.sharebox.util.activity.ActivityUtil
 import org.ecjtu.channellibrary.wifiutil.NetworkUtil
 import org.ecjtu.channellibrary.wifiutil.WifiUtil
+import kotlin.concurrent.thread
 
 /**
  * Created by KerriGan on 2017/6/2.
  */
-open class WifiBottomSheetDialog:CloseBottomSheetDialog{
+open class WifiBottomSheetDialog : CloseBottomSheetDialog {
 
-    constructor(context: Context,activity: Activity? = null):super(context,activity){
+    constructor(context: Context, activity: Activity? = null) : super(context, activity) {
 
     }
 
-    private var mHotspotName:TextInputEditText? =null
+    private var mHotspotName: TextInputEditText? = null
 
-    private var mHotspotPwd:TextInputEditText? =null
+    private var mHotspotPwd: TextInputEditText? = null
 
-    private var mNameTextInput:TextInputLayout? =null
+    private var mNameTextInput: TextInputLayout? = null
 
-    private var mPwdTextInput:TextInputLayout? =null
+    private var mPwdTextInput: TextInputLayout? = null
 
-    private var mReceiver:BroadcastReceiver? =null
+    private var mReceiver: BroadcastReceiver? = null
 
-    private var mHandler:Handler =Handler(ownerActivity.mainLooper)
+    private var mHandler: Handler = Handler(ownerActivity.mainLooper)
 
     private val DELAY_TIME = 5 * 1000L
 
-    private var mCircularButton:CircularProgressButton? =null
+    private var mCircularButton: CircularProgressButton? = null
 
     companion object {
-        const val PROGRESS_START= 0
-        const val PROGRESS_MIDDLE= 50
-        const val PROGRESS_END=100
+        const val PROGRESS_START = 0
+        const val PROGRESS_MIDDLE = 50
+        const val PROGRESS_END = 100
     }
 
-    override fun onCreateView(): View?{
+    override fun onCreateView(): View? {
         var vg = super.onCreateView() as ViewGroup
-        var child=layoutInflater.inflate(R.layout.dialog_hotspot,vg,false)
+        var child = layoutInflater.inflate(R.layout.dialog_hotspot, vg, false)
         vg.addView(child)
         initView(vg)
         return vg
     }
 
-    private fun initView(vg:ViewGroup){
-        mHotspotName=vg.findViewById(R.id.ap_name) as TextInputEditText
-        mHotspotPwd=vg.findViewById(R.id.ap_pwd) as TextInputEditText
+    private fun initView(vg: ViewGroup) {
+        mHotspotName = vg.findViewById(R.id.ap_name) as TextInputEditText
+        mHotspotPwd = vg.findViewById(R.id.ap_pwd) as TextInputEditText
 
-        mNameTextInput= vg.findViewById(R.id.text_input_ap) as TextInputLayout
+        mNameTextInput = vg.findViewById(R.id.text_input_ap) as TextInputLayout
 
-        mPwdTextInput= vg.findViewById(R.id.text_input_pwd) as TextInputLayout
+        mPwdTextInput = vg.findViewById(R.id.text_input_pwd) as TextInputLayout
 
         mHotspotName?.addTextChangedListener(mTextWatcherName)
         mHotspotPwd?.addTextChangedListener(mTextWatcherPwd)
 
         setupCircularProgressButton(vg)
 
-        var config=NetworkUtil.getHotSpotConfiguration(context)
-        mHotspotName?.setText(config.SSID)
-        mHotspotPwd?.setText(config.preSharedKey)
-        if(NetworkUtil.isHotSpot(context)){
-            mCircularButton?.setText("关闭")
-            mCircularButton?.progress= PROGRESS_END
-        }else{
-            mCircularButton?.setText("开启")
-            mCircularButton?.progress= PROGRESS_START
+        vg.findViewById(R.id.text_use_last).setOnClickListener {
+            usingLast()
         }
 
-        (vg.findViewById(R.id.text_title) as TextView).setText("Hotspot")
+        if (NetworkUtil.isHotSpot(context)) {
+            mCircularButton?.setText(R.string.close)
+            mCircularButton?.progress = PROGRESS_END
+        } else {
+            mCircularButton?.setText(R.string.open)
+            mCircularButton?.progress = PROGRESS_START
+        }
+
+        (vg.findViewById(R.id.text_title) as TextView).setText(R.string.hotspot)
+    }
+
+    private fun usingLast(){
+        var config = NetworkUtil.getHotSpotConfiguration(context)
+        mHotspotName?.setText(config.SSID)
+        mHotspotPwd?.setText(config.preSharedKey)
     }
 
     override fun dismiss() {
@@ -97,72 +106,72 @@ open class WifiBottomSheetDialog:CloseBottomSheetDialog{
         mHotspotPwd?.removeTextChangedListener(mTextWatcherPwd)
     }
 
-    private var mTextWatcherName = object : TextWatcher{
+    private var mTextWatcherName = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int,
-                                       count: Int, after: Int){
+                                       count: Int, after: Int) {
 
         }
 
-        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int){
-            var len=s.length
-            if(len>mPwdTextInput!!.counterMaxLength){
-                mPwdTextInput!!.setError("名字太长啦呆逼")
-            }else{
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+            var len = s.length
+            if (len > mPwdTextInput!!.counterMaxLength) {
+                mPwdTextInput!!.setError(context.getString(R.string.name_too_long))
+            } else {
                 mPwdTextInput!!.setError(null)
             }
         }
 
 
-        override fun afterTextChanged(s: Editable){
+        override fun afterTextChanged(s: Editable) {
 
         }
     }
 
-    private var mTextWatcherPwd = object : TextWatcher{
+    private var mTextWatcherPwd = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int,
-                                       count: Int, after: Int){
+                                       count: Int, after: Int) {
         }
 
-        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int){
-            var len=s.length
-            if(len>mPwdTextInput!!.counterMaxLength){
-                mPwdTextInput!!.setError("密码太长啦呆逼")
-            }else{
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+            var len = s.length
+            if (len > mPwdTextInput!!.counterMaxLength) {
+                mPwdTextInput!!.setError(context.getString(R.string.name_too_long))
+            } else {
                 mPwdTextInput!!.setError(null)
             }
         }
 
-        override fun afterTextChanged(s: Editable){
+        override fun afterTextChanged(s: Editable) {
 
         }
     }
 
     override fun onStart() {
         super.onStart()
-        mReceiver=object :BroadcastReceiver(){
+        mReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
-                var status=intent?.getIntExtra("wifi_state", -1)
-                if(status==13){
+                var status = intent?.getIntExtra("wifi_state", -1)
+                if (status == 13) {
                     //wifi ap enabled
-                    var config=NetworkUtil.getHotSpotConfiguration(context)
+                    var config = NetworkUtil.getHotSpotConfiguration(context)
                     mHotspotName?.setText(config.SSID)
                     mHotspotPwd?.setText(config.preSharedKey)
-                    mCircularButton?.setText("关闭")
-                    mCircularButton?.progress= PROGRESS_END
 
+                    mCircularButton?.setText(R.string.close)
+                    mCircularButton?.progress = PROGRESS_END
                     mHandler.removeCallbacksAndMessages(null)
-                }else if(status==11){
+                } else if (status == 11) {
                     //wifi ap disabled
-                    mCircularButton?.setText("开启")
-                    mCircularButton?.progress= PROGRESS_START
+                    mCircularButton?.setText(R.string.open)
+                    mCircularButton?.progress = PROGRESS_START
                 }
             }
 
         }
 
-        var filter=IntentFilter("android.net.wifi.WIFI_AP_STATE_CHANGED")
+        var filter = IntentFilter("android.net.wifi.WIFI_AP_STATE_CHANGED")
 
-        context.registerReceiver(mReceiver,filter)
+        context.registerReceiver(mReceiver, filter)
     }
 
     override fun onStop() {
@@ -171,7 +180,7 @@ open class WifiBottomSheetDialog:CloseBottomSheetDialog{
         mHandler.removeCallbacksAndMessages(null)
     }
 
-    fun setupCircularProgressButton(vg:ViewGroup){
+    fun setupCircularProgressButton(vg: ViewGroup) {
         mCircularButton = vg.findViewById(R.id.circle_progress) as CircularProgressButton
         mCircularButton?.isIndeterminateProgressMode = true
         mCircularButton?.setOnClickListener {
@@ -184,20 +193,20 @@ open class WifiBottomSheetDialog:CloseBottomSheetDialog{
                 }
 
                 mHandler.postDelayed({
-                    Toast.makeText(context, "No permission", Toast.LENGTH_SHORT).show()
-                    context.startActivity(MainActivityDelegate.getAppDetailSettingIntent(context))
-                    mCircularButton?.progress= PROGRESS_START
+                    Toast.makeText(context, R.string.no_permission, Toast.LENGTH_SHORT).show()
+                    context.startActivity(ActivityUtil.getAppDetailSettingIntent(context))
+                    mCircularButton?.progress = PROGRESS_START
                     cancel()
                 }, DELAY_TIME)
 
-                WifiUtil.openHotSpot(context,true,mHotspotName?.text.toString()
-                        ,mHotspotPwd?.text.toString())
+                WifiUtil.openHotSpot(context, true, mHotspotName?.text.toString()
+                        , mHotspotPwd?.text.toString())
             } else if (mCircularButton?.progress == PROGRESS_END) {
                 mCircularButton?.progress = PROGRESS_START
-                mCircularButton?.setText("开启")
+                mCircularButton?.setText(R.string.open)
 
-                WifiUtil.openHotSpot(context,false,mHotspotName?.text.toString()
-                        ,mHotspotPwd?.text.toString())
+                WifiUtil.openHotSpot(context, false, mHotspotName?.text.toString()
+                        , mHotspotPwd?.text.toString())
             }
         }
     }

@@ -2,6 +2,7 @@ package com.ecjtu.sharebox.ui.fragment
 
 import android.app.Dialog
 import android.os.Bundle
+import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDialogFragment
 import com.ecjtu.sharebox.ui.dialog.FilePickDialog
@@ -11,13 +12,13 @@ import com.ecjtu.sharebox.ui.dialog.FilePickDialog
  */
 class FilePickDialogFragment : AppCompatDialogFragment{
 
-    private var mActivity:AppCompatActivity?=null
+    private var mActivity:FragmentActivity?=null
 
     constructor():super(){
 
     }
 
-    constructor(activity: AppCompatActivity):super(){
+    constructor(activity: FragmentActivity):super(){
         mActivity=activity
     }
 

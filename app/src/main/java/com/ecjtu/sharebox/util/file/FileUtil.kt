@@ -1,13 +1,14 @@
 package com.ecjtu.sharebox.util.file
 
+
 import android.content.Context
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.os.Environment
 import java.io.*
-
-
 import java.lang.Exception
 import java.util.*
 
@@ -286,52 +287,66 @@ object FileUtil {
 
     val TX_PATH = arrayOf("/tencent/MicroMsg", "/tencent/MobileQQ")
 
-    fun foldFiles(input: MutableList<File>?, output: LinkedHashMap<String, MutableList<File>>): Array<String>? {
+    @JvmOverloads
+    fun foldFiles(input: MutableList<String>?, output: LinkedHashMap<String, MutableList<String>>, ignoreWx: Boolean = false, ignoreQQ: Boolean = false): Array<String>? {
         if (input == null || input.size == 0) return null
         val prefix = ArrayList<String>()
-        output.put(TX_PATH[0], arrayListOf<File>())
-        output.put(TX_PATH[1], arrayListOf<File>())
+        output.put(TX_PATH[0], arrayListOf<String>())
+        output.put(TX_PATH[1], arrayListOf<String>())
 
         for (f in input) {
-            var root = f.parent
-
+            var root = f
+            root = root.substring(0, root.lastIndexOf(File.separator))
             if (prefix.indexOf(root) < 0) {
                 prefix.add(root)
-                var list = ArrayList<File>()
+                var list = ArrayList<String>()
                 output.put(root, list)
             }
         }
 
+        var wxList = output[TX_PATH[0]]
+        var qqList = output[TX_PATH[1]]
         for (f in input) {
             if (Thread.interrupted())
                 return null
-            val root = f.parent
-
-            var list: MutableList<File>? = output[root]
-
-            list?.add(f)
+            var root = f
+            root = root.substring(0, root.lastIndexOf(File.separator))
+            var list: MutableList<String>? = output[root]
+            if (root != null) {
+                if (root.contains(TX_PATH[0]) && !ignoreWx) {
+                    if (wxList?.indexOf(f) ?: -1 < 0)
+                        wxList?.add(f)
+                }
+                if (root.contains(TX_PATH[1]) && !ignoreQQ) {
+                    if (qqList?.indexOf(f) ?: -1 < 0)
+                        qqList?.add(f)
+                }
+                if (wxList?.indexOf(f) ?: -1 < 0 && qqList?.indexOf(f) ?: -1 < 0) {
+                    if (list?.indexOf(f) ?: 0 < 0)
+                        list?.add(f)
+                }
+            }
 
             for (pre in prefix) {
                 if (Thread.interrupted()) return null
-                if (root.startsWith(pre)) {
+                if (root.startsWith(pre) && wxList?.indexOf(f) ?: -1 < 0 && qqList?.indexOf(f) ?: -1 < 0) {
                     val lst = output[pre]
-                    if (lst?.indexOf(f) ?: 0 < 0)
-                        lst?.add(f)
-                }
-                if (root.contains(TX_PATH[0]) || root.contains(TX_PATH[1])) {
-                    val lst = output[if (root.contains(TX_PATH[0])) TX_PATH[0] else TX_PATH[1]]
                     if (lst?.indexOf(f) ?: 0 < 0)
                         lst?.add(f)
                 }
             }
         }
-
-        if (output.get(TX_PATH[0])?.size == 0) {
-            output.remove(TX_PATH[0])
+        var iter = output.iterator()
+        while (iter.hasNext()) {
+            var entry = iter.next()
+            if (entry.value?.size == 0) {
+                iter.remove()
+            }
         }
-
-        if (output.get(TX_PATH[1])?.size == 0) {
-            output.remove(TX_PATH[1])
+        for (key in output) {
+            if (key.value?.size == 0) {
+                output.remove(key.key)
+            }
         }
 
         //sort paths
@@ -363,21 +378,23 @@ object FileUtil {
         return count
     }
 
-    fun copyFile2InternalPath(file: File, name: String, context: Context): Boolean {
+    fun copyFile2InternalPath(file: File, name: String, context: Context, internalUrl: String = ""): Boolean {
         var root = context.filesDir
+        root = File(root, internalUrl)
+        if (!root.isDirectory()) root.mkdirs()
+        val temp = File(root.absoluteFile, name)
+        if (temp.exists()) temp.delete()
+        return copyFile2Path(file, temp)
+    }
+
+    fun copyFile2Path(src: File, dest: File): Boolean {
         var fis: FileInputStream? = null
         var buf: BufferedOutputStream? = null
+
         try {
-            fis = FileInputStream(file)
-            var temp = File(root.absoluteFile, name)
-            if (temp.exists()) temp.delete()
-            buf = BufferedOutputStream(FileOutputStream(temp))
-            var arr = ByteArray(1024 * 5)
-            var len = fis.read(arr)
-            while (len > 0) {
-                buf.write(arr)
-                len = fis.read(arr)
-            }
+            fis = FileInputStream(src)
+            buf = BufferedOutputStream(FileOutputStream(dest))
+            copyFile(fis, buf)
         } catch (e: Exception) {
             return false
         } finally {
@@ -385,6 +402,16 @@ object FileUtil {
             buf?.close()
         }
         return true
+    }
+
+    @Throws(IOException::class)
+    fun copyFile(inputStream: InputStream, outputStream: BufferedOutputStream) {
+        val arr = ByteArray(1024 * 5)
+        var len = inputStream.read(arr)
+        while (len > 0) {
+            outputStream.write(arr)
+            len = inputStream.read(arr)
+        }
     }
 
     fun getImagesByDCIM(context: Context): MutableList<File> {
@@ -422,6 +449,142 @@ object FileUtil {
                 }
             }
         }
+    }
+
+    fun string2MediaFileType(str: String): FileUtil.MediaFileType? {
+        var ret: FileUtil.MediaFileType? = null
+        when (str) {
+            "Movie" -> {
+                ret = FileUtil.MediaFileType.MOVIE
+            }
+            "Music" -> {
+                ret = FileUtil.MediaFileType.MP3
+            }
+            "Photo" -> {
+                ret = FileUtil.MediaFileType.IMG
+            }
+            "Doc" -> {
+                ret = FileUtil.MediaFileType.DOC
+            }
+            "Apk" -> {
+                ret = FileUtil.MediaFileType.APP
+            }
+            "Rar" -> {
+                ret = FileUtil.MediaFileType.RAR
+            }
+        }
+        return ret
+    }
+
+    fun mediaFileType2String(type: FileUtil.MediaFileType): String? {
+        var ret: String? = null
+        when (type) {
+            FileUtil.MediaFileType.MOVIE -> {
+                ret = "Movie"
+            }
+            FileUtil.MediaFileType.MP3 -> {
+                ret = "Music"
+            }
+            FileUtil.MediaFileType.IMG -> {
+                ret = "Photo"
+            }
+            FileUtil.MediaFileType.DOC -> {
+                ret = "Doc"
+            }
+            FileUtil.MediaFileType.APP -> {
+                ret = "Apk"
+            }
+            FileUtil.MediaFileType.RAR -> {
+                ret = "Rar"
+            }
+        }
+        return ret
+    }
+
+    fun getFileName(filePath: String): String {
+        val index = filePath.lastIndexOf("/")
+        if (index < 0) {
+            return if (filePath.startsWith("/")) filePath.substring(1) else filePath
+        } else {
+            var ret = filePath.substring(index)
+            return if (ret.startsWith("/")) ret.substring(1) else ret
+        }
+    }
+
+    fun getParentFileName(filePath: String): String? {
+        var cpy = filePath
+        var index = cpy.lastIndexOf("/")
+        if (index < 0) return null
+        cpy = filePath.substring(0, index)
+        index = cpy.lastIndexOf("/")
+        if (index < 0) {
+            return if (filePath.startsWith("/")) filePath.substring(1) else filePath
+        } else {
+            var ret = filePath.substring(index)
+            return if (ret.startsWith("/")) ret.substring(1) else ret
+        }
+    }
+
+    fun getFilesByFolder(root: File, out: MutableList<File>? = null): MutableList<File> {
+        var list = out
+        if (list == null) {
+            list = mutableListOf<File>()
+        }
+
+        if (!root.exists()) return list
+        if (root.isDirectory) {
+            var childList = root.listFiles()
+            for (child in childList) {
+                if (child.isDirectory) {
+                    list = getFilesByFolder(child, list)
+                } else {
+                    list?.add(child)
+                }
+            }
+        } else {
+            list.add(root)
+        }
+        return list!!
+    }
+
+    fun readFileContent(file: File): ByteArray? {
+        var fis: FileInputStream? = null
+        var buf: ByteArrayOutputStream? = null
+        var ret: ByteArray? = null
+        try {
+            fis = FileInputStream(file)
+            buf = ByteArrayOutputStream()
+            var byteArr = ByteArray(1024 * 2)
+            var len = fis.read(byteArr)
+            while (len > 0) {
+                buf.write(byteArr, 0, len)
+                len = fis.read(byteArr)
+            }
+            ret = buf.toByteArray()
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            ret = null
+        } finally {
+            fis?.close()
+            buf?.close()
+        }
+        return ret
+    }
+
+    fun getInstalledApps(context: Context, includeSystem: Boolean):List<PackageInfo> {
+        val appList = ArrayList<PackageInfo>() //用来存储获取的应用信息数据
+        val manager = context.getPackageManager()
+        val packages = manager.getInstalledPackages(0)
+
+        for (i in 0 until packages.size) {
+            val packageInfo = packages.get(i)
+            //Only display the non-system app info
+            if (!includeSystem && packageInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM == 0) {
+                appList.add(packageInfo)//如果非系统应用，则添加至appList
+            }
+
+        }
+        return appList
     }
 }
 

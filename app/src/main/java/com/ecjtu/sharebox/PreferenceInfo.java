@@ -1,4 +1,4 @@
-package com.ecjtu.sharebox.domain;
+package com.ecjtu.sharebox;
 
 /**
  * Created by KerriGan on 2016/6/12.

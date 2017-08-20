@@ -15,27 +15,26 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.R
-import com.ecjtu.sharebox.domain.PreferenceInfo
+import com.ecjtu.sharebox.PreferenceInfo
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
 import com.ecjtu.sharebox.service.MainService
-import com.ecjtu.sharebox.ui.dialog.ProgressDialog
 import org.ecjtu.easyserver.server.DeviceInfo
 import org.ecjtu.easyserver.server.ServerManager
 import org.ecjtu.easyserver.server.impl.server.EasyServer
 import org.ecjtu.easyserver.server.impl.service.EasyServerService
 
-
-//http://www.tmtpost.com/195557.html 17.6.7
 class MainActivity : ImmersiveFragmentActivity() {
 
     companion object {
         const private val TAG = "MainActivity"
         private val MSG_SERVICE_STARTED = 0x10
-        private val MSG_START_SERVER = 0x11
+        val MSG_START_SERVER = 0x11
         @JvmStatic val MSG_CLOSE_APP = -1
+        const val DEBUG = true
     }
 
     private var mDelegate: MainActivityDelegate? = null
@@ -51,7 +50,6 @@ class MainActivity : ImmersiveFragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         var toolbar = findViewById(R.id.toolbar) as Toolbar
 
         setSupportActionBar(toolbar)
@@ -81,6 +79,9 @@ class MainActivity : ImmersiveFragmentActivity() {
         filter.addAction(mReceiver?.NETWORK_STATE_CHANGED_ACTION)
         filter.addAction(mReceiver?.CONNECTIVITY_ACTION)
         registerReceiver(mReceiver, filter)
+
+        var name=PreferenceManager.getDefaultSharedPreferences(this).getString(PreferenceInfo.PREF_DEVICE_NAME,Build.MODEL)
+        (findViewById(R.id.text_name) as TextView).setText(name)
     }
 
     override fun onStop() {
@@ -292,6 +293,7 @@ class MainActivity : ImmersiveFragmentActivity() {
     }
 
     override fun onDestroy() {
+        refreshing=false
         mDelegate?.onDestroy()
         try {
             unbindService(mServiceConnection)
@@ -313,9 +315,11 @@ class MainActivity : ImmersiveFragmentActivity() {
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            this.moveTaskToBack(true)
-            return true
+        if (!DEBUG) {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                this.moveTaskToBack(true)
+                return true
+            }
         }
         return super.onKeyDown(keyCode, event)
     }

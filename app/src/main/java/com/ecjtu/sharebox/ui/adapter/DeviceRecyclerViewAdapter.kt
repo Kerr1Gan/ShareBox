@@ -17,10 +17,10 @@ import com.ecjtu.sharebox.ui.dialog.ApDataDialog
 import com.ecjtu.sharebox.ui.dialog.FilePickDialog
 import com.ecjtu.sharebox.ui.dialog.InternetFilePickDialog
 import com.ecjtu.sharebox.ui.dialog.TextItemDialog
+import com.ecjtu.sharebox.util.file.FileUtil
 import org.ecjtu.easyserver.server.ConversionFactory
 import org.ecjtu.easyserver.server.DeviceInfo
 import org.json.JSONObject
-import java.io.File
 import java.lang.Exception
 import java.lang.ref.WeakReference
 import java.net.HttpURLConnection
@@ -91,20 +91,14 @@ class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerViewAdapter
                 }
                 mWeakRef?.get()?.runOnUiThread {
                     if (mWeakRef?.get() != null) {
-                        InternetFilePickDialog(mWeakRef?.get()!!, mWeakRef?.get()).apply {
+                        InternetFilePickDialog(mWeakRef?.get()!!, mWeakRef?.get(), deviceInfo!!).apply {
                             var holders: MutableMap<String, FilePickDialog.TabItemHolder> = mutableMapOf()
                             if (deviceInfo?.fileMap?.entries != null) {
                                 for (entry in deviceInfo!!.fileMap!!.entries) {
-                                    var type = FilePickDialog.string2MediaFileType(entry.key)
-                                    var fileList = mutableListOf<File>()
-                                    for (child in entry.value) {
-                                        var file = File(child)
-                                        if (fileList.indexOf(file) < 0)
-                                            fileList.add(File(child))
-                                    }
+                                    var type = FileUtil.string2MediaFileType(entry.key)
                                     var holder = FilePickDialog.TabItemHolder(entry.key, type,
                                             null,
-                                            fileList)
+                                            entry.value)
                                     holders.put(entry.key, holder)
                                 }
                             }
@@ -117,7 +111,7 @@ class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerViewAdapter
 
             override fun onError(httpURLConnection: HttpURLConnection?, exception: Exception) {
                 mWeakRef?.get()?.runOnUiThread {
-                    Toast.makeText(mWeakRef?.get()!!, "对方还未准备好，请稍后再试", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(mWeakRef?.get()!!, R.string.client_has_not_yet_ready_try_later, Toast.LENGTH_SHORT).show()
                 }
             }
         })
@@ -127,7 +121,7 @@ class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerViewAdapter
         var position = v?.getTag(R.id.extra_tag) as Int
         var deviceInfo = mDeviceList?.get(position)
         TextItemDialog(v.context).apply {
-            setupItem(arrayOf("详细信息", "取消"))
+            setupItem(arrayOf(v.context.getString(R.string.details), v.context.getString(R.string.cancel)))
             setOnClickListener { index ->
                 if (index == 0) {
                     if (mWeakRef?.get() != null && mWeakRef!!.get() != null) {

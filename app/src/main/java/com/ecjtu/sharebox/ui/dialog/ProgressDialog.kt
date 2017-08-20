@@ -26,7 +26,7 @@ class ProgressDialog : CloseBottomSheetDialog {
         var relParam = RelativeLayout.LayoutParams(-1, -2)
         relParam.addRule(RelativeLayout.CENTER_IN_PARENT)
         container.addView(root, relParam)
-        setTitle("正在加载", container)
+        setTitle(context.getString(R.string.loading), container)
         return container
     }
 

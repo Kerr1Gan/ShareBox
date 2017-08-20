@@ -4,31 +4,32 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import com.ecjtu.sharebox.R
-import android.support.design.widget.BottomSheetBehavior
-import android.support.v7.widget.Toolbar
-import android.view.*
 import android.os.AsyncTask
 import android.os.Message
+import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.TabLayout
 import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
+import android.support.v7.widget.Toolbar
 import android.util.Log
+import android.view.MenuItem
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
 import com.ecjtu.sharebox.Constants
-import com.ecjtu.sharebox.MainApplication
+import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.async.MemoryUnLeakHandler
 import com.ecjtu.sharebox.getMainApplication
-import org.ecjtu.easyserver.server.ServerManager
 import com.ecjtu.sharebox.ui.adapter.FileExpandableAdapter
-import com.ecjtu.sharebox.ui.adapter.InternetFileExpandableAdapter
 import com.ecjtu.sharebox.ui.view.FileExpandableListView
 import com.ecjtu.sharebox.util.file.FileUtil
 import org.ecjtu.easyserver.server.DeviceInfo
+import org.ecjtu.easyserver.server.ServerManager
 import java.io.File
-import java.util.ArrayList
-import java.util.LinkedHashMap
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.concurrent.thread
 
 
@@ -38,7 +39,6 @@ import kotlin.concurrent.thread
 open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListener, MemoryUnLeakHandler.IHandleMessage {
 
     constructor(context: Context, activity: Activity? = null) : super(context, activity) {
-
     }
 
     private var mBehavior: BottomSheetBehavior<View>? = null
@@ -62,59 +62,6 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
     private var mHasFindAll = false
 
     private var mRetMap: MutableMap<String, ArrayList<FileExpandableAdapter.VH>> = mutableMapOf()
-
-    companion object {
-        fun string2MediaFileType(str: String): FileUtil.MediaFileType? {
-            var ret: FileUtil.MediaFileType? = null
-            when (str) {
-                "Movie" -> {
-                    ret = FileUtil.MediaFileType.MOVIE
-                }
-                "Music" -> {
-                    ret = FileUtil.MediaFileType.MP3
-                }
-                "Photo" -> {
-                    ret = FileUtil.MediaFileType.IMG
-                }
-                "Doc" -> {
-                    ret = FileUtil.MediaFileType.DOC
-                }
-                "Apk" -> {
-                    ret = FileUtil.MediaFileType.APP
-                }
-                "Rar" -> {
-                    ret = FileUtil.MediaFileType.RAR
-                }
-            }
-            return ret
-        }
-
-        fun mediaFileType2String(type: FileUtil.MediaFileType): String? {
-            var ret: String? = null
-            when (type) {
-                FileUtil.MediaFileType.MOVIE -> {
-                    ret = "Movie"
-                }
-                FileUtil.MediaFileType.MP3 -> {
-                    ret = "Music"
-                }
-                FileUtil.MediaFileType.IMG -> {
-                    ret = "Photo"
-                }
-                FileUtil.MediaFileType.DOC -> {
-                    ret = "Doc"
-                }
-                FileUtil.MediaFileType.APP -> {
-                    ret = "Apk"
-                }
-                FileUtil.MediaFileType.RAR -> {
-                    ret = "Rar"
-                }
-            }
-            return ret
-        }
-
-    }
 
     override fun initializeDialog() {
         super.initializeDialog()
@@ -145,22 +92,22 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
     }
 
     open protected fun initData() {
-        var item = TabItemHolder(context.getString(R.string.movie), string2MediaFileType("Movie"))
+        var item = TabItemHolder(context.getString(R.string.movie), FileUtil.string2MediaFileType("Movie"))
         mTabItemHolders?.put("Movie", item)
 
-        item = TabItemHolder(context.getString(R.string.music), string2MediaFileType("Music"))
+        item = TabItemHolder(context.getString(R.string.music), FileUtil.string2MediaFileType("Music"))
         mTabItemHolders?.put("Music", item)
 
-        item = TabItemHolder(context.getString(R.string.photo), string2MediaFileType("Photo"))
+        item = TabItemHolder(context.getString(R.string.photo), FileUtil.string2MediaFileType("Photo"))
         mTabItemHolders?.put("Photo", item)
 
-        item = TabItemHolder(context.getString(R.string.doc), string2MediaFileType("Doc"))
+        item = TabItemHolder(context.getString(R.string.doc), FileUtil.string2MediaFileType("Doc"))
         mTabItemHolders?.put("Doc", item)
 
-        item = TabItemHolder(context.getString(R.string.apk), string2MediaFileType("Apk"))
+        item = TabItemHolder(context.getString(R.string.apk), FileUtil.string2MediaFileType("Apk"))
         mTabItemHolders?.put("Apk", item)
 
-        item = TabItemHolder(context.getString(R.string.rar), string2MediaFileType("Rar"))
+        item = TabItemHolder(context.getString(R.string.rar), FileUtil.string2MediaFileType("Rar"))
         mTabItemHolders?.put("Rar", item)
 
     }
@@ -276,18 +223,18 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
 
                 var holder = mTabItemHolders?.get(title)
                 vg.fileExpandableAdapter = getFileAdapter(vg, title)
-                var oldCache :List<FileExpandableAdapter.VH>? =null
-                if(vg.fileExpandableAdapter !is InternetFileExpandableAdapter){
-                    oldCache= ownerActivity.getMainApplication().getSavedInstance().get(FileExpandableAdapter.EXTRA_VH_LIST + title) as List<FileExpandableAdapter.VH>?
-                }else{
-                    var fileList=mTabItemHolders?.get(title)?.fileList
-                    if(fileList!=null){
-                        var map=LinkedHashMap<String,MutableList<File>>()
-                        oldCache= makeVhList(fileList,map)
+                var oldCache: List<FileExpandableAdapter.VH>? = null
+                if (isLoadCache()) {
+                    oldCache = getOldCacheAndClone(title)
+                } else {
+                    var fileList = mTabItemHolders?.get(title)?.fileList
+                    if (fileList != null) {
+                        var map = LinkedHashMap<String, MutableList<String>>()
+                        oldCache = makeVhList(fileList, map, title)
                     }
                 }
 
-                vg.initData(holder,oldCache)
+                vg.initData(holder, oldCache)
 
                 if (mTabItemHolders?.get(title)?.task == null && mTabItemHolders?.get(title)?.fileList == null) {
                     var task = LoadingFilesTask(context, holder!!)
@@ -336,15 +283,15 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         }
 
         override fun doInBackground(vararg params: List<File>?): List<File>? {
-            Log.e(TAG, mediaFileType2String(mType!!) + " task begin")
+            val key = FileUtil.mediaFileType2String(mType!!)
+            Log.e(TAG, key + " task begin")
             publishProgress()
-            var list: List<File>? = null
 
             findFilesWithType(mContext!!, mType!!, mTabItemHolders!!)
 
             if (!isCancelled)
-                Log.e(TAG, mediaFileType2String(mType!!) + " task finished")
-            return list
+                Log.e(TAG, key + " task finished")
+            return null
         }
 
         override fun onProgressUpdate(vararg values: Void?) {
@@ -373,40 +320,64 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
 
         override fun onCancelled(result: List<File>?) {
             super.onCancelled(result)
-            Log.e(TAG, mediaFileType2String(mType!!) + " task cancelled")
+            Log.e(TAG, FileUtil.mediaFileType2String(mType!!) + " task cancelled")
         }
     }
 
     data class TabItemHolder(var title: String? = null, var type: FileUtil.MediaFileType? = null
-                             , var task: LoadingFilesTask? = null, var fileList: List<File>? = null)
+                             , var task: LoadingFilesTask? = null, var fileList: List<String>? = null)
 
     private fun findFilesWithType(context: Context, type: FileUtil.MediaFileType, map: MutableMap<String, TabItemHolder>) {
         var list: MutableList<File>? = null
         when (type) {
             FileUtil.MediaFileType.MOVIE -> {
-                list = FileUtil.getAllMediaFile(context!!, null)
-                map.get("Movie")?.fileList = list
+                list = FileUtil.getAllMediaFile(context, null)
+                var strList = arrayListOf<String>()
+                for (path in list.iterator()) {
+                    strList.add(path.absolutePath)
+                }
+                map.get("Movie")?.fileList = strList
             }
             FileUtil.MediaFileType.MP3 -> {
-                list = FileUtil.getAllMusicFile(context!!, null)
-                map.get("Music")?.fileList = list
+                list = FileUtil.getAllMusicFile(context, null)
+                var strList = arrayListOf<String>()
+                for (path in list.iterator()) {
+                    strList.add(path.absolutePath)
+                }
+                map.get("Music")?.fileList = strList
             }
             FileUtil.MediaFileType.IMG -> {
 //                    list=FileUtil.getAllImageFile(mContext!!,null)
-                list = FileUtil.getImagesByDCIM(context!!)
-                map.get("Photo")?.fileList = list
+                list = FileUtil.getImagesByDCIM(context)
+                var strList = arrayListOf<String>()
+                for (path in list.iterator()) {
+                    strList.add(path.absolutePath)
+                }
+                map.get("Photo")?.fileList = strList
             }
             FileUtil.MediaFileType.DOC -> {
-                list = FileUtil.getAllDocFile(context!!, null)
-                map.get("Doc")?.fileList = list
+                list = FileUtil.getAllDocFile(context, null)
+                var strList = arrayListOf<String>()
+                for (path in list.iterator()) {
+                    strList.add(path.absolutePath)
+                }
+                map.get("Doc")?.fileList = strList
             }
             FileUtil.MediaFileType.APP -> {
-                list = FileUtil.getAllApkFile(context!!, null)
-                map.get("Apk")?.fileList = list
+                list = FileUtil.getAllApkFile(context, null)
+                var strList = arrayListOf<String>()
+                for (path in list.iterator()) {
+                    strList.add(path.absolutePath)
+                }
+                map.get("Apk")?.fileList = strList
             }
             FileUtil.MediaFileType.RAR -> {
-                list = FileUtil.getAllRarFile(context!!, null)
-                map.get("Rar")?.fileList = list
+                list = FileUtil.getAllRarFile(context, null)
+                var strList = arrayListOf<String>()
+                for (path in list.iterator()) {
+                    strList.add(path.absolutePath)
+                }
+                map.get("Rar")?.fileList = strList
             }
         }
     }
@@ -416,7 +387,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         var ret = false
         if (mExpandableListView?.getFirstVisiblePosition() == 0) {
             val topChildView = mExpandableListView?.getChildAt(0)
-            ret = topChildView?.getTop() == 0
+            ret = topChildView?.getTop() ?: 0 >= 0
         }
 
         if (mBehavior?.state != BottomSheetBehavior.STATE_EXPANDED) {
@@ -428,8 +399,6 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         } else {
             return mBottomSheet?.dispatchTouchEvent(ev)!!
         }
-
-        return super.dispatchTouchEvent(ev)
     }
 
     override fun onStop() {
@@ -453,23 +422,23 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                     var obj = iter?.next()
                     obj?.value?.task?.cancel(true)
                 }
-                var fileList = mutableListOf<File>()
+                var fileList = mutableListOf<String>()
 
                 for (entry in mTabItemHolders!!.entries) {
                     var title = entry.key
                     var key = FileExpandableAdapter.EXTRA_VH_LIST + title
                     var vhList = mRetMap.get(key)
-                    if (ownerActivity != null && vhList!=null) {
+                    if (ownerActivity != null && vhList != null) {
                         var application = ownerActivity.getMainApplication()
-                        application.getSavedInstance().put(key, vhList!!)
+                        application.getSavedInstance().put(key, vhList)
                     }
                 }
 
-                for(entry in mViewPagerViews){
-                    var pager=entry.value as FileExpandableListView
-                    var adapter=pager.fileExpandableAdapter
-                    var save=pager.fileExpandableAdapter.vhList
-                    if (ownerActivity != null && save!=null) {
+                for (entry in mViewPagerViews) {
+                    var pager = entry.value as FileExpandableListView
+                    var adapter = pager.fileExpandableAdapter
+                    var save = pager.fileExpandableAdapter.vhList
+                    if (ownerActivity != null && save != null) {
                         var application = ownerActivity.getMainApplication()
                         application.getSavedInstance().put(FileExpandableAdapter.EXTRA_VH_LIST + adapter.title, save)
                     }
@@ -480,9 +449,13 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                         get(Constants.KEY_INFO_OBJECT) as DeviceInfo
                 deviceInfo.fileMap = map
 
-                ServerManager.getInstance().setSharedFileList(fileList)
+                var serverList = arrayListOf<File>()
+                for (path in fileList) {
+                    serverList.add(File(path))
+                }
+                ServerManager.getInstance().setSharedFileList(serverList)
                 this@FilePickDialog.cancel()
-                Toast.makeText(context, "选择成功", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, R.string.select_success, Toast.LENGTH_SHORT).show()
             }
 
             R.id.select_all -> {
@@ -522,7 +495,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         return true
     }
 
-    private fun updateFileMap(fileList: MutableList<File>, itemHolder: MutableMap<String, FilePickDialog.TabItemHolder>): MutableMap<String, List<String>> {
+    private fun updateFileMap(fileList: MutableList<String>, itemHolder: MutableMap<String, FilePickDialog.TabItemHolder>): MutableMap<String, List<String>> {
         var map = mutableMapOf<String, List<String>>()
         var index = 0
         for (element in itemHolder!!.entries) {
@@ -534,8 +507,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
             for (file in fileArr) {
                 if (fileList.indexOf(file) < 0)
                     fileList.add(file)
-
-                strList.add(file.absolutePath)
+                strList.add(file)
             }
             map.put(element.key, strList)
         }
@@ -546,8 +518,8 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
 
             if (application == null) continue
 
-            var obj=application.getSavedInstance().get(FileExpandableAdapter.EXTRA_VH_LIST + title)
-            var vhList = if(obj!=null) obj as List<FileExpandableAdapter.VH> else null
+            var obj = application.getSavedInstance().get(FileExpandableAdapter.EXTRA_VH_LIST + title)
+            var vhList = if (obj != null) obj as List<FileExpandableAdapter.VH> else null
 
             if (vhList != null) {
                 for (vh in vhList) {
@@ -555,7 +527,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                     for (file in fList) {
                         if (fileList.indexOf(file) < 0)
                             fileList.add(file)
-                        strList.add(file.absolutePath)
+                        strList.add(file)
                     }
                 }
             }
@@ -564,7 +536,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         return map
     }
 
-    private fun updateAllFileList(fileList: MutableList<File>, itemHolder: MutableMap<String, FilePickDialog.TabItemHolder>): MutableMap<String, List<String>> {
+    private fun updateAllFileList(fileList: MutableList<String>, itemHolder: MutableMap<String, FilePickDialog.TabItemHolder>): MutableMap<String, List<String>> {
         var map = mutableMapOf<String, List<String>>()
         var application = if (ownerActivity != null) ownerActivity.getMainApplication() else null
         for (element in itemHolder!!.entries) {
@@ -581,7 +553,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                     for (file in fList) {
                         if (fileList.indexOf(file) < 0)
                             fileList.add(file)
-                        strList.add(file.absolutePath)
+                        strList.add(file)
                     }
                 }
             }
@@ -643,19 +615,19 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
 
             thread {
                 mRetMap.clear()
-                val res = LinkedHashMap<String, MutableList<File>>()
+                val res = LinkedHashMap<String, MutableList<String>>()
                 for (entry in mTabItemHolders!!.entries) {
                     res.clear()
                     var title = entry.key
                     var fileList = mTabItemHolders?.get(title)?.fileList
                     if (fileList != null) {
-                        var newArr = makeVhList(fileList, res)
+                        var newArr = makeVhList(fileList, res, title)
 
                         if (newArr == null) {
                             continue
                         }
                         for (view in mViewPagerViews) {
-                            var viewPager = view!!.value as FileExpandableListView
+                            var viewPager = view.value as FileExpandableListView
                             if (viewPager.fileExpandableAdapter.title.equals(title)) {
                                 viewPager.fileExpandableAdapter.replaceVhList(newArr)
                             }
@@ -673,20 +645,49 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         fileExpandableListView.fileExpandableAdapter.selectAll(true)
     }
 
-    private fun makeVhList(fileList:List<File>,map :LinkedHashMap<String, MutableList<File>>? =null) : List<FileExpandableAdapter.VH>?{
-        var map2:LinkedHashMap<String, MutableList<File>>? =map
-        if(map2==null) map2=LinkedHashMap<String, MutableList<File>>()
-        val names = FileUtil.foldFiles(fileList as MutableList<File>, map2!!)
+    private fun makeVhList(fileList: List<String>, map: LinkedHashMap<String, MutableList<String>>? = null, title: String): List<FileExpandableAdapter.VH>? {
+        var localMap: LinkedHashMap<String, MutableList<String>>? = map
+        if (localMap == null) localMap = LinkedHashMap<String, MutableList<String>>()
+
+        if (title.equals("Apk", true)) {
+            val arrayList = ArrayList<String>()
+            val installedApps = FileUtil.getInstalledApps(ownerActivity, false)
+            for (packageInfo in installedApps) {
+                arrayList.add(packageInfo.applicationInfo.sourceDir)
+            }
+            localMap.put("已安装", arrayList)
+        }
+
+        val names = FileUtil.foldFiles(fileList as MutableList<String>, localMap)
+
         names?.let {
             val newArr = ArrayList<FileExpandableAdapter.VH>()
 
-            for (name in names!!.iterator()) {
-                val vh = FileExpandableAdapter.VH(File(name), map2!!.get(name))
+            for (name in names.iterator()) {
+                val vh = FileExpandableAdapter.VH(name, localMap!!.get(name))
                 vh.activate(true)
                 newArr.add(vh)
             }
             return newArr
         }
         return null
+    }
+
+    open protected fun isLoadCache(): Boolean {
+        return true
+    }
+
+    private fun getOldCacheAndClone(title: String): List<FileExpandableAdapter.VH>? {
+        var cache = ownerActivity.getMainApplication().getSavedInstance().get(FileExpandableAdapter.EXTRA_VH_LIST + title) as List<FileExpandableAdapter.VH>?
+        var newList = arrayListOf<FileExpandableAdapter.VH>()
+        if (cache != null) {
+            for (vh in cache) {
+                var newVh = vh.clone() as FileExpandableAdapter.VH
+                if (newVh != null) {
+                    newList.add(newVh)
+                }
+            }
+        }
+        return newList
     }
 }

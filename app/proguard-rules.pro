@@ -110,3 +110,10 @@
 -keep public class org.ecjtu.easyserver.server.impl.server.EasyServer{*;}
 
 -keepnames class org.ecjtu.easyserver.server.impl.service.EasyServerService$* {*;}
+
+# 不混淆 Bugly
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.**{*;}
+
+# Js 桥
+-keepnames class com.ecjtu.sharebox.ui.fragment.WebViewFragment$* {*;}
