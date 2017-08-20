@@ -33,7 +33,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.BaseFragmentActivity" />
+
         <activity
             android:name=".ui.activity.ImmersiveFragmentActivity"
             android:theme="@style/ImageStatusBarStyle" />
@@ -44,21 +44,25 @@
         <service
             android:name=".service.DaemonService"
             android:process=":daemon" />
+
         <service android:name=".service.MainService" />
 
         <activity
             android:name=".ui.activity.TestActivityJava"
             android:exported="true" />
-
         <activity
             android:name=".ui.activity.SettingsActivity"
             android:exported="true"
             android:label="@string/title_activity_settings"
             android:theme="@style/AppPreferenceTheme" />
+        <activity
+            android:name=".ui.activity.ActionBarFragmentActivity"
+            android:exported="true"
+            android:theme="@style/AppPreferenceTheme" />
 
-        <activity android:name=".ui.activity.ActionBarFragmentActivity"
-            android:theme="@style/AppPreferenceTheme"
-            android:exported="true"/>
+        <activity android:name=".ui.activity.RotateNoCreateActivity"
+            android:theme="@style/ImageStatusBarStyle"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
     </application>
 
 </manifest>

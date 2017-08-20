@@ -47,7 +47,7 @@ class TestActivity:AppCompatActivity(){
 //        var intent=ImmersiveFragmentActivity.newInstance(this,WebViewFragment::class.java,Bundle().apply { putString(WebViewFragment.EXTRA_URL,"index.html"); putInt(WebViewFragment.EXTRA_TYPE,WebViewFragment.TYPE_INNER_WEB) })
 //        startActivity(intent)
 
-        var intent=ImmersiveFragmentActivity.newInstance(this,IjkVideoFragment::class.java)
+        var intent=RotateNoCreateActivity.newInstance(this,IjkVideoFragment::class.java)
         startActivity(intent)
     }
 }

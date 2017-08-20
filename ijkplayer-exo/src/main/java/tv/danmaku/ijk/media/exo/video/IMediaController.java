@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ecjtu.sharebox.ui.view.video;
+package tv.danmaku.ijk.media.exo.video;
 
 import android.view.View;
 import android.widget.MediaController;

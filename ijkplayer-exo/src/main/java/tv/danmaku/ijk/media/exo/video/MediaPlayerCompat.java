@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ecjtu.sharebox.ui.view.video;
+package tv.danmaku.ijk.media.exo.video;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;

@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-package com.ecjtu.sharebox.ui.view.video;
+package tv.danmaku.ijk.media.exo.video;
 
 import android.graphics.SurfaceTexture;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.View;
@@ -45,23 +43,23 @@ public interface IRenderView {
 
     void setAspectRatio(int aspectRatio);
 
-    void addRenderCallback(@NonNull IRenderCallback callback);
+    void addRenderCallback( IRenderCallback callback);
 
-    void removeRenderCallback(@NonNull IRenderCallback callback);
+    void removeRenderCallback( IRenderCallback callback);
 
     interface ISurfaceHolder {
         void bindToMediaPlayer(IMediaPlayer mp);
 
-        @NonNull
+
         IRenderView getRenderView();
 
-        @Nullable
+
         SurfaceHolder getSurfaceHolder();
 
-        @Nullable
+
         Surface openSurface();
 
-        @Nullable
+
         SurfaceTexture getSurfaceTexture();
     }
 
@@ -71,7 +69,7 @@ public interface IRenderView {
          * @param width  could be 0
          * @param height could be 0
          */
-        void onSurfaceCreated(@NonNull ISurfaceHolder holder, int width, int height);
+        void onSurfaceCreated( ISurfaceHolder holder, int width, int height);
 
         /**
          * @param holder
@@ -79,8 +77,8 @@ public interface IRenderView {
          * @param width
          * @param height
          */
-        void onSurfaceChanged(@NonNull ISurfaceHolder holder, int format, int width, int height);
+        void onSurfaceChanged( ISurfaceHolder holder, int format, int width, int height);
 
-        void onSurfaceDestroyed(@NonNull ISurfaceHolder holder);
+        void onSurfaceDestroyed( ISurfaceHolder holder);
     }
 }

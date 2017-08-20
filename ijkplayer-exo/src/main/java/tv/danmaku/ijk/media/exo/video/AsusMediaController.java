@@ -1,4 +1,4 @@
-package com.ecjtu.sharebox.ui.view.video;
+package tv.danmaku.ijk.media.exo.video;
 
 import android.content.Context;
 import android.media.AudioManager;
@@ -21,10 +21,10 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 
-import com.ecjtu.sharebox.R;
-
 import java.util.Formatter;
 import java.util.Locale;
+
+import tv.danmaku.ijk.media.exo.R;
 
 /**
  * Created by Jeff_Sang on 2016/7/3.
@@ -142,6 +142,7 @@ public class AsusMediaController extends FrameLayout {
      */
     protected View makeControllerView() {
         LayoutInflater inflate = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mRoot = inflate.inflate(R.layout.video_media_controller, null);
         mRoot = inflate.inflate(R.layout.video_media_controller, null);
 
         initControllerView(mRoot);

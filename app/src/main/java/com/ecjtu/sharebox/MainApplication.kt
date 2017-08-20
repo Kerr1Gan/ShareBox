@@ -1,10 +1,12 @@
 package com.ecjtu.sharebox
 
+import android.app.ActivityManager
 import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Environment
 import android.support.v4.content.LocalBroadcastManager
+import android.text.TextUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.load.DecodeFormat
@@ -15,7 +17,6 @@ import com.ecjtu.sharebox.service.MainService
 import com.tencent.bugly.crashreport.CrashReport
 import org.ecjtu.channellibrary.wifidirect.WifiDirectManager
 import org.ecjtu.easyserver.server.ServerManager
-import org.ecjtu.easyserver.server.util.AssetsUtil
 import java.io.*
 import java.lang.reflect.InvocationTargetException
 import java.util.*
@@ -25,17 +26,23 @@ import java.util.*
  * Created by KerriGan on 2017/6/9 0009.
  */
 class MainApplication : Application() {
-
-
     private val mSavedInstance = HashMap<String, Any>()
 
     override fun onCreate() {
         super.onCreate()
-        var module = SimpleGlideModule()
-        var builder = GlideBuilder()
+        if (isAppMainProcess(packageName)) {
+            initMainProcess()
+        } else {
+            //child process
+        }
+    }
+
+    private fun initMainProcess() {
+        val module = SimpleGlideModule()
+        val builder = GlideBuilder()
         module.applyOptions(this, builder)
 
-        var glide = builder.build(this)
+        val glide = builder.build(this)
 
         Glide.init(glide)
 
@@ -50,7 +57,6 @@ class MainApplication : Application() {
         initSDK()
 
         startService(Intent(this, MainService::class.java))
-
     }
 
     fun getSavedInstance(): MutableMap<String, Any> {
@@ -61,15 +67,15 @@ class MainApplication : Application() {
 
     }
 
-    private fun initSDK(){
+    private fun initSDK() {
         CrashReport.initCrashReport(getApplicationContext(), "18b1313e86", true)
 
         ServerManager.getInstance().setIconPath(filesDir.absolutePath + "/" + Constants.ICON_HEAD)
         ServerManager.getInstance().setContext(applicationContext)
     }
 
-    private fun initError(){
-        val exHandler=Thread.currentThread().uncaughtExceptionHandler
+    private fun initError() {
+        val exHandler = Thread.currentThread().uncaughtExceptionHandler
         Thread.currentThread().setUncaughtExceptionHandler { thread, ex ->
             //write error logs add in 2016/6/23 by KerriGan
             if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
@@ -116,7 +122,7 @@ class MainApplication : Application() {
 
             }
 
-            exHandler.uncaughtException(thread,ex)
+            exHandler.uncaughtException(thread, ex)
         }
     }
 
@@ -198,5 +204,27 @@ class MainApplication : Application() {
 
         field.isAccessible = false
         return buffer
+    }
+
+    /**
+     * 判断是不是UI主进程，因为有些东西只能在UI主进程初始化
+     */
+    fun isAppMainProcess(packageName:String): Boolean {
+        val pid = android.os.Process.myPid()
+        val process = getAppNameByPID(this, pid)
+        return packageName.equals(process)
+    }
+
+    /**
+     * 根据Pid得到进程名
+     */
+    fun getAppNameByPID(context: Context, pid: Int): String {
+        val manager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        for (processInfo in manager.runningAppProcesses) {
+            if (processInfo.pid == pid) {
+                return processInfo.processName
+            }
+        }
+        return ""
     }
 }

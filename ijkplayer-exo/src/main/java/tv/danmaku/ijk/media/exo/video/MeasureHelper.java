@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package com.ecjtu.sharebox.ui.view.video;
+package tv.danmaku.ijk.media.exo.video;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.view.View;
 
 
-import com.ecjtu.sharebox.R;
-
 import java.lang.ref.WeakReference;
+
+import tv.danmaku.ijk.media.exo.R;
 
 
 public final class MeasureHelper {
@@ -218,7 +217,6 @@ public final class MeasureHelper {
         mCurrentAspectRatio = aspectRatio;
     }
 
-    @NonNull
     public static String getAspectRatioText(Context context, int aspectRatio) {
         String text;
         switch (aspectRatio) {

@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.ecjtu.sharebox.ui.view.video;
+package tv.danmaku.ijk.media.exo.video;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.ecjtu.sharebox.R;
+import tv.danmaku.ijk.media.exo.R;
 
 
 public class Settings {
