@@ -74,7 +74,7 @@ public class GetFiles implements BaseServlet {
 
                         obj.put("name", file.getName());
 
-                        int hash= File.getFileHashByPath(file.getPath());
+                        Long hash= File.getFileHashByPath(file.getPath());
                         obj.put("path", "/File/" + hash + File.getSuffixByPath(file.getName()));
 
                         String cachePath="/API/Cache"+ CacheUtil.getCachePath(context,file.getPath());

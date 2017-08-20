@@ -8,6 +8,7 @@ import org.ecjtu.easyserver.server.ServerManager;
 import org.ecjtu.easyserver.http.HTTPRequest;
 import org.ecjtu.easyserver.http.HTTPResponse;
 import org.ecjtu.easyserver.http.HTTPStatus;
+import org.ecjtu.easyserver.server.util.hash.HashUtil;
 import org.ecjtu.easyserver.server.util.CacheUtil;
 import org.ecjtu.easyserver.server.util.ImageUtil;
 import org.ecjtu.easyserver.servlet.BaseServlet;
@@ -66,7 +67,7 @@ public class File implements BaseServlet {
 
         try {
             String cpy=filePaths;
-            filePaths = getFilePathByHash(Integer.valueOf(filePaths));
+            filePaths = getFilePathByHash(Long.valueOf(filePaths));
             if(filePaths==null) filePaths=cpy;
         } catch (Exception e) {
             e.printStackTrace();
@@ -120,32 +121,33 @@ public class File implements BaseServlet {
 
     }
 
-    public static String getFilePathByHash(int hash) {
+    public static String getFilePathByHash(Long hash) {
         List<java.io.File> fileList= ServerManager.getInstance().getSharedFileList();
         if (fileList == null)
             return null;
 
         for (int i = 0; i < fileList.size(); i++) {
             java.io.File f = fileList.get(i);
-            if (f.hashCode() == hash) {
+            if (HashUtil.BKDRHash(f.getPath()).equals(hash)) {
                 return f.getPath();
             }
         }
         return null;
     }
 
-    public static int getFileHashByPath(String path) {
+    public static Long getFileHashByPath(String path) {
         List<java.io.File> fileList=ServerManager.getInstance().getSharedFileList();
 
         if (fileList == null)
-            return 0;
+            return 0L;
 
         for (int i = 0; i < fileList.size(); i++) {
-            if (fileList.get(i).getPath().compareTo(path) == 0)
-                return fileList.get(i).hashCode();
+            String childPath=fileList.get(i).getPath();
+            if (childPath.compareTo(path) == 0)
+                return HashUtil.BKDRHash(childPath);
         }
 
-        return 0;
+        return 0L;
     }
 
     public static String getSuffixByPath(String path) {
