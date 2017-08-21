@@ -9,8 +9,8 @@ object HashUtil {
         var hash = 0L
         val len = string.length
         var index = 0
-        while (index++ < len) {
-            hash = hash * seed + (string[index].toInt())
+        while (index < len) {
+            hash = hash * seed + (string[index++].toInt())
         }
         return (hash and 0x7FFFFFFF)
     }

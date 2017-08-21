@@ -4,10 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +22,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.ecjtu.sharebox.R;
 import com.ecjtu.sharebox.async.AppThumbTask;
 import com.ecjtu.sharebox.ui.activity.ActionBarFragmentActivity;
@@ -27,8 +35,11 @@ import com.ecjtu.sharebox.ui.dialog.TextItemDialog;
 import com.ecjtu.sharebox.ui.fragment.VideoPlayerFragment;
 import com.ecjtu.sharebox.ui.fragment.WebViewFragment;
 import com.ecjtu.sharebox.ui.view.FileExpandableListView;
+import com.ecjtu.sharebox.util.cache.CacheUtil;
 import com.ecjtu.sharebox.util.file.FileOpenIntentUtil;
 import com.ecjtu.sharebox.util.file.FileUtil;
+import com.ecjtu.sharebox.util.hash.HashUtil;
+import com.ecjtu.sharebox.util.image.ImageUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -285,7 +296,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
     protected void setGroupViewThumb(FileUtil.MediaFileType type, String thumb, ImageView icon, TextView text) {
         if (type == FileUtil.MediaFileType.MOVIE ||
                 type == FileUtil.MediaFileType.IMG) {
-            Glide.with(mContext).load(thumb).into(icon);
+            Glide.with(mContext).load(thumb).listener(mRequestListener).into(icon);
         } else if (type == FileUtil.MediaFileType.APP) {
             Bitmap b = sLruCache.get(thumb);
             if (b == null) {
@@ -305,7 +316,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
     protected void setChildViewThumb(FileUtil.MediaFileType type, String f, ImageView icon) {
         if (type == FileUtil.MediaFileType.MOVIE ||
                 type == FileUtil.MediaFileType.IMG) {
-            Glide.with(mContext).load(f).into(icon);
+            Glide.with(mContext).load(f).listener(mRequestListener).into(icon);
         } else if (type == FileUtil.MediaFileType.APP) {
             Bitmap b = sLruCache.get(f);
             if (b == null) {
@@ -321,6 +332,22 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
             icon.setImageResource(R.mipmap.rar);
         }
     }
+
+    private RequestListener<Drawable> mRequestListener= new RequestListener<Drawable>() {
+        @Override
+        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+            return false;
+        }
+
+        @Override
+        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+            if(model instanceof String){
+                CacheUtil.makeCache((String)model,ImageUtil.drawable2Bitmap(resource),resource.getIntrinsicWidth(),
+                        resource.getIntrinsicHeight(),mContext);
+            }
+            return false;
+        }
+    };
 
     public static class VH implements Cloneable {
 

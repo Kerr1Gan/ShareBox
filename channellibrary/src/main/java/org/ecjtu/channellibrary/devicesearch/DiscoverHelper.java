@@ -16,32 +16,32 @@ import java.util.Set;
  */
 
 
-public class DiscoverHelper{
+public class DiscoverHelper {
 
-    public static final int MSG_FIND_DEVICE=0x1001;
+    public static final int MSG_FIND_DEVICE = 0x1001;
 
-    public static final int MSG_BEING_SEARCHED=0x1002;
+    public static final int MSG_BEING_SEARCHED = 0x1002;
 
-    public static final int MSG_START_FIND_DEVICE=0x1003;
+    public static final int MSG_START_FIND_DEVICE = 0x1003;
 
-    public static final int MSG_START_BEING_SEARCHED=0x1004;
+    public static final int MSG_START_BEING_SEARCHED = 0x1004;
 
-    public static class SimpleHandler extends Handler{
+    public static class SimpleHandler extends Handler {
 
         private WeakReference<DiscoverHelper> mHost;
 
-        public SimpleHandler(DiscoverHelper host){
-            mHost=new WeakReference<DiscoverHelper>(host);
+        public SimpleHandler(DiscoverHelper host) {
+            mHost = new WeakReference<DiscoverHelper>(host);
         }
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if(mHost.get()==null) return;
-            IMessageListener listener=mHost.get().getMessageListener();
-            if(listener==null) return;
+            if (mHost.get() == null) return;
+            IMessageListener listener = mHost.get().getMessageListener();
+            if (listener == null) return;
 
-            listener.message(msg.what, (Set<DeviceSearcher.DeviceBean>) msg.obj,this);
+            listener.message(msg.what, (Set<DeviceSearcher.DeviceBean>) msg.obj, this);
         }
     }
 
@@ -49,48 +49,50 @@ public class DiscoverHelper{
 
     private String mName;
 
-    private DeviceSearcher mSearcher=null;
+    private DeviceSearcher mSearcher = null;
 
-    private DeviceWaitingSearch mWaitingSearch=null;
+    private DeviceWaitingSearch mWaitingSearch = null;
 
-    private Handler mHandler=new SimpleHandler(this);
+    private Handler mHandler = new SimpleHandler(this);
 
     private IMessageListener mMsgListener;
 
-    private String mPort="";
+    private String mPort = "";
 
-    private String mIcon="";
+    private String mIcon = "";
 
-    public DiscoverHelper(Context context,String name,String port,String icon){
-        mContext=context;
-        mName =name;
-        mPort=port;
-        mIcon=icon;
-        prepare(mContext,true,true);
+    private long mUpdateTime = System.currentTimeMillis();
+
+    public DiscoverHelper(Context context, String name, String port, String icon) {
+        mContext = context;
+        mName = name;
+        mPort = port;
+        mIcon = icon;
+        prepare(mContext, true, true);
     }
 
-    public void prepare(Context context,boolean restartWaiting,boolean restartSearcher){
+    public void prepare(Context context, boolean restartWaiting, boolean restartSearcher) {
         mHandler.removeCallbacksAndMessages(null);
-        if(restartWaiting){
-            if(mWaitingSearch!=null) mWaitingSearch.interrupt();
-            mWaitingSearch=new DeviceWaitingSearch(context,mName+","+mPort+","+mIcon,"") {
+        if (restartWaiting) {
+            if (mWaitingSearch != null) mWaitingSearch.interrupt();
+            mWaitingSearch = new DeviceWaitingSearch(context, mName + "," + mPort + "," + mIcon + "," + mUpdateTime, "") {
                 @Override
-                public void onDeviceSearched(InetSocketAddress socketAddr,String port) {
-                    Set<DeviceSearcher.DeviceBean> set=new HashSet<>();
-                    DeviceSearcher.DeviceBean bean=new DeviceSearcher.DeviceBean();
-                    String ip=NetworkUtil.intToIp(NetworkUtil.byteArrayToInt(socketAddr.getAddress().getAddress()));
+                public void onDeviceSearched(InetSocketAddress socketAddr, String port) {
+                    Set<DeviceSearcher.DeviceBean> set = new HashSet<>();
+                    DeviceSearcher.DeviceBean bean = new DeviceSearcher.DeviceBean();
+                    String ip = NetworkUtil.intToIp(NetworkUtil.byteArrayToInt(socketAddr.getAddress().getAddress()));
                     bean.setIp(ip);
                     bean.setPort(socketAddr.getPort());
                     bean.setName(port);
                     set.add(bean);
-                    mHandler.obtainMessage(MSG_BEING_SEARCHED,set).sendToTarget();
+                    mHandler.obtainMessage(MSG_BEING_SEARCHED, set).sendToTarget();
                 }
             };
         }
 
-        if(restartSearcher){
-            if(mSearcher!=null) mSearcher.interrupt();
-            mSearcher=new DeviceSearcher(mName+","+mPort+","+mIcon) {
+        if (restartSearcher) {
+            if (mSearcher != null) mSearcher.interrupt();
+            mSearcher = new DeviceSearcher(mName + "," + mPort + "," + mIcon + "," + mUpdateTime) {
                 @Override
                 public void onSearchStart() {
 
@@ -98,51 +100,63 @@ public class DiscoverHelper{
 
                 @Override
                 public void onSearchFinish(Set<DeviceBean> deviceSet) {
-                    mHandler.obtainMessage(MSG_FIND_DEVICE,deviceSet).sendToTarget();
+                    mHandler.obtainMessage(MSG_FIND_DEVICE, deviceSet).sendToTarget();
                 }
             };
         }
     }
 
-    public void start(boolean waiting,boolean search){
-        if(waiting) mWaitingSearch.start();
-        if(search) mSearcher.start();
+    public void start(boolean waiting, boolean search) {
+        if (waiting) mWaitingSearch.start();
+        if (search) mSearcher.start();
     }
 
-    public void stop(boolean waiting,boolean search){
+    public void stop(boolean waiting, boolean search) {
         mHandler.removeCallbacksAndMessages(null);
-        if(waiting) mWaitingSearch.interrupt();
-        if(search) mSearcher.interrupt();
+        if (waiting) mWaitingSearch.interrupt();
+        if (search) mSearcher.interrupt();
     }
 
-    public void setMessageListener(IMessageListener listener){
-        mMsgListener=listener;
+    public void updateTime(long time){
+        mUpdateTime=time;
     }
 
-    public IMessageListener getMessageListener(){
+    public void setMessageListener(IMessageListener listener) {
+        mMsgListener = listener;
+    }
+
+    public IMessageListener getMessageListener() {
         return mMsgListener;
     }
 
-    public void release(){
+    public void release() {
         mHandler.removeCallbacksAndMessages(null);
-        if(mSearcher!=null) mSearcher.interrupt();
-        if(mWaitingSearch!=null) mWaitingSearch.interrupt();
-        mHandler=null;
-        mSearcher=null;
-        mWaitingSearch=null;
+        if (mSearcher != null) mSearcher.interrupt();
+        if (mWaitingSearch != null) mWaitingSearch.interrupt();
+        mHandler = null;
+        mSearcher = null;
+        mWaitingSearch = null;
     }
 
-    public interface IMessageListener{
+    public String getName(){
+        return mName;
+    }
+
+    public String getPort(){
+        return mPort;
+    }
+
+    public interface IMessageListener {
         /**
+         * @param msg
+         * @param deviceSet
+         * @param handler
          * @see #MSG_FIND_DEVICE
          * @see #MSG_BEING_SEARCHED
          * @see #MSG_START_FIND_DEVICE
          * @see #MSG_START_BEING_SEARCHED
-         * @param msg
-         * @param deviceSet
-         * @param handler
          */
-        void message(int msg, Set<DeviceSearcher.DeviceBean> deviceSet,Handler handler);
+        void message(int msg, Set<DeviceSearcher.DeviceBean> deviceSet, Handler handler);
     }
 
 }

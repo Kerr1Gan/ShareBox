@@ -17,7 +17,7 @@ class CapturePhotoHelper(fragmentActivity: FragmentActivity) :CropPhotoHelper(){
     private var mActivity: FragmentActivity? = null
 
     companion object {
-        private val TAKE_PHOTO = 0x1001
+        private const val TAKE_PHOTO = 0x1001
         private val IMAGE_PATH = Environment.getExternalStorageDirectory().absolutePath
     }
 
@@ -34,15 +34,12 @@ class CapturePhotoHelper(fragmentActivity: FragmentActivity) :CropPhotoHelper(){
 
             if (requestCode == PHOTO_RESULT) {
                 //get corp image
-                var file=File(IMAGE_PATH+"/head.png")
+                val file=File(IMAGE_PATH+"/head.png")
                 FileUtil.copyFile2InternalPath(file,"head.png",mActivity!!)
 
                 File(IMAGE_PATH+"/temp.jpg").delete()
                 file.delete()
             }
-        }else{
-            File(IMAGE_PATH+"/temp.jpg").delete()
-            File(IMAGE_PATH+"/head.png").delete()
         }
     }
 
@@ -54,4 +51,8 @@ class CapturePhotoHelper(fragmentActivity: FragmentActivity) :CropPhotoHelper(){
         mActivity?.startActivityForResult(intent, TAKE_PHOTO)
     }
 
+    override fun clearCache() {
+        File(IMAGE_PATH+"/temp.jpg").delete()
+        File(IMAGE_PATH+"/head.png").delete()
+    }
 }

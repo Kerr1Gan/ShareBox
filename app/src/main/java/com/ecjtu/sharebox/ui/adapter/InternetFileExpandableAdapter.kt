@@ -14,6 +14,7 @@ import com.ecjtu.sharebox.ui.fragment.VideoPlayerFragment
 import com.ecjtu.sharebox.ui.view.FileExpandableListView
 import com.ecjtu.sharebox.util.file.FileOpenIntentUtil
 import com.ecjtu.sharebox.util.file.FileUtil
+import com.ecjtu.sharebox.util.hash.HashUtil
 import org.ecjtu.easyserver.server.DeviceInfo
 
 /**
@@ -43,8 +44,7 @@ class InternetFileExpandableAdapter(expandableListView: FileExpandableListView) 
     override fun onClick(v: View?) {
         var tag = v?.getTag()
         if (tag != null && tag is String) {
-            var path = java.lang.String(tag)
-            openFile("http://${mDeviceInfo?.ip}:${mDeviceInfo?.port}/API/File/${path.hashCode()}")
+            openFile("http://${mDeviceInfo?.ip}:${mDeviceInfo?.port}/API/File/${HashUtil.BKDRHash(tag)}")
             return
         }
         super.onClick(v)

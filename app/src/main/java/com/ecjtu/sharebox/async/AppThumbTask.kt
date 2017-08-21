@@ -18,6 +18,7 @@ class AppThumbTask:AsyncTask<File,Void,Bitmap?>{
     private var mContext: Context? =null
 
     private var mImageView:ImageView?=null
+
     constructor(lruCache: LruCache<String,Bitmap>,context: Context,imgView:ImageView):super(){
         mLruCache=lruCache
         mContext=context
@@ -25,9 +26,9 @@ class AppThumbTask:AsyncTask<File,Void,Bitmap?>{
     }
 
     override fun doInBackground(vararg params: File?): Bitmap? {
-        var f=params[0]
+        val f=params[0]
 
-        var bit = FileUtil.getAppThumbnail(mContext!!, f!!)
+        val bit = FileUtil.getAppThumbnail(mContext!!, f!!)
 
         if(bit!=null){
             mLruCache?.put(f.absolutePath, bit)
