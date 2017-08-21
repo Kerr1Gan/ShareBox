@@ -11,7 +11,7 @@ import java.io.IOException;
  * Created by Ethan_Xiang on 2017/8/21.
  * Parcel 存储在磁盘体积约为Serializable的4倍，而速度比Serializable快了约10至20倍
  */
-public class ParcelableFileCacheHelper extends FileCacheHelper {
+abstract public class ParcelableFileCacheHelper extends FileCacheHelper {
 
     private ByteArrayOutputStream mByteArrayOutputStream;
 
@@ -68,11 +68,7 @@ public class ParcelableFileCacheHelper extends FileCacheHelper {
         System.gc();
     }
 
-    private <T> T readParcel(Parcel parcel) {
-        return null;
-    }
+    abstract  <T> T readParcel(Parcel parcel);
 
-    private <T> Parcel writeParcel(T object) {
-        return null;
-    }
+    abstract <T> Parcel writeParcel(T object);
 }
