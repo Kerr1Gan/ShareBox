@@ -32,6 +32,7 @@ import com.ecjtu.sharebox.ui.activity.ActionBarFragmentActivity;
 import com.ecjtu.sharebox.ui.activity.ImmersiveFragmentActivity;
 import com.ecjtu.sharebox.ui.dialog.FilePickDialog;
 import com.ecjtu.sharebox.ui.dialog.TextItemDialog;
+import com.ecjtu.sharebox.ui.fragment.IjkVideoFragment;
 import com.ecjtu.sharebox.ui.fragment.VideoPlayerFragment;
 import com.ecjtu.sharebox.ui.fragment.WebViewFragment;
 import com.ecjtu.sharebox.ui.view.FileExpandableListView;
@@ -443,8 +444,8 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
     protected void openFile(String path) {
         if (mTabHolder.getType() == FileUtil.MediaFileType.MOVIE) {
             Bundle bundle = new Bundle();
-            bundle.putString(VideoPlayerFragment.Companion.getEXTRA_URI_PATH(), path);
-            Intent i = ImmersiveFragmentActivity.Companion.newInstance(mContext, VideoPlayerFragment.class, bundle);
+            bundle.putString(IjkVideoFragment.EXTRA_URI_PATH, path);
+            Intent i = ImmersiveFragmentActivity.newInstance(mContext, IjkVideoFragment.class, bundle);
             mContext.startActivity(i);
         } else {
             Intent i = FileOpenIntentUtil.INSTANCE.openFile(path);

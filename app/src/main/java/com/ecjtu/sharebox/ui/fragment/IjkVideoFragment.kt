@@ -18,6 +18,11 @@ import tv.danmaku.ijk.media.player.IMediaPlayer
  */
 class IjkVideoFragment:Fragment(){
 
+    companion object {
+        @JvmField
+        val EXTRA_URI_PATH = "extra_uri_path"
+    }
+
     private var mMediaController: AndroidMediaController? = null
 
     private var mVideoView: IjkVideoView? =null

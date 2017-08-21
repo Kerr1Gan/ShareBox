@@ -11,6 +11,7 @@ class ActionBarFragmentActivity : BaseFragmentActivity() {
     companion object {
         const private val EXTRA_TITLE = "extra_title";
         @JvmOverloads
+        @JvmStatic
         fun newInstance(context: Context, fragment: Class<*>, bundle: Bundle? = null,
                         title: String? = null, clazz: Class<out Activity> = getActivityClazz()): Intent {
             val ret = BaseFragmentActivity.newInstance(context, fragment, bundle, clazz)
