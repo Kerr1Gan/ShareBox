@@ -7,7 +7,7 @@ import org.ecjtu.easyserver.server.ServerManager;
 import org.ecjtu.easyserver.http.HTTPRequest;
 import org.ecjtu.easyserver.http.HTTPResponse;
 import org.ecjtu.easyserver.http.HTTPStatus;
-import org.ecjtu.easyserver.server.util.CacheUtil;
+import org.ecjtu.easyserver.server.util.cache.CacheUtil;
 import org.ecjtu.easyserver.servlet.BaseServlet;
 import org.json.JSONArray;
 import org.json.JSONException;

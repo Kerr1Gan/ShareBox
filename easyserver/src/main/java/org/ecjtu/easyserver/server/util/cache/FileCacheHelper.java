@@ -1,4 +1,4 @@
-package com.ecjtu.sharebox.util.cache;
+package org.ecjtu.easyserver.server.util.cache;
 
 import java.io.File;
 import java.io.FileInputStream;

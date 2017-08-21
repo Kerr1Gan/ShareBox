@@ -34,4 +34,6 @@ abstract class CropPhotoHelper{
     }
 
     abstract fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
+
+    abstract fun clearCache()
 }

@@ -1,6 +1,7 @@
 package com.ecjtu.sharebox.util.image
 
 import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.media.MediaMetadataRetriever
 import android.media.ThumbnailUtils
 import android.os.Build
@@ -8,13 +9,17 @@ import android.provider.MediaStore
 import java.io.FileOutputStream
 import java.lang.Exception
 import java.util.HashMap
+import android.graphics.PixelFormat
+import android.graphics.drawable.Drawable
+
+
 
 /**
  * Created by KerriGan on 2017/7/11.
  */
 
 object ImageUtil{
-
+    @JvmStatic
     fun saveBitmap(bitmap:Bitmap, path:String, format: Bitmap.CompressFormat, quality:Int):Boolean{
         try {
             bitmap.compress(format,quality,FileOutputStream(path))
@@ -28,6 +33,7 @@ object ImageUtil{
      * 使用android内部native库,不需要转utf-8编码
      * @param url httpUrl
      */
+    @JvmStatic
     fun createVideoThumbnail(url: String, width: Int, height: Int): Bitmap? {
         var bitmap: Bitmap? = null
         val retriever = MediaMetadataRetriever()
@@ -57,6 +63,22 @@ object ImageUtil{
             bitmap = ThumbnailUtils.extractThumbnail(bitmap, width, height,
                     ThumbnailUtils.OPTIONS_RECYCLE_INPUT)
         }
+        return bitmap
+    }
+
+    @JvmStatic
+    fun drawable2Bitmap(drawable: Drawable): Bitmap {
+        val bitmap = Bitmap.createBitmap(
+                drawable.intrinsicWidth,
+                drawable.intrinsicHeight,
+                if (drawable.opacity != PixelFormat.OPAQUE)
+                    Bitmap.Config.ARGB_8888
+                else
+                    Bitmap.Config.RGB_565)
+
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
+        drawable.draw(canvas)
         return bitmap
     }
 }

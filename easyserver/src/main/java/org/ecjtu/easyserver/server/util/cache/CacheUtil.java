@@ -1,4 +1,4 @@
-package org.ecjtu.easyserver.server.util;
+package org.ecjtu.easyserver.server.util.cache;
 
 import android.content.Context;
 import android.graphics.Bitmap;

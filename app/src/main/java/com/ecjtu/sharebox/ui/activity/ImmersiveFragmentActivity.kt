@@ -11,6 +11,7 @@ import android.os.Bundle
 open class ImmersiveFragmentActivity : BaseFragmentActivity() {
     companion object {
         @JvmOverloads
+        @JvmStatic
         fun newInstance(context: Context, fragment: Class<*>, bundle: Bundle? = null,
                         clazz: Class<out Activity> = getActivityClazz()): Intent {
             return BaseFragmentActivity.newInstance(context, fragment, bundle, clazz)

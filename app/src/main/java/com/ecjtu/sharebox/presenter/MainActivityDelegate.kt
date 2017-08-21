@@ -17,6 +17,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -88,6 +89,8 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
 
     companion object {
         const val DEBUG = true
+        private const val TAG = "MainActivityDelegate"
+        private const val TAG_FRAGMENT = "FilePickDialogFragment"
     }
 
     init {
@@ -102,7 +105,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         mFloatingActionButton.setOnClickListener({ view ->
             //            mViewSwitcher?.showNext()
             val dlg = FilePickDialogFragment(owner)
-            dlg.show(owner.supportFragmentManager, "FilePickDialogFragment")
+            dlg.show(owner.supportFragmentManager, TAG_FRAGMENT)
         })
 
         //for view switcher
@@ -113,7 +116,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         mViewSwitcher?.addView(view1)
 
         view0.findViewById(R.id.button_help).setOnClickListener {
-            val intent = ActionBarFragmentActivity.newInstance(owner, HelpFragment::class.java,title = "Help")
+            val intent = ActionBarFragmentActivity.newInstance(owner, HelpFragment::class.java, title = "Help")
             owner.startActivity(intent)
         }
 
@@ -167,7 +170,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
 
         findViewById(R.id.text_faq)?.setOnClickListener {
             var intent = ActionBarFragmentActivity.newInstance(owner, WebViewFragment::class.java,
-                    WebViewFragment.openInnerUrl("faq.html"),"FAQ")
+                    WebViewFragment.openInnerUrl("faq.html"), "FAQ")
             owner.startActivity(intent)
         }
 
@@ -176,7 +179,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         }
 
         findViewById(R.id.text_help)?.setOnClickListener {
-            val intent = ActionBarFragmentActivity.newInstance(owner, HelpFragment::class.java,title = "Help")
+            val intent = ActionBarFragmentActivity.newInstance(owner, HelpFragment::class.java, title = "Help")
             owner.startActivity(intent)
         }
 
@@ -189,9 +192,11 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
             dlg.setupItem(arrayOf(owner.getString(R.string.pick_from_camera), owner.getString(R.string.pick_from_album), owner.getString(R.string.cancel)))
             dlg.setOnClickListener { index ->
                 if (index == 0) {
+                    mImageHelper = null
                     mPhotoHelper = CapturePhotoHelper(owner)
                     mPhotoHelper?.takePhoto()
                 } else if (index == 1) {
+                    mPhotoHelper = null
                     mImageHelper = PickPhotoHelper(owner)
                     mImageHelper?.takePhoto()
                 }
@@ -323,19 +328,18 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
 
     fun doSearch() {
 
-        var name = PreferenceManager.getDefaultSharedPreferences(owner).
+        val name = PreferenceManager.getDefaultSharedPreferences(owner).
                 getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
-
         var obj = owner.getMainApplication().getSavedInstance().get(Constants.KEY_SERVER_PORT)
         var port = ""
-        if (obj != null)
-            port = obj as String
+        if (obj is String)
+            port = obj
 
         if (TextUtils.isEmpty(port)) return
 
         mDiscoverHelper?.stop(true, true)
-
         mDiscoverHelper = DiscoverHelper(owner, name, port, "/API/Icon")
+        mDiscoverHelper?.updateTime(System.currentTimeMillis())
         mDiscoverHelper?.setMessageListener { msg, deviceSet, handler ->
             var state = owner.getMainApplication().getSavedInstance().get(Constants.AP_STATE)
             var ip = ""
@@ -371,11 +375,11 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
                 DiscoverHelper.MSG_BEING_SEARCHED -> {
                     for (obj in deviceSet) {
                         if (isSelf(ip, obj)) continue
-                        var index = mClientSet.indexOf(obj)
+                        var index = mServerSet.indexOf(obj)
                         if (index < 0) {
                             mServerSet.add(obj)
                         } else {
-                            var old = mClientSet.get(index)
+                            var old = mServerSet.get(index)
                             old.name = obj.name
                             old.room = obj.room
                         }
@@ -413,31 +417,36 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
                     old = info
                 }
             }
+
             if (!flag) {
-                var data = bean.name
-                var arr = data.split(",")
+                val data = bean.name
+                val arr = data.split(",")
                 var port = 0
-                try {
-                    port = Integer.parseInt(arr[1])
+                port = try {
+                    Integer.parseInt(arr[1])
                 } catch (e: Exception) {
-                    port = 0
+                    0
                 }
-                var deviceInfo = DeviceInfo(arr[0], bean.ip, port, arr[2])
+                val deviceInfo = DeviceInfo(arr[0], bean.ip, port, arr[2])
+                deviceInfo.updateTime = arr[3].toLong()
                 mDeviceInfoList.add(deviceInfo)
                 mRecyclerView?.adapter?.notifyDataSetChanged()
             } else {
-                var data = bean.name
-                var arr = data.split(",")
+                val data = bean.name
+                val arr = data.split(",")
                 var port = 0
-                try {
-                    port = Integer.parseInt(arr[1])
+                port = try {
+                    Integer.parseInt(arr[1])
                 } catch (e: Exception) {
-                    port = 0
+                    0
                 }
                 if (port == 0) continue
                 var needUpdate = false
 
-                if (old?.port != port || old.icon != arr[2]) needUpdate = true
+                if (old?.port != port || old.icon != arr[2] || old.updateTime != arr[3].toLong()) {
+                    needUpdate = true
+                    Log.e(TAG, "need update recycler view")
+                }
 
                 old?.name = arr[0]
                 old?.port = port
@@ -449,8 +458,8 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
             }
         }
 
-        var index = mViewSwitcher?.indexOfChild(mRecyclerView)
-        var nextIndex = mViewSwitcher?.indexOfChild(mViewSwitcher?.nextView)
+        val index = mViewSwitcher?.indexOfChild(mRecyclerView)
+        val nextIndex = mViewSwitcher?.indexOfChild(mViewSwitcher?.nextView)
         if (mDeviceInfoList.size != 0) {
             if (index == nextIndex) {
                 mViewSwitcher?.showNext()
@@ -470,9 +479,9 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
     }
 
     fun checkIconHead() {
-        var iconFile = File(owner.filesDir, Constants.ICON_HEAD)
+        val iconFile = File(owner.filesDir, Constants.ICON_HEAD)
         if (iconFile.exists()) {
-            var icon = findViewById(R.id.drawer_view)?.findViewById(R.id.icon) as ImageView //有相同id 找到错误的view
+            val icon = findViewById(R.id.drawer_view)?.findViewById(R.id.icon) as ImageView //有相同id 找到错误的view
             icon.setImageBitmap(BitmapFactory.decodeFile(iconFile.absolutePath))
         }
     }
@@ -488,9 +497,9 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
 
     fun onDestroy() {
         mDiscoverHelper?.stop(true, true)
+        mPhotoHelper?.clearCache()
+        mImageHelper?.clearCache()
     }
 
-    fun hasDiscovered(): Boolean {
-        return if (mDiscoverHelper != null) return true else return false
-    }
+    fun hasDiscovered(): Boolean = mDiscoverHelper != null
 }

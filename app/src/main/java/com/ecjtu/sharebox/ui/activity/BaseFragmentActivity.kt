@@ -21,7 +21,9 @@ open class BaseFragmentActivity : BaseActionActivity() {
         private const val EXTRA_FRAGMENT_NAME = "extra_fragment_name"
         private const val EXTRA_FRAGMENT_ARG = "extra_fragment_arguments"
 
-        @JvmOverloads fun newInstance(context: Context, fragment: Class<*>, bundle: Bundle? = null,
+        @JvmOverloads
+        @JvmStatic
+        fun newInstance(context: Context, fragment: Class<*>, bundle: Bundle? = null,
                                       clazz: Class<out Activity> = getActivityClazz()): Intent {
             val intent = Intent(context, clazz)
             intent.putExtra(EXTRA_FRAGMENT_NAME, fragment.name)
