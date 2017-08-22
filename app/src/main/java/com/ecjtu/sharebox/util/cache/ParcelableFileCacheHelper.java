@@ -38,12 +38,12 @@ abstract public class ParcelableFileCacheHelper extends FileCacheHelper {
         parcel.recycle();
         gc();
         mByteArrayOutputStream.close();
-        return null;
+        return ret;
     }
 
     @Override
     public <T> void writeObjectFromStream(FileOutputStream os, T object) throws IOException, ClassNotFoundException {
-        Parcel parcel = writeParcel(object);
+        Parcel parcel = writeParcel(Parcel.obtain(),object);
         os.write(parcel.marshall());
         parcel.recycle();
         gc();
@@ -68,7 +68,7 @@ abstract public class ParcelableFileCacheHelper extends FileCacheHelper {
         System.gc();
     }
 
-    abstract  <T> T readParcel(Parcel parcel);
+    abstract <T> T readParcel(Parcel parcel);
 
-    abstract <T> Parcel writeParcel(T object);
+    abstract <T> Parcel writeParcel(Parcel parcel,T object);
 }

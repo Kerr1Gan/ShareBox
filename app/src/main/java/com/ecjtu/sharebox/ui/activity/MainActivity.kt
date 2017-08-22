@@ -17,8 +17,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import com.ecjtu.sharebox.Constants
-import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.PreferenceInfo
+import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
 import com.ecjtu.sharebox.service.MainService
@@ -33,7 +33,8 @@ class MainActivity : ImmersiveFragmentActivity() {
         const private val TAG = "MainActivity"
         private val MSG_SERVICE_STARTED = 0x10
         val MSG_START_SERVER = 0x11
-        @JvmStatic val MSG_CLOSE_APP = -1
+        @JvmStatic
+        val MSG_CLOSE_APP = -1
         const val DEBUG = true
     }
 
@@ -67,6 +68,7 @@ class MainActivity : ImmersiveFragmentActivity() {
         var intent = Intent(this, EasyServerService::class.java)
         startService(intent)
         bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE)
+
     }
 
 
@@ -80,7 +82,7 @@ class MainActivity : ImmersiveFragmentActivity() {
         filter.addAction(mReceiver?.CONNECTIVITY_ACTION)
         registerReceiver(mReceiver, filter)
 
-        var name=PreferenceManager.getDefaultSharedPreferences(this).getString(PreferenceInfo.PREF_DEVICE_NAME,Build.MODEL)
+        var name = PreferenceManager.getDefaultSharedPreferences(this).getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
         (findViewById(R.id.text_name) as TextView).setText(name)
     }
 
@@ -293,7 +295,7 @@ class MainActivity : ImmersiveFragmentActivity() {
     }
 
     override fun onDestroy() {
-        refreshing=false
+        refreshing = false
         mDelegate?.onDestroy()
         try {
             unbindService(mServiceConnection)
