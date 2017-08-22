@@ -109,7 +109,7 @@ class MainActivity : ImmersiveFragmentActivity() {
 
         when (item?.itemId) {
             R.id.refresh -> {
-                if (mAnimator!!.isRunning) {
+                if (mAnimator?.isRunning == true) {
                     refreshing = false
                     mAnimator?.cancel()
                 } else {
@@ -240,6 +240,14 @@ class MainActivity : ImmersiveFragmentActivity() {
             mService = (service as EasyServerService.EasyServerBinder).service
             getHandler()?.obtainMessage(MSG_SERVICE_STARTED)?.sendToTarget()
 
+            EasyServer.setServerListener { server, hostIP, port ->
+                var name = PreferenceManager.getDefaultSharedPreferences(this@MainActivity).
+                        getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
+                registerServerInfo(hostIP, port, name, mutableMapOf())
+                EasyServer.setServerListener(null)
+
+                runOnUiThread { mDelegate?.doSearch() }
+            }
         }
     }
 
@@ -258,14 +266,6 @@ class MainActivity : ImmersiveFragmentActivity() {
                     flag = true
                     Log.e(TAG, "isServerAlive false,start server")
                     var intent = EasyServerService.getApIntent(this)
-                    EasyServer.setServerListener { server, hostIP, port ->
-                        var name = PreferenceManager.getDefaultSharedPreferences(this).
-                                getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
-                        registerServerInfo(hostIP, port, name, mutableMapOf())
-                        EasyServer.setServerListener(null)
-
-                        runOnUiThread { mDelegate?.doSearch() }
-                    }
                     startService(intent)
                 } else {
                     getMainApplication().getSavedInstance().remove(Constants.KEY_SERVER_PORT)
