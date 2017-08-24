@@ -11,6 +11,7 @@ import android.os.IBinder
 import android.os.Message
 import android.preference.PreferenceManager
 import android.support.v7.widget.Toolbar
+import android.text.TextUtils
 import android.util.Log
 import android.view.KeyEvent
 import android.view.Menu
@@ -33,6 +34,7 @@ class MainActivity : ImmersiveFragmentActivity() {
         const private val TAG = "MainActivity"
         private val MSG_SERVICE_STARTED = 0x10
         val MSG_START_SERVER = 0x11
+        private val MSG_LOADING_SERVER = 0x12
         @JvmStatic
         val MSG_CLOSE_APP = -1
         const val DEBUG = true
@@ -245,7 +247,10 @@ class MainActivity : ImmersiveFragmentActivity() {
                         getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
                 registerServerInfo(hostIP, port, name, mutableMapOf())
                 EasyServer.setServerListener(null)
-
+                if(!TextUtils.isEmpty(hostIP)){
+                    getHandler()?.removeMessages(MSG_LOADING_SERVER)
+                    getHandler()?.sendEmptyMessage(MSG_START_SERVER)
+                }
                 runOnUiThread { mDelegate?.doSearch() }
             }
         }
@@ -262,19 +267,20 @@ class MainActivity : ImmersiveFragmentActivity() {
             MSG_START_SERVER -> {
                 if (mService == null) return
                 var flag = false
-                if (!mService?.isServerAlive()!!) {
+                if (mService?.isServerAlive() == false && getHandler()?.hasMessages(MSG_LOADING_SERVER) == false) {
                     flag = true
                     Log.e(TAG, "isServerAlive false,start server")
                     var intent = EasyServerService.getApIntent(this)
                     startService(intent)
+                    getHandler()?.sendEmptyMessageDelayed(MSG_LOADING_SERVER, Int.MAX_VALUE.toLong())
                 } else {
                     getMainApplication().getSavedInstance().remove(Constants.KEY_SERVER_PORT)
                 }
 
-                if (!flag && mDelegate != null && !mDelegate!!.hasDiscovered()) {
+                if (!flag && mDelegate != null && !mDelegate!!.hasDiscovered() && getHandler()?.hasMessages(MSG_LOADING_SERVER) == false) {
                     var name = PreferenceManager.getDefaultSharedPreferences(this).
                             getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
-                    if (mService != null && mService!!.ip != null && mService!!.port != null) {
+                    if (mService != null && mService!!.ip != null && mService?.port != null) {
                         registerServerInfo(mService!!.ip, mService!!.port, name,
                                 ServerManager.getInstance().deviceInfo.fileMap)
                     }
@@ -297,6 +303,7 @@ class MainActivity : ImmersiveFragmentActivity() {
     override fun onDestroy() {
         refreshing = false
         mDelegate?.onDestroy()
+        getHandler()?.removeMessages(MSG_LOADING_SERVER)
         try {
             unbindService(mServiceConnection)
         } catch (ignore: Exception) {

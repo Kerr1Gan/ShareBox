@@ -8,9 +8,7 @@ import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.async.FindAllFilesHelper
-import com.ecjtu.sharebox.ui.fragment.IjkVideoFragment
 import com.ecjtu.sharebox.ui.fragment.PageFragment
-import com.ecjtu.sharebox.ui.fragment.WebViewFragment
 import com.ecjtu.sharebox.util.file.FileUtil
 
 /**
@@ -53,7 +51,7 @@ class TestActivity:AppCompatActivity(){
 //        startActivity(intent)
 
         var task = FindAllFilesHelper(this)
-        task.startScaning { map->
+        task.startScanning { map->
             val result = arrayListOf<MutableMap<String,List<String>>>()
 
             for(entry in map){

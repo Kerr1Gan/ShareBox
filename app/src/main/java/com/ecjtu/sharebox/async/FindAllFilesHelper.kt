@@ -42,7 +42,7 @@ class FindAllFilesHelper(val context: Context) {
         }
     }
 
-    fun startScaning(callback: (map: MutableMap<String, List<String>>) -> Unit) {
+    fun startScanning(callback: (map: MutableMap<String, List<String>>) -> Unit) {
         mCallback = callback
         for (index in 0 until mTaskList.size) {
             mHandler?.obtainMessage(index)?.sendToTarget()

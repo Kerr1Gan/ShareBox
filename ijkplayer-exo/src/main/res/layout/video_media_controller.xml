@@ -62,16 +62,20 @@
             <TextView
                 android:id="@+id/time"
                 style="@style/video_media_controller_time_text_style"
-                android:layout_toLeftOf="@+id/sdk_media_controller_direction" />
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/sdk_media_controller_direction"
+                android:layout_toStartOf="@+id/sdk_media_controller_direction" />
 
             <ImageButton
                 android:id="@+id/sdk_media_controller_direction"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:background="@null"
-                android:src="@mipmap/btn_video_expand" />
+                android:layout_centerVertical="true"
+                android:src="@mipmap/btn_video_expand"
+                android:scaleType="fitXY"/>
         </RelativeLayout>
     </LinearLayout>
 

@@ -558,7 +558,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
             show()
         }
 
-        findAllTask.startScaning { map ->
+        findAllTask.startScanning { map ->
             mTempMap.clear()
             val res = LinkedHashMap<String, MutableList<String>>()
             for (entry in map) {

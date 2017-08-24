@@ -8,7 +8,7 @@ import android.text.TextUtils
 import android.view.*
 import com.ecjtu.sharebox.R
 import tv.danmaku.ijk.media.exo.video.AndroidMediaController
-import tv.danmaku.ijk.media.exo.video.AsusMediaController
+import tv.danmaku.ijk.media.exo.video.SimpleMediaController
 import tv.danmaku.ijk.media.exo.video.IjkVideoView
 import tv.danmaku.ijk.media.player.IMediaPlayer
 
@@ -73,7 +73,7 @@ class IjkVideoFragment : Fragment(), GestureDetector.OnGestureListener, View.OnT
         initOrientationListener()
     }
 
-    private val mCallback = AsusMediaController.MediaPlayerCallback {
+    private val mCallback = SimpleMediaController.MediaPlayerCallback {
         if (activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) {
             activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT)
         } else {
