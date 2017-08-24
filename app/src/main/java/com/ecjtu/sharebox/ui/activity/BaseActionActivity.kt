@@ -30,6 +30,11 @@ abstract class BaseActionActivity : AppCompatActivity, MemoryUnLeakHandler.IHand
 
     private var mSimpleHandler: SimpleHandler? = null
 
+    companion object {
+        const val NAVIGATION_BAR_HEIGHT = "navigation_bar_height"
+        const val STATUS_BAR_HEIGHT = "status_bar_height"
+    }
+
     constructor() : super() {
         mLocalBroadcastManger = LocalBroadcastManager.getInstance(this)
         mIntentFilter = IntentFilter()
@@ -116,10 +121,9 @@ abstract class BaseActionActivity : AppCompatActivity, MemoryUnLeakHandler.IHand
             return 0
         }
         val resources = activity.resources
-        val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+        val resourceId = resources.getIdentifier(NAVIGATION_BAR_HEIGHT, "dimen", "android")
         //获取NavigationBar的高度
-        val height = resources.getDimensionPixelSize(resourceId)
-        return height
+        return resources.getDimensionPixelSize(resourceId)
     }
 
 
@@ -129,8 +133,7 @@ abstract class BaseActionActivity : AppCompatActivity, MemoryUnLeakHandler.IHand
 
     fun getStatusBarHeight(): Int {
         val resources = getResources()
-        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
-        val height = resources.getDimensionPixelSize(resourceId)
-        return height
+        val resourceId = resources.getIdentifier(STATUS_BAR_HEIGHT, "dimen", "android")
+        return resources.getDimensionPixelSize(resourceId)
     }
 }

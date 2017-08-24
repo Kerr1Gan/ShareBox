@@ -9,7 +9,7 @@ import android.view.MenuItem
 
 class ActionBarFragmentActivity : BaseFragmentActivity() {
     companion object {
-        const private val EXTRA_TITLE = "extra_title";
+        const private val EXTRA_TITLE = "extra_title"
         @JvmOverloads
         @JvmStatic
         fun newInstance(context: Context, fragment: Class<*>, bundle: Bundle? = null,

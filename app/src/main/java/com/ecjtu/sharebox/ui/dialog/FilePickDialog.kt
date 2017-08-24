@@ -21,6 +21,7 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.R
+import com.ecjtu.sharebox.async.FindAllFilesHelper
 import com.ecjtu.sharebox.async.MemoryUnLeakHandler
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.ui.adapter.FileExpandableAdapter
@@ -31,7 +32,6 @@ import org.ecjtu.easyserver.server.ServerManager
 import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.concurrent.thread
 
 
 /**
@@ -57,10 +57,6 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
     private var mExpandableListView: FileExpandableListView? = null
 
     private var mProgressBar: ProgressBar? = null
-
-    private var mProgressDialog: ProgressDialog? = null
-
-    private var mHasFindAll = false
 
     private var mTempMap: MutableMap<String, ArrayList<FileExpandableAdapter.VH>> = mutableMapOf()
 
@@ -190,10 +186,6 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                     mTabItemHolders?.get(title)?.task = task
                 }
 
-                if (mHasFindAll) {
-                    selectViewPager(vg)
-                }
-
                 refreshData()
 
                 return vg
@@ -253,7 +245,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
             var index = mViewPager?.currentItem
             getListView(index!!)?.loadedData()
 
-            checkFindAllMessage()
+//            checkFindAllMessage()
         }
 
         override fun onCancelled(result: List<File>?) {
@@ -261,18 +253,18 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
             Log.e(TAG, FileUtil.mediaFileType2String(mType!!) + " task cancelled")
         }
 
-        private fun checkFindAllMessage() {
-            var count = 0
-            for (entry in mTabItemHolders!!.entries) {
-                val title = entry.key
-                if (mTabItemHolders?.get(title)?.task != null && mTabItemHolders?.get(title)?.fileList != null) {
-                    count++
-                }
-            }
-            if (count == mTabItemHolders!!.entries.size) {
-                findAllFinish()
-            }
-        }
+//        private fun checkFindAllMessage() {
+//            var count = 0
+//            for (entry in mTabItemHolders!!.entries) {
+//                val title = entry.key
+//                if (mTabItemHolders?.get(title)?.task != null && mTabItemHolders?.get(title)?.fileList != null) {
+//                    count++
+//                }
+//            }
+//            if (count == mTabItemHolders!!.entries.size) {
+//                findAllFinish()
+//            }
+//        }
     }
 
     private fun findFilesWithType(context: Context, type: FileUtil.MediaFileType, map: MutableMap<String, TabItemHolder>) {
@@ -466,48 +458,8 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
 
     private var mHandler: MemoryUnLeakHandler<FilePickDialog>? = MemoryUnLeakHandler<FilePickDialog>(this)
 
-    private val MSG_FIND_ALL = 0x10
-
-    private val MSG_FIND_ALL_FINISH = 0x11
-
     override fun handleMessage(msg: Message) {
-        when (msg.what) {
-            MSG_FIND_ALL_FINISH -> {
-                mProgressDialog?.cancel()
-                for (entry in mViewPagerViews) {
-                    selectViewPager(entry.value as FileExpandableListView)
-                }
-            }
-            MSG_FIND_ALL -> {
-            }
-        }
-    }
 
-    fun findAllFinish() {
-        if (mHandler != null && mHandler!!.hasMessages(MSG_FIND_ALL)) {
-            mHasFindAll = true
-            thread {
-                mTempMap.clear()
-                val res = LinkedHashMap<String, MutableList<String>>()
-                for (entry in mTabItemHolders!!.entries) {
-                    res.clear()
-                    var title = entry.key
-                    var fileList = mTabItemHolders?.get(title)?.fileList
-                    if (fileList != null) {
-                        var newArr: List<FileExpandableAdapter.VH>? = makeVhList(fileList, res, title, true) ?: continue
-                        for (view in mViewPagerViews) {
-                            var viewPager = view.value as FileExpandableListView
-                            if (viewPager.fileExpandableAdapter.title.equals(title)) {
-                                viewPager.fileExpandableAdapter.replaceVhList(newArr)
-                            }
-                        }
-                        mTempMap.put(FileExpandableAdapter.EXTRA_VH_LIST + title, newArr as ArrayList<FileExpandableAdapter.VH>)
-                    }
-                }
-                mHandler?.removeMessages(MSG_FIND_ALL)
-                mHandler?.obtainMessage(MSG_FIND_ALL_FINISH)?.sendToTarget()
-            }
-        }
     }
 
     private fun selectViewPager(fileExpandableListView: FileExpandableListView) {
@@ -582,7 +534,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
             }
         }
 
-        var map = if (!mHasFindAll) updateFileMap(fileList, mTabItemHolders!!) else updateAllFileList(fileList, mTabItemHolders!!)
+        var map = updateFileMap(fileList, mTabItemHolders!!)
         var deviceInfo = ownerActivity.getMainApplication().getSavedInstance().
                 get(Constants.KEY_INFO_OBJECT) as DeviceInfo
         deviceInfo.fileMap = map
@@ -597,36 +549,39 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
     }
 
     private fun doSelectAll() {
-        var msg = mHandler?.obtainMessage(MSG_FIND_ALL)
-        mHandler?.sendMessageDelayed(msg, (Integer.MAX_VALUE).toLong())
-        mProgressDialog = ProgressDialog(context, ownerActivity).apply {
-            setOnCancelListener {
-                var iter = mTabItemHolders?.iterator()
-                while (iter?.hasNext() ?: false) {
-                    var obj = iter?.next()
-                    obj?.value?.task?.cancel(true)
-                }
-                mHandler?.removeCallbacksAndMessages(null)
+        val findAllTask = FindAllFilesHelper(context)
+
+        val progressDialog = ProgressDialog(context, ownerActivity).apply {
+            setOnDismissListener {
+                findAllTask.release()
             }
             show()
         }
 
-        var set = mTabItemHolders?.entries
-        if (set != null) {
-            var index = 0
-            for (entry in set) {
+        findAllTask.startScaning { map ->
+            mTempMap.clear()
+            val res = LinkedHashMap<String, MutableList<String>>()
+            for (entry in map) {
+                res.clear()
                 var title = entry.key
-                if (entry.value.task == null && entry.value.fileList == null) {
-                    var task = LoadingFilesTask(context, entry.value)
-                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
-                    mTabItemHolders?.get(title)?.task = task
-                } else {
-                    index++
+                var fileList = entry.value
+                if (fileList != null) {
+                    var newArr: List<FileExpandableAdapter.VH>? = makeVhList(fileList, res, title, true) ?: continue
+                    ownerActivity.getMainApplication().getSavedInstance().put(FileExpandableAdapter.EXTRA_VH_LIST + title, newArr!!)
+                    for (view in mViewPagerViews) {
+                        var viewPager = view.value as FileExpandableListView
+                        if (viewPager.fileExpandableAdapter.title.equals(title)) {
+                            viewPager.fileExpandableAdapter.replaceVhList(newArr)
+                            viewPager.post {
+                                viewPager.loadedData()
+                            }
+                        }
+                    }
+                    mTempMap.put(FileExpandableAdapter.EXTRA_VH_LIST + title, newArr as ArrayList<FileExpandableAdapter.VH>)
                 }
             }
-            if (index == set.size) {
-                findAllFinish()
-            }
+
+            progressDialog.cancel()
         }
     }
 
