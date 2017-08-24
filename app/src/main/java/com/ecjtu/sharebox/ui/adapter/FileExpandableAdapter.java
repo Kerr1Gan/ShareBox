@@ -4,9 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -30,16 +28,15 @@ import com.ecjtu.sharebox.R;
 import com.ecjtu.sharebox.async.AppThumbTask;
 import com.ecjtu.sharebox.ui.activity.ActionBarFragmentActivity;
 import com.ecjtu.sharebox.ui.activity.ImmersiveFragmentActivity;
+import com.ecjtu.sharebox.ui.activity.RotateNoCreateActivity;
 import com.ecjtu.sharebox.ui.dialog.FilePickDialog;
 import com.ecjtu.sharebox.ui.dialog.TextItemDialog;
 import com.ecjtu.sharebox.ui.fragment.IjkVideoFragment;
-import com.ecjtu.sharebox.ui.fragment.VideoPlayerFragment;
 import com.ecjtu.sharebox.ui.fragment.WebViewFragment;
 import com.ecjtu.sharebox.ui.view.FileExpandableListView;
 import com.ecjtu.sharebox.util.cache.CacheUtil;
 import com.ecjtu.sharebox.util.file.FileOpenIntentUtil;
 import com.ecjtu.sharebox.util.file.FileUtil;
-import com.ecjtu.sharebox.util.hash.HashUtil;
 import com.ecjtu.sharebox.util.image.ImageUtil;
 
 import java.io.File;
@@ -334,7 +331,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         }
     }
 
-    private RequestListener<Drawable> mRequestListener= new RequestListener<Drawable>() {
+    private RequestListener<Drawable> mRequestListener = new RequestListener<Drawable>() {
         @Override
         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
             return false;
@@ -342,9 +339,9 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
 
         @Override
         public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-            if(model instanceof String){
-                CacheUtil.makeCache((String)model,ImageUtil.drawable2Bitmap(resource),resource.getIntrinsicWidth(),
-                        resource.getIntrinsicHeight(),mContext);
+            if (model instanceof String) {
+                CacheUtil.makeCache((String) model, ImageUtil.drawable2Bitmap(resource), resource.getIntrinsicWidth(),
+                        resource.getIntrinsicHeight(), mContext);
             }
             return false;
         }
@@ -445,7 +442,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         if (mTabHolder.getType() == FileUtil.MediaFileType.MOVIE) {
             Bundle bundle = new Bundle();
             bundle.putString(IjkVideoFragment.EXTRA_URI_PATH, path);
-            Intent i = ImmersiveFragmentActivity.newInstance(mContext, IjkVideoFragment.class, bundle);
+            Intent i = RotateNoCreateActivity.newInstance(mContext, IjkVideoFragment.class, bundle);
             mContext.startActivity(i);
         } else {
             Intent i = FileOpenIntentUtil.INSTANCE.openFile(path);
@@ -505,7 +502,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         return mTitle;
     }
 
-    public Context getContext(){
+    public Context getContext() {
         return mContext;
     }
 }

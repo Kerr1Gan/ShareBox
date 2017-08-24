@@ -79,6 +79,7 @@ public class MainService extends Service {
                 .getSystemService(Context.ACTIVITY_SERVICE);
 
         List<ActivityManager.RunningAppProcessInfo> lists = am.getRunningAppProcesses();
+        if (lists == null) return isRunning;
         for (ActivityManager.RunningAppProcessInfo info : lists) {
             if (info.processName.equals(processName)) {
                 isRunning = true;

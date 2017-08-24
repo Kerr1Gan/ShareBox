@@ -19,7 +19,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.MediaController;
 
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -584,7 +583,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
 
     IRenderView.IRenderCallback mSHCallback = new IRenderView.IRenderCallback() {
         @Override
-        public void onSurfaceChanged( IRenderView.ISurfaceHolder holder, int format, int w, int h) {
+        public void onSurfaceChanged(IRenderView.ISurfaceHolder holder, int format, int w, int h) {
             if (holder.getRenderView() != mRenderView) {
                 Log.e(TAG, "onSurfaceChanged: unmatched render callback\n");
                 return;
@@ -603,7 +602,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         }
 
         @Override
-        public void onSurfaceCreated( IRenderView.ISurfaceHolder holder, int width, int height) {
+        public void onSurfaceCreated(IRenderView.ISurfaceHolder holder, int width, int height) {
             if (holder.getRenderView() != mRenderView) {
                 Log.e(TAG, "onSurfaceCreated: unmatched render callback\n");
                 return;
@@ -794,8 +793,8 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
                 mCurrentState != STATE_PREPARING);
     }
 
-    public boolean isFinish(){
-        return mCurrentState==STATE_PLAYBACK_COMPLETED;
+    public boolean isFinish() {
+        return mCurrentState == STATE_PLAYBACK_COMPLETED;
     }
 
     @Override

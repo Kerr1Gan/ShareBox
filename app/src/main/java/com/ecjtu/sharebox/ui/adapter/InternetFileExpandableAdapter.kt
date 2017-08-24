@@ -44,7 +44,7 @@ class InternetFileExpandableAdapter(expandableListView: FileExpandableListView) 
     override fun onClick(v: View?) {
         var tag = v?.getTag()
         if (tag != null && tag is String) {
-            openFile("http://${mDeviceInfo?.ip}:${mDeviceInfo?.port}/API/File/${HashUtil.BKDRHash(tag)}")
+            openFile("http://${mDeviceInfo?.ip}:${mDeviceInfo?.port}/File/${HashUtil.BKDRHash(tag)}")
             return
         }
         super.onClick(v)
@@ -71,7 +71,7 @@ class InternetFileExpandableAdapter(expandableListView: FileExpandableListView) 
     override fun openFile(path: String?) {
         if (mTabHolder.type === FileUtil.MediaFileType.MOVIE) {
             val bundle = Bundle()
-            bundle.putString(VideoPlayerFragment.EXTRA_URI_PATH, path)
+            bundle.putString(IjkVideoFragment.EXTRA_URI_PATH, path)
             val i = RotateNoCreateActivity.newInstance(context, IjkVideoFragment::class.java, bundle)
             context.startActivity(i)
         }

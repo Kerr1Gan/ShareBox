@@ -39,19 +39,23 @@ class IjkVideoFragment : Fragment(), GestureDetector.OnGestureListener, View.OnT
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        init(view)
+    }
+
+    private fun init(view: View?){
         if (mMediaController == null)
             mMediaController = AndroidMediaController(context)
         mMediaController?.setMediaPlayerCallback(mCallback)
 
         mVideoView = view?.findViewById(R.id.video_view) as IjkVideoView
         mVideoView?.setMediaController(mMediaController)
-        mVideoView?.setOnInfoListener(IMediaPlayer.OnInfoListener { mp, what, extra ->
+        mVideoView?.setOnInfoListener{ mp, what, extra ->
             if (what == IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
 //                mVideoView.setVisibility(View.VISIBLE)
 //                mLoading.setVisibility(View.GONE)
             }
             false
-        })
+        }
         var arg = arguments
         if (arg != null) {
             val uri = arg.getString("extra_uri_path", "")
@@ -130,12 +134,13 @@ class IjkVideoFragment : Fragment(), GestureDetector.OnGestureListener, View.OnT
                 if (rotation >= 0 && rotation <= 45 || rotation >= 315 || rotation >= 135 && rotation <= 225) {
                     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
                 } else if (rotation > 45 && rotation < 135 || rotation > 225 && rotation < 315) {
+                    // 设置横屏
                     if (rotation > 225 && rotation < 315) {
                         activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
                     } else {
                         activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE)
                     }
-                }// 设置横屏
+                }
             }
         }
         mOrientationListener?.enable()
