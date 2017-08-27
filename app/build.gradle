@@ -46,7 +46,7 @@ dependencies {
     compile 'com.android.support:support-vector-drawable:23.4.0'
     compile 'com.tencent.bugly:crashreport:latest.release'
     testCompile 'junit:junit:4.12'
-    compile project(':easyserver')
+    compile(name: 'easyserver-release', ext: 'aar')
 }
 repositories {
     mavenCentral()
