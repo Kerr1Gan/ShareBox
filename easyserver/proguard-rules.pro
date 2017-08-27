@@ -100,3 +100,7 @@
 -keep public class org.ecjtu.easyserver.server.ConversionFactory{*;}
 
 -keepnames class org.ecjtu.easyserver.server.impl.service.EasyServerService$* {*;}
+
+-keep public class * extends android.app.Fragment
+-keep public class * extends org.ecjtu.easyserver.server.util.cache.FileCacheHelper{*;}
+-keep public class * extends android.os.IInterface{*;}
