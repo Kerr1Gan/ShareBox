@@ -61,6 +61,21 @@ public class DaemonService extends Service{
             Intent i=new Intent(getBaseContext(),MainService.class);
             getBaseContext().stopService(i);
         }
+
+        @Override
+        public boolean isServerAlive() throws RemoteException {
+            return false;
+        }
+
+        @Override
+        public String getIp() throws RemoteException {
+            return null;
+        }
+
+        @Override
+        public int getPort() throws RemoteException {
+            return 0;
+        }
     };
 
     @Override

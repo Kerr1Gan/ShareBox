@@ -30,7 +30,6 @@ public class File implements BaseServlet {
 
     @Override
     public void doGet(HTTPRequest httpReq, HTTPResponse res) {
-        Log.e("tttttttttt", "doGet");
         String uri = httpReq.getURI();
 //        try
 //        {

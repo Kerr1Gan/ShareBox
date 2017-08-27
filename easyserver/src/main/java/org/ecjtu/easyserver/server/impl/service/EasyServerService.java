@@ -1,7 +1,6 @@
 package org.ecjtu.easyserver.server.impl.service;
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -9,20 +8,25 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
-import android.os.Binder;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
+import android.os.RemoteException;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
 
+import org.ecjtu.easyserver.IAidlInterface;
 import org.ecjtu.easyserver.R;
-import org.ecjtu.easyserver.net.HostInterface;
-import org.ecjtu.easyserver.server.ServerInfoCarrier;
+import org.ecjtu.easyserver.server.DeviceInfo;
 import org.ecjtu.easyserver.server.ServerManager;
 import org.ecjtu.easyserver.server.impl.server.EasyServer;
 import org.ecjtu.easyserver.server.util.WifiUtil;
+import org.ecjtu.easyserver.server.util.cache.ServerInfoParcelableHelper;
 import org.ecjtu.easyserver.util.StatusBarUtil;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static org.ecjtu.easyserver.server.impl.server.EasyServer.TYPE_AP;
 import static org.ecjtu.easyserver.server.impl.server.EasyServer.TYPE_NOTHING;
@@ -33,11 +37,6 @@ import static org.ecjtu.easyserver.server.impl.server.EasyServer.TYPE_P2P;
  * Created by KerriGan on 2016/4/24.
  */
 public class EasyServerService extends Service {
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return mBinder;
-    }
 
     private EasyServer mEasyServer = null;
 
@@ -55,29 +54,57 @@ public class EasyServerService extends Service {
 
     public static final String EXTRA_SERVER_TYPE = "extra_server_type";
 
-    public static final String EXTRA_SETUP_SERVER= "extra_setup_server";
+    public static final String EXTRA_SETUP_SERVER = "extra_setup_server";
 
     public static final int SERVER_TYPE_AP = TYPE_AP;
 
     public static final int SERVER_TYPE_P2P = TYPE_P2P;
 
-    public static final int SERVER_TYPE_NOT= TYPE_NOTHING;
+    public static final int SERVER_TYPE_NOT = TYPE_NOTHING;
+
+    public IAidlInterface mBinder = new IAidlInterface.Stub() {
+
+        @Override
+        public void startService() throws RemoteException {
+        }
+
+        @Override
+        public void stopService() throws RemoteException {
+        }
+
+        @Override
+        public boolean isServerAlive() throws RemoteException {
+            return EasyServerService.this.isServerAlive();
+        }
+
+        @Override
+        public String getIp() throws RemoteException {
+            return EasyServerService.this.getIp();
+        }
+
+        @Override
+        public int getPort() throws RemoteException {
+            return EasyServerService.this.getPort();
+        }
+    };
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return (IBinder) mBinder;
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
-
-        mBinder = new EasyServerBinder();
         isBind = false;
-
         initNotification();
         initEasyServer();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(intent==null)
-            return super.onStartCommand(intent,flags,startId);
+        if (intent == null)
+            return super.onStartCommand(intent, flags, startId);
 
         int type = intent.getIntExtra(EXTRA_SERVER_TYPE, SERVER_TYPE_NOT);
 
@@ -104,15 +131,27 @@ public class EasyServerService extends Service {
             }
         }
 
-        Object param=intent.getSerializableExtra(EXTRA_SETUP_SERVER);
-        if(param!=null){
-            ServerInfoCarrier carrier=(ServerInfoCarrier)param;
-            ServerManager manager=ServerManager.getInstance();
-            manager.setDeviceInfo(carrier.deviceInfo);
-            manager.setIconPath(carrier.iconPath);
-            manager.setIp(carrier.ip);
-            manager.setSharedFileList(carrier.sharedFileList);
-            manager.setContext(this);
+        String key = intent.getStringExtra(EXTRA_SETUP_SERVER);
+        if (!TextUtils.isEmpty(key)) {
+            //reload the server
+            ServerInfoParcelableHelper helper = new ServerInfoParcelableHelper(getFilesDir().getAbsolutePath());
+            DeviceInfo info = helper.get("com.ecjtu.sharebox.Info");
+            if (info != null) {
+                ServerManager.getInstance().setDeviceInfo(info);
+                ServerManager.getInstance().setContext(this);
+                ServerManager.getInstance().setIp(info.getIp());
+                ServerManager.getInstance().setIconPath(info.getIcon());
+                List<File> fileList = new ArrayList<>();
+                for (Map.Entry<String, List<String>> entry : info.getFileMap().entrySet()) {
+                    for (String path : entry.getValue()) {
+                        File file = new File(path);
+                        if (fileList.indexOf(file) < 0) {
+                            fileList.add(file);
+                        }
+                    }
+                }
+                ServerManager.getInstance().setSharedFileList(fileList);
+            }
         }
 
         return super.onStartCommand(intent, flags, startId);
@@ -142,7 +181,7 @@ public class EasyServerService extends Service {
         return super.onUnbind(intent);
     }
 
-    public void initNotification(){
+    public void initNotification() {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         builder.setSmallIcon(R.mipmap.notification_wifi);
         builder.setContentTitle("ShareBox");
@@ -176,55 +215,53 @@ public class EasyServerService extends Service {
         this.registerReceiver(mReceiver, filter);
     }
 
-    public void initEasyServer(){
-        EasyServer.setServerListener(new HostInterface.ICallback() {
-            @Override
-            public void ready(Object server, String hostIP, int port) {
-
-            }
-        });
+    public void initEasyServer() {
+//        EasyServer.setServerListener(new HostInterface.ICallback() {
+//            @Override
+//            public void ready(Object server, String hostIP, int port) {
+//
+//            }
+//        });
     }
-
-    public EasyServerBinder mBinder;
 
     private Context mContext;
 
-    private EasyServerConnection mServerConnection;
+//    private EasyServerConnection mServerConnection;
 
-    public class EasyServerBinder extends Binder {
-        private boolean mIsBind = false;
-
-        public EasyServerService getService() {
-            return EasyServerService.this;
-        }
-
-        public boolean isBind() {
-            return mIsBind;
-        }
-
-        public void bind(boolean bind) {
-            mIsBind = bind;
-        }
-
-        public void clearNotification() {
-            NotificationManager manager = (NotificationManager) EasyServerService.
-                    this.getSystemService(NOTIFICATION_SERVICE);
-            manager.cancel(101);
-        }
-
-        public void setHostContext(Context context) {
-            mContext = context;
-        }
-
-        public void setServerConnection(EasyServerConnection con) {
-            mServerConnection = con;
-        }
-
-        public boolean isRunning() {
-            return EasyServerService.this.isBind;
-        }
-
-    }
+//    public class EasyServerBinder extends Binder {
+//        private boolean mIsBind = false;
+//
+//        public EasyServerService getService() {
+//            return EasyServerService.this;
+//        }
+//
+//        public boolean isBind() {
+//            return mIsBind;
+//        }
+//
+//        public void bind(boolean bind) {
+//            mIsBind = bind;
+//        }
+//
+//        public void clearNotification() {
+//            NotificationManager manager = (NotificationManager) EasyServerService.
+//                    this.getSystemService(NOTIFICATION_SERVICE);
+//            manager.cancel(101);
+//        }
+//
+//        public void setHostContext(Context context) {
+//            mContext = context;
+//        }
+//
+//        public void setServerConnection(EasyServerConnection con) {
+//            mServerConnection = con;
+//        }
+//
+//        public boolean isRunning() {
+//            return EasyServerService.this.isBind;
+//        }
+//
+//    }
 
     public class NotificationClickReceiver extends BroadcastReceiver {
 
@@ -238,13 +275,13 @@ public class EasyServerService extends Service {
                             WifiManager manager = (WifiManager) EasyServerService.
                                     this.getSystemService(WIFI_SERVICE);
                             WifiUtil.openHotSpot(manager, false, "", "");
-                            try {
-                                context.unbindService(mServerConnection);
-                            }catch (Exception e){
-                            }
+//                            try {
+//                                context.unbindService(mServerConnection);
+//                            } catch (Exception e) {
+//                            }
                             context.stopService
                                     (new Intent(context, EasyServerService.class));
-                            mServerConnection = null;
+//                            mServerConnection = null;
 
                             //finish app
                             // TODO: 2017/7/8
@@ -253,9 +290,9 @@ public class EasyServerService extends Service {
 //                                            (MainActivity.CloseBroadCastReceiver.ACTION_CLOSE_APP));
 
                         } catch (IllegalArgumentException e) {
-                            mBinder.getService().stopService
-                                    (new Intent(EasyServerService.this, EasyServerService.class));
-                            mServerConnection = null;
+//                            mBinder.getService().stopService
+//                                    (new Intent(EasyServerService.this, EasyServerService.class));
+//                            mServerConnection = null;
                             if (mContext != null) {
                                 //finish app
 //                                ((Activity) mContext).finish();
@@ -265,7 +302,7 @@ public class EasyServerService extends Service {
 //                                                (MainActivity.CloseBroadCastReceiver.ACTION_CLOSE_APP));
                             }
                             mContext = null;
-                        }finally {
+                        } finally {
                             System.exit(0);
                         }
                         break;
@@ -282,30 +319,38 @@ public class EasyServerService extends Service {
         }
     }
 
-    public static Intent getApIntent(Context context){
-        Intent i=new Intent(context,EasyServerService.class);
-        i.putExtra(EXTRA_SERVER_TYPE,TYPE_AP);
+    public static Intent getApIntent(Context context) {
+        Intent i = new Intent(context, EasyServerService.class);
+        i.putExtra(EXTRA_SERVER_TYPE, TYPE_AP);
         return i;
     }
 
-    public static Intent getP2PIntent(Context context,String ip,int port){
-        Intent i=new Intent(context,EasyServerService.class);
-        i.putExtra(EXTRA_SERVER_TYPE,TYPE_P2P);
-        i.putExtra(EXTRA_SERVER_IP,ip);
+    public static Intent getP2PIntent(Context context, String ip, int port) {
+        Intent i = new Intent(context, EasyServerService.class);
+        i.putExtra(EXTRA_SERVER_TYPE, TYPE_P2P);
+        i.putExtra(EXTRA_SERVER_IP, ip);
         i.putExtra(EXTRA_SERVER_PORT, port);
         return i;
     }
 
-    public boolean isServerAlive(){
-        if(mEasyServer==null) return false;
+    public static Intent getSetupServerIntent(Context context, String key) {
+        Intent i = new Intent(context, EasyServerService.class);
+        i.putExtra(EXTRA_SETUP_SERVER, key);
+        return i;
+    }
+
+    public boolean isServerAlive() {
+        if (mEasyServer == null) return false;
         return mEasyServer.isRunning();
     }
 
-    public String getIp(){
+    public String getIp() {
+        if (mEasyServer == null) return null;
         return mEasyServer.getBindIP();
     }
 
-    public int getPort(){
+    public int getPort() {
+        if (mEasyServer == null) return 0;
         return mEasyServer.getHTTPPort();
     }
 }

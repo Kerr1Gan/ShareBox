@@ -23,13 +23,15 @@ public class CacheUtil {
 
         File rootPath = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
+        if (rootPath == null) return null;
+
         String localKey = key.replace("/", "_");
 
         String fileName = localKey + "_cache" + ".png";
 
         File tempFile = new File(rootPath, fileName);
 
-        if (tempFile.exists()){
+        if (tempFile.exists()) {
 //            tempFile.delete();
             return tempFile.getAbsolutePath();
         }
@@ -46,8 +48,6 @@ public class CacheUtil {
             //there is a bug need to fix bitmap will recycle.in 2016.7.5 by KerriGan
 //            saveBitmap.recycle();
             return rootPath.getPath() + fileName;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -58,8 +58,7 @@ public class CacheUtil {
     public static String getCachePath(Context context, String key) {
         String root = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath();
         String localKey = key.replace("/", "_");
-        String filePath = root + "/" + localKey + "_cache" + ".png";
-        return filePath;
+        return root + "/" + localKey + "_cache" + ".png";
     }
 
     public static Bitmap getBitmapByCache(Context context, String key) {
@@ -73,14 +72,32 @@ public class CacheUtil {
             try {
                 FileInputStream input = new FileInputStream(tempFile);
                 bmp = BitmapFactory.decodeStream(input);
-                if(bmp==null){
+                if (bmp == null) {
                     tempFile.delete();//delete wrong cache
                 }
-                return bmp;
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         }
         return bmp;
+    }
+
+    public static void clearCache(Context context) {
+        File rootPath = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if (rootPath != null) {
+            File[] list = rootPath.listFiles();
+            if (list != null) {
+                for (File f : list) {
+                    if (!f.isDirectory()) {
+                        f.delete();
+                    }
+                }
+            }
+        }
+    }
+
+    public static String getCacheRootPath(Context context) {
+        File root = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        return root != null ? root.getAbsolutePath() : null;
     }
 }

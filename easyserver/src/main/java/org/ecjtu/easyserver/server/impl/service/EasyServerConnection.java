@@ -11,7 +11,7 @@ import android.os.IBinder;
  */
 public class EasyServerConnection implements ServiceConnection {
 
-    private EasyServerService.EasyServerBinder mBinder;
+//    private EasyServerService.EasyServerBinder mBinder;
     private Context mContext;
 
     public EasyServerConnection(Context context) {
@@ -22,23 +22,23 @@ public class EasyServerConnection implements ServiceConnection {
     public void onServiceConnected(ComponentName name, IBinder service) {
         System.out.println("EasyServerConnection 成功连接");
 
-        EasyServerService.EasyServerBinder binder = (EasyServerService.EasyServerBinder) service;
-        binder.setHostContext(mContext);
-        binder.setServerConnection(this);
-        mBinder = binder;
-        mBinder.getService().isBind = true;
+//        EasyServerService.EasyServerBinder binder = (EasyServerService.EasyServerBinder) service;
+//        binder.setHostContext(mContext);
+//        binder.setServerConnection(this);
+//        mBinder = binder;
+//        mBinder.getService().isBind = true;
     }
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
         System.out.println("EasyServerConnection 断开连接");
-        mBinder.getService().isBind = false;
-        mBinder = null;
+//        mBinder.getService().isBind = false;
+//        mBinder = null;
     }
 
-    public EasyServerService.EasyServerBinder getBinder() {
-        return mBinder;
-    }
+//    public EasyServerService.EasyServerBinder getBinder() {
+//        return mBinder;
+//    }
 
     public void unbindAndStopService() {
         try {

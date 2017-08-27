@@ -87,7 +87,7 @@ abstract class BaseNetwork {
         mutableMap?.let {
             httpURLConnection.requestMethod = Method.POST
 
-            var param: String? = ""
+            var param: String = ""
 
             for (obj in mutableMap.entries) {
                 if (!TextUtils.isEmpty(param)) {
@@ -95,8 +95,8 @@ abstract class BaseNetwork {
                 }
                 param += "${obj.key}=${obj.value}"
             }
-            httpURLConnection.setRequestProperty(HEADER_CONTENT_LENGTH, param?.toByteArray()?.size.toString())
-            ret = param!!
+            httpURLConnection.setRequestProperty(HEADER_CONTENT_LENGTH, param.toByteArray().size.toString())
+            ret = param
         }
         return ret
     }
@@ -147,7 +147,7 @@ abstract class BaseNetwork {
         if (httpURLConnection.requestMethod == Method.POST) {
             if (!TextUtils.isEmpty(param)) {
                 mOutputStream = httpURLConnection.outputStream
-                mOutputStream?.write(param?.toByteArray())
+                mOutputStream?.write(param.toByteArray())
                 mOutputStream?.flush()
             }
         }

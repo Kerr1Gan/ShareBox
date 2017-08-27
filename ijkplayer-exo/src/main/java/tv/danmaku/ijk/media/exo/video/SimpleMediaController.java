@@ -29,7 +29,7 @@ import tv.danmaku.ijk.media.exo.R;
 /**
  * Created by Jeff_Sang on 2016/7/3.
  */
-public class AsusMediaController extends FrameLayout {
+public class SimpleMediaController extends FrameLayout {
 
     private MediaPlayerControl mPlayer;
     private final Context mContext;
@@ -66,7 +66,7 @@ public class AsusMediaController extends FrameLayout {
     StringBuilder mFormatBuilder;
     Formatter mFormatter;
 
-    public AsusMediaController(Context context) {
+    public SimpleMediaController(Context context) {
         super(context);
         mContext = context;
         initFloatingWindow();
@@ -79,13 +79,13 @@ public class AsusMediaController extends FrameLayout {
             initControllerView(mRoot);
     }
 
-    public AsusMediaController(Context context, AttributeSet attrs) {
+    public SimpleMediaController(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
         initFloatingWindow();
     }
 
-    public AsusMediaController(Context context, AttributeSet attrs, int defStyleAttr) {
+    public SimpleMediaController(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
         initFloatingWindow();

@@ -15,8 +15,6 @@ public class ServerManager {
     private ServerManager(){
     }
 
-    private static ServerManager sInstance=null;
-
     private Context mContext;
 
     private List<File> mSharedFileList;

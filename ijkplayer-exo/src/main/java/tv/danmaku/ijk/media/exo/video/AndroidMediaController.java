@@ -7,7 +7,7 @@ import android.view.View;
 
 import java.util.ArrayList;
 
-public class AndroidMediaController extends AsusMediaController implements IMediaController {
+public class AndroidMediaController extends SimpleMediaController implements IMediaController {
     private ActionBar mActionBar;
 
     public AndroidMediaController(Context context, AttributeSet attrs) {

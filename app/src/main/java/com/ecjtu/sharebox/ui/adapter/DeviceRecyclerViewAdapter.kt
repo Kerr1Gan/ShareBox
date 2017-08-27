@@ -110,7 +110,7 @@ class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerViewAdapter
                                     holders.put(entry.key, holder)
                                 }
                             }
-                            setup(deviceInfo?.name!!, holders)
+                            setup(deviceInfo.name!!, holders)
                             show()
                         }
                     }

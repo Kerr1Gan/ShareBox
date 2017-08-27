@@ -1,5 +1,5 @@
 // IAidlInterface.aidl
-package com.ecjtu.sharebox.service;
+package org.ecjtu.easyserver;
 
 // Declare any non-default types here with import statements
 

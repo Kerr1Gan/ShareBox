@@ -94,7 +94,6 @@ public class FileCacheHelper {
         File file = new File(mPath, key);
         if (!file.exists()) return null;
 
-        ObjectInputStream is = null;
         T ret = null;
         FileLock fileLock=null;
         FileInputStream fis=null;

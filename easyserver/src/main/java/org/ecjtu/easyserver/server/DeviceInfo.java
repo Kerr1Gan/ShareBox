@@ -7,13 +7,15 @@ import java.util.Map;
 /**
  * Created by KerriGan on 2017/7/19.
  */
-public class DeviceInfo implements Serializable{
+public class DeviceInfo implements Serializable {
     private String name;
     private String ip = "";
     private int port = 0;
     private String icon = "";
     private Map<String, List<String>> fileMap;
     private long updateTime;
+    private List<DeviceInfo> otherDevices;
+    private String iconPath="";
 
     public DeviceInfo(String name, String ip, int port, String icon, Map<String, List<String>> fileMap) {
         this.name = name;
@@ -21,7 +23,7 @@ public class DeviceInfo implements Serializable{
         this.port = port;
         this.icon = icon;
         this.fileMap = fileMap;
-        this.updateTime= System.currentTimeMillis();
+        this.updateTime = System.currentTimeMillis();
     }
 
     public DeviceInfo(String name, String ip) {
@@ -32,13 +34,15 @@ public class DeviceInfo implements Serializable{
         this(name, ip, port, icon, null);
     }
 
+    public DeviceInfo() {
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-        setUpdateTime(System.currentTimeMillis());
     }
 
     public String getIp() {
@@ -47,7 +51,6 @@ public class DeviceInfo implements Serializable{
 
     public void setIp(String ip) {
         this.ip = ip;
-        setUpdateTime(System.currentTimeMillis());
     }
 
     public int getPort() {
@@ -56,7 +59,6 @@ public class DeviceInfo implements Serializable{
 
     public void setPort(int port) {
         this.port = port;
-        setUpdateTime(System.currentTimeMillis());
     }
 
     public String getIcon() {
@@ -65,7 +67,6 @@ public class DeviceInfo implements Serializable{
 
     public void setIcon(String icon) {
         this.icon = icon;
-        setUpdateTime(System.currentTimeMillis());
     }
 
     public Map<String, List<String>> getFileMap() {
@@ -74,7 +75,6 @@ public class DeviceInfo implements Serializable{
 
     public void setFileMap(Map<String, List<String>> fileMap) {
         this.fileMap = fileMap;
-        setUpdateTime(System.currentTimeMillis());
     }
 
     public long getUpdateTime() {
@@ -85,11 +85,27 @@ public class DeviceInfo implements Serializable{
         this.updateTime = updateTime;
     }
 
+    public List<DeviceInfo> getOtherDevices() {
+        return otherDevices;
+    }
+
+    public void setOtherDevices(List<DeviceInfo> otherDevices) {
+        this.otherDevices = otherDevices;
+    }
+
+    public String getIconPath() {
+        return iconPath;
+    }
+
+    public void setIconPath(String iconPath) {
+        this.iconPath = iconPath;
+    }
+
     @Override
     public boolean equals(Object obj) {
-        if(!(obj instanceof DeviceInfo)) return false;
-        DeviceInfo info= (DeviceInfo) obj;
-        if(info.ip.equals(this.ip)){
+        if (!(obj instanceof DeviceInfo)) return false;
+        DeviceInfo info = (DeviceInfo) obj;
+        if (info.ip.equals(this.ip)) {
             return true;
         }
         return super.equals(obj);
