@@ -11,4 +11,7 @@ interface IAidlInterface {
 
     void startService();
     void stopService();
+    boolean isServerAlive();
+    String getIp();
+    int getPort();
 }

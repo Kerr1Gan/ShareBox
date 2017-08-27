@@ -1,7 +1,6 @@
 package com.ecjtu.sharebox.ui.dialog
 
 import android.app.Activity
-import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -21,7 +20,6 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.R
-import com.ecjtu.sharebox.async.FindAllFilesHelper
 import com.ecjtu.sharebox.async.MemoryUnLeakHandler
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.ui.adapter.FileExpandableAdapter
@@ -32,6 +30,7 @@ import org.ecjtu.easyserver.server.ServerManager
 import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.concurrent.thread
 
 
 /**
@@ -287,6 +286,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                 map.get("Music")?.fileList = strList
             }
             FileUtil.MediaFileType.IMG -> {
+//                    list=FileUtil.getAllImageFile(mContext!!,null)
                 list = FileUtil.getImagesByDCIM(context)
                 var strList = arrayListOf<String>()
                 for (path in list.iterator()) {

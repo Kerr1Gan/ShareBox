@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Environment
 import android.support.v4.content.LocalBroadcastManager
-import android.text.TextUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.load.DecodeFormat
@@ -16,7 +15,7 @@ import com.bumptech.glide.module.AppGlideModule
 import com.ecjtu.sharebox.service.MainService
 import com.tencent.bugly.crashreport.CrashReport
 import org.ecjtu.channellibrary.wifidirect.WifiDirectManager
-import org.ecjtu.easyserver.server.ServerManager
+import org.ecjtu.easyserver.server.DeviceInfo
 import java.io.*
 import java.lang.reflect.InvocationTargetException
 import java.util.*
@@ -64,14 +63,18 @@ class MainApplication : Application() {
     }
 
     private fun initSavedState() {
-
+        val deviceInfo = DeviceInfo()
+        deviceInfo.iconPath = filesDir.absolutePath + "/" + Constants.ICON_HEAD
+        deviceInfo.fileMap = mutableMapOf()
+        mSavedInstance.put(Constants.KEY_INFO_OBJECT, deviceInfo)
     }
 
     private fun initSDK() {
         CrashReport.initCrashReport(getApplicationContext(), "18b1313e86", true)
 
-        ServerManager.getInstance().setIconPath(filesDir.absolutePath + "/" + Constants.ICON_HEAD)
-        ServerManager.getInstance().setContext(applicationContext)
+//        ServerManager.getInstance().setDeviceInfo(DeviceInfo())
+//        ServerManager.getInstance().setIconPath(filesDir.absolutePath + "/" + Constants.ICON_HEAD)
+//        ServerManager.getInstance().setContext(applicationContext)
     }
 
     private fun initError() {
@@ -209,7 +212,7 @@ class MainApplication : Application() {
     /**
      * 判断是不是UI主进程，因为有些东西只能在UI主进程初始化
      */
-    fun isAppMainProcess(packageName:String): Boolean {
+    fun isAppMainProcess(packageName: String): Boolean {
         val pid = android.os.Process.myPid()
         val process = getAppNameByPID(this, pid)
         return packageName.equals(process)

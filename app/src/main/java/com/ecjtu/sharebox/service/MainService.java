@@ -46,14 +46,29 @@ public class MainService extends Service {
 
         @Override
         public void startService() throws RemoteException {
-            Intent i = new Intent(getBaseContext(), DaemonService.class);
-            getBaseContext().startService(i);
+//            Intent i = new Intent(getBaseContext(), DaemonService.class);
+//            getBaseContext().startService(i);
         }
 
         @Override
         public void stopService() throws RemoteException {
-            Intent i = new Intent(getBaseContext(), DaemonService.class);
-            getBaseContext().stopService(i);
+//            Intent i = new Intent(getBaseContext(), DaemonService.class);
+//            getBaseContext().stopService(i);
+        }
+
+        @Override
+        public boolean isServerAlive() throws RemoteException {
+            return false;
+        }
+
+        @Override
+        public String getIp() throws RemoteException {
+            return null;
+        }
+
+        @Override
+        public int getPort() throws RemoteException {
+            return 0;
         }
     };
 

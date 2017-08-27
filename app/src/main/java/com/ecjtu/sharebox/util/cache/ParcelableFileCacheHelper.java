@@ -70,5 +70,5 @@ abstract public class ParcelableFileCacheHelper extends FileCacheHelper {
 
     abstract <T> T readParcel(Parcel parcel);
 
-    abstract <T> Parcel writeParcel(Parcel parcel,T object);
+    abstract <T> Parcel writeParcel(Parcel parcel, T object);
 }

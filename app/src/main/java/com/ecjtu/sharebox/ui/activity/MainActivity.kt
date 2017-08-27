@@ -23,10 +23,11 @@ import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
 import com.ecjtu.sharebox.service.MainService
+import org.ecjtu.easyserver.IAidlInterface
 import org.ecjtu.easyserver.server.DeviceInfo
-import org.ecjtu.easyserver.server.ServerManager
 import org.ecjtu.easyserver.server.impl.server.EasyServer
 import org.ecjtu.easyserver.server.impl.service.EasyServerService
+import org.ecjtu.easyserver.server.util.cache.ServerInfoParcelableHelper
 
 class MainActivity : ImmersiveFragmentActivity() {
 
@@ -48,7 +49,7 @@ class MainActivity : ImmersiveFragmentActivity() {
 
     var refreshing = true
 
-    private var mService: EasyServerService? = null
+    private var mService: IAidlInterface? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -239,7 +240,7 @@ class MainActivity : ImmersiveFragmentActivity() {
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             Log.e(TAG, "onServiceConnected " + name.toString())
-            mService = (service as EasyServerService.EasyServerBinder).service
+            mService = IAidlInterface.Stub.asInterface(service)
             getHandler()?.obtainMessage(MSG_SERVICE_STARTED)?.sendToTarget()
 
             EasyServer.setServerListener { server, hostIP, port ->
@@ -247,11 +248,17 @@ class MainActivity : ImmersiveFragmentActivity() {
                         getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
                 registerServerInfo(hostIP, port, name, mutableMapOf())
                 EasyServer.setServerListener(null)
-                if(!TextUtils.isEmpty(hostIP)){
+                if (!TextUtils.isEmpty(hostIP)) {
                     getHandler()?.removeMessages(MSG_LOADING_SERVER)
                     getHandler()?.sendEmptyMessage(MSG_START_SERVER)
                 }
                 runOnUiThread { mDelegate?.doSearch() }
+
+                val deviceInfo = getMainApplication().getSavedInstance().get(Constants.KEY_INFO_OBJECT) as DeviceInfo
+                val helper = ServerInfoParcelableHelper(this@MainActivity.filesDir.absolutePath)
+                helper.put(Constants.KEY_INFO_OBJECT, deviceInfo)
+                val intent = EasyServerService.getSetupServerIntent(this@MainActivity, Constants.KEY_INFO_OBJECT)
+                this@MainActivity.startService(intent)
             }
         }
     }
@@ -277,12 +284,14 @@ class MainActivity : ImmersiveFragmentActivity() {
                     getMainApplication().getSavedInstance().remove(Constants.KEY_SERVER_PORT)
                 }
 
-                if (!flag && mDelegate != null && !mDelegate!!.hasDiscovered() && getHandler()?.hasMessages(MSG_LOADING_SERVER) == false) {
+                if (!flag && mDelegate != null && !mDelegate!!.hasDiscovered()) {
                     var name = PreferenceManager.getDefaultSharedPreferences(this).
                             getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
-                    if (mService != null && mService!!.ip != null && mService?.port != null) {
+                    if (mService != null && mService!!.ip != null && mService!!.port != 0) {
+                        val deviceInfo = getMainApplication().getSavedInstance().get(Constants.KEY_INFO_OBJECT) as DeviceInfo
                         registerServerInfo(mService!!.ip, mService!!.port, name,
-                                ServerManager.getInstance().deviceInfo.fileMap)
+                                /*ServerManager.getInstance().deviceInfo.fileMap*/
+                                deviceInfo.fileMap)
                     }
                     runOnUiThread { mDelegate?.doSearch() }
                 }
@@ -318,9 +327,17 @@ class MainActivity : ImmersiveFragmentActivity() {
 
     fun registerServerInfo(hostIP: String, port: Int, name: String, mutableMap: MutableMap<String, List<String>>) {
         getMainApplication().getSavedInstance().put(Constants.KEY_SERVER_PORT, port.toString())
-        var deviceInfo = DeviceInfo(name, hostIP, port, "/API/Icon", mutableMap)
-        ServerManager.getInstance().setDeviceInfo(deviceInfo)
-        getMainApplication().getSavedInstance().put(Constants.KEY_INFO_OBJECT, deviceInfo)
+        val deviceInfo = getMainApplication().getSavedInstance().get(Constants.KEY_INFO_OBJECT) as DeviceInfo
+        deviceInfo.apply {
+            this.name = name
+            this.ip = hostIP
+            this.port = port
+            this.icon = "/API/Icon"
+            this.fileMap = mutableMap
+            this.updateTime = System.currentTimeMillis()
+        }
+//        ServerManager.getInstance().setDeviceInfo(deviceInfo)
+//        getMainApplication().getSavedInstance().put(Constants.KEY_INFO_OBJECT, deviceInfo)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
