@@ -290,7 +290,6 @@ class MainActivity : ImmersiveFragmentActivity() {
                     if (mService != null && mService!!.ip != null && mService!!.port != 0) {
                         val deviceInfo = getMainApplication().getSavedInstance().get(Constants.KEY_INFO_OBJECT) as DeviceInfo
                         registerServerInfo(mService!!.ip, mService!!.port, name,
-                                /*ServerManager.getInstance().deviceInfo.fileMap*/
                                 deviceInfo.fileMap)
                     }
                     runOnUiThread { mDelegate?.doSearch() }
@@ -336,8 +335,6 @@ class MainActivity : ImmersiveFragmentActivity() {
             this.fileMap = mutableMap
             this.updateTime = System.currentTimeMillis()
         }
-//        ServerManager.getInstance().setDeviceInfo(deviceInfo)
-//        getMainApplication().getSavedInstance().put(Constants.KEY_INFO_OBJECT, deviceInfo)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {

@@ -72,9 +72,6 @@ class MainApplication : Application() {
     private fun initSDK() {
         CrashReport.initCrashReport(getApplicationContext(), "18b1313e86", true)
 
-//        ServerManager.getInstance().setDeviceInfo(DeviceInfo())
-//        ServerManager.getInstance().setIconPath(filesDir.absolutePath + "/" + Constants.ICON_HEAD)
-//        ServerManager.getInstance().setContext(applicationContext)
     }
 
     private fun initError() {

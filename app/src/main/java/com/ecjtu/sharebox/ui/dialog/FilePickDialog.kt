@@ -28,10 +28,12 @@ import com.ecjtu.sharebox.ui.adapter.FileExpandableAdapter
 import com.ecjtu.sharebox.ui.view.FileExpandableListView
 import com.ecjtu.sharebox.util.file.FileUtil
 import org.ecjtu.easyserver.server.DeviceInfo
-import org.ecjtu.easyserver.server.ServerManager
+import org.ecjtu.easyserver.server.impl.service.EasyServerService
+import org.ecjtu.easyserver.server.util.cache.ServerInfoParcelableHelper
 import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.concurrent.thread
 
 
 /**
@@ -544,7 +546,13 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         for (path in fileList) {
             serverList.add(File(path))
         }
-        ServerManager.getInstance().setSharedFileList(serverList)
+
+        thread {
+            val helper = ServerInfoParcelableHelper(context.filesDir.absolutePath)
+            helper.put(Constants.KEY_INFO_OBJECT, deviceInfo)
+            val intent = EasyServerService.getSetupServerIntent(context, Constants.KEY_INFO_OBJECT)
+            context.startService(intent)
+        }
         this@FilePickDialog.cancel()
         Toast.makeText(context, R.string.select_success, Toast.LENGTH_SHORT).show()
     }
