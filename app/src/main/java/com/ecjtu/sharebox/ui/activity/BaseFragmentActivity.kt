@@ -67,8 +67,7 @@ open class BaseFragmentActivity : BaseActionActivity() {
     fun makeFragment(name: String): Fragment? {
         try {
             val fragmentClazz = Class.forName(name)
-            val fragment = fragmentClazz.newInstance() as Fragment
-            return fragment
+            return fragmentClazz.newInstance() as Fragment
         } catch (e: Exception) {
             e.printStackTrace()
         }

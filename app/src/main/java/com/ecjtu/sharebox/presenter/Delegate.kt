@@ -12,7 +12,7 @@ import android.view.View
 /**
  * Created by KerriGan on 2016/9/17.
  */
-abstract class Delegate<T>(val owner: T) {
+abstract class Delegate<out T>(val owner: T) {
 
     open fun findViewById(resId: Int): View? {
         if (owner is Activity) {

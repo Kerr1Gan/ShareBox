@@ -64,7 +64,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
     private var mWifiImage: ImageView
     private var mTextName: TextView? = null
 
-    private val REQUEST_CODE = 0x10;
+    private val REQUEST_CODE = 0x10
 
     private var mServerSet = mutableListOf<DeviceSearcher.DeviceBean>()
 

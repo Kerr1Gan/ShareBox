@@ -27,7 +27,6 @@ import com.bumptech.glide.request.target.Target;
 import com.ecjtu.sharebox.R;
 import com.ecjtu.sharebox.async.AppThumbTask;
 import com.ecjtu.sharebox.ui.activity.ActionBarFragmentActivity;
-import com.ecjtu.sharebox.ui.activity.ImmersiveFragmentActivity;
 import com.ecjtu.sharebox.ui.activity.RotateNoCreateActivity;
 import com.ecjtu.sharebox.ui.dialog.FilePickDialog;
 import com.ecjtu.sharebox.ui.dialog.TextItemDialog;
@@ -74,11 +73,11 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
 
     private Context mContext;
 
-    public static final String EXTRA_VH_LIST = "FileExpandableAdapter_extra_vh_list";
-
     private String mTitle = "";
 
     private boolean mSelectAll = false;
+
+    private String[] mInstalledAppNames;
 
     public FileExpandableAdapter(FileExpandableListView expandableListView) {
         mExpandableListView = expandableListView;
@@ -266,8 +265,12 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         if (convertView == null)
             convertView = LayoutInflater.from(mContext).inflate(R.layout.layout_file_item, parent, false);
 
-        ((TextView) convertView.findViewById(R.id.text_name)).setText(FileUtil.INSTANCE.getFileName(f));
         FileUtil.MediaFileType type = mTabHolder.getType();
+        if (type == FileUtil.MediaFileType.APP && f.startsWith("/data/app") && mInstalledAppNames != null) {
+            ((TextView) convertView.findViewById(R.id.text_name)).setText(mInstalledAppNames[childPosition]);
+        } else {
+            ((TextView) convertView.findViewById(R.id.text_name)).setText(FileUtil.INSTANCE.getFileName(f));
+        }
 
         ImageView icon = (ImageView) convertView.findViewById(R.id.icon);
         icon.setImageDrawable(null);
@@ -424,6 +427,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
                     arrayList.add(packageInfo.applicationInfo.sourceDir);
                 }
                 res.put("已安装", arrayList);
+                mInstalledAppNames = FileUtil.INSTANCE.getInstallAppsNameByPathArray(mContext, arrayList.toArray(new String[0]));
             }
 
             final String[] names = FileUtil.INSTANCE.foldFiles(mFileList, res);

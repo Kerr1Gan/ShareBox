@@ -184,6 +184,10 @@ open class WifiBottomSheetDialog : CloseBottomSheetDialog {
         mCircularButton = vg.findViewById(R.id.circle_progress) as CircularProgressButton
         mCircularButton?.isIndeterminateProgressMode = true
         mCircularButton?.setOnClickListener {
+            if(mHotspotName?.text.toString()=="" || mHotspotPwd?.text.toString()==""){
+                Toast.makeText(context, "请正确填入名字和密码", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             if (mCircularButton?.progress == PROGRESS_START) {
                 mCircularButton?.progress = PROGRESS_MIDDLE
 
@@ -198,13 +202,11 @@ open class WifiBottomSheetDialog : CloseBottomSheetDialog {
                     mCircularButton?.progress = PROGRESS_START
                     cancel()
                 }, DELAY_TIME)
-
                 WifiUtil.openHotSpot(context, true, mHotspotName?.text.toString()
                         , mHotspotPwd?.text.toString())
             } else if (mCircularButton?.progress == PROGRESS_END) {
                 mCircularButton?.progress = PROGRESS_START
                 mCircularButton?.setText(R.string.open)
-
                 WifiUtil.openHotSpot(context, false, mHotspotName?.text.toString()
                         , mHotspotPwd?.text.toString())
             }

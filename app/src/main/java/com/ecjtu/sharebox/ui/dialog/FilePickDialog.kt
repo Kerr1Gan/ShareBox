@@ -62,6 +62,10 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
 
     private var mTempMap: MutableMap<String, ArrayList<FileExpandableAdapter.VH>> = mutableMapOf()
 
+    companion object {
+        const val EXTRA_VH_LIST = "FileExpandableAdapter_extra_vh_list"
+    }
+
     override fun initializeDialog() {
         super.initializeDialog()
         context.setTheme(R.style.WhiteToolbar)
@@ -246,27 +250,12 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
             refresh(false)
             var index = mViewPager?.currentItem
             getListView(index!!)?.loadedData()
-
-//            checkFindAllMessage()
         }
 
         override fun onCancelled(result: List<File>?) {
             super.onCancelled(result)
             Log.e(TAG, FileUtil.mediaFileType2String(mType!!) + " task cancelled")
         }
-
-//        private fun checkFindAllMessage() {
-//            var count = 0
-//            for (entry in mTabItemHolders!!.entries) {
-//                val title = entry.key
-//                if (mTabItemHolders?.get(title)?.task != null && mTabItemHolders?.get(title)?.fileList != null) {
-//                    count++
-//                }
-//            }
-//            if (count == mTabItemHolders!!.entries.size) {
-//                findAllFinish()
-//            }
-//        }
     }
 
     private fun findFilesWithType(context: Context, type: FileUtil.MediaFileType, map: MutableMap<String, TabItemHolder>) {
@@ -387,7 +376,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
 
             if (application == null) continue
 
-            var obj = application.getSavedInstance().get(FileExpandableAdapter.EXTRA_VH_LIST + title)
+            var obj = application.getSavedInstance().get(EXTRA_VH_LIST + title)
             var vhList = if (obj != null) obj as List<FileExpandableAdapter.VH> else null
 
             if (vhList != null) {
@@ -414,9 +403,8 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
             if (element.value.fileList == null) continue
             if (application == null) continue
 
-            var vhList = application.getSavedInstance().get(FileExpandableAdapter.EXTRA_VH_LIST + title) as List<FileExpandableAdapter.VH>
-
-            if (vhList != null) {
+            if (application.getSavedInstance().get(EXTRA_VH_LIST + title) != null) {
+                val vhList = application.getSavedInstance().get(EXTRA_VH_LIST + title) as List<FileExpandableAdapter.VH>
                 for (vh in vhList) {
                     var fList = vh.activatedList
                     for (file in fList) {
@@ -425,8 +413,8 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                         strList.add(file)
                     }
                 }
+                map.put(title, strList)
             }
-            map.put(title, strList)
         }
         return map
     }
@@ -500,7 +488,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
     open protected fun isLoadCache(): Boolean = true
 
     private fun getOldCacheAndClone(title: String): List<FileExpandableAdapter.VH>? {
-        var cache = ownerActivity.getMainApplication().getSavedInstance().get(FileExpandableAdapter.EXTRA_VH_LIST + title) as List<FileExpandableAdapter.VH>?
+        var cache = ownerActivity.getMainApplication().getSavedInstance().get(EXTRA_VH_LIST + title) as List<FileExpandableAdapter.VH>?
         var newList = arrayListOf<FileExpandableAdapter.VH>()
         if (cache != null) {
             for (vh in cache) {
@@ -519,7 +507,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
 
         for (entry in mTabItemHolders!!.entries) {
             var title = entry.key
-            var key = FileExpandableAdapter.EXTRA_VH_LIST + title
+            var key = EXTRA_VH_LIST + title
             var vhList = mTempMap.get(key)
             if (ownerActivity != null && vhList != null) {
                 var application = ownerActivity.getMainApplication()
@@ -533,7 +521,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
             var save = pager.fileExpandableAdapter.vhList
             if (ownerActivity != null && save != null) {
                 var application = ownerActivity.getMainApplication()
-                application.getSavedInstance().put(FileExpandableAdapter.EXTRA_VH_LIST + adapter.title, save)
+                application.getSavedInstance().put(EXTRA_VH_LIST + adapter.title, save)
             }
         }
 
@@ -576,7 +564,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                 var fileList = entry.value
                 if (fileList != null) {
                     var newArr: List<FileExpandableAdapter.VH>? = makeVhList(fileList, res, title, true) ?: continue
-                    ownerActivity.getMainApplication().getSavedInstance().put(FileExpandableAdapter.EXTRA_VH_LIST + title, newArr!!)
+                    ownerActivity.getMainApplication().getSavedInstance().put(EXTRA_VH_LIST + title, newArr!!)
                     for (view in mViewPagerViews) {
                         var viewPager = view.value as FileExpandableListView
                         if (viewPager.fileExpandableAdapter.title.equals(title)) {
@@ -586,7 +574,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                             }
                         }
                     }
-                    mTempMap.put(FileExpandableAdapter.EXTRA_VH_LIST + title, newArr as ArrayList<FileExpandableAdapter.VH>)
+                    mTempMap.put(EXTRA_VH_LIST + title, newArr as ArrayList<FileExpandableAdapter.VH>)
                 }
             }
 

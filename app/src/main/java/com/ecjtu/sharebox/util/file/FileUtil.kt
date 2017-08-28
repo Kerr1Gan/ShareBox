@@ -339,12 +339,12 @@ object FileUtil {
         var iter = output.iterator()
         while (iter.hasNext()) {
             var entry = iter.next()
-            if (entry.value?.size == 0) {
+            if (entry.value.size == 0) {
                 iter.remove()
             }
         }
         for (key in output) {
-            if (key.value?.size == 0) {
+            if (key.value.size == 0) {
                 output.remove(key.key)
             }
         }
@@ -571,7 +571,7 @@ object FileUtil {
         return ret
     }
 
-    fun getInstalledApps(context: Context, includeSystem: Boolean):List<PackageInfo> {
+    fun getInstalledApps(context: Context, includeSystem: Boolean): List<PackageInfo> {
         val appList = ArrayList<PackageInfo>() //用来存储获取的应用信息数据
         val manager = context.getPackageManager()
         val packages = manager.getInstalledPackages(0)
@@ -585,6 +585,31 @@ object FileUtil {
 
         }
         return appList
+    }
+
+    fun getInstallAppNameByPath(context: Context, path: String): String {
+        val appList = getInstalledApps(context, false)
+        for (packageInfo in appList) {
+            val application = packageInfo.applicationInfo
+            if (packageInfo.applicationInfo.sourceDir == path) {
+                return application.loadLabel(context.packageManager).toString()
+            }
+        }
+        return ""
+    }
+
+    fun getInstallAppsNameByPathArray(context: Context, path: Array<String>): Array<String> {
+        val appList = getInstalledApps(context, false)
+        val retArray = Array<String>(appList.size, { "" })
+        for (packageInfo in appList) {
+            val application = packageInfo.applicationInfo
+            for (childPath in path) {
+                if (packageInfo.applicationInfo.sourceDir == childPath) {
+                    retArray[path.indexOf(childPath)] = application.loadLabel(context.packageManager).toString()
+                }
+            }
+        }
+        return retArray
     }
 }
 
