@@ -1,6 +1,7 @@
 package com.ecjtu.sharebox.ui.activity
 
 import android.animation.ObjectAnimator
+import android.app.ActivityManager
 import android.content.*
 import android.graphics.drawable.RotateDrawable
 import android.net.NetworkInfo
@@ -244,6 +245,7 @@ class MainActivity : ImmersiveFragmentActivity() {
             getHandler()?.obtainMessage(MSG_SERVICE_STARTED)?.sendToTarget()
 
             EasyServer.setServerListener { server, hostIP, port ->
+                TODO("主进程无法得到回调，BugFix")
                 var name = PreferenceManager.getDefaultSharedPreferences(this@MainActivity).
                         getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
                 registerServerInfo(hostIP, port, name, mutableMapOf())
