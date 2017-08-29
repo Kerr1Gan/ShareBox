@@ -103,7 +103,6 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
 
         mFloatingActionButton = findViewById(R.id.floating_action_button) as FloatingActionButton
         mFloatingActionButton.setOnClickListener({ view ->
-            //            mViewSwitcher?.showNext()
             val dlg = FilePickDialogFragment(owner)
             dlg.show(owner.supportFragmentManager, TAG_FRAGMENT)
         })

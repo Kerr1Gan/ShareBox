@@ -1,7 +1,6 @@
 package com.ecjtu.sharebox.ui.activity
 
 import android.animation.ObjectAnimator
-import android.app.ActivityManager
 import android.content.*
 import android.graphics.drawable.RotateDrawable
 import android.net.NetworkInfo
