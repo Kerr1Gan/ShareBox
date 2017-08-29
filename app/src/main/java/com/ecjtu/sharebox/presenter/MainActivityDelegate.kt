@@ -111,6 +111,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         mViewSwitcher = findViewById(R.id.view_switcher) as ViewSwitcher
         var view0: View = LayoutInflater.from(owner).inflate(R.layout.layout_main_activity_data, null)
         var view1: View = LayoutInflater.from(owner).inflate(R.layout.layout_main_activity_list, null)
+
         mViewSwitcher?.addView(view0)
         mViewSwitcher?.addView(view1)
 
@@ -501,4 +502,8 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
     }
 
     fun hasDiscovered(): Boolean = mDiscoverHelper != null
+
+    fun getRecyclerView(): RecyclerView? {
+        return mRecyclerView
+    }
 }

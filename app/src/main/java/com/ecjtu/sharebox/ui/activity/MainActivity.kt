@@ -65,6 +65,9 @@ class MainActivity : ImmersiveFragmentActivity() {
         if (isNavigationBarShow(this)) {
             drawer.setPadding(drawer.paddingLeft, drawer.paddingTop, drawer.paddingRight,
                     drawer.paddingBottom + getNavigationBarHeight(this))
+            val recyclerView = mDelegate?.getRecyclerView()
+            recyclerView?.setPadding(recyclerView.paddingLeft, recyclerView.paddingTop, recyclerView.paddingRight,
+                    recyclerView.paddingBottom + getNavigationBarHeight(this))
         }
 
         //init service
