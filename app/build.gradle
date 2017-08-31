@@ -47,10 +47,13 @@ dependencies {
     compile 'com.tencent.bugly:crashreport:latest.release'
     testCompile 'junit:junit:4.12'
     compile(name: 'easyserver-release', ext: 'aar')
+    compile 'com.google.android.gms:play-services-ads:11.2.0'
 }
+
 repositories {
     mavenCentral()
     flatDir {
         dirs 'libs'
     }
 }
+

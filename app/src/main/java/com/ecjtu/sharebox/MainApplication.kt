@@ -13,6 +13,7 @@ import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory
 import com.bumptech.glide.load.engine.cache.LruResourceCache
 import com.bumptech.glide.module.AppGlideModule
 import com.ecjtu.sharebox.service.MainService
+import com.google.android.gms.ads.MobileAds
 import com.tencent.bugly.crashreport.CrashReport
 import org.ecjtu.channellibrary.wifidirect.WifiDirectManager
 import org.ecjtu.easyserver.server.DeviceInfo
@@ -70,8 +71,8 @@ class MainApplication : Application() {
     }
 
     private fun initSDK() {
-        CrashReport.initCrashReport(getApplicationContext(), "18b1313e86", true)
-
+        CrashReport.initCrashReport(getApplicationContext(), getString(R.string.bugly_id), true)
+        MobileAds.initialize(this, getString(R.string.admob_app_id))
     }
 
     private fun initError() {
