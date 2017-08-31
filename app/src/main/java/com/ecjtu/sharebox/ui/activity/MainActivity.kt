@@ -172,7 +172,7 @@ class MainActivity : ImmersiveFragmentActivity() {
             if (action == ACTION_WIFI_AP_CHANGED) {
                 when (state) {
                     WIFI_AP_STATE_ENABLED -> {
-                        if (mDelegate?.checkCurrentAp(null) ?: false) {
+                        if (mDelegate?.checkCurrentNetwork(null) ?: false) {
                             getHandler()?.obtainMessage(MSG_START_SERVER)?.sendToTarget()
                         }
                         var s = ""
@@ -186,7 +186,7 @@ class MainActivity : ImmersiveFragmentActivity() {
                         Log.i("WifiApReceiver", "ap " + s)
                     }
                     WIFI_AP_STATE_DISABLED -> {
-                        mDelegate?.checkCurrentAp(null)
+                        mDelegate?.checkCurrentNetwork(null)
                     }
                     else -> {
                         var s = ""
@@ -204,12 +204,12 @@ class MainActivity : ImmersiveFragmentActivity() {
                 var state = intent.getIntExtra(EXTRA_WIFI_STATE, -1)
                 when (state) {
                     WIFI_STATE_ENABLED -> {
-                        if (mDelegate?.checkCurrentAp(null) ?: false) {
+                        if (mDelegate?.checkCurrentNetwork(null) ?: false) {
                             getHandler()?.obtainMessage(MSG_START_SERVER)?.sendToTarget()
                         }
                     }
                     WIFI_STATE_DISABLED -> {
-                        mDelegate?.checkCurrentAp(null)
+                        mDelegate?.checkCurrentNetwork(null)
                     }
                 }
             } else if (action.equals(NETWORK_STATE_CHANGED_ACTION)) {
@@ -217,14 +217,14 @@ class MainActivity : ImmersiveFragmentActivity() {
                 Log.i("WifiApReceiver", "WifiInfo " + wifiInfo?.toString() ?: "null")
                 if (wifiInfo != null) {
                     if (wifiInfo.bssid != null && !wifiInfo.bssid.equals("<none>")) // is a bug in ui
-                        mDelegate?.checkCurrentAp(wifiInfo)
+                        mDelegate?.checkCurrentNetwork(wifiInfo)
                 }
             } else if (action.equals(CONNECTIVITY_ACTION)) {
                 var info = intent.getParcelableExtra<NetworkInfo>(EXTRA_NETWORK_INFO)
                 Log.i("WifiApReceiver", "NetworkInfo " + info?.toString() ?: "null")
                 if (info != null && info.type == TYPE_MOBILE && (info.state == NetworkInfo.State.CONNECTED ||
                         info.state == NetworkInfo.State.DISCONNECTED)) {
-                    mDelegate?.checkCurrentAp(null)
+                    mDelegate?.checkCurrentNetwork(null)
                 }
             }
         }
@@ -271,7 +271,7 @@ class MainActivity : ImmersiveFragmentActivity() {
         super.handleMessage(msg)
         when (msg.what) {
             MSG_SERVICE_STARTED -> {
-                if (mDelegate?.checkCurrentAp(null) ?: false) {
+                if (mDelegate?.checkCurrentNetwork(null) ?: false) {
                     getHandler()?.obtainMessage(MSG_START_SERVER)?.sendToTarget()
                 }
             }

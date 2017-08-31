@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="main_activity_delegate_array">
+        <item>@mipmap/wifi</item>
+        <item>@mipmap/hotspot</item>
+        <item>@mipmap/wifi_off</item>
+    </integer-array>
+    <array name="main_activity_delegate_array2">
+        <item>@mipmap/wifi</item>
+        <item>@mipmap/hotspot</item>
+        <item>@mipmap/wifi_off</item>
+    </array>
+</resources>

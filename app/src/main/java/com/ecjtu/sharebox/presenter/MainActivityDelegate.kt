@@ -37,6 +37,7 @@ import com.ecjtu.sharebox.ui.dialog.WifiBottomSheetDialog
 import com.ecjtu.sharebox.ui.fragment.FilePickDialogFragment
 import com.ecjtu.sharebox.ui.fragment.HelpFragment
 import com.ecjtu.sharebox.ui.fragment.WebViewFragment
+import com.ecjtu.sharebox.ui.state.StateMachine
 import com.ecjtu.sharebox.util.activity.ActivityUtil
 import com.ecjtu.sharebox.util.photo.CapturePhotoHelper
 import com.ecjtu.sharebox.util.photo.PickPhotoHelper
@@ -86,6 +87,8 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
     private var mImageHelper: PickPhotoHelper? = null
 
     private val DELAY_TIME = 8000L
+
+    private var mWifiImageStateMachine: StateMachine? = null
 
     companion object {
         const val DEBUG = true
@@ -158,7 +161,16 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
 
         mWifiImage = findViewById(R.id.image_wifi) as ImageView
 
-        checkCurrentAp(null)
+        mWifiImageStateMachine = object : StateMachine(owner, R.array.main_activity_delegate_array, mWifiImage) {
+            override fun updateView(index: Int) {
+                val value = getArrayValueByIndex(index)
+                value?.let {
+                    mWifiImage.setImageResource(value)
+                }
+            }
+        }
+
+        checkCurrentNetwork(null)
 
         initDrawerLayout()
 
@@ -269,7 +281,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         }
     }
 
-    fun checkCurrentAp(info: WifiInfo?): Boolean {
+    fun checkCurrentNetwork(info: WifiInfo?): Boolean {
         var hasAccess = false
 
         if (NetworkUtil.isWifi(owner) || info != null) {
@@ -282,7 +294,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
             mApName.setText(getRealName(wifiInfo!!.ssid))
             mWifiButton.isActivated = true
             mHotspotButton.isActivated = false
-            mWifiImage.setImageResource(R.mipmap.wifi)
+            mWifiImageStateMachine?.updateView(0)
             hasAccess = true
             owner.getMainApplication().getSavedInstance().put(Constants.AP_STATE, Constants.NetWorkState.WIFI)
 
@@ -292,14 +304,14 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
             mApName.setText(getRealName(config.SSID))
             mWifiButton.isActivated = false
             mHotspotButton.isActivated = true
-            mWifiImage.setImageResource(R.mipmap.hotspot)
+            mWifiImageStateMachine?.updateView(1)
             hasAccess = true
             owner.getMainApplication().getSavedInstance().put(Constants.AP_STATE, Constants.NetWorkState.AP)
 
             owner.getHandler()?.obtainMessage(MainActivity.MSG_START_SERVER)?.sendToTarget()
         } else if (NetworkUtil.isMobile(owner)) {
             mApName.setText(R.string.cellular)
-            mWifiImage.setImageResource(R.mipmap.wifi_off)
+            mWifiImageStateMachine?.updateView(2)
 
             mWifiButton.isActivated = false
             mHotspotButton.isActivated = false
@@ -307,7 +319,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
             owner.getMainApplication().getSavedInstance().put(Constants.AP_STATE, Constants.NetWorkState.MOBILE)
         } else {
             mApName.setText(R.string.no_internet)
-            mWifiImage.setImageResource(R.mipmap.wifi_off)
+            mWifiImageStateMachine?.updateView(2)
             mWifiButton.isActivated = false
             mHotspotButton.isActivated = false
             hasAccess = false
