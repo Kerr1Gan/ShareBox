@@ -149,7 +149,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
                 return null;
             }
         });
-        dlg.setupItem(new String[]{mContext.getString(R.string.open), "其他方式打开", mContext.getString(R.string.cancel)});
+        dlg.setupItem(new String[]{mContext.getString(R.string.open), mContext.getString(R.string.open_by_others), mContext.getString(R.string.cancel)});
         dlg.show();
         return true;
     }

@@ -58,7 +58,7 @@ class IjkVideoFragment : Fragment(), GestureDetector.OnGestureListener, View.OnT
         }
         var arg = arguments
         if (arg != null) {
-            val uri = arg.getString("extra_uri_path", "")
+            val uri = arg.getString(EXTRA_URI_PATH, "")
             if (!TextUtils.isEmpty(uri)) {
                 mVideoView?.setVideoPath(uri)
                 mVideoView?.start()

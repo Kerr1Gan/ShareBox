@@ -14,6 +14,7 @@
     <string name="loading">LOADING</string>
     <string name="close">关闭</string>
     <string name="open">打开</string>
+    <string name="open_by_others">其他方式打开</string>
     <string name="name_too_long">名字太长啦呆逼</string>
     <string name="no_permission">No Permission</string>
     <string name="failure">失败</string>
