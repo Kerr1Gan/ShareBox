@@ -34,7 +34,7 @@ class IjkVideoFragment : Fragment(), GestureDetector.OnGestureListener, View.OnT
     private var mOrientationListener: OrientationEventListener? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.activity_video_player, container, false)
+        return inflater?.inflate(R.layout.fragment_ijk_video_player, container, false)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {

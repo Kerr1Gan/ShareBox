@@ -13,25 +13,26 @@ import org.ecjtu.easyserver.server.DeviceInfo
 /**
  * Created by KerriGan on 2017/7/16.
  */
-class InternetFilePickDialog:FilePickDialog{
+class InternetFilePickDialog : FilePickDialog {
 
     private val mDeviceInfo: DeviceInfo
 
-    constructor(context: Context, activity: Activity? = null,deviceInfo:DeviceInfo):super(context,activity){
-        mDeviceInfo=deviceInfo
+    constructor(context: Context, activity: Activity? = null, deviceInfo: DeviceInfo) : super(context, activity) {
+        mDeviceInfo = deviceInfo
     }
-    private var mName:String? =null
 
-    fun setup(name:String,holder:MutableMap<String,TabItemHolder>){
-        mName=name
+    private var mName: String? = null
+
+    fun setup(name: String, holder: MutableMap<String, TabItemHolder>) {
+        mName = name
         setTabItemsHolder(holder)
     }
 
     override fun initView(vg: ViewGroup) {
         super.initView(vg)
         refresh(false)
-        var toolbar=vg.findViewById(R.id.toolbar) as Toolbar
-        toolbar.title=mName
+        var toolbar = vg.findViewById(R.id.toolbar) as Toolbar
+        toolbar.title = mName
         toolbar.menu.clear()
     }
 
@@ -39,7 +40,7 @@ class InternetFilePickDialog:FilePickDialog{
 //        super.initData()
     }
 
-    override fun getFileAdapter(vg: FileExpandableListView,title:String): FileExpandableAdapter {
+    override fun getFileAdapter(vg: FileExpandableListView, title: String): FileExpandableAdapter {
         return InternetFileExpandableAdapter(vg).apply { setDeviceInfo(mDeviceInfo) }
     }
 

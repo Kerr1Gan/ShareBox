@@ -37,7 +37,7 @@ public class SelectPreference extends DialogPreference {
     protected void onPrepareDialogBuilder(AlertDialog.Builder builder) {
         super.onPrepareDialogBuilder(builder);
         builder.setTitle(R.string.do_you_want_to_clear_the_cache);
-        builder.setMessage(getContext().getString(R.string.you_will_clear_cache,getSharedPreferences().getString(getKey(),"")));
+        builder.setMessage(getContext().getString(R.string.you_will_clear_cache, getSharedPreferences().getString(getKey(), "")));
         builder.setPositiveButton(R.string.positive, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

@@ -5,13 +5,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.net.Uri
-import android.net.wifi.WifiConfiguration
 import android.os.Handler
-import android.provider.Settings
 import android.support.design.widget.TextInputEditText
 import android.support.design.widget.TextInputLayout
-import android.support.v4.app.ActivityCompat
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -20,12 +16,9 @@ import android.widget.TextView
 import android.widget.Toast
 import com.dd.CircularProgressButton
 import com.ecjtu.sharebox.R
-import com.ecjtu.sharebox.presenter.MainActivityDelegate
-import com.ecjtu.sharebox.ui.view.CircleProgressView
 import com.ecjtu.sharebox.util.activity.ActivityUtil
 import org.ecjtu.channellibrary.wifiutil.NetworkUtil
 import org.ecjtu.channellibrary.wifiutil.WifiUtil
-import kotlin.concurrent.thread
 
 /**
  * Created by KerriGan on 2017/6/2.
@@ -94,7 +87,7 @@ open class WifiBottomSheetDialog : CloseBottomSheetDialog {
         (vg.findViewById(R.id.text_title) as TextView).setText(R.string.hotspot)
     }
 
-    private fun usingLast(){
+    private fun usingLast() {
         var config = NetworkUtil.getHotSpotConfiguration(context)
         mHotspotName?.setText(config.SSID)
         mHotspotPwd?.setText(config.preSharedKey)
@@ -184,7 +177,7 @@ open class WifiBottomSheetDialog : CloseBottomSheetDialog {
         mCircularButton = vg.findViewById(R.id.circle_progress) as CircularProgressButton
         mCircularButton?.isIndeterminateProgressMode = true
         mCircularButton?.setOnClickListener {
-            if(mHotspotName?.text.toString()=="" || mHotspotPwd?.text.toString()==""){
+            if (mHotspotName?.text.toString() == "" || mHotspotPwd?.text.toString() == "") {
                 Toast.makeText(context, "请正确填入名字和密码", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }

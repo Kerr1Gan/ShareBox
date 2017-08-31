@@ -16,7 +16,7 @@ import com.ecjtu.sharebox.ui.view.web.SimpleWebChromeClient
 import com.ecjtu.sharebox.ui.view.web.SimpleWebViewClient
 import com.ecjtu.sharebox.util.activity.ActivityUtil
 import com.ecjtu.sharebox.util.file.FileUtil
-import java.io.*
+import java.io.File
 
 
 /**
@@ -109,7 +109,7 @@ class WebViewFragment : Fragment() {
 
     private fun toDoWithMIME(mime: String?, url: String) {
         if (mime?.startsWith("text") == true) {
-            var arr=FileUtil.readFileContent(File(url))
+            var arr = FileUtil.readFileContent(File(url))
             if (arr != null) {
                 mWebView?.loadDataWithBaseURL(null, String(arr), mime, "utf-8", null)
             }

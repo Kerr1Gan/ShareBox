@@ -7,7 +7,6 @@ import android.widget.ExpandableListView;
 import com.ecjtu.sharebox.ui.adapter.FileExpandableAdapter;
 import com.ecjtu.sharebox.ui.dialog.FilePickDialog;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -28,22 +27,22 @@ public class FileExpandableListView extends ExpandableListView {
         super(context, attrs, defStyleAttr);
     }
 
-    private FileExpandableAdapter mAdapter=getFileExpandableAdapter();
+    private FileExpandableAdapter mAdapter = getFileExpandableAdapter();
 
-    public void initData(FilePickDialog.TabItemHolder holder,List<FileExpandableAdapter.VH> oldCache){
-        mAdapter.initData(holder,oldCache);
+    public void initData(FilePickDialog.TabItemHolder holder, List<FileExpandableAdapter.VH> oldCache) {
+        mAdapter.initData(holder, oldCache);
     }
 
-    public void loadedData(){
+    public void loadedData() {
         mAdapter.loadedData();
     }
 
-    public void setFileExpandableAdapter(FileExpandableAdapter adapter){
-        mAdapter=adapter;
+    public void setFileExpandableAdapter(FileExpandableAdapter adapter) {
+        mAdapter = adapter;
     }
 
-    public FileExpandableAdapter getFileExpandableAdapter(){
-        if(mAdapter==null) mAdapter=new FileExpandableAdapter(this);
+    public FileExpandableAdapter getFileExpandableAdapter() {
+        if (mAdapter == null) mAdapter = new FileExpandableAdapter(this);
         return mAdapter;
     }
 }

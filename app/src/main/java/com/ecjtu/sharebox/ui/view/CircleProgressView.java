@@ -37,13 +37,13 @@ public class CircleProgressView extends View {
 
     private int mProgressColor;
 
-    private boolean mSolid=true;
+    private boolean mSolid = true;
 
-    private int mProgressDis=10;
+    private int mProgressDis = 10;
 
-    private boolean mAnimate=false;
+    private boolean mAnimate = false;
 
-    private int mAnimTime=0;
+    private int mAnimTime = 0;
 
     private float mCurProgress;
 
@@ -51,9 +51,9 @@ public class CircleProgressView extends View {
 
     private int mTextColor;
 
-    private String mStartText="";
+    private String mStartText = "";
 
-    private boolean mShowStartText=true;
+    private boolean mShowStartText = true;
 
     public CircleProgressView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -62,8 +62,8 @@ public class CircleProgressView extends View {
         mRectF = new RectF();
         mPaint = new Paint();
 
-        mBackgroundColor=getBackgroundColor();
-        mProgress=getBackgroundColor();
+        mBackgroundColor = getBackgroundColor();
+        mProgress = getBackgroundColor();
 
     }
 
@@ -86,14 +86,14 @@ public class CircleProgressView extends View {
         mPaint.setStrokeWidth(mCircleLineStrokeWidth);
         mPaint.setStyle(Paint.Style.STROKE);
         // 位置
-        mRectF.left = mCircleLineStrokeWidth / 2 + mProgressDis/2 -1; // 左上角x
-        mRectF.top = mCircleLineStrokeWidth / 2 + mProgressDis/2 -1; // 左上角y
-        mRectF.right = width - mCircleLineStrokeWidth / 2 - mProgressDis/2 +1; // 右下角x
-        mRectF.bottom = height - mCircleLineStrokeWidth / 2 - mProgressDis/2 +1; // 右下角y
+        mRectF.left = mCircleLineStrokeWidth / 2 + mProgressDis / 2 - 1; // 左上角x
+        mRectF.top = mCircleLineStrokeWidth / 2 + mProgressDis / 2 - 1; // 左上角y
+        mRectF.right = width - mCircleLineStrokeWidth / 2 - mProgressDis / 2 + 1; // 右下角x
+        mRectF.bottom = height - mCircleLineStrokeWidth / 2 - mProgressDis / 2 + 1; // 右下角y
 
 
         // 绘制圆圈，进度条背景
-        if(mSolid){
+        if (mSolid) {
             mPaint.setStyle(Paint.Style.FILL);
         }
         mPaint.setColor(mBackgroundColor);
@@ -113,9 +113,9 @@ public class CircleProgressView extends View {
         mPaint.setColor(mTextColor);
         mPaint.setStrokeWidth(mTxtStrokeWidth);
         String text;
-        if(mShowStartText){
-            text=mStartText;
-        }else
+        if (mShowStartText) {
+            text = mStartText;
+        } else
             text = mCurProgress + "%";
 
         int textHeight = height / 4;
@@ -123,7 +123,7 @@ public class CircleProgressView extends View {
         int textWidth = (int) mPaint.measureText(text, 0, text.length());
         mPaint.setStyle(Paint.Style.FILL);
 
-        Rect bound=new Rect();
+        Rect bound = new Rect();
         mPaint.getTextBounds(text, 0, text.length(), bound);
         int textCenter = getHeight() / 2 + (bound.height() - bound.bottom) / 2;
         canvas.drawText(text, width / 2 - textWidth / 2, textCenter, mPaint);
@@ -149,7 +149,7 @@ public class CircleProgressView extends View {
             canvas.drawText(text, width / 2 - textWidth / 2, 3 * height / 4 + textHeight / 2, mPaint);
         }
 
-        if(mAnimate)
+        if (mAnimate)
             startAnimate();
     }
 
@@ -162,21 +162,21 @@ public class CircleProgressView extends View {
     }
 
     public void setProgress(int progress) {
-        setProgress(progress,false,0);
+        setProgress(progress, false, 0);
     }
 
-    public boolean setProgress(int progress,boolean animate,int time){
-        if(mAnimate) return false;
+    public boolean setProgress(int progress, boolean animate, int time) {
+        if (mAnimate) return false;
         this.mProgress = progress;
-        if(!animate) {
-            mCurProgress=progress;
+        if (!animate) {
+            mCurProgress = progress;
             this.invalidate();
             return false;
         }
-        mShowStartText=false;
-        mAnimate=animate;
-        mAnimTime=time;
-        mIncrement=0;
+        mShowStartText = false;
+        mAnimate = animate;
+        mAnimTime = time;
+        mIncrement = 0;
         startAnimate();
         return true;
     }
@@ -218,52 +218,52 @@ public class CircleProgressView extends View {
         this.mProgressColor = progressColor;
     }
 
-    public void setSolid(boolean solid){
-        mSolid=solid;
+    public void setSolid(boolean solid) {
+        mSolid = solid;
     }
 
-    public boolean isSolid(){
+    public boolean isSolid() {
         return mSolid;
     }
 
-    private void startAnimate(){
-        if(mAnimate){
-            if(mIncrement==0)
-                mIncrement= (float) ((mProgress*1.0-mCurProgress*1.0)/(mAnimTime*1.0/100*1.0));
+    private void startAnimate() {
+        if (mAnimate) {
+            if (mIncrement == 0)
+                mIncrement = (float) ((mProgress * 1.0 - mCurProgress * 1.0) / (mAnimTime * 1.0 / 100 * 1.0));
 
-            mCurProgress+=mIncrement;
-            if(mCurProgress>mProgress){
-                mCurProgress=mProgress;
-                mAnimate=false;
+            mCurProgress += mIncrement;
+            if (mCurProgress > mProgress) {
+                mCurProgress = mProgress;
+                mAnimate = false;
             }
             postInvalidateDelayed(100);
         }
     }
 
-    public void setTextColor(int color){
-        mTextColor=color;
+    public void setTextColor(int color) {
+        mTextColor = color;
     }
 
-    public int getTextColor(){
+    public int getTextColor() {
         return mTextColor;
     }
 
-    public void setStartText(String text){
-        mCurProgress=0;
-        mProgress=0;
-        mAnimate=false;
-        mStartText=text;
-        mShowStartText=true;
+    public void setStartText(String text) {
+        mCurProgress = 0;
+        mProgress = 0;
+        mAnimate = false;
+        mStartText = text;
+        mShowStartText = true;
         invalidate();
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        mAnimate=false;
+        mAnimate = false;
     }
 
-    public boolean isAnimated(){
+    public boolean isAnimated() {
         return mAnimate;
     }
 }

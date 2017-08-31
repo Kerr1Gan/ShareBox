@@ -1,7 +1,6 @@
 package com.ecjtu.sharebox.ui.fragment
 
 import android.content.pm.ActivityInfo
-import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -9,9 +8,9 @@ import android.view.LayoutInflater
 import android.view.Surface
 import android.view.View
 import android.view.ViewGroup
-import com.ecjtu.sharebox.R
-import android.widget.VideoView
 import android.widget.MediaController
+import android.widget.VideoView
+import com.ecjtu.sharebox.R
 
 
 /**

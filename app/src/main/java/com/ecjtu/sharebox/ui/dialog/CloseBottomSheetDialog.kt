@@ -11,24 +11,24 @@ import com.ecjtu.sharebox.R
 /**
  * Created by KerriGan on 2017/6/5.
  */
-open class CloseBottomSheetDialog:BaseBottomSheetDialog,View.OnClickListener{
+open class CloseBottomSheetDialog : BaseBottomSheetDialog, View.OnClickListener {
 
-    constructor(context: Context, activity: Activity? = null,theme :Int =0):super(context,activity,theme){
+    constructor(context: Context, activity: Activity? = null, theme: Int = 0) : super(context, activity, theme) {
         //do nothing
     }
 
     override fun onCreateView(): View? {
-        var bg=layoutInflater.inflate(R.layout.dialog_close,null)
+        var bg = layoutInflater.inflate(R.layout.dialog_close, null)
         bg.setBackgroundColor(Color.TRANSPARENT)
         return bg
     }
 
-    override fun onViewCreated(view: View?):Boolean {
+    override fun onViewCreated(view: View?): Boolean {
         super.onViewCreated(view)
         transparentDialog()
-        var v=findViewById(R.id.btn_close)
+        var v = findViewById(R.id.btn_close)
 
-        (v?.parent as ViewGroup).setOnClickListener(){
+        (v?.parent as ViewGroup).setOnClickListener() {
             dismiss()
         }
         return false
@@ -38,8 +38,8 @@ open class CloseBottomSheetDialog:BaseBottomSheetDialog,View.OnClickListener{
         dismiss()
     }
 
-    open fun setTitle(title:String,vg:ViewGroup? =null){
-        if(vg==null)
+    open fun setTitle(title: String, vg: ViewGroup? = null) {
+        if (vg == null)
             (findViewById(R.id.text_title) as TextView).setText(title)
         else
             (vg.findViewById(R.id.text_title) as TextView).setText(title)
