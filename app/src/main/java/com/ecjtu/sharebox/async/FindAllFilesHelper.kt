@@ -12,6 +12,10 @@ import java.io.File
  */
 class FindAllFilesHelper(val context: Context) {
 
+    companion object {
+        private const val TAG = "FindAllFilesHelper"
+    }
+
     private var mHandler: Handler? = null
 
     private var mHandlerThread: HandlerThread? = null
@@ -23,7 +27,7 @@ class FindAllFilesHelper(val context: Context) {
     private var mCallback: ((map: MutableMap<String, List<String>>) -> Unit)? = null
 
     init {
-        mHandlerThread = HandlerThread("Handler1")
+        mHandlerThread = HandlerThread(TAG)
         mHandlerThread?.start()
         val looper = mHandlerThread?.looper
         mHandler = object : Handler(looper) {
