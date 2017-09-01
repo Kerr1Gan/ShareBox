@@ -23,20 +23,15 @@ import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
 import com.ecjtu.sharebox.service.MainService
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.InterstitialAd
-import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.reward.RewardItem
-import com.google.android.gms.ads.reward.RewardedVideoAd
-import com.google.android.gms.ads.reward.RewardedVideoAdListener
+import com.ecjtu.sharebox.util.admob.AdmobCallback
+import com.ecjtu.sharebox.util.admob.AdmobManager
 import org.ecjtu.easyserver.IAidlInterface
 import org.ecjtu.easyserver.server.DeviceInfo
 import org.ecjtu.easyserver.server.impl.server.EasyServer
 import org.ecjtu.easyserver.server.impl.service.EasyServerService
 import org.ecjtu.easyserver.server.util.cache.ServerInfoParcelableHelper
 
-class MainActivity : ImmersiveFragmentActivity(), RewardedVideoAdListener {
+class MainActivity : ImmersiveFragmentActivity() {
 
     companion object {
         const private val TAG = "MainActivity"
@@ -46,7 +41,6 @@ class MainActivity : ImmersiveFragmentActivity(), RewardedVideoAdListener {
         @JvmStatic
         val MSG_CLOSE_APP = -1
         const val DEBUG = true
-        private const val TEST_DEVICE = "20EDA9412005F81D6EBABCBCF65F02E2"
     }
 
     private var mDelegate: MainActivityDelegate? = null
@@ -59,7 +53,7 @@ class MainActivity : ImmersiveFragmentActivity(), RewardedVideoAdListener {
 
     private var mService: IAidlInterface? = null
 
-    private var mRewardedVideoAd: RewardedVideoAd? = null
+    private var mAdManager: AdmobManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,7 +97,6 @@ class MainActivity : ImmersiveFragmentActivity(), RewardedVideoAdListener {
         var name = PreferenceManager.getDefaultSharedPreferences(this).getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
         (findViewById(R.id.text_name) as TextView).setText(name)
 
-        mRewardedVideoAd?.resume(this)
     }
 
     override fun onStop() {
@@ -113,11 +106,9 @@ class MainActivity : ImmersiveFragmentActivity(), RewardedVideoAdListener {
 
     override fun onPause() {
         super.onPause()
-        mRewardedVideoAd?.pause(this)
     }
 
     override fun onDestroy() {
-        mRewardedVideoAd?.destroy(this)
         refreshing = false
         mDelegate?.onDestroy()
         getHandler()?.removeMessages(MSG_LOADING_SERVER)
@@ -372,61 +363,24 @@ class MainActivity : ImmersiveFragmentActivity(), RewardedVideoAdListener {
     }
 
     private fun initAd() {
-        mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this)
-        mRewardedVideoAd?.rewardedVideoAdListener = this
-        loadRewardedVideoAd()
-        val ad2 = InterstitialAd(this)
-        ad2.adUnitId = getString(R.string.admob_ad_02)
-        ad2.loadAd(AdRequest.Builder().addTestDevice(TEST_DEVICE).build())
-        ad2.adListener = object : AdListener() {
-            override fun onAdLoaded() {
-                super.onAdLoaded()
-                ad2.show()
+        mAdManager = AdmobManager(this)
+        mAdManager?.loadInterstitialAd(getString(R.string.admob_ad_02), object : AdmobCallback {
+            override fun onLoaded() {
+                mAdManager?.getLatestInterstitialAd()?.show()
             }
 
-            override fun onAdClosed() {
-                super.onAdClosed()
-                ad2.loadAd(AdRequest.Builder().build())
+            override fun onError() {
+                mAdManager?.loadInterstitialAd(getString(R.string.admob_ad_02), this)
             }
-        }
+
+            override fun onOpened() {
+            }
+
+            override fun onClosed() {
+                mAdManager = null
+            }
+
+        })
     }
 
-    private fun loadRewardedVideoAd() {
-        val adRequest = AdRequest.Builder()
-        if (DEBUG) {
-            adRequest.addTestDevice(TEST_DEVICE)
-        }
-        mRewardedVideoAd?.loadAd(getString(R.string.admob_ad_01), adRequest.build())
-    }
-
-    override fun onRewardedVideoAdClosed() {
-        Log.d("AdMob", "onRewardedVideoAdClosed")
-    }
-
-    override fun onRewardedVideoAdLeftApplication() {
-        Log.d("AdMob", "onRewardedVideoAdLeftApplication")
-    }
-
-    override fun onRewardedVideoAdLoaded() {
-        Log.d("AdMob", "onRewardedVideoAdLoaded")
-        if (mRewardedVideoAd?.isLoaded == true) {
-            mRewardedVideoAd?.show()
-        }
-    }
-
-    override fun onRewardedVideoAdOpened() {
-        Log.d("AdMob", "onRewardedVideoAdOpened")
-    }
-
-    override fun onRewarded(p0: RewardItem?) {
-        Log.d("AdMob", "onRewarded rewardItem " + p0.toString())
-    }
-
-    override fun onRewardedVideoStarted() {
-        Log.d("AdMob", "onRewardedVideoStarted")
-    }
-
-    override fun onRewardedVideoAdFailedToLoad(p0: Int) {
-        Log.d("AdMob", "onRewardedVideoAdFailedToLoad code " + p0)
-    }
 }
