@@ -92,11 +92,11 @@
 
 -keep public class * implements  org.ecjtu.easyserver.servlet.BaseServlet{*;}
 
--keep public class org.ecjtu.easyserver.server.ServerManager{*;}
--keep public class org.ecjtu.easyserver.server.util.AssetsUtil{*;}
+#-keep public class org.ecjtu.easyserver.server.ServerManager{*;}
+#-keep public class org.ecjtu.easyserver.server.util.AssetsUtil{*;}
 -keep public class org.ecjtu.easyserver.server.DeviceInfo{*;}
 -keep public class org.ecjtu.easyserver.server.impl.service.EasyServerService{*;}
--keep public class org.ecjtu.easyserver.server.impl.server.EasyServer{*;}
+#-keep public class org.ecjtu.easyserver.server.impl.server.EasyServer{*;}
 -keep public class org.ecjtu.easyserver.server.ConversionFactory{*;}
 
 -keepnames class org.ecjtu.easyserver.server.impl.service.EasyServerService$* {*;}
@@ -104,3 +104,4 @@
 -keep public class * extends android.app.Fragment
 -keep public class * extends org.ecjtu.easyserver.server.util.cache.FileCacheHelper{*;}
 -keep public class * extends android.os.IInterface{*;}
+-keep public class org.ecjtu.easyserver.server.Constants{*;}

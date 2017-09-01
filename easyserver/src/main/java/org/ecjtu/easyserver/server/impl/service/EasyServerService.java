@@ -10,6 +10,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
+import android.os.Looper;
+import android.os.MessageQueue;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
@@ -33,7 +35,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.ecjtu.easyserver.server.impl.server.EasyServer.TAG;
 import static org.ecjtu.easyserver.server.impl.server.EasyServer.TYPE_AP;
 import static org.ecjtu.easyserver.server.impl.server.EasyServer.TYPE_NOTHING;
 import static org.ecjtu.easyserver.server.impl.server.EasyServer.TYPE_P2P;
@@ -42,7 +43,7 @@ import static org.ecjtu.easyserver.server.impl.server.EasyServer.TYPE_P2P;
 /**
  * Created by KerriGan on 2016/4/24.
  */
-public class EasyServerService extends Service implements HostInterface.ICallback{
+public class EasyServerService extends Service implements HostInterface.ICallback {
 
     private EasyServer mEasyServer = null;
 
@@ -228,12 +229,20 @@ public class EasyServerService extends Service implements HostInterface.ICallbac
 
     @Override
     public void ready(Object server, String hostIP, int port) {
-        Log.e("easyserver","server ready "+server.toString());
-        SharedPreferences.Editor editor=PreferenceManager.getDefaultSharedPreferences(this).edit();
-        editor.putString(Constants.PREF_KEY_HOST_PORT,hostIP);
-        editor.putInt(Constants.PREF_KEY_HOST_PORT,port);
-        editor.putLong(Constants.PREF_OBSERVER_CHANGE,System.currentTimeMillis());
+        Log.e("easyserver", "server ready " + server.toString());
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        editor.putString(Constants.PREF_KEY_HOST_PORT, hostIP);
+        editor.putInt(Constants.PREF_KEY_HOST_PORT, port);
         editor.apply();
+        Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
+            @Override
+            public boolean queueIdle() {
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences
+                        (EasyServerService.this).edit();
+                editor.putLong(Constants.PREF_OBSERVER_CHANGE,System.currentTimeMillis()).apply();
+                return false;//执行完 remove掉IdleHandler，true则保留 需要手动调用removeHandler
+            }
+        });
     }
 
     public class NotificationClickReceiver extends BroadcastReceiver {
@@ -250,7 +259,7 @@ public class EasyServerService extends Service implements HostInterface.ICallbac
                             WifiUtil.openHotSpot(manager, false, "", "");
                             context.stopService(new Intent(context, EasyServerService.class));
                             //finish app
-                            Intent closeIntent=new Intent(Constants.ACTION_CLOSE_SERVER);
+                            Intent closeIntent = new Intent(Constants.ACTION_CLOSE_SERVER);
                             context.sendBroadcast(closeIntent);
 
                         } catch (IllegalArgumentException e) {
