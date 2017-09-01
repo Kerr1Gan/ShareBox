@@ -17,7 +17,7 @@ public class StorageUtil {
      * 获取内置和外置sd卡路径
      * @param context
      * @param isRemove
-     * @return
+     * @returnd
      */
     public static String getStoragePath(Context context, boolean isRemove) {
 
