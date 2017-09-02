@@ -10,8 +10,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
-import android.os.Looper;
-import android.os.MessageQueue;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
@@ -95,10 +93,8 @@ public class EasyServerService extends Service implements HostInterface.ICallbac
 
     @Override
     public IBinder onBind(Intent intent) {
-        return (IBinder) mBinder;
+        return mBinder.asBinder();
     }
-
-    private Context mContext;
 
     @Override
     public void onCreate() {
@@ -229,20 +225,12 @@ public class EasyServerService extends Service implements HostInterface.ICallbac
 
     @Override
     public void ready(Object server, String hostIP, int port) {
-        Log.e("easyserver", "server ready " + server.toString());
+        Log.d("easyserver", "server ready " + server.toString());
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
         editor.putString(Constants.PREF_KEY_HOST_PORT, hostIP);
         editor.putInt(Constants.PREF_KEY_HOST_PORT, port);
+        editor.putLong(Constants.PREF_OBSERVER_CHANGE, System.currentTimeMillis()).apply();
         editor.apply();
-        Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
-            @Override
-            public boolean queueIdle() {
-                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences
-                        (EasyServerService.this).edit();
-                editor.putLong(Constants.PREF_OBSERVER_CHANGE,System.currentTimeMillis()).apply();
-                return false;//执行完 remove掉IdleHandler，true则保留 需要手动调用removeHandler
-            }
-        });
     }
 
     public class NotificationClickReceiver extends BroadcastReceiver {
@@ -263,7 +251,6 @@ public class EasyServerService extends Service implements HostInterface.ICallbac
                             context.sendBroadcast(closeIntent);
 
                         } catch (IllegalArgumentException e) {
-                            mContext = null;
                         } finally {
                             System.exit(0);
                         }

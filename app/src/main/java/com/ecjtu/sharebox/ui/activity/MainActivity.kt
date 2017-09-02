@@ -284,32 +284,14 @@ class MainActivity : ImmersiveFragmentActivity() {
 
     private val mServiceConnection = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName?) {
-            Log.e(TAG, "onServiceDisconnected " + name.toString())
+            Log.e(TAG, "onServiceDisconnected " + name.toString()) // 子进程服务挂掉后会被回调
         }
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             Log.e(TAG, "onServiceConnected " + name.toString())
             mService = IAidlInterface.Stub.asInterface(service)
-            getHandler()?.obtainMessage(MSG_SERVICE_STARTED)?.sendToTarget()
 
-//            EasyServer.setServerListener { server, hostIP, port ->
-//                TODO("主进程无法得到回调，BugFix")
-//                var name = PreferenceManager.getDefaultSharedPreferences(this@MainActivity).
-//                        getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
-//                registerServerInfo(hostIP, port, name, mutableMapOf())
-//                EasyServer.setServerListener(null)
-//                if (!TextUtils.isEmpty(hostIP)) {
-//                    getHandler()?.removeMessages(MSG_LOADING_SERVER)
-//                    getHandler()?.sendEmptyMessage(MSG_START_SERVER)
-//                }
-//                runOnUiThread { mDelegate?.doSearch() }
-//
-//                val deviceInfo = getMainApplication().getSavedInstance().get(Constants.KEY_INFO_OBJECT) as DeviceInfo
-//                val helper = ServerInfoParcelableHelper(this@MainActivity.filesDir.absolutePath)
-//                helper.put(Constants.KEY_INFO_OBJECT, deviceInfo)
-//                val intent = EasyServerService.getSetupServerIntent(this@MainActivity, Constants.KEY_INFO_OBJECT)
-//                this@MainActivity.startService(intent)
-//            }
+            getHandler()?.obtainMessage(MSG_SERVICE_STARTED)?.sendToTarget()
         }
     }
 
