@@ -32,6 +32,8 @@
   **[] $VALUES;
   public *;
 }
+# for DexGuard only
+-keepresourcexmlelements manifest/application/meta-data@value=GlideModule
 #glide end\
 
 #指定代码的压缩级别

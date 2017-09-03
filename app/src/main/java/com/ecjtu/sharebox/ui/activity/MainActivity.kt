@@ -104,17 +104,19 @@ class MainActivity : ImmersiveFragmentActivity() {
 
         //ad
         initAd()
+
+        mReceiver = WifiApReceiver()
     }
 
 
     override fun onResume() {
         super.onResume()
-        mReceiver = WifiApReceiver()
         var filter = IntentFilter()
         filter.addAction(mReceiver?.ACTION_WIFI_AP_CHANGED)
         filter.addAction(mReceiver?.WIFI_STATE_CHANGED_ACTION)
         filter.addAction(mReceiver?.NETWORK_STATE_CHANGED_ACTION)
         filter.addAction(mReceiver?.CONNECTIVITY_ACTION)
+        filter.addAction(org.ecjtu.easyserver.server.Constants.ACTION_CLOSE_SERVER)
         registerReceiver(mReceiver, filter)
 
         var name = PreferenceManager.getDefaultSharedPreferences(this).getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
@@ -272,6 +274,8 @@ class MainActivity : ImmersiveFragmentActivity() {
                         info.state == NetworkInfo.State.DISCONNECTED)) {
                     mDelegate?.checkCurrentNetwork(null)
                 }
+            } else if(action == org.ecjtu.easyserver.server.Constants.ACTION_CLOSE_SERVER){
+                getHandler()?.sendEmptyMessage(MSG_CLOSE_APP)
             }
         }
     }

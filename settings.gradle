@@ -1,1 +1,1 @@
-include ':app', ':channellibrary', ':circularprogresslibrary', ':materialstepper', ':ijkplayer-java', ':ijkplayer-exo', ':easyserver'
+include ':app', ':channellibrary', ':circularprogresslibrary', ':materialstepper', ':ijkplayer-java', ':ijkplayer-exo'
