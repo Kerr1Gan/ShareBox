@@ -55,27 +55,6 @@ class MainActivity : ImmersiveFragmentActivity() {
 
     private var mAdManager: AdmobManager? = null
 
-    private val mObserver = object : SharedPreferences.OnSharedPreferenceChangeListener {
-        override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-            val pref = PreferenceManager.getDefaultSharedPreferences(this@MainActivity)
-            val name = pref.getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
-            val hostIP = pref.getString(org.ecjtu.easyserver.server.Constants.PREF_KEY_HOST_IP, "")
-            val port = pref.getInt(org.ecjtu.easyserver.server.Constants.PREF_KEY_HOST_PORT, 0)
-            if (!TextUtils.isEmpty(hostIP)) {
-                registerServerInfo(hostIP, port, name, mutableMapOf())
-                val deviceInfo = getMainApplication().getSavedInstance().get(Constants.KEY_INFO_OBJECT) as DeviceInfo
-                val helper = ServerInfoParcelableHelper(this@MainActivity.filesDir.absolutePath)
-                helper.put(Constants.KEY_INFO_OBJECT, deviceInfo)
-                val intent = EasyServerService.getSetupServerIntent(this@MainActivity, Constants.KEY_INFO_OBJECT)
-                this@MainActivity.startService(intent)
-
-                getHandler()?.removeMessages(MSG_LOADING_SERVER)
-                getHandler()?.sendEmptyMessage(MSG_START_SERVER)
-            }
-            runOnUiThread { mDelegate?.doSearch() }
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -100,9 +79,6 @@ class MainActivity : ImmersiveFragmentActivity() {
         startService(intent)
         bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE)
 
-        //observer
-//        PreferenceManager.getDefaultSharedPreferences(this@MainActivity).registerOnSharedPreferenceChangeListener(mObserver)
-
         //ad
         initAd()
 
@@ -118,7 +94,7 @@ class MainActivity : ImmersiveFragmentActivity() {
         filter.addAction(mReceiver?.NETWORK_STATE_CHANGED_ACTION)
         filter.addAction(mReceiver?.CONNECTIVITY_ACTION)
         filter.addAction(org.ecjtu.easyserver.server.Constants.ACTION_CLOSE_SERVER)
-        filter.addAction(org.ecjtu.easyserver.server.Constants.ACTION_CLOSE_SERVER)
+        filter.addAction(org.ecjtu.easyserver.server.Constants.ACTION_UPDATE_SERVER)
         registerReceiver(mReceiver, filter)
 
         var name = PreferenceManager.getDefaultSharedPreferences(this).getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
@@ -138,7 +114,6 @@ class MainActivity : ImmersiveFragmentActivity() {
         refreshing = false
         mDelegate?.onDestroy()
         getHandler()?.removeMessages(MSG_LOADING_SERVER)
-//        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(mObserver)
         try {
             unbindService(mServiceConnection)
         } catch (ignore: Exception) {
@@ -277,6 +252,23 @@ class MainActivity : ImmersiveFragmentActivity() {
                 }
             } else if(action == org.ecjtu.easyserver.server.Constants.ACTION_CLOSE_SERVER){
                 getHandler()?.sendEmptyMessage(MSG_CLOSE_APP)
+            } else if(action == org.ecjtu.easyserver.server.Constants.ACTION_UPDATE_SERVER){
+                val pref = PreferenceManager.getDefaultSharedPreferences(this@MainActivity)
+                val name = pref.getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
+                val hostIP = pref.getString(org.ecjtu.easyserver.server.Constants.PREF_KEY_HOST_IP, "")
+                val port = pref.getInt(org.ecjtu.easyserver.server.Constants.PREF_KEY_HOST_PORT, 0)
+                if (!TextUtils.isEmpty(hostIP)) {
+                    registerServerInfo(hostIP, port, name, mutableMapOf())
+                    val deviceInfo = getMainApplication().getSavedInstance().get(Constants.KEY_INFO_OBJECT) as DeviceInfo
+                    val helper = ServerInfoParcelableHelper(this@MainActivity.filesDir.absolutePath)
+                    helper.put(Constants.KEY_INFO_OBJECT, deviceInfo)
+                    val intent = EasyServerService.getSetupServerIntent(this@MainActivity, Constants.KEY_INFO_OBJECT)
+                    this@MainActivity.startService(intent)
+
+                    getHandler()?.removeMessages(MSG_LOADING_SERVER)
+                    getHandler()?.sendEmptyMessage(MSG_START_SERVER)
+                }
+                runOnUiThread { mDelegate?.doSearch() }
             }
         }
     }
