@@ -101,7 +101,7 @@ class MainActivity : ImmersiveFragmentActivity() {
         bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE)
 
         //observer
-        PreferenceManager.getDefaultSharedPreferences(this@MainActivity).registerOnSharedPreferenceChangeListener(mObserver)
+//        PreferenceManager.getDefaultSharedPreferences(this@MainActivity).registerOnSharedPreferenceChangeListener(mObserver)
 
         //ad
         initAd()
@@ -117,6 +117,7 @@ class MainActivity : ImmersiveFragmentActivity() {
         filter.addAction(mReceiver?.WIFI_STATE_CHANGED_ACTION)
         filter.addAction(mReceiver?.NETWORK_STATE_CHANGED_ACTION)
         filter.addAction(mReceiver?.CONNECTIVITY_ACTION)
+        filter.addAction(org.ecjtu.easyserver.server.Constants.ACTION_CLOSE_SERVER)
         filter.addAction(org.ecjtu.easyserver.server.Constants.ACTION_CLOSE_SERVER)
         registerReceiver(mReceiver, filter)
 
@@ -137,7 +138,7 @@ class MainActivity : ImmersiveFragmentActivity() {
         refreshing = false
         mDelegate?.onDestroy()
         getHandler()?.removeMessages(MSG_LOADING_SERVER)
-        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(mObserver)
+//        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(mObserver)
         try {
             unbindService(mServiceConnection)
         } catch (ignore: Exception) {
