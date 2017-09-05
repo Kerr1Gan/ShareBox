@@ -26,6 +26,7 @@ import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.PreferenceInfo
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.getMainApplication
+import com.ecjtu.sharebox.notification.ServerComingNotification
 import com.ecjtu.sharebox.ui.activity.ActionBarFragmentActivity
 import com.ecjtu.sharebox.ui.activity.MainActivity
 import com.ecjtu.sharebox.ui.activity.SettingsActivity
@@ -372,6 +373,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
                         val index = mClientSet.indexOf(obj)
                         if (index < 0) {
                             mClientSet.add(obj)
+                            ServerComingNotification(owner).buildServerComingNotification("搜索到新的设备",obj.name,"ShareBox:"+"找到新的设备").send()
                         } else {
                             val old = mClientSet.get(index)
                             old.name = obj.name

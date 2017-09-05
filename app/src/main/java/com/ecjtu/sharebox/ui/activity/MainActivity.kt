@@ -21,6 +21,7 @@ import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.PreferenceInfo
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.getMainApplication
+import com.ecjtu.sharebox.notification.ServerComingNotification
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
 import com.ecjtu.sharebox.service.MainService
 import com.ecjtu.sharebox.util.admob.AdmobCallback
@@ -94,13 +95,13 @@ class MainActivity : ImmersiveFragmentActivity() {
                     recyclerView.paddingBottom + getNavigationBarHeight(this))
         }
 
-        //observer
-        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(mObserver)
-
         //init service
         var intent = Intent(this, EasyServerService::class.java)
         startService(intent)
         bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE)
+
+        //observer
+        PreferenceManager.getDefaultSharedPreferences(this@MainActivity).registerOnSharedPreferenceChangeListener(mObserver)
 
         //ad
         initAd()
@@ -121,7 +122,6 @@ class MainActivity : ImmersiveFragmentActivity() {
 
         var name = PreferenceManager.getDefaultSharedPreferences(this).getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
         (findViewById(R.id.text_name) as TextView).setText(name)
-
     }
 
     override fun onStop() {
@@ -294,7 +294,6 @@ class MainActivity : ImmersiveFragmentActivity() {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             Log.e(TAG, "onServiceConnected " + name.toString())
             mService = IAidlInterface.Stub.asInterface(service)
-
             getHandler()?.obtainMessage(MSG_SERVICE_STARTED)?.sendToTarget()
         }
     }
