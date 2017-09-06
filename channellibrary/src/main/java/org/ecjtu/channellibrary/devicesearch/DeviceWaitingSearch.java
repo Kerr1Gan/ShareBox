@@ -75,7 +75,7 @@ public abstract class DeviceWaitingSearch extends Thread{
                     socket.setSoTimeout(0); // 连接超时还原成无穷大，阻塞式接收
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             if (socket != null) {

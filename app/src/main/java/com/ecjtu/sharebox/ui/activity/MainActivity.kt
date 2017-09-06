@@ -21,9 +21,9 @@ import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.PreferenceInfo
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.getMainApplication
-import com.ecjtu.sharebox.notification.ServerComingNotification
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
 import com.ecjtu.sharebox.service.MainService
+import com.ecjtu.sharebox.ui.fragment.SplashFragment
 import com.ecjtu.sharebox.util.admob.AdmobCallback
 import com.ecjtu.sharebox.util.admob.AdmobManager
 import org.ecjtu.easyserver.IAidlInterface
@@ -55,8 +55,12 @@ class MainActivity : ImmersiveFragmentActivity() {
 
     private var mAdManager: AdmobManager? = null
 
+    private var mMainService: MainService? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.ImageStatusBarStyle)
         super.onCreate(savedInstanceState)
+//        loadSplash()
         setContentView(R.layout.activity_main)
         var toolbar = findViewById(R.id.toolbar) as Toolbar
 
@@ -75,19 +79,14 @@ class MainActivity : ImmersiveFragmentActivity() {
         }
 
         //init service
-        var intent = Intent(this, EasyServerService::class.java)
+        val intent = Intent(this, MainService::class.java)
         startService(intent)
-        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE)
+        bindService(intent, mMainServiceConnection, Context.BIND_AUTO_CREATE)
 
         //ad
-        initAd()
+//        initAd()
 
         mReceiver = WifiApReceiver()
-    }
-
-
-    override fun onResume() {
-        super.onResume()
         var filter = IntentFilter()
         filter.addAction(mReceiver?.ACTION_WIFI_AP_CHANGED)
         filter.addAction(mReceiver?.WIFI_STATE_CHANGED_ACTION)
@@ -96,14 +95,18 @@ class MainActivity : ImmersiveFragmentActivity() {
         filter.addAction(org.ecjtu.easyserver.server.Constants.ACTION_CLOSE_SERVER)
         filter.addAction(org.ecjtu.easyserver.server.Constants.ACTION_UPDATE_SERVER)
         registerReceiver(mReceiver, filter)
+    }
 
+
+    override fun onResume() {
+        super.onResume()
+        getMainApplication().closeActivityByIndex(1)
         var name = PreferenceManager.getDefaultSharedPreferences(this).getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
         (findViewById(R.id.text_name) as TextView).setText(name)
     }
 
     override fun onStop() {
         super.onStop()
-        unregisterReceiver(mReceiver)
     }
 
     override fun onPause() {
@@ -114,9 +117,14 @@ class MainActivity : ImmersiveFragmentActivity() {
         refreshing = false
         mDelegate?.onDestroy()
         getHandler()?.removeMessages(MSG_LOADING_SERVER)
+        unregisterReceiver(mReceiver)
         try {
             unbindService(mServiceConnection)
-        } catch (ignore: Exception) {
+        } catch (ignore: java.lang.Exception) {
+        }
+        try {
+            unbindService(mMainServiceConnection)
+        } catch (ignore: java.lang.Exception) {
         }
         super.onDestroy()
     }
@@ -250,9 +258,9 @@ class MainActivity : ImmersiveFragmentActivity() {
                         info.state == NetworkInfo.State.DISCONNECTED)) {
                     mDelegate?.checkCurrentNetwork(null)
                 }
-            } else if(action == org.ecjtu.easyserver.server.Constants.ACTION_CLOSE_SERVER){
+            } else if (action == org.ecjtu.easyserver.server.Constants.ACTION_CLOSE_SERVER) {
                 getHandler()?.sendEmptyMessage(MSG_CLOSE_APP)
-            } else if(action == org.ecjtu.easyserver.server.Constants.ACTION_UPDATE_SERVER){
+            } else if (action == org.ecjtu.easyserver.server.Constants.ACTION_UPDATE_SERVER) {
                 val pref = PreferenceManager.getDefaultSharedPreferences(this@MainActivity)
                 val name = pref.getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
                 val hostIP = pref.getString(org.ecjtu.easyserver.server.Constants.PREF_KEY_HOST_IP, "")
@@ -312,7 +320,7 @@ class MainActivity : ImmersiveFragmentActivity() {
                     getMainApplication().getSavedInstance().remove(Constants.KEY_SERVER_PORT)
                 }
 
-                if (!flag && mDelegate != null && !mDelegate!!.hasDiscovered()) {
+                if (!flag && mDelegate != null) {
                     var name = PreferenceManager.getDefaultSharedPreferences(this).
                             getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
                     if (mService != null && mService!!.ip != null && mService!!.port != 0) {
@@ -326,11 +334,12 @@ class MainActivity : ImmersiveFragmentActivity() {
             MSG_CLOSE_APP -> {
                 try {
                     unbindService(mServiceConnection)
+                    unbindService(mMainServiceConnection)
                 } catch (e: java.lang.Exception) {
                 } finally {
                     stopService(Intent(this, EasyServerService::class.java))
                     stopService(Intent(this, MainService::class.java))
-                    System.exit(0)
+                    getMainApplication().closeApp()
                 }
             }
         }
@@ -383,6 +392,31 @@ class MainActivity : ImmersiveFragmentActivity() {
             }
 
         })
+    }
+
+    private fun loadSplash() {
+        val intent = ImmersiveFragmentActivity.newInstance(this, SplashFragment::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
+        startActivity(intent)
+    }
+
+    private val mMainServiceConnection = object : ServiceConnection {
+        override fun onServiceDisconnected(name: ComponentName?) {
+            mMainService = null
+        }
+
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            mMainService = (service as MainService.MainServiceBinder).service
+
+            //start server
+            var intent = Intent(this@MainActivity, EasyServerService::class.java)
+            startService(intent)
+            bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE)
+        }
+    }
+
+    fun getMainService(): MainService? {
+        return mMainService
     }
 
 }

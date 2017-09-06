@@ -25,6 +25,7 @@ abstract class SimpleNotification(val context: Context) {
         builder.setWhen(System.currentTimeMillis())
         builder.setTicker(ticker)
         builder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+        builder.setAutoCancel(true)
 
         val pref = PreferenceManager.getDefaultSharedPreferences(context)
         val ringtoneUri = pref.getString(context.getString(R.string.key_notification_message_ringtone),
@@ -40,9 +41,13 @@ abstract class SimpleNotification(val context: Context) {
         return builder
     }
 
-    open fun fullScreenIntent(builder: NotificationCompat.Builder?, requestCode: Int, intent: Intent, highPriority: Boolean? = false) {
-        val intent = PendingIntent.getActivity(context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        builder?.setFullScreenIntent(intent, highPriority!!)
+    open fun fullScreenIntent(builder: NotificationCompat.Builder?, requestCode: Int, intent: Intent?, highPriority: Boolean = false) {
+        if (intent == null) {
+            builder?.setFullScreenIntent(null, highPriority)
+        } else {
+            val pending = PendingIntent.getActivity(context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            builder?.setFullScreenIntent(pending, highPriority)
+        }
     }
 
     open fun sendNotification(id: Int, builder: NotificationCompat.Builder?, tag: String? = null) {

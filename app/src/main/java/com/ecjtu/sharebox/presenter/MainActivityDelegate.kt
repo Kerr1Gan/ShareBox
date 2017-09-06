@@ -72,8 +72,6 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
 
     private var mClientSet = mutableListOf<DeviceSearcher.DeviceBean>()
 
-    private var mDiscoverHelper: DiscoverHelper? = null
-
     private val mRequestPermission = arrayOf(Manifest.permission.ACCESS_NETWORK_STATE,
             Manifest.permission.CHANGE_NETWORK_STATE,
             Manifest.permission.ACCESS_NETWORK_STATE,
@@ -250,10 +248,9 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
             }
             R.id.refresh -> {
                 if (owner.refreshing) {
-                    mDiscoverHelper?.prepare(owner, true, true)
-                    mDiscoverHelper?.start(true, true)
+                    owner.getMainService()?.prepareAndStartHelper(true,true)
                 } else {
-                    mDiscoverHelper?.stop(true, true)
+                    owner.getMainService()?.stopHelper(true,true)
                 }
                 return true
             }
@@ -350,10 +347,8 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
 
         if (TextUtils.isEmpty(port)) return
 
-        mDiscoverHelper?.stop(true, true)
-        mDiscoverHelper = DiscoverHelper(owner, name, port, "/API/Icon")
-        mDiscoverHelper?.updateTime(System.currentTimeMillis())
-        mDiscoverHelper?.setMessageListener { msg, deviceSet, handler ->
+        owner.getMainService()?.createHelper(name, port.toInt(), "/API/Icon")
+        owner.getMainService()?.setMessageListener { msg, deviceSet, handler ->
             var state = owner.getMainApplication().getSavedInstance().get(Constants.AP_STATE)
             var ip = ""
             if (state == Constants.NetWorkState.WIFI) {
@@ -373,7 +368,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
                         val index = mClientSet.indexOf(obj)
                         if (index < 0) {
                             mClientSet.add(obj)
-                            ServerComingNotification(owner).buildServerComingNotification("搜索到新的设备",obj.name,"ShareBox:"+"找到新的设备").send()
+                            ServerComingNotification(owner).buildServerComingNotification("搜索到新的设备", obj.name, "ShareBox:" + "找到新的设备").send()
                         } else {
                             val old = mClientSet.get(index)
                             old.name = obj.name
@@ -405,18 +400,16 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
                     }
                 }
                 DiscoverHelper.MSG_START_FIND_DEVICE -> {
-                    mDiscoverHelper?.prepare(owner, true, true)
-                    mDiscoverHelper?.start(true, true)
+                    owner.getMainService()?.prepareAndStartHelper(true, true)
                 }
                 DiscoverHelper.MSG_START_BEING_SEARCHED -> {
-                    mDiscoverHelper?.prepare(owner, true, true)
-                    mDiscoverHelper?.start(true, true)
+                    owner.getMainService()?.prepareAndStartHelper(true, true)
                 }
             }
         }
+
         if (owner.refreshing) {
-            mDiscoverHelper?.prepare(owner, true, true)
-            mDiscoverHelper?.start(true, true)
+            owner.getMainService()?.prepareAndStartHelper(true, true)
         }
     }
 
@@ -510,12 +503,10 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
     }
 
     fun onDestroy() {
-        mDiscoverHelper?.stop(true, true)
+        owner.getMainService()?.stopHelper(true,true)
         mPhotoHelper?.clearCache()
         mImageHelper?.clearCache()
     }
-
-    fun hasDiscovered(): Boolean = mDiscoverHelper != null
 
     fun getRecyclerView(): RecyclerView? {
         return mRecyclerView

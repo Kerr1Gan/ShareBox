@@ -227,7 +227,6 @@ public abstract class DeviceSearcher extends Thread {
     public void interrupt() {
         if (mHostSocket != null) {
             mHostSocket.close();
-            mHostSocket = null;
         }
         super.interrupt();
     }

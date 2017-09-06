@@ -117,8 +117,8 @@ public class DiscoverHelper {
         if (search) mSearcher.interrupt();
     }
 
-    public void updateTime(long time){
-        mUpdateTime=time;
+    public void updateTime(long time) {
+        mUpdateTime = time;
     }
 
     public void setMessageListener(IMessageListener listener) {
@@ -138,11 +138,11 @@ public class DiscoverHelper {
         mWaitingSearch = null;
     }
 
-    public String getName(){
+    public String getName() {
         return mName;
     }
 
-    public String getPort(){
+    public String getPort() {
         return mPort;
     }
 

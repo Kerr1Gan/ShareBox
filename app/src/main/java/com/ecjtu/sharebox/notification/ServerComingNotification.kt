@@ -4,6 +4,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import com.ecjtu.sharebox.ui.activity.MainActivity
+import com.ecjtu.sharebox.util.activity.ActivityUtil
 
 /**
  * Created by Ethan_Xiang on 2017/9/5.
@@ -16,8 +17,9 @@ class ServerComingNotification(context: Context) : SimpleNotification(context) {
 
     fun buildServerComingNotification(title: String, content: String, ticker: String): ServerComingNotification {
         super.buildNotification(ID, title, content, ticker)
+        fullScreenIntent(getCurrentBuilder(), 0, null)
         val intent = Intent(context, MainActivity::class.java)
-        fullScreenIntent(getCurrentBuilder(), 0, intent)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         getCurrentBuilder()?.setContentIntent(PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT))
         return this
     }

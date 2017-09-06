@@ -26,7 +26,7 @@
         <activity
             android:name=".ui.activity.MainActivity"
             android:launchMode="singleInstance"
-            android:theme="@style/ImageStatusBarStyle">
+            android:theme="@style/MainActivityStyle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -62,7 +62,7 @@
 
         <activity
             android:name=".ui.activity.RotateNoCreateActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:configChanges="orientation|keyboardHidden|screenSize|mcc|mnc"
             android:theme="@style/ImageStatusBarStyle" />
     </application>
 

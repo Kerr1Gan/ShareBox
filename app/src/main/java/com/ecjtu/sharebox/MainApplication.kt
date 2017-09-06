@@ -1,9 +1,10 @@
 package com.ecjtu.sharebox
 
+import android.app.Activity
 import android.app.ActivityManager
 import android.app.Application
 import android.content.Context
-import android.content.Intent
+import android.os.Bundle
 import android.os.Environment
 import android.support.v4.content.LocalBroadcastManager
 import com.bumptech.glide.Glide
@@ -12,14 +13,15 @@ import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory
 import com.bumptech.glide.load.engine.cache.LruResourceCache
 import com.bumptech.glide.module.AppGlideModule
-import com.ecjtu.sharebox.service.MainService
 import com.google.android.gms.ads.MobileAds
 import com.tencent.bugly.crashreport.CrashReport
 import org.ecjtu.channellibrary.wifidirect.WifiDirectManager
 import org.ecjtu.easyserver.server.DeviceInfo
 import java.io.*
+import java.lang.ref.WeakReference
 import java.lang.reflect.InvocationTargetException
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 /**
@@ -27,6 +29,8 @@ import java.util.*
  */
 class MainApplication : Application() {
     private val mSavedInstance = HashMap<String, Any>()
+
+    private val mActivityList = ArrayList<WeakReference<Activity?>>()
 
     override fun onCreate() {
         super.onCreate()
@@ -56,7 +60,52 @@ class MainApplication : Application() {
 
         initSDK()
 
-        startService(Intent(this, MainService::class.java))
+        this.registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
+            override fun onActivityPaused(activity: Activity?) {
+            }
+
+            override fun onActivityResumed(activity: Activity?) {
+            }
+
+            override fun onActivityStarted(activity: Activity?) {
+            }
+
+            override fun onActivityDestroyed(activity: Activity?) {
+                val iter = mActivityList.iterator()
+                while (iter.hasNext()) {
+                    val obj = iter.next()
+                    val act = obj.get()
+                    if (activity == act || act == null) {
+                        iter.remove()
+                    }
+                }
+            }
+
+            override fun onActivitySaveInstanceState(activity: Activity?, outState: Bundle?) {
+            }
+
+            override fun onActivityStopped(activity: Activity?) {
+            }
+
+            override fun onActivityCreated(activity: Activity?, savedInstanceState: Bundle?) {
+                mActivityList.add(WeakReference(activity))
+            }
+        })
+    }
+
+    fun closeApp() {
+        var end = mActivityList.size - 1
+        while (end >= 0) {
+            val activity = mActivityList.get(end--).get()
+            activity?.finish()
+        }
+        System.exit(0)
+    }
+
+    fun closeActivityByIndex(start: Int, end: Int = mActivityList.size) {
+        for(index in start until end){
+            mActivityList.get(index).get()?.finish()
+        }
     }
 
     fun getSavedInstance(): MutableMap<String, Any> {

@@ -1,17 +1,13 @@
 package com.ecjtu.sharebox.service;
 
-import android.app.ActivityManager;
 import android.app.Service;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
+import android.os.Binder;
 import android.os.IBinder;
-import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import java.util.List;
+import org.ecjtu.channellibrary.devicesearch.DiscoverHelper;
 
 /**
  * Created by KerriGan on 2017/6/18.
@@ -21,96 +17,18 @@ public class MainService extends Service {
 
     private static final String TAG = "MainService";
 
-    private boolean mDaemon = false;
-
-    private ServiceConnection mServiceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.e(TAG, "onServiceConnected");
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            Log.e(TAG, "onServiceDisconnected restart DaemonService");
-            bindService(new Intent(MainService.this, DaemonService.class), mServiceConnection, Context.BIND_AUTO_CREATE);
-        }
-    };
+    private DiscoverHelper mDiscoverHelper;
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return (IBinder) mAidl;
+        return new MainServiceBinder();
     }
-
-    private IAidlInterface mAidl = new IAidlInterface.Stub() {
-
-        @Override
-        public void startService() throws RemoteException {
-//            Intent i = new Intent(getBaseContext(), DaemonService.class);
-//            getBaseContext().startService(i);
-        }
-
-        @Override
-        public void stopService() throws RemoteException {
-//            Intent i = new Intent(getBaseContext(), DaemonService.class);
-//            getBaseContext().stopService(i);
-        }
-
-        @Override
-        public boolean isServerAlive() throws RemoteException {
-            return false;
-        }
-
-        @Override
-        public String getIp() throws RemoteException {
-            return null;
-        }
-
-        @Override
-        public int getPort() throws RemoteException {
-            return 0;
-        }
-    };
 
     @Override
     public void onCreate() {
         super.onCreate();
         Log.e(TAG, "onCreate");
-        if (mDaemon) {
-            startService(new Intent(this, DaemonService.class));
-            bindService(new Intent(this, DaemonService.class), mServiceConnection, Context.BIND_AUTO_CREATE);
-        }
-    }
-
-    /**
-     * 判断进程是否运行
-     *
-     * @return
-     */
-    public static boolean isProcessRunning(Context context, String processName) {
-
-        boolean isRunning = false;
-        ActivityManager am = (ActivityManager) context
-                .getSystemService(Context.ACTIVITY_SERVICE);
-
-        List<ActivityManager.RunningAppProcessInfo> lists = am.getRunningAppProcesses();
-        if (lists == null) return isRunning;
-        for (ActivityManager.RunningAppProcessInfo info : lists) {
-            if (info.processName.equals(processName)) {
-                isRunning = true;
-            }
-        }
-
-        return isRunning;
-    }
-
-    @Override
-    public void onTrimMemory(int level) {
-        if (isProcessRunning(getBaseContext(), "com.ecjtu.sharebox")) {
-            Log.e(TAG, "onTrimMemory restart MainService");
-            Intent i = new Intent(getBaseContext(), MainService.class);
-            getBaseContext().startService(i);
-        }
     }
 
     @Override
@@ -121,12 +39,46 @@ public class MainService extends Service {
 
     @Override
     public void onDestroy() {
-        try {
-            if (mDaemon)
-                unbindService(mServiceConnection);
-        } catch (Exception e) {
-        }
-        Log.e(TAG, "onDestroy");
         super.onDestroy();
     }
+
+    public class MainServiceBinder extends Binder {
+        public MainService getService() {
+            return MainService.this;
+        }
+    }
+
+    public void createHelper(String name, int port,String icon) {
+        if (mDiscoverHelper != null) {
+            stopHelper(true, true);
+        }
+        mDiscoverHelper = new DiscoverHelper(this, name, String.valueOf(port), icon);
+        mDiscoverHelper.updateTime(System.currentTimeMillis());
+    }
+
+    public void prepareAndStartHelper(boolean waiting, boolean search) {
+        DiscoverHelper.IMessageListener listener = mDiscoverHelper.getMessageListener();
+        stopHelper(waiting,search);
+        setMessageListener(listener);
+        prepareHelper(waiting, search);
+        startHelper(waiting, search);
+    }
+
+    public void prepareHelper(boolean waiting, boolean search) {
+        mDiscoverHelper.prepare(this, waiting, search);
+    }
+
+    public void startHelper(boolean waiting, boolean search) {
+        mDiscoverHelper.start(waiting, search);
+    }
+
+    public void stopHelper(boolean waiting, boolean search) {
+        mDiscoverHelper.stop(waiting, search);
+        setMessageListener(null);
+    }
+
+    public void setMessageListener(DiscoverHelper.IMessageListener listener) {
+        mDiscoverHelper.setMessageListener(listener);
+    }
+
 }
