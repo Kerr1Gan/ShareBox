@@ -48,7 +48,7 @@ public class MainService extends Service {
         }
     }
 
-    public void createHelper(String name, int port,String icon) {
+    public void createHelper(String name, int port, String icon) {
         if (mDiscoverHelper != null) {
             stopHelper(true, true);
         }
@@ -58,7 +58,7 @@ public class MainService extends Service {
 
     public void prepareAndStartHelper(boolean waiting, boolean search) {
         DiscoverHelper.IMessageListener listener = mDiscoverHelper.getMessageListener();
-        stopHelper(waiting,search);
+        stopHelper(waiting, search);
         setMessageListener(listener);
         prepareHelper(waiting, search);
         startHelper(waiting, search);

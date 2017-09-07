@@ -4,6 +4,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import com.ecjtu.sharebox.ui.activity.MainActivity
+import com.ecjtu.sharebox.ui.activity.TestActivity
 import com.ecjtu.sharebox.util.activity.ActivityUtil
 
 /**
@@ -19,8 +20,8 @@ class ServerComingNotification(context: Context) : SimpleNotification(context) {
         super.buildNotification(ID, title, content, ticker)
         fullScreenIntent(getCurrentBuilder(), 0, null)
         val intent = Intent(context, MainActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        getCurrentBuilder()?.setContentIntent(PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT))
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        getCurrentBuilder()?.setContentIntent(PendingIntent.getActivity(context, 100, intent, PendingIntent.FLAG_UPDATE_CURRENT)) //requestCode 不能为0 否则MainActivity 将重建
         return this
     }
 

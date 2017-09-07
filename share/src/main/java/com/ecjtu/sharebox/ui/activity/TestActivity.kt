@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.async.FindAllFilesHelper
+import com.ecjtu.sharebox.notification.ServerComingNotification
 import com.ecjtu.sharebox.ui.fragment.PageFragment
 import com.ecjtu.sharebox.util.file.FileUtil
 
@@ -75,5 +76,7 @@ class TestActivity : AppCompatActivity() {
 //            }
 //            task.release()
 //        }
+
+        ServerComingNotification(this).buildServerComingNotification("title","content","ticker").send()
     }
 }
