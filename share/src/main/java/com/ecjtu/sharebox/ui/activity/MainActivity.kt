@@ -100,9 +100,9 @@ class MainActivity : ImmersiveFragmentActivity() {
 
     override fun onResume() {
         super.onResume()
-//        if(getMainApplication().getActivityByIndex(1) !is MainActivity){
-//            getMainApplication().closeActivityByIndex(1)
-//        }
+        if(getMainApplication().getActivityByIndex(1) !is MainActivity){
+            getMainApplication().closeActivityByIndex(1)
+        }
         getMainApplication().closeActivityByIndex(1)
         var name = PreferenceManager.getDefaultSharedPreferences(this).getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
         (findViewById(R.id.text_name) as TextView).setText(name)
