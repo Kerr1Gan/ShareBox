@@ -50,7 +50,7 @@ public abstract class DeviceWaitingSearch extends Thread{
             mSocket=socket;
             byte[] data = new byte[1024];
             DatagramPacket pack = new DatagramPacket(data, data.length);
-            while (true) {
+            while (!Thread.interrupted()) {
                 // 等待主机的搜索
                 socket.receive(pack);
                 if (verifySearchData(pack)) {

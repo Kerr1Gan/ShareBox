@@ -91,7 +91,7 @@ public abstract class DeviceSearcher extends Thread {
                 }
                 Log.i(TAG, String.format("%s: 结束搜索 %d", TAG, i));
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             onSearchFinish(mDeviceSet);

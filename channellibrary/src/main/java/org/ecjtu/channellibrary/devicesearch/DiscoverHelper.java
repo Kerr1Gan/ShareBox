@@ -3,6 +3,7 @@ package org.ecjtu.channellibrary.devicesearch;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import org.ecjtu.channellibrary.wifiutil.NetworkUtil;
 
@@ -113,8 +114,20 @@ public class DiscoverHelper {
 
     public void stop(boolean waiting, boolean search) {
         mHandler.removeCallbacksAndMessages(null);
-        if (waiting) mWaitingSearch.interrupt();
-        if (search) mSearcher.interrupt();
+        if (waiting) {
+            mWaitingSearch.interrupt();
+            try {
+                mWaitingSearch.join();
+            } catch (InterruptedException e) {
+            }
+        }
+        if (search){
+            mSearcher.interrupt();
+            try {
+                mSearcher.join();
+            } catch (InterruptedException e) {
+            }
+        }
     }
 
     public void updateTime(long time) {
