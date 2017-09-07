@@ -99,13 +99,38 @@ class MainApplication : Application() {
             val activity = mActivityList.get(end--).get()
             activity?.finish()
         }
+        mActivityList.clear()
         System.exit(0)
     }
 
     fun closeActivityByIndex(start: Int, end: Int = mActivityList.size) {
-        for(index in start until end){
-            mActivityList.get(index).get()?.finish()
+        if (start >= end) return
+        var index = 0
+        val iter = mActivityList.iterator()
+        while (iter.hasNext()) {
+            val activity = iter.next()
+            if (index in start..(end - 1)) {
+                activity.get()?.finish()
+            }
         }
+    }
+
+    fun getActivityByIndex(index: Int): Activity? {
+        if (index >= getActivityLength()) return null
+        return mActivityList[index].get()
+    }
+
+    fun getTopActivity(): Activity? {
+        return mActivityList[mActivityList.size - 1].get()
+    }
+
+    fun getBottomActivity(): Activity? {
+        if (getActivityLength() >= 1) return null
+        return mActivityList[0].get()
+    }
+
+    fun getActivityLength(): Int {
+        return mActivityList.size
     }
 
     fun getSavedInstance(): MutableMap<String, Any> {
@@ -276,5 +301,27 @@ class MainApplication : Application() {
             }
         }
         return ""
+    }
+
+    /**
+     * 程序是否在前台运行
+     *
+     */
+    fun isAppOnForeground(context: Context): Boolean {
+        val activityManager = context.getApplicationContext()
+                .getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val packageName = context.getApplicationContext().getPackageName()
+        /**
+         * 获取Android设备中所有正在运行的App
+         */
+        val appProcesses = activityManager
+                .runningAppProcesses ?: return false
+        for (appProcess in appProcesses) {
+            // The name of the process that this object is associated with.
+            if (appProcess.processName == packageName && appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                return true
+            }
+        }
+        return false
     }
 }
