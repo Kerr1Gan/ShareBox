@@ -21,7 +21,6 @@ import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.PreferenceInfo
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.getMainApplication
-import com.ecjtu.sharebox.notification.ServerComingNotification
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
 import com.ecjtu.sharebox.service.MainService
 import com.ecjtu.sharebox.ui.fragment.SplashFragment
@@ -78,7 +77,7 @@ class MainActivity : ImmersiveFragmentActivity() {
             recyclerView?.setPadding(recyclerView.paddingLeft, recyclerView.paddingTop, recyclerView.paddingRight,
                     recyclerView.paddingBottom + getNavigationBarHeight(this))
         }
-        ServerComingNotification(this).buildServerComingNotification("title","content","ticker").send()
+
         //init service
         val intent = Intent(this, MainService::class.java)
         startService(intent)
@@ -101,9 +100,6 @@ class MainActivity : ImmersiveFragmentActivity() {
 
     override fun onResume() {
         super.onResume()
-        if(getMainApplication().getActivityByIndex(1) !is MainActivity){
-            getMainApplication().closeActivityByIndex(1)
-        }
         getMainApplication().closeActivityByIndex(1)
         var name = PreferenceManager.getDefaultSharedPreferences(this).getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
         (findViewById(R.id.text_name) as TextView).setText(name)

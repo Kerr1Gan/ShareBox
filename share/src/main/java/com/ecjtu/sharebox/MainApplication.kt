@@ -109,8 +109,9 @@ class MainApplication : Application() {
         val iter = mActivityList.iterator()
         while (iter.hasNext()) {
             val activity = iter.next()
-            if (index in start..(end - 1)) {
+            if (index++ in start..(end - 1)) {
                 activity.get()?.finish()
+                iter.remove()
             }
         }
     }
