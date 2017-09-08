@@ -12,6 +12,7 @@ import com.ecjtu.sharebox.ui.activity.RotateNoCreateActivity
 import com.ecjtu.sharebox.ui.dialog.FilePickDialog
 import com.ecjtu.sharebox.ui.fragment.IjkVideoFragment
 import com.ecjtu.sharebox.ui.widget.FileExpandableListView
+import com.ecjtu.sharebox.util.cache.CacheUtil
 import com.ecjtu.sharebox.util.file.FileUtil
 import com.ecjtu.sharebox.util.hash.HashUtil
 import org.ecjtu.easyserver.server.DeviceInfo
@@ -58,13 +59,13 @@ class InternetFileExpandableAdapter(expandableListView: FileExpandableListView) 
     }
 
     override fun setGroupViewThumb(type: FileUtil.MediaFileType?, thumb: String?, icon: ImageView?, text: TextView?) {
-        val baseUrl = "http://${mDeviceInfo?.getIp()}:${mDeviceInfo?.port}/API/Cache$thumb"
+        val baseUrl = "http://${mDeviceInfo?.getIp()}:${mDeviceInfo?.port}/API/Cache${CacheUtil.getCachePath(context,thumb)}"
         val opt = RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)
         super.setGroupViewThumb(type, baseUrl, icon, text, opt)
     }
 
     override fun setChildViewThumb(type: FileUtil.MediaFileType?, f: String?, icon: ImageView?) {
-        val baseUrl = "http://${mDeviceInfo?.getIp()}:${mDeviceInfo?.port}/API/Cache$f"
+        val baseUrl = "http://${mDeviceInfo?.getIp()}:${mDeviceInfo?.port}/API/Cache${CacheUtil.getCachePath(context,f)}"
         val opt = RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)
         super.setChildViewThumb(type, baseUrl, icon, opt)
     }
