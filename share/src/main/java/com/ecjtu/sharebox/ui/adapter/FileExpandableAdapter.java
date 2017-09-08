@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.ecjtu.sharebox.R;
 import com.ecjtu.sharebox.async.AppThumbTask;
@@ -295,9 +296,17 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
     }
 
     protected void setGroupViewThumb(FileUtil.MediaFileType type, String thumb, ImageView icon, TextView text) {
+        setGroupViewThumb(type,thumb,icon,text,null);
+    }
+
+    protected void setGroupViewThumb(FileUtil.MediaFileType type, String thumb, ImageView icon, TextView text, RequestOptions options) {
         if (type == FileUtil.MediaFileType.MOVIE ||
                 type == FileUtil.MediaFileType.IMG) {
-            Glide.with(mContext).load(thumb).listener(mRequestListener).into(icon);
+            if(options==null){
+                Glide.with(mContext).load(thumb).listener(mRequestListener).into(icon);
+            }else{
+                Glide.with(mContext).load(thumb).listener(mRequestListener).apply(options).into(icon);
+            }
         } else if (type == FileUtil.MediaFileType.APP) {
             Bitmap b = sLruCache.get(thumb);
             if (b == null) {
@@ -315,9 +324,17 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
     }
 
     protected void setChildViewThumb(FileUtil.MediaFileType type, String f, ImageView icon) {
+        setChildViewThumb(type,f,icon,null);
+    }
+
+    protected void setChildViewThumb(FileUtil.MediaFileType type, String f, ImageView icon,RequestOptions options) {
         if (type == FileUtil.MediaFileType.MOVIE ||
                 type == FileUtil.MediaFileType.IMG) {
-            Glide.with(mContext).load(f).listener(mRequestListener).into(icon);
+            if(options==null){
+                Glide.with(mContext).load(f).listener(mRequestListener).into(icon);
+            }else{
+                Glide.with(mContext).load(f).listener(mRequestListener).apply(options).into(icon);
+            }
         } else if (type == FileUtil.MediaFileType.APP) {
             Bitmap b = sLruCache.get(f);
             if (b == null) {

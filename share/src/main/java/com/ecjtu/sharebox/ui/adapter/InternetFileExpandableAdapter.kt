@@ -5,6 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.ui.activity.RotateNoCreateActivity
 import com.ecjtu.sharebox.ui.dialog.FilePickDialog
@@ -57,12 +59,14 @@ class InternetFileExpandableAdapter(expandableListView: FileExpandableListView) 
 
     override fun setGroupViewThumb(type: FileUtil.MediaFileType?, thumb: String?, icon: ImageView?, text: TextView?) {
         val baseUrl = "http://${mDeviceInfo?.getIp()}:${mDeviceInfo?.port}/API/Cache$thumb"
-        super.setGroupViewThumb(type, baseUrl, icon, text)
+        val opt = RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)
+        super.setGroupViewThumb(type, baseUrl, icon, text, opt)
     }
 
     override fun setChildViewThumb(type: FileUtil.MediaFileType?, f: String?, icon: ImageView?) {
         val baseUrl = "http://${mDeviceInfo?.getIp()}:${mDeviceInfo?.port}/API/Cache$f"
-        super.setChildViewThumb(type, baseUrl, icon)
+        val opt = RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)
+        super.setChildViewThumb(type, baseUrl, icon, opt)
     }
 
     override fun openFile(path: String?) {
