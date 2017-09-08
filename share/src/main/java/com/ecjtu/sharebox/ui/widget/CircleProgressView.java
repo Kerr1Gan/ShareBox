@@ -1,4 +1,4 @@
-package com.ecjtu.sharebox.ui.view;
+package com.ecjtu.sharebox.ui.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;

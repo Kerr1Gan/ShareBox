@@ -32,7 +32,7 @@ import com.ecjtu.sharebox.ui.dialog.FilePickDialog;
 import com.ecjtu.sharebox.ui.dialog.TextItemDialog;
 import com.ecjtu.sharebox.ui.fragment.IjkVideoFragment;
 import com.ecjtu.sharebox.ui.fragment.WebViewFragment;
-import com.ecjtu.sharebox.ui.view.FileExpandableListView;
+import com.ecjtu.sharebox.ui.widget.FileExpandableListView;
 import com.ecjtu.sharebox.util.cache.CacheUtil;
 import com.ecjtu.sharebox.util.file.FileOpenIntentUtil;
 import com.ecjtu.sharebox.util.file.FileUtil;

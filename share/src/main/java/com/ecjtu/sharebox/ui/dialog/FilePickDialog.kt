@@ -25,7 +25,7 @@ import com.ecjtu.sharebox.async.FindAllFilesHelper
 import com.ecjtu.sharebox.async.MemoryUnLeakHandler
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.ui.adapter.FileExpandableAdapter
-import com.ecjtu.sharebox.ui.view.FileExpandableListView
+import com.ecjtu.sharebox.ui.widget.FileExpandableListView
 import com.ecjtu.sharebox.util.file.FileUtil
 import org.ecjtu.easyserver.server.DeviceInfo
 import org.ecjtu.easyserver.server.impl.service.EasyServerService

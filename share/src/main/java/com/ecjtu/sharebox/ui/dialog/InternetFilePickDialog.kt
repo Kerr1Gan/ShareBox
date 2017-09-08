@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.ui.adapter.FileExpandableAdapter
 import com.ecjtu.sharebox.ui.adapter.InternetFileExpandableAdapter
-import com.ecjtu.sharebox.ui.view.FileExpandableListView
+import com.ecjtu.sharebox.ui.widget.FileExpandableListView
 import org.ecjtu.easyserver.server.DeviceInfo
 
 /**
