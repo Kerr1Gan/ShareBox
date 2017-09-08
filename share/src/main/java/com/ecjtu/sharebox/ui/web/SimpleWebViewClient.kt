@@ -1,4 +1,4 @@
-package com.ecjtu.sharebox.ui.widget.web
+package com.ecjtu.sharebox.ui.web
 
 import android.webkit.WebView
 import android.webkit.WebViewClient

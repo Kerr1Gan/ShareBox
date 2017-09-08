@@ -12,8 +12,8 @@ import android.webkit.JavascriptInterface
 import android.webkit.MimeTypeMap
 import android.webkit.WebView
 import com.ecjtu.sharebox.R
-import com.ecjtu.sharebox.ui.widget.web.SimpleWebChromeClient
-import com.ecjtu.sharebox.ui.widget.web.SimpleWebViewClient
+import com.ecjtu.sharebox.ui.web.SimpleWebChromeClient
+import com.ecjtu.sharebox.ui.web.SimpleWebViewClient
 import com.ecjtu.sharebox.util.activity.ActivityUtil
 import com.ecjtu.sharebox.util.file.FileUtil
 import java.io.File
