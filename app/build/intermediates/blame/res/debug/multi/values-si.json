@@ -1,0 +1,140 @@
+[
+    {
+        "outputFile": "I:\\Projects\\ShareBox\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-si\\values-si.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 105,
+                    "endColumn": 197,
+                    "endOffset": 298
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\c45582eb004ac2d176a714976b6bb7a9a24992ed\\output\\res\\values-si\\values.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 0,
+                        "startOffset": 285,
+                        "endColumn": 197,
+                        "endOffset": 482
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 3,
+                    "startColumn": 4,
+                    "startOffset": 303,
+                    "endColumn": 73,
+                    "endOffset": 372
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\6e39af0737353c1a6bda7e6976d3c0ddced0ad56\\output\\res\\values-si\\values.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 0,
+                        "startOffset": 237,
+                        "endColumn": 69,
+                        "endOffset": 306
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 4,
+                    "startColumn": 4,
+                    "startOffset": 377,
+                    "endColumn": 121,
+                    "endOffset": 494
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\6e39af0737353c1a6bda7e6976d3c0ddced0ad56\\output\\res\\values-si\\values.xml",
+                    "position": {
+                        "startLine": 5,
+                        "startColumn": 0,
+                        "startOffset": 307,
+                        "endColumn": 117,
+                        "endOffset": 424
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 5,
+                    "startColumn": 4,
+                    "startOffset": 499,
+                    "endColumn": 69,
+                    "endOffset": 564
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\6e39af0737353c1a6bda7e6976d3c0ddced0ad56\\output\\res\\values-si\\values.xml",
+                    "position": {
+                        "startLine": 6,
+                        "startColumn": 0,
+                        "startOffset": 425,
+                        "endColumn": 65,
+                        "endOffset": 490
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 6,
+                    "startColumn": 4,
+                    "startOffset": 569,
+                    "endColumn": 78,
+                    "endOffset": 643
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\6e39af0737353c1a6bda7e6976d3c0ddced0ad56\\output\\res\\values-si\\values.xml",
+                    "position": {
+                        "startLine": 7,
+                        "startColumn": 0,
+                        "startOffset": 491,
+                        "endColumn": 74,
+                        "endOffset": 565
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 7,
+                    "startColumn": 4,
+                    "startOffset": 648,
+                    "endColumn": 85,
+                    "endOffset": 729
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\6e39af0737353c1a6bda7e6976d3c0ddced0ad56\\output\\res\\values-si\\values.xml",
+                    "position": {
+                        "startLine": 8,
+                        "startColumn": 0,
+                        "startOffset": 566,
+                        "endColumn": 81,
+                        "endOffset": 647
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 8,
+                    "startColumn": 4,
+                    "startOffset": 734,
+                    "endColumn": 112,
+                    "endOffset": 842
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\6e39af0737353c1a6bda7e6976d3c0ddced0ad56\\output\\res\\values-si\\values.xml",
+                    "position": {
+                        "startLine": 9,
+                        "startColumn": 0,
+                        "startOffset": 648,
+                        "endColumn": 108,
+                        "endOffset": 756
+                    }
+                }
+            }
+        ]
+    }
+]

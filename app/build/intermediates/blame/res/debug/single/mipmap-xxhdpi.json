@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "I:\\Projects\\ShareBox\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxhdpi\\ic_launcher_round.png",
+        "source": "I:\\Projects\\ShareBox\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "I:\\Projects\\ShareBox\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxhdpi\\ic_launcher.png",
+        "source": "I:\\Projects\\ShareBox\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher.png"
+    }
+]

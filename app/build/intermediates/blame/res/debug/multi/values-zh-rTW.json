@@ -1,0 +1,539 @@
+[
+    {
+        "outputFile": "I:\\Projects\\ShareBox\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-zh-rTW\\values-zh-rTW.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 105,
+                    "endColumn": 94,
+                    "endOffset": 195
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zh-rTW\\values-zh-rTW.xml",
+                    "position": {
+                        "startLine": 2,
+                        "startColumn": 4,
+                        "startOffset": 55,
+                        "endColumn": 94,
+                        "endOffset": 145
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 3,
+                    "startColumn": 4,
+                    "startOffset": 200,
+                    "endColumn": 106,
+                    "endOffset": 302
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zh-rTW\\values-zh-rTW.xml",
+                    "position": {
+                        "startLine": 3,
+                        "startColumn": 4,
+                        "startOffset": 150,
+                        "endColumn": 106,
+                        "endOffset": 252
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 4,
+                    "startColumn": 4,
+                    "startOffset": 307,
+                    "endColumn": 122,
+                    "endOffset": 425
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zh-rTW\\values-zh-rTW.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 4,
+                        "startOffset": 257,
+                        "endColumn": 122,
+                        "endOffset": 375
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 5,
+                    "startColumn": 4,
+                    "startOffset": 430,
+                    "endColumn": 92,
+                    "endOffset": 518
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zh-rTW\\values-zh-rTW.xml",
+                    "position": {
+                        "startLine": 5,
+                        "startColumn": 4,
+                        "startOffset": 380,
+                        "endColumn": 92,
+                        "endOffset": 468
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 6,
+                    "startColumn": 4,
+                    "startOffset": 523,
+                    "endColumn": 99,
+                    "endOffset": 618
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zh-rTW\\values-zh-rTW.xml",
+                    "position": {
+                        "startLine": 6,
+                        "startColumn": 4,
+                        "startOffset": 473,
+                        "endColumn": 99,
+                        "endOffset": 568
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 7,
+                    "startColumn": 4,
+                    "startOffset": 623,
+                    "endColumn": 81,
+                    "endOffset": 700
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zh-rTW\\values-zh-rTW.xml",
+                    "position": {
+                        "startLine": 7,
+                        "startColumn": 4,
+                        "startOffset": 573,
+                        "endColumn": 81,
+                        "endOffset": 650
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 8,
+                    "startColumn": 4,
+                    "startOffset": 705,
+                    "endColumn": 96,
+                    "endOffset": 797
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zh-rTW\\values-zh-rTW.xml",
+                    "position": {
+                        "startLine": 8,
+                        "startColumn": 4,
+                        "startOffset": 655,
+                        "endColumn": 96,
+                        "endOffset": 747
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 9,
+                    "startColumn": 4,
+                    "startOffset": 802,
+                    "endColumn": 107,
+                    "endOffset": 905
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zh-rTW\\values-zh-rTW.xml",
+                    "position": {
+                        "startLine": 9,
+                        "startColumn": 4,
+                        "startOffset": 752,
+                        "endColumn": 107,
+                        "endOffset": 855
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 10,
+                    "startColumn": 4,
+                    "startOffset": 910,
+                    "endColumn": 75,
+                    "endOffset": 981
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zh-rTW\\values-zh-rTW.xml",
+                    "position": {
+                        "startLine": 10,
+                        "startColumn": 4,
+                        "startOffset": 860,
+                        "endColumn": 75,
+                        "endOffset": 931
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 11,
+                    "startColumn": 4,
+                    "startOffset": 986,
+                    "endColumn": 75,
+                    "endOffset": 1057
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zh-rTW\\values-zh-rTW.xml",
+                    "position": {
+                        "startLine": 11,
+                        "startColumn": 4,
+                        "startOffset": 936,
+                        "endColumn": 75,
+                        "endOffset": 1007
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 12,
+                    "startColumn": 4,
+                    "startOffset": 1062,
+                    "endColumn": 77,
+                    "endOffset": 1135
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zh-rTW\\values-zh-rTW.xml",
+                    "position": {
+                        "startLine": 12,
+                        "startColumn": 4,
+                        "startOffset": 1012,
+                        "endColumn": 77,
+                        "endOffset": 1085
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 13,
+                    "startColumn": 4,
+                    "startOffset": 1140,
+                    "endColumn": 95,
+                    "endOffset": 1231
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zh-rTW\\values-zh-rTW.xml",
+                    "position": {
+                        "startLine": 13,
+                        "startColumn": 4,
+                        "startOffset": 1090,
+                        "endColumn": 95,
+                        "endOffset": 1181
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 14,
+                    "startColumn": 4,
+                    "startOffset": 1236,
+                    "endColumn": 95,
+                    "endOffset": 1327
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zh-rTW\\values-zh-rTW.xml",
+                    "position": {
+                        "startLine": 14,
+                        "startColumn": 4,
+                        "startOffset": 1186,
+                        "endColumn": 95,
+                        "endOffset": 1277
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 15,
+                    "startColumn": 4,
+                    "startOffset": 1332,
+                    "endColumn": 94,
+                    "endOffset": 1422
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zh-rTW\\values-zh-rTW.xml",
+                    "position": {
+                        "startLine": 15,
+                        "startColumn": 4,
+                        "startOffset": 1282,
+                        "endColumn": 94,
+                        "endOffset": 1372
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 16,
+                    "startColumn": 4,
+                    "startOffset": 1427,
+                    "endColumn": 96,
+                    "endOffset": 1519
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zh-rTW\\values-zh-rTW.xml",
+                    "position": {
+                        "startLine": 16,
+                        "startColumn": 4,
+                        "startOffset": 1377,
+                        "endColumn": 96,
+                        "endOffset": 1469
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 17,
+                    "startColumn": 4,
+                    "startOffset": 1524,
+                    "endColumn": 94,
+                    "endOffset": 1614
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zh-rTW\\values-zh-rTW.xml",
+                    "position": {
+                        "startLine": 17,
+                        "startColumn": 4,
+                        "startOffset": 1474,
+                        "endColumn": 94,
+                        "endOffset": 1564
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 18,
+                    "startColumn": 4,
+                    "startOffset": 1619,
+                    "endColumn": 99,
+                    "endOffset": 1714
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zh-rTW\\values-zh-rTW.xml",
+                    "position": {
+                        "startLine": 18,
+                        "startColumn": 4,
+                        "startOffset": 1569,
+                        "endColumn": 99,
+                        "endOffset": 1664
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 19,
+                    "startColumn": 4,
+                    "startOffset": 1719,
+                    "endColumn": 112,
+                    "endOffset": 1827
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zh-rTW\\values-zh-rTW.xml",
+                    "position": {
+                        "startLine": 19,
+                        "startColumn": 4,
+                        "startOffset": 1669,
+                        "endColumn": 112,
+                        "endOffset": 1777
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 20,
+                    "startColumn": 4,
+                    "startOffset": 1832,
+                    "endColumn": 93,
+                    "endOffset": 1921
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zh-rTW\\values-zh-rTW.xml",
+                    "position": {
+                        "startLine": 20,
+                        "startColumn": 4,
+                        "startOffset": 1782,
+                        "endColumn": 93,
+                        "endOffset": 1871
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 21,
+                    "startColumn": 4,
+                    "startOffset": 1926,
+                    "endColumn": 161,
+                    "endOffset": 2083
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\c45582eb004ac2d176a714976b6bb7a9a24992ed\\output\\res\\values-zh-rTW\\values.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 0,
+                        "startOffset": 289,
+                        "endColumn": 161,
+                        "endOffset": 450
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 22,
+                    "startColumn": 4,
+                    "startOffset": 2088,
+                    "endColumn": 64,
+                    "endOffset": 2148
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\6e39af0737353c1a6bda7e6976d3c0ddced0ad56\\output\\res\\values-zh-rTW\\values.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 0,
+                        "startOffset": 241,
+                        "endColumn": 60,
+                        "endOffset": 301
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 23,
+                    "startColumn": 4,
+                    "startOffset": 2153,
+                    "endColumn": 78,
+                    "endOffset": 2227
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\6e39af0737353c1a6bda7e6976d3c0ddced0ad56\\output\\res\\values-zh-rTW\\values.xml",
+                    "position": {
+                        "startLine": 5,
+                        "startColumn": 0,
+                        "startOffset": 302,
+                        "endColumn": 74,
+                        "endOffset": 376
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 24,
+                    "startColumn": 4,
+                    "startOffset": 2232,
+                    "endColumn": 63,
+                    "endOffset": 2291
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\6e39af0737353c1a6bda7e6976d3c0ddced0ad56\\output\\res\\values-zh-rTW\\values.xml",
+                    "position": {
+                        "startLine": 6,
+                        "startColumn": 0,
+                        "startOffset": 377,
+                        "endColumn": 59,
+                        "endOffset": 436
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 25,
+                    "startColumn": 4,
+                    "startOffset": 2296,
+                    "endColumn": 63,
+                    "endOffset": 2355
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\6e39af0737353c1a6bda7e6976d3c0ddced0ad56\\output\\res\\values-zh-rTW\\values.xml",
+                    "position": {
+                        "startLine": 7,
+                        "startColumn": 0,
+                        "startOffset": 437,
+                        "endColumn": 59,
+                        "endOffset": 496
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 26,
+                    "startColumn": 4,
+                    "startOffset": 2360,
+                    "endColumn": 67,
+                    "endOffset": 2423
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\6e39af0737353c1a6bda7e6976d3c0ddced0ad56\\output\\res\\values-zh-rTW\\values.xml",
+                    "position": {
+                        "startLine": 8,
+                        "startColumn": 0,
+                        "startOffset": 497,
+                        "endColumn": 63,
+                        "endOffset": 560
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 27,
+                    "startColumn": 4,
+                    "startOffset": 2428,
+                    "endColumn": 74,
+                    "endOffset": 2498
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\6e39af0737353c1a6bda7e6976d3c0ddced0ad56\\output\\res\\values-zh-rTW\\values.xml",
+                    "position": {
+                        "startLine": 9,
+                        "startColumn": 0,
+                        "startOffset": 561,
+                        "endColumn": 70,
+                        "endOffset": 631
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 28,
+                    "startColumn": 4,
+                    "startOffset": 2503,
+                    "endColumn": 77,
+                    "endOffset": 2576
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zh-rTW\\values-zh-rTW.xml",
+                    "position": {
+                        "startLine": 21,
+                        "startColumn": 4,
+                        "startOffset": 1876,
+                        "endColumn": 77,
+                        "endOffset": 1949
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 29,
+                    "startColumn": 4,
+                    "startOffset": 2581,
+                    "endColumn": 100,
+                    "endOffset": 2677
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zh-rTW\\values-zh-rTW.xml",
+                    "position": {
+                        "startLine": 22,
+                        "startColumn": 4,
+                        "startOffset": 1954,
+                        "endColumn": 100,
+                        "endOffset": 2050
+                    }
+                }
+            }
+        ]
+    }
+]

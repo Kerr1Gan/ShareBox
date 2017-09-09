@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Using last"
+        android:gravity="right"
+        android:layout_marginTop="30dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:id="@+id/text_use_last"/>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/text_input_ap"
+        style="@style/BottomSheetDialogStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        app:counterEnabled="true"
+        app:counterMaxLength="12"
+        app:errorEnabled="true"
+        app:errorTextAppearance="@style/CounterOverflowTextColor"
+        app:theme="@style/BottomSheetDialogStyle">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/ap_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="热点名称"
+            android:singleLine="true"
+            android:textColor="@android:color/black" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/text_input_pwd"
+        style="@style/BottomSheetDialogStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        app:counterEnabled="true"
+        app:counterMaxLength="17"
+        app:errorEnabled="true"
+        app:errorTextAppearance="@style/CounterOverflowTextColor"
+        app:passwordToggleEnabled="true"
+        app:passwordToggleTint="@color/colorAccent"
+        app:theme="@style/BottomSheetDialogStyle">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/ap_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="热点密码"
+            android:inputType="textPassword"
+            android:singleLine="true"
+            android:textColor="@android:color/black" />
+    </android.support.design.widget.TextInputLayout>
+
+
+    <!--<com.ecjtu.sharebox.ui.view.CircleProgressView-->
+    <!--android:layout_width="56dp"-->
+    <!--android:layout_height="56dp"-->
+    <!--android:id="@+id/circle_progress"-->
+    <!--android:layout_gravity="center_horizontal"-->
+    <!--android:layout_marginBottom="20dp"/>-->
+    <com.dd.CircularProgressButton
+        android:id="@+id/circle_progress"
+        android:layout_width="70dp"
+        android:layout_height="46dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:textColor="@android:color/white"
+        app:cpb_cornerRadius="23dp"
+        app:cpb_textIdle="@string/open"
+        app:cpb_textComplete="@string/close"
+        app:cpb_textError="@string/failure"
+        app:cpb_selectorIdle="@color/selector_cpb_idle_state"/>
+</LinearLayout>

@@ -1,0 +1,539 @@
+[
+    {
+        "outputFile": "I:\\Projects\\ShareBox\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-zu\\values-zu.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 105,
+                    "endColumn": 107,
+                    "endOffset": 208
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zu\\values-zu.xml",
+                    "position": {
+                        "startLine": 2,
+                        "startColumn": 4,
+                        "startOffset": 55,
+                        "endColumn": 107,
+                        "endOffset": 158
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 3,
+                    "startColumn": 4,
+                    "startOffset": 213,
+                    "endColumn": 107,
+                    "endOffset": 316
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zu\\values-zu.xml",
+                    "position": {
+                        "startLine": 3,
+                        "startColumn": 4,
+                        "startOffset": 163,
+                        "endColumn": 107,
+                        "endOffset": 266
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 4,
+                    "startColumn": 4,
+                    "startOffset": 321,
+                    "endColumn": 122,
+                    "endOffset": 439
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zu\\values-zu.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 4,
+                        "startOffset": 271,
+                        "endColumn": 122,
+                        "endOffset": 389
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 5,
+                    "startColumn": 4,
+                    "startOffset": 444,
+                    "endColumn": 106,
+                    "endOffset": 546
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zu\\values-zu.xml",
+                    "position": {
+                        "startLine": 5,
+                        "startColumn": 4,
+                        "startOffset": 394,
+                        "endColumn": 106,
+                        "endOffset": 496
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 6,
+                    "startColumn": 4,
+                    "startOffset": 551,
+                    "endColumn": 113,
+                    "endOffset": 660
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zu\\values-zu.xml",
+                    "position": {
+                        "startLine": 6,
+                        "startColumn": 4,
+                        "startOffset": 501,
+                        "endColumn": 113,
+                        "endOffset": 610
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 7,
+                    "startColumn": 4,
+                    "startOffset": 665,
+                    "endColumn": 87,
+                    "endOffset": 748
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zu\\values-zu.xml",
+                    "position": {
+                        "startLine": 7,
+                        "startColumn": 4,
+                        "startOffset": 615,
+                        "endColumn": 87,
+                        "endOffset": 698
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 8,
+                    "startColumn": 4,
+                    "startOffset": 753,
+                    "endColumn": 102,
+                    "endOffset": 851
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zu\\values-zu.xml",
+                    "position": {
+                        "startLine": 8,
+                        "startColumn": 4,
+                        "startOffset": 703,
+                        "endColumn": 102,
+                        "endOffset": 801
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 9,
+                    "startColumn": 4,
+                    "startOffset": 856,
+                    "endColumn": 126,
+                    "endOffset": 978
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zu\\values-zu.xml",
+                    "position": {
+                        "startLine": 9,
+                        "startColumn": 4,
+                        "startOffset": 806,
+                        "endColumn": 126,
+                        "endOffset": 928
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 10,
+                    "startColumn": 4,
+                    "startOffset": 983,
+                    "endColumn": 79,
+                    "endOffset": 1058
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zu\\values-zu.xml",
+                    "position": {
+                        "startLine": 10,
+                        "startColumn": 4,
+                        "startOffset": 933,
+                        "endColumn": 79,
+                        "endOffset": 1008
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 11,
+                    "startColumn": 4,
+                    "startOffset": 1063,
+                    "endColumn": 79,
+                    "endOffset": 1138
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zu\\values-zu.xml",
+                    "position": {
+                        "startLine": 11,
+                        "startColumn": 4,
+                        "startOffset": 1013,
+                        "endColumn": 79,
+                        "endOffset": 1088
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 12,
+                    "startColumn": 4,
+                    "startOffset": 1143,
+                    "endColumn": 85,
+                    "endOffset": 1224
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zu\\values-zu.xml",
+                    "position": {
+                        "startLine": 12,
+                        "startColumn": 4,
+                        "startOffset": 1093,
+                        "endColumn": 85,
+                        "endOffset": 1174
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 13,
+                    "startColumn": 4,
+                    "startOffset": 1229,
+                    "endColumn": 103,
+                    "endOffset": 1328
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zu\\values-zu.xml",
+                    "position": {
+                        "startLine": 13,
+                        "startColumn": 4,
+                        "startOffset": 1179,
+                        "endColumn": 103,
+                        "endOffset": 1278
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 14,
+                    "startColumn": 4,
+                    "startOffset": 1333,
+                    "endColumn": 105,
+                    "endOffset": 1434
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zu\\values-zu.xml",
+                    "position": {
+                        "startLine": 14,
+                        "startColumn": 4,
+                        "startOffset": 1283,
+                        "endColumn": 105,
+                        "endOffset": 1384
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 15,
+                    "startColumn": 4,
+                    "startOffset": 1439,
+                    "endColumn": 97,
+                    "endOffset": 1532
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zu\\values-zu.xml",
+                    "position": {
+                        "startLine": 15,
+                        "startColumn": 4,
+                        "startOffset": 1389,
+                        "endColumn": 97,
+                        "endOffset": 1482
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 16,
+                    "startColumn": 4,
+                    "startOffset": 1537,
+                    "endColumn": 106,
+                    "endOffset": 1639
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zu\\values-zu.xml",
+                    "position": {
+                        "startLine": 16,
+                        "startColumn": 4,
+                        "startOffset": 1487,
+                        "endColumn": 106,
+                        "endOffset": 1589
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 17,
+                    "startColumn": 4,
+                    "startOffset": 1644,
+                    "endColumn": 105,
+                    "endOffset": 1745
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zu\\values-zu.xml",
+                    "position": {
+                        "startLine": 17,
+                        "startColumn": 4,
+                        "startOffset": 1594,
+                        "endColumn": 105,
+                        "endOffset": 1695
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 18,
+                    "startColumn": 4,
+                    "startOffset": 1750,
+                    "endColumn": 105,
+                    "endOffset": 1851
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zu\\values-zu.xml",
+                    "position": {
+                        "startLine": 18,
+                        "startColumn": 4,
+                        "startOffset": 1700,
+                        "endColumn": 105,
+                        "endOffset": 1801
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 19,
+                    "startColumn": 4,
+                    "startOffset": 1856,
+                    "endColumn": 119,
+                    "endOffset": 1971
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zu\\values-zu.xml",
+                    "position": {
+                        "startLine": 19,
+                        "startColumn": 4,
+                        "startOffset": 1806,
+                        "endColumn": 119,
+                        "endOffset": 1921
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 20,
+                    "startColumn": 4,
+                    "startOffset": 1976,
+                    "endColumn": 95,
+                    "endOffset": 2067
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zu\\values-zu.xml",
+                    "position": {
+                        "startLine": 20,
+                        "startColumn": 4,
+                        "startOffset": 1926,
+                        "endColumn": 95,
+                        "endOffset": 2017
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 21,
+                    "startColumn": 4,
+                    "startOffset": 2072,
+                    "endColumn": 190,
+                    "endOffset": 2258
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\c45582eb004ac2d176a714976b6bb7a9a24992ed\\output\\res\\values-zu\\values.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 0,
+                        "startOffset": 285,
+                        "endColumn": 190,
+                        "endOffset": 475
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 22,
+                    "startColumn": 4,
+                    "startOffset": 2263,
+                    "endColumn": 79,
+                    "endOffset": 2338
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\6e39af0737353c1a6bda7e6976d3c0ddced0ad56\\output\\res\\values-zu\\values.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 0,
+                        "startOffset": 237,
+                        "endColumn": 75,
+                        "endOffset": 312
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 23,
+                    "startColumn": 4,
+                    "startOffset": 2343,
+                    "endColumn": 120,
+                    "endOffset": 2459
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\6e39af0737353c1a6bda7e6976d3c0ddced0ad56\\output\\res\\values-zu\\values.xml",
+                    "position": {
+                        "startLine": 5,
+                        "startColumn": 0,
+                        "startOffset": 313,
+                        "endColumn": 116,
+                        "endOffset": 429
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 24,
+                    "startColumn": 4,
+                    "startOffset": 2464,
+                    "endColumn": 69,
+                    "endOffset": 2529
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\6e39af0737353c1a6bda7e6976d3c0ddced0ad56\\output\\res\\values-zu\\values.xml",
+                    "position": {
+                        "startLine": 6,
+                        "startColumn": 0,
+                        "startOffset": 430,
+                        "endColumn": 65,
+                        "endOffset": 495
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 25,
+                    "startColumn": 4,
+                    "startOffset": 2534,
+                    "endColumn": 68,
+                    "endOffset": 2598
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\6e39af0737353c1a6bda7e6976d3c0ddced0ad56\\output\\res\\values-zu\\values.xml",
+                    "position": {
+                        "startLine": 7,
+                        "startColumn": 0,
+                        "startOffset": 496,
+                        "endColumn": 64,
+                        "endOffset": 560
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 26,
+                    "startColumn": 4,
+                    "startOffset": 2603,
+                    "endColumn": 84,
+                    "endOffset": 2683
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\6e39af0737353c1a6bda7e6976d3c0ddced0ad56\\output\\res\\values-zu\\values.xml",
+                    "position": {
+                        "startLine": 8,
+                        "startColumn": 0,
+                        "startOffset": 561,
+                        "endColumn": 80,
+                        "endOffset": 641
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 27,
+                    "startColumn": 4,
+                    "startOffset": 2688,
+                    "endColumn": 107,
+                    "endOffset": 2791
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\6e39af0737353c1a6bda7e6976d3c0ddced0ad56\\output\\res\\values-zu\\values.xml",
+                    "position": {
+                        "startLine": 9,
+                        "startColumn": 0,
+                        "startOffset": 642,
+                        "endColumn": 103,
+                        "endOffset": 745
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 28,
+                    "startColumn": 4,
+                    "startOffset": 2796,
+                    "endColumn": 80,
+                    "endOffset": 2872
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zu\\values-zu.xml",
+                    "position": {
+                        "startLine": 21,
+                        "startColumn": 4,
+                        "startOffset": 2022,
+                        "endColumn": 80,
+                        "endOffset": 2098
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 29,
+                    "startColumn": 4,
+                    "startOffset": 2877,
+                    "endColumn": 100,
+                    "endOffset": 2973
+                },
+                "from": {
+                    "file": "C:\\Users\\向乾\\.android\\build-cache\\2e5b801f4b657feef0174b3d85bc1f750977b787\\output\\res\\values-zu\\values-zu.xml",
+                    "position": {
+                        "startLine": 22,
+                        "startColumn": 4,
+                        "startOffset": 2103,
+                        "endColumn": 100,
+                        "endOffset": 2199
+                    }
+                }
+            }
+        ]
+    }
+]

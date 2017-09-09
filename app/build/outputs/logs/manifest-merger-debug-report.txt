@@ -1,0 +1,239 @@
+-- Merging decision tree log ---
+manifest
+ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:2:1-69:12
+	package
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:4:5-33
+		INJECTED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml
+		INJECTED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml
+	android:versionName
+		INJECTED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml
+		INJECTED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml
+	xmlns:tools
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:3:5-51
+	xmlns:android
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:2:11-69
+	android:versionCode
+		INJECTED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml
+		INJECTED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml
+uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
+ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:6:5-81
+	android:name
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:6:22-78
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:7:5-80
+	android:name
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:7:22-77
+uses-permission#android.permission.INTERNET
+ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:8:5-67
+MERGED from [com.google.android.gms:play-services-ads-lite:11.2.0] C:\Users\向乾\.android\build-cache\da35b281ddf94cc7ac9504074ddb245fb7c907c7\output\AndroidManifest.xml:19:5-66
+	android:name
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:8:22-64
+uses-permission#android.permission.CHANGE_CONFIGURATION
+ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:9:5-79
+	android:name
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:9:22-76
+uses-permission#android.permission.CAMERA
+ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:10:5-65
+	android:name
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:10:22-62
+uses-permission#android.permission.EXPAND_STATUS_BAR
+ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:11:5-76
+MERGED from [ShareBox:easyserver:unspecified] I:\Projects\ShareBox\easyserver\build\intermediates\bundles\default\AndroidManifest.xml:15:5-76
+	android:name
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:11:22-73
+uses-permission#android.permission.READ_PHONE_STATE
+ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:14:5-75
+	android:name
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:14:22-72
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:16:5-79
+MERGED from [ShareBox:channellibrary:unspecified] I:\Projects\ShareBox\channellibrary\build\intermediates\bundles\default\AndroidManifest.xml:13:5-79
+MERGED from [com.google.android.gms:play-services-ads-lite:11.2.0] C:\Users\向乾\.android\build-cache\da35b281ddf94cc7ac9504074ddb245fb7c907c7\output\AndroidManifest.xml:20:5-78
+MERGED from [ShareBox:easyserver:unspecified] I:\Projects\ShareBox\easyserver\build\intermediates\bundles\default\AndroidManifest.xml:13:5-79
+	android:name
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:16:22-76
+uses-permission#android.permission.ACCESS_WIFI_STATE
+ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:17:5-76
+MERGED from [ShareBox:channellibrary:unspecified] I:\Projects\ShareBox\channellibrary\build\intermediates\bundles\default\AndroidManifest.xml:11:5-76
+MERGED from [ShareBox:easyserver:unspecified] I:\Projects\ShareBox\easyserver\build\intermediates\bundles\default\AndroidManifest.xml:11:5-76
+	android:name
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:17:22-73
+uses-permission#android.permission.READ_LOGS
+ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:18:5-68
+	android:name
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:18:22-65
+application
+ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:20:5-67:19
+MERGED from [ShareBox:channellibrary:unspecified] I:\Projects\ShareBox\channellibrary\build\intermediates\bundles\default\AndroidManifest.xml:16:5-21:19
+MERGED from [ShareBox:circularprogresslibrary:unspecified] I:\Projects\ShareBox\circularprogresslibrary\build\intermediates\bundles\default\AndroidManifest.xml:12:5-20
+MERGED from [ShareBox:ijkplayer-exo:unspecified] I:\Projects\ShareBox\ijkplayer-exo\build\intermediates\bundles\default\AndroidManifest.xml:11:5-14:19
+MERGED from [ShareBox:ijkplayer-java:unspecified] I:\Projects\ShareBox\ijkplayer-java\build\intermediates\bundles\default\AndroidManifest.xml:11:5-14:19
+MERGED from [com.android.support:design:24.2.0] C:\Users\向乾\.android\build-cache\cf59a9a3c3b4ce7671292dcf5fa2c7c18f7127fa\output\AndroidManifest.xml:22:5-20
+MERGED from [de.hdodenhof:circleimageview:2.1.0] C:\Users\向乾\.android\build-cache\322514815a079856e1f072f07f97213e2bd4c343\output\AndroidManifest.xml:9:5-20
+MERGED from [com.google.android.gms:play-services-ads-lite:11.2.0] C:\Users\向乾\.android\build-cache\da35b281ddf94cc7ac9504074ddb245fb7c907c7\output\AndroidManifest.xml:23:5-26:19
+MERGED from [com.google.android.gms:play-services-gass:11.2.0] C:\Users\向乾\.android\build-cache\7f31a5089a255f9f58f8790cc1f5d41c4a724fe7\output\AndroidManifest.xml:4:5-19
+MERGED from [com.google.android.gms:play-services-basement:11.2.0] C:\Users\向乾\.android\build-cache\c45582eb004ac2d176a714976b6bb7a9a24992ed\output\AndroidManifest.xml:19:5-21:19
+MERGED from [ShareBox:easyserver:unspecified] I:\Projects\ShareBox\easyserver\build\intermediates\bundles\default\AndroidManifest.xml:17:5-24:19
+MERGED from [com.android.support:appcompat-v7:24.2.0] C:\Users\向乾\.android\build-cache\2e5b801f4b657feef0174b3d85bc1f750977b787\output\AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:animated-vector-drawable:24.2.0] C:\Users\向乾\.android\build-cache\ff9e0902b7a7ca7c155ea0f703a336d709281092\output\AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-vector-drawable:24.2.0] C:\Users\向乾\.android\build-cache\73ddaf860a4b0c4901fd8b262c81d022e8a62914\output\AndroidManifest.xml:23:5-20
+MERGED from [com.android.support:support-v4:25.2.0] C:\Users\向乾\.android\build-cache\c7cb9ea6d2d572c8ef09fae77dc76d5da172784c\output\AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-fragment:25.2.0] C:\Users\向乾\.android\build-cache\e9b0a1bee812ad1c4dc8da04f4ec4782e1688183\output\AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-media-compat:25.2.0] C:\Users\向乾\.android\build-cache\467271e8497092aa5154cccf8c4e82355bd104ad\output\AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-core-ui:25.2.0] C:\Users\向乾\.android\build-cache\807dc9bc9c15f04c098433a713cdd264b70659be\output\AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-core-utils:25.2.0] C:\Users\向乾\.android\build-cache\5871ec061d604f1d7f4fa343478e4c298bf0c396\output\AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-compat:25.2.0] C:\Users\向乾\.android\build-cache\1ee70a0f91456f14f098e82351ae5c2c1f3532cf\output\AndroidManifest.xml:25:5-20
+	android:label
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:24:9-41
+	android:supportsRtl
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:25:9-35
+	android:allowBackup
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:22:9-35
+	android:icon
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:23:9-43
+	android:theme
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:26:9-40
+	android:name
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:21:9-40
+activity#com.ecjtu.sharebox.ui.activity.MainActivity
+ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:27:9-36:20
+	android:launchMode
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:29:13-48
+	android:theme
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:30:13-55
+	android:name
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:28:13-53
+intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
+ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:31:13-35:29
+action#android.intent.action.MAIN
+ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:32:17-69
+	android:name
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:32:25-66
+category#android.intent.category.LAUNCHER
+ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:34:17-77
+	android:name
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:34:27-74
+activity#com.ecjtu.sharebox.ui.activity.ImmersiveFragmentActivity
+ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:38:9-40:58
+	android:theme
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:40:13-55
+	android:name
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:39:13-66
+activity#com.ecjtu.sharebox.ui.activity.TestActivity
+ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:41:9-43:39
+	android:exported
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:43:13-36
+	android:name
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:42:13-53
+service#com.ecjtu.sharebox.service.DaemonService
+ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:45:9-47:41
+	android:process
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:47:13-38
+	android:name
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:46:13-50
+service#com.ecjtu.sharebox.service.MainService
+ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:49:9-56
+	android:name
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:49:18-53
+activity#com.ecjtu.sharebox.ui.activity.TestActivityJava
+ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:51:9-53:39
+	android:exported
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:53:13-36
+	android:name
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:52:13-57
+activity#com.ecjtu.sharebox.ui.activity.SettingsActivity
+ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:54:9-58:57
+	android:label
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:57:13-60
+	android:exported
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:56:13-36
+	android:theme
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:58:13-54
+	android:name
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:55:13-57
+activity#com.ecjtu.sharebox.ui.activity.ActionBarFragmentActivity
+ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:59:9-62:57
+	android:exported
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:61:13-36
+	android:theme
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:62:13-54
+	android:name
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:60:13-66
+activity#com.ecjtu.sharebox.ui.activity.RotateNoCreateActivity
+ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:64:9-66:76
+	android:configChanges
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:66:13-74
+	android:theme
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:65:13-55
+	android:name
+		ADDED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml:64:19-69
+uses-sdk
+INJECTED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
+MERGED from [ShareBox:channellibrary:unspecified] I:\Projects\ShareBox\channellibrary\build\intermediates\bundles\default\AndroidManifest.xml:7:5-9:41
+MERGED from [ShareBox:circularprogresslibrary:unspecified] I:\Projects\ShareBox\circularprogresslibrary\build\intermediates\bundles\default\AndroidManifest.xml:8:5-10:41
+MERGED from [ShareBox:materialstepper:unspecified] I:\Projects\ShareBox\materialstepper\build\intermediates\bundles\default\AndroidManifest.xml:8:5-10:41
+MERGED from [ShareBox:ijkplayer-exo:unspecified] I:\Projects\ShareBox\ijkplayer-exo\build\intermediates\bundles\default\AndroidManifest.xml:7:5-9:41
+MERGED from [com.google.android.exoplayer:exoplayer:r1.5.11] C:\Users\向乾\.android\build-cache\f057b71241e831c7fac90a523192cc866cd5d727\output\AndroidManifest.xml:24:5-26:41
+MERGED from [ShareBox:ijkplayer-java:unspecified] I:\Projects\ShareBox\ijkplayer-java\build\intermediates\bundles\default\AndroidManifest.xml:7:5-9:41
+MERGED from [com.android.support:design:24.2.0] C:\Users\向乾\.android\build-cache\cf59a9a3c3b4ce7671292dcf5fa2c7c18f7127fa\output\AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:recyclerview-v7:24.2.0] C:\Users\向乾\.android\build-cache\6f424d37dcf6df61bf5b4dfae1358a4130f7961b\output\AndroidManifest.xml:20:5-43
+MERGED from [de.hdodenhof:circleimageview:2.1.0] C:\Users\向乾\.android\build-cache\322514815a079856e1f072f07f97213e2bd4c343\output\AndroidManifest.xml:5:5-7:41
+MERGED from [com.tencent.bugly:crashreport:2.6.5] C:\Users\向乾\.android\build-cache\1df95c9ae2aa012e30d74bdca04a9fff1d0a6ea9\output\AndroidManifest.xml:5:5-7:41
+MERGED from [com.google.android.gms:play-services-ads:11.2.0] C:\Users\向乾\.android\build-cache\6e39af0737353c1a6bda7e6976d3c0ddced0ad56\output\AndroidManifest.xml:17:5-94
+MERGED from [com.google.android.gms:play-services-ads-lite:11.2.0] C:\Users\向乾\.android\build-cache\da35b281ddf94cc7ac9504074ddb245fb7c907c7\output\AndroidManifest.xml:22:5-43
+MERGED from [com.google.android.gms:play-services-gass:11.2.0] C:\Users\向乾\.android\build-cache\7f31a5089a255f9f58f8790cc1f5d41c4a724fe7\output\AndroidManifest.xml:3:5-43
+MERGED from [com.google.android.gms:play-services-basement:11.2.0] C:\Users\向乾\.android\build-cache\c45582eb004ac2d176a714976b6bb7a9a24992ed\output\AndroidManifest.xml:17:5-43
+MERGED from [ShareBox:easyserver:unspecified] I:\Projects\ShareBox\easyserver\build\intermediates\bundles\default\AndroidManifest.xml:7:5-9:41
+MERGED from [com.android.support:appcompat-v7:24.2.0] C:\Users\向乾\.android\build-cache\2e5b801f4b657feef0174b3d85bc1f750977b787\output\AndroidManifest.xml:21:5-23:78
+MERGED from [com.android.support:animated-vector-drawable:24.2.0] C:\Users\向乾\.android\build-cache\ff9e0902b7a7ca7c155ea0f703a336d709281092\output\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:24.2.0] C:\Users\向乾\.android\build-cache\73ddaf860a4b0c4901fd8b262c81d022e8a62914\output\AndroidManifest.xml:21:5-43
+MERGED from [com.android.support:support-v4:25.2.0] C:\Users\向乾\.android\build-cache\c7cb9ea6d2d572c8ef09fae77dc76d5da172784c\output\AndroidManifest.xml:21:5-23:54
+MERGED from [com.android.support:support-fragment:25.2.0] C:\Users\向乾\.android\build-cache\e9b0a1bee812ad1c4dc8da04f4ec4782e1688183\output\AndroidManifest.xml:21:5-23:60
+MERGED from [com.android.support:support-media-compat:25.2.0] C:\Users\向乾\.android\build-cache\467271e8497092aa5154cccf8c4e82355bd104ad\output\AndroidManifest.xml:21:5-23:63
+MERGED from [com.android.support:support-core-ui:25.2.0] C:\Users\向乾\.android\build-cache\807dc9bc9c15f04c098433a713cdd264b70659be\output\AndroidManifest.xml:21:5-23:58
+MERGED from [com.android.support:support-core-utils:25.2.0] C:\Users\向乾\.android\build-cache\5871ec061d604f1d7f4fa343478e4c298bf0c396\output\AndroidManifest.xml:21:5-23:61
+MERGED from [com.android.support:support-compat:25.2.0] C:\Users\向乾\.android\build-cache\1ee70a0f91456f14f098e82351ae5c2c1f3532cf\output\AndroidManifest.xml:21:5-23:58
+	tools:overrideLibrary
+		ADDED from [com.google.android.gms:play-services-ads:11.2.0] C:\Users\向乾\.android\build-cache\6e39af0737353c1a6bda7e6976d3c0ddced0ad56\output\AndroidManifest.xml:17:42-92
+	android:targetSdkVersion
+		INJECTED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml
+		INJECTED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml
+		INJECTED from I:\Projects\ShareBox\app\src\main\AndroidManifest.xml
+uses-permission#android.permission.CHANGE_NETWORK_STATE
+ADDED from [ShareBox:channellibrary:unspecified] I:\Projects\ShareBox\channellibrary\build\intermediates\bundles\default\AndroidManifest.xml:12:5-79
+MERGED from [ShareBox:easyserver:unspecified] I:\Projects\ShareBox\easyserver\build\intermediates\bundles\default\AndroidManifest.xml:12:5-79
+	android:name
+		ADDED from [ShareBox:channellibrary:unspecified] I:\Projects\ShareBox\channellibrary\build\intermediates\bundles\default\AndroidManifest.xml:12:22-76
+uses-permission#android.permission.CHANGE_WIFI_STATE
+ADDED from [ShareBox:channellibrary:unspecified] I:\Projects\ShareBox\channellibrary\build\intermediates\bundles\default\AndroidManifest.xml:14:5-76
+MERGED from [ShareBox:easyserver:unspecified] I:\Projects\ShareBox\easyserver\build\intermediates\bundles\default\AndroidManifest.xml:14:5-76
+	android:name
+		ADDED from [ShareBox:channellibrary:unspecified] I:\Projects\ShareBox\channellibrary\build\intermediates\bundles\default\AndroidManifest.xml:14:22-73
+service#org.ecjtu.channellibrary.wifidirect.WifiDirectService
+ADDED from [ShareBox:channellibrary:unspecified] I:\Projects\ShareBox\channellibrary\build\intermediates\bundles\default\AndroidManifest.xml:20:9-89
+	android:name
+		ADDED from [ShareBox:channellibrary:unspecified] I:\Projects\ShareBox\channellibrary\build\intermediates\bundles\default\AndroidManifest.xml:20:18-86
+activity#com.google.android.gms.ads.AdActivity
+ADDED from [com.google.android.gms:play-services-ads-lite:11.2.0] C:\Users\向乾\.android\build-cache\da35b281ddf94cc7ac9504074ddb245fb7c907c7\output\AndroidManifest.xml:25:9-257
+	android:exported
+		ADDED from [com.google.android.gms:play-services-ads-lite:11.2.0] C:\Users\向乾\.android\build-cache\da35b281ddf94cc7ac9504074ddb245fb7c907c7\output\AndroidManifest.xml:25:231-255
+	android:configChanges
+		ADDED from [com.google.android.gms:play-services-ads-lite:11.2.0] C:\Users\向乾\.android\build-cache\da35b281ddf94cc7ac9504074ddb245fb7c907c7\output\AndroidManifest.xml:25:72-181
+	android:theme
+		ADDED from [com.google.android.gms:play-services-ads-lite:11.2.0] C:\Users\向乾\.android\build-cache\da35b281ddf94cc7ac9504074ddb245fb7c907c7\output\AndroidManifest.xml:25:182-230
+	android:name
+		ADDED from [com.google.android.gms:play-services-ads-lite:11.2.0] C:\Users\向乾\.android\build-cache\da35b281ddf94cc7ac9504074ddb245fb7c907c7\output\AndroidManifest.xml:25:19-71
+meta-data#com.google.android.gms.version
+ADDED from [com.google.android.gms:play-services-basement:11.2.0] C:\Users\向乾\.android\build-cache\c45582eb004ac2d176a714976b6bb7a9a24992ed\output\AndroidManifest.xml:20:9-121
+	android:value
+		ADDED from [com.google.android.gms:play-services-basement:11.2.0] C:\Users\向乾\.android\build-cache\c45582eb004ac2d176a714976b6bb7a9a24992ed\output\AndroidManifest.xml:20:66-119
+	android:name
+		ADDED from [com.google.android.gms:play-services-basement:11.2.0] C:\Users\向乾\.android\build-cache\c45582eb004ac2d176a714976b6bb7a9a24992ed\output\AndroidManifest.xml:20:20-65
+service#org.ecjtu.easyserver.server.impl.service.EasyServerService
+ADDED from [ShareBox:easyserver:unspecified] I:\Projects\ShareBox\easyserver\build\intermediates\bundles\default\AndroidManifest.xml:21:9-23:39
+	android:process
+		ADDED from [ShareBox:easyserver:unspecified] I:\Projects\ShareBox\easyserver\build\intermediates\bundles\default\AndroidManifest.xml:23:13-36
+	android:name
+		ADDED from [ShareBox:easyserver:unspecified] I:\Projects\ShareBox\easyserver\build\intermediates\bundles\default\AndroidManifest.xml:22:13-86

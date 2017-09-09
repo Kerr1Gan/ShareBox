@@ -1,0 +1,42 @@
+[
+    {
+        "merged": "I:\\Projects\\ShareBox\\app\\build\\intermediates\\res\\merged\\debug\\mipmap\\ico_wifi_open.png",
+        "source": "I:\\Projects\\ShareBox\\easyserver\\build\\intermediates\\bundles\\default\\res\\mipmap\\ico_wifi_open.png"
+    },
+    {
+        "merged": "I:\\Projects\\ShareBox\\app\\build\\intermediates\\res\\merged\\debug\\mipmap\\btn_video_expand.png",
+        "source": "I:\\Projects\\ShareBox\\ijkplayer-exo\\build\\intermediates\\bundles\\default\\res\\mipmap\\btn_video_expand.png"
+    },
+    {
+        "merged": "I:\\Projects\\ShareBox\\app\\build\\intermediates\\res\\merged\\debug\\mipmap\\btn_video_pause_p.png",
+        "source": "I:\\Projects\\ShareBox\\ijkplayer-exo\\build\\intermediates\\bundles\\default\\res\\mipmap\\btn_video_pause_p.png"
+    },
+    {
+        "merged": "I:\\Projects\\ShareBox\\app\\build\\intermediates\\res\\merged\\debug\\mipmap\\btn_video_back.png",
+        "source": "I:\\Projects\\ShareBox\\ijkplayer-exo\\build\\intermediates\\bundles\\default\\res\\mipmap\\btn_video_back.png"
+    },
+    {
+        "merged": "I:\\Projects\\ShareBox\\app\\build\\intermediates\\res\\merged\\debug\\mipmap\\btn_video_progress_thumb.png",
+        "source": "I:\\Projects\\ShareBox\\ijkplayer-exo\\build\\intermediates\\bundles\\default\\res\\mipmap\\btn_video_progress_thumb.png"
+    },
+    {
+        "merged": "I:\\Projects\\ShareBox\\app\\build\\intermediates\\res\\merged\\debug\\mipmap\\btn_video_play_p.png",
+        "source": "I:\\Projects\\ShareBox\\ijkplayer-exo\\build\\intermediates\\bundles\\default\\res\\mipmap\\btn_video_play_p.png"
+    },
+    {
+        "merged": "I:\\Projects\\ShareBox\\app\\build\\intermediates\\res\\merged\\debug\\mipmap\\btn_video_play_n.png",
+        "source": "I:\\Projects\\ShareBox\\ijkplayer-exo\\build\\intermediates\\bundles\\default\\res\\mipmap\\btn_video_play_n.png"
+    },
+    {
+        "merged": "I:\\Projects\\ShareBox\\app\\build\\intermediates\\res\\merged\\debug\\mipmap\\notification_wifi.png",
+        "source": "I:\\Projects\\ShareBox\\easyserver\\build\\intermediates\\bundles\\default\\res\\mipmap\\notification_wifi.png"
+    },
+    {
+        "merged": "I:\\Projects\\ShareBox\\app\\build\\intermediates\\res\\merged\\debug\\mipmap\\ico_exit.png",
+        "source": "I:\\Projects\\ShareBox\\easyserver\\build\\intermediates\\bundles\\default\\res\\mipmap\\ico_exit.png"
+    },
+    {
+        "merged": "I:\\Projects\\ShareBox\\app\\build\\intermediates\\res\\merged\\debug\\mipmap\\btn_video_pause_n.png",
+        "source": "I:\\Projects\\ShareBox\\ijkplayer-exo\\build\\intermediates\\bundles\\default\\res\\mipmap\\btn_video_pause_n.png"
+    }
+]
