@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.ecjtu.sharebox.R
@@ -59,13 +60,33 @@ class InternetFileExpandableAdapter(expandableListView: FileExpandableListView) 
     }
 
     override fun setGroupViewThumb(type: FileUtil.MediaFileType?, thumb: String?, icon: ImageView?, text: TextView?) {
-        val baseUrl = "http://${mDeviceInfo?.getIp()}:${mDeviceInfo?.port}/API/Cache${CacheUtil.getCachePath(context,thumb)}"
+        var baseUrl = ""
+        var localThumb = thumb
+        if (type == FileUtil.MediaFileType.APP) {
+            baseUrl = "http://${mDeviceInfo?.getIp()}:${mDeviceInfo?.port}/api/Apk$localThumb"
+            Glide.with(context).load(baseUrl).into(icon)
+            return
+        } else if (type == FileUtil.MediaFileType.IMG) {
+            baseUrl = "http://${mDeviceInfo?.getIp()}:${mDeviceInfo?.port}/api/Image$localThumb"
+        } else {
+            baseUrl = "http://${mDeviceInfo?.getIp()}:${mDeviceInfo?.port}/api/Cache${CacheUtil.getCachePath(context, localThumb)}"
+        }
         val opt = RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)
         super.setGroupViewThumb(type, baseUrl, icon, text, opt)
     }
 
     override fun setChildViewThumb(type: FileUtil.MediaFileType?, f: String?, icon: ImageView?) {
-        val baseUrl = "http://${mDeviceInfo?.getIp()}:${mDeviceInfo?.port}/API/Cache${CacheUtil.getCachePath(context,f)}"
+        var baseUrl = ""
+        var localThumb = f
+        if (type == FileUtil.MediaFileType.APP) {
+            baseUrl = "http://${mDeviceInfo?.getIp()}:${mDeviceInfo?.port}/api/Apk$localThumb"
+            Glide.with(context).load(baseUrl).into(icon)
+            return
+        } else if (type == FileUtil.MediaFileType.IMG) {
+            baseUrl = "http://${mDeviceInfo?.getIp()}:${mDeviceInfo?.port}/api/Image$localThumb"
+        } else {
+            baseUrl = "http://${mDeviceInfo?.getIp()}:${mDeviceInfo?.port}/api/Cache${CacheUtil.getCachePath(context, localThumb)}"
+        }
         val opt = RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)
         super.setChildViewThumb(type, baseUrl, icon, opt)
     }
