@@ -112,8 +112,6 @@ public class File implements BaseServlet {
             httpReq.returnBadRequest();
             return;
         }
-
-        return;
     }
 
     @Override

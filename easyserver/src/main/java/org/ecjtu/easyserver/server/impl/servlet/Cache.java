@@ -14,13 +14,16 @@ import java.net.MalformedURLException;
  * Created by KerriGan on 2016/6/27.
  */
 public class Cache implements BaseServlet {
+    private static final String TAG = "Cache";
+
     @Override
     public void doGet(HTTPRequest httpReq, HTTPResponse httpRes) {
         String uri = httpReq.getURI();
 
-
-        String filePaths = uri.substring("/API/Cache".length());
-
+        uri= uri.toLowerCase();
+        uri = uri.replace("/api/"+"cache","");
+//        String filePaths = uri.substring("/API/Cache".length());
+        String filePaths = uri;
 
         int indexOf = filePaths.indexOf("&");
 

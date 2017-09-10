@@ -39,12 +39,12 @@ public class CacheUtil {
         Bitmap saveBitmap = Bitmap.createScaledBitmap(bmp, width, height, true);
 
         try {
-            tempFile.createNewFile();
+            tempFile = new File(rootPath , "@@@@"+fileName);
             FileOutputStream out = new FileOutputStream(tempFile);
             saveBitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
             out.flush();
             out.close();
-
+            tempFile.renameTo(new File(rootPath,fileName));
             //there is a bug need to fix bitmap will recycle.in 2016.7.5 by KerriGan
 //            saveBitmap.recycle();
             return rootPath.getPath() + fileName;
@@ -94,6 +94,19 @@ public class CacheUtil {
                 }
             }
         }
+    }
+
+    public static boolean hasCache(Context context,String key){
+        File file = new File(getCachePath(context,key));
+        if(file.exists()&&!file.isDirectory()){
+            return true;
+        }
+        return false;
+    }
+
+    public static void deleteCache(Context context,String key){
+        File file = new File(getCachePath(context,key));
+        file.delete();
     }
 
     public static String getCacheRootPath(Context context) {
