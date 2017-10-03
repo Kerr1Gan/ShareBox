@@ -1,4 +1,4 @@
-package com.ecjtu.sharebox.util.cache;
+package com.ecjtu.parcel.base;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,7 +38,7 @@ public class FileCacheHelper {
             ret = persistObject(key, object);
         } catch (InterruptedException e) {
             e.printStackTrace();
-            ret=false;
+            ret = false;
         } finally {
             mWriteLock.unlock();
         }
@@ -52,29 +52,67 @@ public class FileCacheHelper {
             ret = (T) readObject(key);
         } catch (InterruptedException e) {
             e.printStackTrace();
-            ret=null;
+            ret = null;
         } finally {
             mReadLock.unlock();
         }
         return ret;
     }
 
-    public <T> boolean persistObject(String key, T object) {
-        File file = new File(mPath, key);
-        if (file.exists()) file.delete();
-        FileOutputStream fos=null;
+    public boolean remove(String key) {
+        FileLock fileLock = null;
+        FileInputStream fis = null;
+        File file = null;
         boolean ret = false;
-        FileLock fileLock=null;
         try {
-            fos=new FileOutputStream(file);
-            fileLock=fos.getChannel().lock();
-            writeObjectFromStream(fos,object);
+            mReadLock.lockInterruptibly();
+            file = new File(mPath, key);
+            fis = new FileInputStream(file);
+            fileLock = fis.getChannel().lock(0L, Long.MAX_VALUE, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            mReadLock.unlock();
+            if (fileLock != null) {
+                try {
+                    fileLock.release();
+                } catch (Exception e) {
+                }
+            }
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (Exception e) {
+                }
+            }
+            if (file != null) {
+                ret = file.delete();
+            }
+        }
+        return ret;
+    }
+
+    protected <T> boolean persistObject(String key, T object) {
+        return persistObject(key, object, mPath, key + "@@@@");
+    }
+
+    protected <T> boolean persistObject(String key, T object, String path, String tempName) {
+        File file = new File(path, tempName);
+        if (file.exists()) file.delete();
+        FileOutputStream fos = null;
+        boolean ret = false;
+        FileLock fileLock = null;
+        try {
+            fos = new FileOutputStream(file);
+            fileLock = fos.getChannel().lock();
+            writeObjectFromStream(fos, object);
             ret = true;
+            file.renameTo(new File(path, key));
         } catch (Exception e) {
             e.printStackTrace();
             ret = false;
         } finally {
-            if(fileLock!=null){
+            if (fileLock != null) {
                 try {
                     fileLock.release();
                 } catch (IOException e) {
@@ -90,21 +128,25 @@ public class FileCacheHelper {
         return ret;
     }
 
-    public <T> T readObject(String key) {
-        File file = new File(mPath, key);
+    protected <T> T readObject(String key) {
+        return readObject(key, mPath);
+    }
+
+    protected <T> T readObject(String key, String path) {
+        File file = new File(path, key);
         if (!file.exists()) return null;
 
         T ret = null;
-        FileLock fileLock=null;
-        FileInputStream fis=null;
+        FileLock fileLock = null;
+        FileInputStream fis = null;
         try {
-            fis=new FileInputStream(file);
-            fileLock=fis.getChannel().lock(0L, Long.MAX_VALUE, true);
+            fis = new FileInputStream(file);
+            fileLock = fis.getChannel().lock(0L, Long.MAX_VALUE, true);
             ret = readObjectFromStream(fis);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if(fileLock!=null){
+            if (fileLock != null) {
                 try {
                     fileLock.release();
                 } catch (IOException e) {
@@ -120,12 +162,12 @@ public class FileCacheHelper {
         return ret;
     }
 
-    public <T> T readObjectFromStream(FileInputStream is) throws IOException, ClassNotFoundException {
+    protected <T> T readObjectFromStream(FileInputStream is) throws IOException, ClassNotFoundException {
         ObjectInputStream fis = new ObjectInputStream(is);
         return (T) fis.readObject();
     }
 
-    public <T> void writeObjectFromStream(FileOutputStream os,T object) throws IOException, ClassNotFoundException {
+    protected <T> void writeObjectFromStream(FileOutputStream os, T object) throws IOException, ClassNotFoundException {
         ObjectOutputStream fos = new ObjectOutputStream(os);
         fos.writeObject(object);
     }

@@ -1,7 +1,6 @@
 package com.ecjtu.sharebox.ui.adapter
 
 import android.app.Activity
-import android.graphics.drawable.Drawable
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -10,20 +9,16 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.Target
+import com.ecjtu.netcore.network.AsyncNetwork
+import com.ecjtu.netcore.network.IRequestCallback
+import com.ecjtu.netcore.network.IRequestCallbackV2
 import com.ecjtu.sharebox.R
-import com.ecjtu.sharebox.network.AsyncNetwork
-import com.ecjtu.sharebox.network.IRequestCallback
 import com.ecjtu.sharebox.ui.dialog.ApDataDialog
 import com.ecjtu.sharebox.ui.dialog.FilePickDialog
 import com.ecjtu.sharebox.ui.dialog.InternetFilePickDialog
 import com.ecjtu.sharebox.ui.dialog.TextItemDialog
-import com.ecjtu.sharebox.util.cache.CacheUtil
 import com.ecjtu.sharebox.util.file.FileUtil
 import org.ecjtu.easyserver.server.ConversionFactory
 import org.ecjtu.easyserver.server.DeviceInfo
@@ -79,9 +74,6 @@ class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerViewAdapter
 //
 //                    }
                 }
-
-                override fun onError(httpURLConnection: HttpURLConnection?, exception: Exception) {
-                }
             })
         } else {
             //do nothing
@@ -92,7 +84,7 @@ class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerViewAdapter
         val position = v?.getTag(R.id.extra_tag) as Int
         val deviceInfo = mDeviceList?.get(position)
 
-        AsyncNetwork().requestDeviceInfo("${deviceInfo?.ip}:${deviceInfo?.port}", object : IRequestCallback {
+        AsyncNetwork().requestDeviceInfo("${deviceInfo?.ip}:${deviceInfo?.port}", object : IRequestCallbackV2 {
             override fun onSuccess(httpURLConnection: HttpURLConnection?, response: String) {
                 ConversionFactory.json2DeviceInfo(JSONObject(response)).apply {
                     deviceInfo?.fileMap = fileMap

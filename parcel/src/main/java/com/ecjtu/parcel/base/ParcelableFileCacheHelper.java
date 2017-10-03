@@ -1,4 +1,4 @@
-package com.ecjtu.sharebox.util.cache;
+package com.ecjtu.parcel.base;
 
 import android.os.Parcel;
 
@@ -9,9 +9,8 @@ import java.io.IOException;
 
 /**
  * Created by Ethan_Xiang on 2017/8/21.
- * Parcel 存储在磁盘体积约为Serializable的4倍，而速度比Serializable快了约10至20倍
  */
-abstract public class ParcelableFileCacheHelper extends FileCacheHelper {
+public abstract class ParcelableFileCacheHelper extends FileCacheHelper {
 
     private ByteArrayOutputStream mByteArrayOutputStream;
 
@@ -20,7 +19,7 @@ abstract public class ParcelableFileCacheHelper extends FileCacheHelper {
     }
 
     @Override
-    public <T> T readObjectFromStream(FileInputStream is) throws IOException, ClassNotFoundException {
+    protected <T> T readObjectFromStream(FileInputStream is) throws IOException, ClassNotFoundException {
         mByteArrayOutputStream = new ByteArrayOutputStream();
         int len;
         byte[] buf = new byte[1024 * 1024];
@@ -31,7 +30,13 @@ abstract public class ParcelableFileCacheHelper extends FileCacheHelper {
         buf = mByteArrayOutputStream.toByteArray();
         parcel.unmarshall(buf, 0, buf.length);
         parcel.setDataPosition(0);
-
+        int version = parcel.readInt();
+        if (version != getVersion()) {
+            if (getVersion() <= 0) {
+                throw new IllegalStateException("getVersion() must be >0");
+            }
+            return null;
+        }
         //read parcel
         T ret = readParcel(parcel);
 
@@ -42,15 +47,19 @@ abstract public class ParcelableFileCacheHelper extends FileCacheHelper {
     }
 
     @Override
-    public <T> void writeObjectFromStream(FileOutputStream os, T object) throws IOException, ClassNotFoundException {
-        Parcel parcel = writeParcel(Parcel.obtain(),object);
-        os.write(parcel.marshall());
-        parcel.recycle();
+    protected <T> void writeObjectFromStream(FileOutputStream os, T object) throws IOException, ClassNotFoundException {
+        Parcel parcel = Parcel.obtain();
+        parcel.writeInt(getVersion());
+        parcel = writeParcel(parcel, object);
+        if (parcel != null) {
+            os.write(parcel.marshall());
+            parcel.recycle();
+        }
         gc();
     }
 
     @Override
-    public <T> T readObject(String key) {
+    protected <T> T readObject(String key) {
         T ret = super.readObject(key);
         try {
             if (mByteArrayOutputStream != null) {
@@ -62,13 +71,22 @@ abstract public class ParcelableFileCacheHelper extends FileCacheHelper {
         return ret;
     }
 
+    @Override
+    protected <T> boolean persistObject(String key, T object) {
+        return super.persistObject(key, object);
+    }
+
     private void gc() {
         System.gc();
         System.runFinalization();
         System.gc();
     }
 
-    abstract <T> T readParcel(Parcel parcel);
+    protected abstract <T> T readParcel(Parcel parcel);
 
-    abstract <T> Parcel writeParcel(Parcel parcel, T object);
+    protected abstract <T> Parcel writeParcel(Parcel parcel, T object);
+
+    public int getVersion() {
+        return 1;
+    }
 }

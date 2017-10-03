@@ -1,8 +1,6 @@
 package com.ecjtu.sharebox.ui.activity;
 
-import android.content.Intent;
 import android.os.Parcel;
-import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,8 +8,6 @@ import android.view.View;
 
 import com.dd.CircularProgressButton;
 import com.ecjtu.sharebox.R;
-import com.ecjtu.sharebox.ui.fragment.WebViewFragment;
-import com.ecjtu.sharebox.util.cache.FileCacheHelper;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -71,33 +67,6 @@ public class TestActivityJava extends AppCompatActivity {
             }
             map.put("HelloWorld" + i, childList);
         }
-
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                long startTime = System.currentTimeMillis();
-                FileCacheHelper helper = new FileCacheHelper("/sdcard");
-                helper.persistObject("key", map);
-
-//                    Log.e("tttttttttt", "persistObject time " + (System.currentTimeMillis() - startTime));
-                startTime = System.currentTimeMillis();
-                Map<String,List<String>> childMap= helper.readObject("key");
-                Log.e("tttttttttt", "persistObject time " + (System.currentTimeMillis() - startTime));
-
-
-//                try {
-//                    saveParcel(map,new FileOutputStream("/sdcard/cache.par"));
-////                    Log.e("tttttttttt", "persistObject time " + (System.currentTimeMillis() - startTime));
-//                    startTime = System.currentTimeMillis();
-////                    Map<String,List<String>> childMap= (Map<String, List<String>>) helper.readObject("key");
-//                    readParcel(new FileInputStream("/sdcard/cache.par"));
-//                    Log.e("tttttttttt", "persistObject time " + (System.currentTimeMillis() - startTime));
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-            }
-        }).start();
     }
 
     public void saveParcel(Map<String,List<String>> map, FileOutputStream fos) throws IOException {
