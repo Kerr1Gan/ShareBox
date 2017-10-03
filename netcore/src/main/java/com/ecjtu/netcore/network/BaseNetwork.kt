@@ -1,6 +1,7 @@
-package com.ecjtu.sharebox.network
+package com.ecjtu.netcore.network
 
 import android.text.TextUtils
+import android.util.Log
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
@@ -20,6 +21,7 @@ abstract class BaseNetwork {
         const val HEADER_CONTENT_LENGTH = "Content-Length"
         const val HTTP_PREFIX = "http://"
         const val CACHE_SIZE = 5 * 1024
+        private const val TAG = "BaseNetwork"
     }
 
     object Method {
@@ -40,6 +42,14 @@ abstract class BaseNetwork {
 
     private var mOutputStream: OutputStream? = null
 
+    private var mHeaders: HashMap<String, String>? = null
+
+    private var mDoInput = true
+
+    private var mDoOutput = false
+
+    private var mUrl = ""
+
     fun setRequestCallback(callback: IRequestCallback) {
         mCallback = callback
     }
@@ -50,7 +60,8 @@ abstract class BaseNetwork {
 
         var ret = ""
         try {
-            var url = URL(urlStr)
+            mUrl = urlStr
+            var url = URL(mUrl)
             mHttpUrlConnection = url.openConnection() as HttpURLConnection
             setupRequest(mHttpUrlConnection!!)
             var paramStr = setParams(mHttpUrlConnection!!, mutableMap)
@@ -58,11 +69,14 @@ abstract class BaseNetwork {
             pushContent(mHttpUrlConnection!!, paramStr)
             ret = getContent(mHttpUrlConnection!!)
         } catch (e: Exception) {
+            Log.i(TAG, "uri " + mUrl)
             e.printStackTrace()
             ex = e
         } finally {
-            if (ex != null) {
-                mCallback?.onError(mHttpUrlConnection, ex)
+            if (ex != null && mCallback is IRequestCallbackV2) {
+                mCallback?.let {
+                    (mCallback as IRequestCallbackV2).onError(mHttpUrlConnection, ex!!)
+                }
             } else {
                 mCallback?.onSuccess(mHttpUrlConnection, ret)
             }
@@ -72,23 +86,47 @@ abstract class BaseNetwork {
 
     open fun setupRequest(httpURLConnection: HttpURLConnection) {
         httpURLConnection.apply {
-            doInput = true
-            doOutput = true
+            doInput = mDoInput
+            doOutput = mDoOutput
             requestMethod = Method.GET
             connectTimeout = TIME_OUT
             readTimeout = TIME_OUT
             setRequestProperty("Content-Type", "*/*")
             setRequestProperty(HEADER_CONTENT_ENCODING, CHARSET)
+            mHeaders?.apply {
+                for (entry in this) {
+                    setRequestProperty(entry.key, entry.value)
+                }
+            }
         }
+
+    }
+
+    open fun setHeaders(values: HashMap<String, String>): BaseNetwork {
+        if (mHeaders == null) {
+            mHeaders = HashMap<String, String>()
+        }
+        for (entry in values) {
+            setHeader(entry.key, entry.value)
+        }
+        return this
+    }
+
+
+    open fun setHeader(key: String, value: String): BaseNetwork {
+        if (mHeaders == null) {
+            mHeaders = HashMap<String, String>()
+        }
+        mHeaders?.put(key, value)
+        return this
     }
 
     open fun setParams(httpURLConnection: HttpURLConnection, mutableMap: MutableMap<String, String>? = null): String {
         var ret = ""
         mutableMap?.let {
             httpURLConnection.requestMethod = Method.POST
-
-            var param: String = ""
-
+            setDoInputOutput(null, true)
+            var param = ""
             for (obj in mutableMap.entries) {
                 if (!TextUtils.isEmpty(param)) {
                     param += "&"
@@ -101,31 +139,40 @@ abstract class BaseNetwork {
         return ret
     }
 
+    @Throws(IOException::class)
     open fun connect() {
         try {
             mHttpUrlConnection?.connect()
         } catch (io: IOException) {
+            Log.i(TAG, "uri " + mUrl)
             throw io
         }
     }
 
     open fun getContent(httpURLConnection: HttpURLConnection): String {
         var ret = ""
+        var os: ByteArrayOutputStream? = null
         try {
-            if (httpURLConnection.responseCode == HttpURLConnection.HTTP_OK) {
-                var os = ByteArrayOutputStream()
-                var temp = ByteArray(CACHE_SIZE, { index -> 0 })
-                var `is` = httpURLConnection.inputStream
-                mInputStream = `is`
-                var len: Int
+            os = ByteArrayOutputStream()
+            var temp = ByteArray(CACHE_SIZE, { index -> 0 })
+            var `is` = httpURLConnection.inputStream
+            mInputStream = `is`
+            var len: Int
+            len = `is`.read(temp)
+            while (len > 0) {
+                os.write(temp, 0, len)
                 len = `is`.read(temp)
-                while (len > 0) {
-                    os.write(temp, 0, len)
-                    len = `is`.read(temp)
-                }
-                ret = String(os.toByteArray())
             }
+            ret = String(os.toByteArray())
+            os.close()
         } catch (ex: Exception) {
+            Log.i(TAG, "uri " + mUrl)
+            if (mInputStream != null) {
+                mInputStream?.close()
+            }
+            if (os != null) {
+                os.close()
+            }
             ex.printStackTrace()
             throw ex
         }
@@ -137,6 +184,7 @@ abstract class BaseNetwork {
             mOutputStream?.close()
             mInputStream?.close()
         } catch (e: Exception) {
+            Log.i(TAG, "uri " + mUrl)
             throw e
         } finally {
             mHttpUrlConnection?.disconnect()
@@ -151,5 +199,11 @@ abstract class BaseNetwork {
                 mOutputStream?.flush()
             }
         }
+    }
+
+    fun setDoInputOutput(input: Boolean?, output: Boolean?): BaseNetwork {
+        input?.let { mDoInput = input }
+        output?.let { mDoOutput = output }
+        return this
     }
 }

@@ -1,4 +1,4 @@
-package com.ecjtu.sharebox.network
+package com.ecjtu.netcore.network
 
 import java.lang.Exception
 import java.net.HttpURLConnection
@@ -8,5 +8,8 @@ import java.net.HttpURLConnection
  */
 interface IRequestCallback {
     fun onSuccess(httpURLConnection: HttpURLConnection?, response: String)
+}
+
+interface IRequestCallbackV2 : IRequestCallback {
     fun onError(httpURLConnection: HttpURLConnection?, exception: Exception)
 }

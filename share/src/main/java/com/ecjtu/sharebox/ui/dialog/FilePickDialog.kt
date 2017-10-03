@@ -22,7 +22,7 @@ import android.widget.Toast
 import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.async.FindAllFilesHelper
-import com.ecjtu.sharebox.async.MemoryUnLeakHandler
+import com.ecjtu.sharebox.async.WeakHandler
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.ui.adapter.FileExpandableAdapter
 import com.ecjtu.sharebox.ui.widget.FileExpandableListView
@@ -39,7 +39,7 @@ import kotlin.concurrent.thread
 /**
  * Created by KerriGan on 2017/6/2.
  */
-open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListener, MemoryUnLeakHandler.IHandleMessage {
+open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListener, WeakHandler.IHandleMessage {
 
     constructor(context: Context, activity: Activity? = null) : super(context, activity) {
     }
@@ -447,7 +447,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         return vg.fileExpandableAdapter.apply { setup(title) }
     }
 
-    private var mHandler: MemoryUnLeakHandler<FilePickDialog>? = MemoryUnLeakHandler<FilePickDialog>(this)
+    private var mHandler: WeakHandler<FilePickDialog>? = WeakHandler<FilePickDialog>(this)
 
     override fun handleMessage(msg: Message) {
 

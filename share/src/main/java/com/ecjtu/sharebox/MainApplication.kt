@@ -16,7 +16,6 @@ import com.bumptech.glide.module.AppGlideModule
 import com.google.android.gms.ads.MobileAds
 import com.tencent.bugly.crashreport.CrashReport
 import org.ecjtu.channellibrary.wifidirect.WifiDirectManager
-import org.ecjtu.easyserver.server.DeviceInfo
 import java.io.*
 import java.lang.ref.WeakReference
 import java.lang.reflect.InvocationTargetException

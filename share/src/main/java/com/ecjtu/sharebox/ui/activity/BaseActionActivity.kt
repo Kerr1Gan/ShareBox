@@ -14,13 +14,13 @@ import android.support.v7.app.AppCompatActivity
 import android.view.KeyCharacterMap
 import android.view.KeyEvent
 import android.view.ViewConfiguration
-import com.ecjtu.sharebox.async.MemoryUnLeakHandler
+import com.ecjtu.sharebox.async.WeakHandler
 
 
 /**
  * Created by KeriGan on 2017/6/25.
  */
-abstract class BaseActionActivity : AppCompatActivity, MemoryUnLeakHandler.IHandleMessage {
+abstract class BaseActionActivity : AppCompatActivity, WeakHandler.IHandleMessage {
 
     private var mLocalBroadcastManger: LocalBroadcastManager? = null
 
@@ -99,7 +99,7 @@ abstract class BaseActionActivity : AppCompatActivity, MemoryUnLeakHandler.IHand
     }
 
     class SimpleHandler(host: BaseActionActivity) :
-            MemoryUnLeakHandler<BaseActionActivity>(host)
+            WeakHandler<BaseActionActivity>(host)
 
     fun isNavigationBarShow(activity: Activity): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
