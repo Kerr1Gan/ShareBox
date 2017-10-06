@@ -50,6 +50,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-ads:11.2.0'
     //    compile project(':easyserver')
     compile project(':netcore')
+    compile project(':common-componentes')
 }
 
 repositories {
