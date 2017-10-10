@@ -1,9 +1,8 @@
 package com.ecjtu.sharebox.ui.activity;
 
+import android.os.Bundle;
 import android.os.Parcel;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import com.dd.CircularProgressButton;
@@ -69,8 +68,8 @@ public class TestActivityJava extends AppCompatActivity {
         }
     }
 
-    public void saveParcel(Map<String,List<String>> map, FileOutputStream fos) throws IOException {
-        Parcel parcel=Parcel.obtain();
+    public void saveParcel(Map<String, List<String>> map, FileOutputStream fos) throws IOException {
+        Parcel parcel = Parcel.obtain();
         parcel.writeMap(map);
         fos.write(parcel.marshall());
         parcel.recycle();
@@ -90,8 +89,8 @@ public class TestActivityJava extends AppCompatActivity {
         parcel.setDataPosition(0);
 
         //read parcel
-        Map<String,List<String>> map=new HashMap<>();
-        parcel.readMap(map,HashMap.class.getClassLoader());
+        Map<String, List<String>> map = new HashMap<>();
+        parcel.readMap(map, HashMap.class.getClassLoader());
 
 
         parcel.recycle();

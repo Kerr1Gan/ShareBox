@@ -22,12 +22,12 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
+import com.ecjtu.componentes.ActionBarFragmentActivity
 import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.PreferenceInfo
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.notification.ServerComingNotification
-import com.ecjtu.sharebox.ui.activity.ActionBarFragmentActivity
 import com.ecjtu.sharebox.ui.activity.MainActivity
 import com.ecjtu.sharebox.ui.activity.SettingsActivity
 import com.ecjtu.sharebox.ui.adapter.DeviceRecyclerViewAdapter

@@ -36,18 +36,18 @@ open class BaseFragmentActivity : BaseActionActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_base_fragment)
+        setContentView(R.layout.cc_activity_base_fragment)
         val fragmentName = intent.getStringExtra(EXTRA_FRAGMENT_NAME)
         var fragment: Fragment? = null
         if (TextUtils.isEmpty(fragmentName)) {
             //set default fragment
-//            fragment = makeFragment(MainFragment::class.java!!.getName())
+            //fragment = makeFragment(MainFragment::class.java!!.getName())
         } else {
             val args = intent.getBundleExtra(EXTRA_FRAGMENT_ARG)
             try {
                 fragment = makeFragment(fragmentName)
                 if (args != null)
-                    fragment!!.arguments = args
+                    fragment?.arguments = args
             } catch (e: Exception) {
                 e.printStackTrace()
             }
