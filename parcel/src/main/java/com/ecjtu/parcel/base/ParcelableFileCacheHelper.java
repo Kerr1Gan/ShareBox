@@ -72,8 +72,8 @@ public abstract class ParcelableFileCacheHelper extends FileCacheHelper {
     }
 
     @Override
-    protected <T> boolean persistObject(String key, T object) {
-        return super.persistObject(key, object);
+    protected <T> boolean writeObject(String key, T object) {
+        return super.writeObject(key, object);
     }
 
     private void gc() {

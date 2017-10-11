@@ -35,7 +35,7 @@ public class FileCacheHelper {
         boolean ret = false;
         try {
             mWriteLock.lockInterruptibly();
-            ret = persistObject(key, object);
+            ret = writeObject(key, object);
         } catch (InterruptedException e) {
             e.printStackTrace();
             ret = false;
@@ -92,11 +92,11 @@ public class FileCacheHelper {
         return ret;
     }
 
-    protected <T> boolean persistObject(String key, T object) {
-        return persistObject(key, object, mPath, key + "@@@@");
+    protected <T> boolean writeObject(String key, T object) {
+        return writeObject(key, object, mPath, key + "@@@@");
     }
 
-    protected <T> boolean persistObject(String key, T object, String path, String tempName) {
+    protected <T> boolean writeObject(String key, T object, String path, String tempName) {
         File file = new File(path, tempName);
         if (file.exists()) file.delete();
         FileOutputStream fos = null;
