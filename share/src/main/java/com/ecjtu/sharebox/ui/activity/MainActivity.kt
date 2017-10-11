@@ -17,7 +17,7 @@ import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
-import com.ecjtu.componentes.ImmersiveFragmentActivity
+import com.ecjtu.componentes.activity.ImmersiveFragmentActivity
 import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.PreferenceInfo
 import com.ecjtu.sharebox.R

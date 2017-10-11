@@ -1,4 +1,4 @@
-package com.ecjtu.componentes
+package com.ecjtu.componentes.activity
 
 import android.app.Activity
 import android.content.BroadcastReceiver
@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Point
 import android.os.Build
+import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.support.v4.content.LocalBroadcastManager
@@ -14,12 +15,13 @@ import android.support.v7.app.AppCompatActivity
 import android.view.KeyCharacterMap
 import android.view.KeyEvent
 import android.view.ViewConfiguration
+import com.ecjtu.componentes.WeakHandler
 
 
 /**
  * Created by KeriGan on 2017/6/25.
  */
-abstract class BaseActionActivity : AppCompatActivity, WeakHandler.IHandleMessage {
+abstract class BaseActionActivity : AppCompatActivity(), WeakHandler.IHandleMessage {
 
     private var mLocalBroadcastManger: LocalBroadcastManager? = null
 
@@ -34,7 +36,8 @@ abstract class BaseActionActivity : AppCompatActivity, WeakHandler.IHandleMessag
         const val STATUS_BAR_HEIGHT = "status_bar_height"
     }
 
-    constructor() : super() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         mLocalBroadcastManger = LocalBroadcastManager.getInstance(this)
         mIntentFilter = IntentFilter()
         mBroadcastReceiver = SimpleReceiver()
@@ -42,7 +45,6 @@ abstract class BaseActionActivity : AppCompatActivity, WeakHandler.IHandleMessag
 
         mSimpleHandler = SimpleHandler(this)
     }
-
 
     override fun onResume() {
         super.onResume()

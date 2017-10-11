@@ -22,7 +22,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
-import com.ecjtu.componentes.ActionBarFragmentActivity
+import com.ecjtu.componentes.activity.ActionBarFragmentActivity
 import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.PreferenceInfo
 import com.ecjtu.sharebox.R
