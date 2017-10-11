@@ -41,8 +41,7 @@ import kotlin.concurrent.thread
  */
 open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListener, WeakHandler.IHandleMessage {
 
-    constructor(context: Context, activity: Activity? = null) : super(context, activity) {
-    }
+    constructor(context: Context, activity: Activity? = null) : super(context, activity)
 
     private var mBehavior: BottomSheetBehavior<View>? = null
 

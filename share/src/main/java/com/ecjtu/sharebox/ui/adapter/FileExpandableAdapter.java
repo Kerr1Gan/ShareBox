@@ -135,22 +135,38 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
     @Override
     public boolean onLongClick(final View v) {
         final TextItemDialog dlg = new TextItemDialog(mExpandableListView.getContext());
-        dlg.setOnClickListener(new Function1<Integer, Unit>() {
-            @Override
-            public Unit invoke(Integer integer) {
-                String path = (String) v.getTag();
-                if (integer == 0) {
-                    Bundle bundle = WebViewFragment.Companion.openWithMIME(path);
-                    Intent intent = ActionBarFragmentActivity.Companion.newInstance(mContext, WebViewFragment.class, bundle);
-                    mContext.startActivity(intent);
-                } else if (integer == 1) {
-                    openFile(path);
+        final String path = (String) v.getTag();
+        FileUtil.MediaFileType type = FileUtil.INSTANCE.getMediaFileTypeByName(path);
+        if (type == FileUtil.MediaFileType.MOVIE) {
+            dlg.setupItem(new String[]{mContext.getString(R.string.open), mContext.getString(R.string.cancel)});
+            dlg.setOnClickListener(new Function1<Integer, Unit>() {
+                @Override
+                public Unit invoke(Integer integer) {
+                    if (integer == 0) {
+                        openFile(path);
+                    } else if (integer == 1) {
+                    }
+                    dlg.cancel();
+                    return null;
                 }
-                dlg.cancel();
-                return null;
-            }
-        });
-        dlg.setupItem(new String[]{mContext.getString(R.string.open), mContext.getString(R.string.open_by_others), mContext.getString(R.string.cancel)});
+            });
+        } else {
+            dlg.setupItem(new String[]{mContext.getString(R.string.open), mContext.getString(R.string.open_by_others), mContext.getString(R.string.cancel)});
+            dlg.setOnClickListener(new Function1<Integer, Unit>() {
+                @Override
+                public Unit invoke(Integer integer) {
+                    if (integer == 0) {
+                        Bundle bundle = WebViewFragment.Companion.openWithMIME(path);
+                        Intent intent = ActionBarFragmentActivity.Companion.newInstance(mContext, WebViewFragment.class, bundle);
+                        mContext.startActivity(intent);
+                    } else if (integer == 1) {
+                        openFile(path);
+                    }
+                    dlg.cancel();
+                    return null;
+                }
+            });
+        }
         dlg.show();
         return true;
     }
@@ -296,15 +312,15 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
     }
 
     protected void setGroupViewThumb(FileUtil.MediaFileType type, String thumb, ImageView icon, TextView text) {
-        setGroupViewThumb(type,thumb,icon,text,null);
+        setGroupViewThumb(type, thumb, icon, text, null);
     }
 
     protected void setGroupViewThumb(FileUtil.MediaFileType type, String thumb, ImageView icon, TextView text, RequestOptions options) {
         if (type == FileUtil.MediaFileType.MOVIE ||
                 type == FileUtil.MediaFileType.IMG) {
-            if(options==null){
+            if (options == null) {
                 Glide.with(mContext).load(thumb).listener(mRequestListener).into(icon);
-            }else{
+            } else {
                 Glide.with(mContext).load(thumb).listener(mRequestListener).apply(options).into(icon);
             }
         } else if (type == FileUtil.MediaFileType.APP) {
@@ -324,15 +340,15 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
     }
 
     protected void setChildViewThumb(FileUtil.MediaFileType type, String f, ImageView icon) {
-        setChildViewThumb(type,f,icon,null);
+        setChildViewThumb(type, f, icon, null);
     }
 
-    protected void setChildViewThumb(FileUtil.MediaFileType type, String f, ImageView icon,RequestOptions options) {
+    protected void setChildViewThumb(FileUtil.MediaFileType type, String f, ImageView icon, RequestOptions options) {
         if (type == FileUtil.MediaFileType.MOVIE ||
                 type == FileUtil.MediaFileType.IMG) {
-            if(options==null){
+            if (options == null) {
                 Glide.with(mContext).load(f).listener(mRequestListener).into(icon);
-            }else{
+            } else {
                 Glide.with(mContext).load(f).listener(mRequestListener).apply(options).into(icon);
             }
         } else if (type == FileUtil.MediaFileType.APP) {
