@@ -16,6 +16,7 @@ import com.ecjtu.sharebox.R;
  */
 
 public class SelectPreference extends DialogPreference {
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public SelectPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
