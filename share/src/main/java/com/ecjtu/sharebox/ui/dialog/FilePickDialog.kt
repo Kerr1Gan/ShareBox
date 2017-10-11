@@ -64,7 +64,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
     private val mSavedState = if (ownerActivity != null) ownerActivity.getMainApplication().getSavedInstance() else null
 
     companion object {
-        private const val EXTRA_VH_LIST = "extra_vh_list"
+        const val EXTRA_VH_LIST = "extra_vh_list"
     }
 
     override fun initializeDialog() {
@@ -338,6 +338,9 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         cancelAllTask()
         mHandler?.removeCallbacksAndMessages(null)
         mHandler = null
+        thread {
+            ownerActivity.getMainApplication().saveCache()
+        }
     }
 
     override fun onMenuItemClick(item: MenuItem?): Boolean {

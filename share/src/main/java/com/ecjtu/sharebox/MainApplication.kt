@@ -13,6 +13,9 @@ import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory
 import com.bumptech.glide.load.engine.cache.LruResourceCache
 import com.bumptech.glide.module.AppGlideModule
+import com.ecjtu.sharebox.parcel.FileExpandableVhCache
+import com.ecjtu.sharebox.ui.adapter.FileExpandableAdapter
+import com.ecjtu.sharebox.ui.dialog.FilePickDialog
 import com.google.android.gms.ads.MobileAds
 import com.tencent.bugly.crashreport.CrashReport
 import org.ecjtu.channellibrary.wifidirect.WifiDirectManager
@@ -59,6 +62,8 @@ class MainApplication : Application() {
         initError()
 
         initSDK()
+
+        loadCache()
 
         this.registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
             override fun onActivityPaused(activity: Activity?) {
@@ -324,5 +329,24 @@ class MainApplication : Application() {
             }
         }
         return false
+    }
+
+    private fun loadCache() {
+        val array = arrayOf("Movie", "Music", "Photo", "Doc", "Apk", "Rar")
+        val cache = FileExpandableVhCache(filesDir.absolutePath)
+        for (key in array) {
+            mSavedInstance.put(FilePickDialog.EXTRA_VH_LIST + key, cache.get(key))
+        }
+    }
+
+    fun saveCache() {
+        val array = arrayOf("Movie", "Music", "Photo", "Doc", "Apk", "Rar")
+        val cache = FileExpandableVhCache(filesDir.absolutePath)
+        for (key in array) {
+            val obj = mSavedInstance.get(FilePickDialog.EXTRA_VH_LIST + key)
+            if (obj != null && (obj is List<*>)) {
+                cache.put(key, obj)
+            }
+        }
     }
 }

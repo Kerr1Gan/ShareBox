@@ -402,6 +402,10 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
             return isActivated;
         }
 
+        public void setActivated(boolean activated) {
+            isActivated = activated;
+        }
+
         public void activate(boolean active) {
             isActivated = active;
             if (isActivated) {
@@ -434,6 +438,10 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
 
         public List<String> getActivatedList() {
             return activatedList;
+        }
+
+        public void setActivatedList(List<String> list) {
+            activatedList = list;
         }
 
         @Override
