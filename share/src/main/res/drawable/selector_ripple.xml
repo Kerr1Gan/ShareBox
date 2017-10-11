@@ -10,7 +10,7 @@
                 android:drawable="@mipmap/ic_launcher"/>
             <item
                 android:state_pressed="false"
-                android:drawable="@mipmap/ic_launcher_round"/>
+                android:drawable="@mipmap/ic_launcher_round22"/>
         </selector>
     </item>
 </ripple>

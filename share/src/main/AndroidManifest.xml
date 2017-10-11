@@ -35,9 +35,6 @@
         </activity>
 
         <activity
-            android:name=".ui.activity.ImmersiveFragmentActivity"
-            android:theme="@style/ImageStatusBarStyle" />
-        <activity
             android:name=".ui.activity.TestActivity"
             android:exported="true" />
 
@@ -55,15 +52,6 @@
             android:exported="true"
             android:label="@string/title_activity_settings"
             android:theme="@style/AppPreferenceTheme" />
-        <activity
-            android:name=".ui.activity.ActionBarFragmentActivity"
-            android:exported="true"
-            android:theme="@style/AppPreferenceTheme" />
-
-        <activity
-            android:name=".ui.activity.RotateNoCreateActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize|mcc|mnc"
-            android:theme="@style/ImageStatusBarStyle" />
     </application>
 
 </manifest>

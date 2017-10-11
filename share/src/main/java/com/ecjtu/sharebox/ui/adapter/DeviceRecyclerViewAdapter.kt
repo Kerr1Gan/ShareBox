@@ -11,6 +11,7 @@ import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import com.ecjtu.netcore.RequestManager
 import com.ecjtu.netcore.network.AsyncNetwork
 import com.ecjtu.netcore.network.IRequestCallback
 import com.ecjtu.netcore.network.IRequestCallbackV2
@@ -65,7 +66,7 @@ class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerViewAdapter
         holder?.name?.setText(info?.name)
 
         if (info?.fileMap == null) {
-            AsyncNetwork().requestDeviceInfo("${info?.ip}:${info?.port}", object : IRequestCallback {
+            RequestManager.requestDeviceInfo("${info?.ip}:${info?.port}", object : IRequestCallback {
                 override fun onSuccess(httpURLConnection: HttpURLConnection?, response: String) {
                     ConversionFactory.json2DeviceInfo(JSONObject(response)).apply {
                         info?.fileMap = fileMap
@@ -84,7 +85,7 @@ class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerViewAdapter
         val position = v?.getTag(R.id.extra_tag) as Int
         val deviceInfo = mDeviceList?.get(position)
 
-        AsyncNetwork().requestDeviceInfo("${deviceInfo?.ip}:${deviceInfo?.port}", object : IRequestCallbackV2 {
+        RequestManager.requestDeviceInfo("${deviceInfo?.ip}:${deviceInfo?.port}", object : IRequestCallbackV2 {
             override fun onSuccess(httpURLConnection: HttpURLConnection?, response: String) {
                 ConversionFactory.json2DeviceInfo(JSONObject(response)).apply {
                     deviceInfo?.fileMap = fileMap

@@ -64,7 +64,7 @@ class WebViewFragment : Fragment() {
         initWebView()
 
         if (arguments != null) {
-            var url = arguments.get(EXTRA_URL) as String
+            var url = arguments.get(EXTRA_URL) as String?
             var type = arguments.get(EXTRA_TYPE)
             if (type == null) {
                 type = TYPE_DEFAULT
@@ -107,7 +107,7 @@ class WebViewFragment : Fragment() {
         mWebView?.addJavascriptInterface(mJsInterface, INTERFACE_NAME)
     }
 
-    private fun toDoWithMIME(mime: String?, url: String) {
+    private fun toDoWithMIME(mime: String?, url: String?) {
         if (mime?.startsWith("text") == true) {
             var arr = FileUtil.readFileContent(File(url))
             if (arr != null) {

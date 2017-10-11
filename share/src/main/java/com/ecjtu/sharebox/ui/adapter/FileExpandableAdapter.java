@@ -25,6 +25,8 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.ecjtu.componentes.activity.ActionBarFragmentActivity;
+import com.ecjtu.componentes.activity.RotateNoCreateActivity;
 import com.ecjtu.sharebox.R;
 import com.ecjtu.sharebox.async.AppThumbTask;
 import com.ecjtu.sharebox.ui.dialog.FilePickDialog;

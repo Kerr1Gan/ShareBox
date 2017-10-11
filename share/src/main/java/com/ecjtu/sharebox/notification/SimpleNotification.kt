@@ -3,6 +3,7 @@ package com.ecjtu.sharebox.notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.preference.PreferenceManager
 import android.support.v4.app.NotificationManagerCompat
@@ -17,11 +18,11 @@ abstract class SimpleNotification(val context: Context) {
 
     private var mBuilder: NotificationCompat.Builder? = null
 
-    open fun buildNotification(id: Int, title: String, contentText: String, ticker: String): NotificationCompat.Builder {
+    open fun buildNotification(id: Int, title: String, contentText: String, ticker: String,smallIcon:Int = R.mipmap.ic_launcher): NotificationCompat.Builder {
         val builder = NotificationCompat.Builder(context)
         builder.setContentTitle(title)
         builder.setContentText(contentText)
-        builder.setSmallIcon(R.mipmap.notification_wifi)
+        builder.setSmallIcon(smallIcon)
         builder.setWhen(System.currentTimeMillis())
         builder.setTicker(ticker)
         builder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
