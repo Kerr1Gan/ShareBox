@@ -63,6 +63,8 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
 
     private val mSavedState = if (ownerActivity != null) ownerActivity.getMainApplication().getSavedInstance() else null
 
+    private var mDoOk = false
+
     companion object {
         const val EXTRA_VH_LIST = "extra_vh_list"
     }
@@ -177,6 +179,9 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                 var oldCache: List<FileExpandableAdapter.VH>? = null
                 if (isLoadCache()) {
                     oldCache = getOldCacheAndClone(title)
+                    if (oldCache != null) {
+                        mDoOk = true
+                    }
                 } else {
                     var fileList = mTabItemHolders?.get(title)?.fileList
                     if (fileList != null) {
@@ -338,6 +343,20 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         cancelAllTask()
         mHandler?.removeCallbacksAndMessages(null)
         mHandler = null
+        if (!mDoOk) {
+            for (entry in mViewPagerViews) {
+                val pager = entry.value as FileExpandableListView
+                val adapter = pager.fileExpandableAdapter
+                val save = pager.fileExpandableAdapter.vhList
+                for (vh in save) {
+                    vh.activate(false)
+                }
+                if (mSavedState != null && save != null) {
+                    mSavedState.put(EXTRA_VH_LIST + adapter.title, save)
+                }
+            }
+        }
+
         thread {
             ownerActivity.getMainApplication().saveCache()
         }
@@ -345,6 +364,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
 
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         var id = item?.itemId
+        mDoOk = true
         when (id) {
             R.id.ok -> {
                 doOk()
@@ -491,13 +511,15 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
 
     private fun getOldCacheAndClone(title: String): List<FileExpandableAdapter.VH>? {
         if (mSavedState == null) return null
-        var cache = mSavedState!!.get(EXTRA_VH_LIST + title) as List<FileExpandableAdapter.VH>?
+        var cache = mSavedState.get(EXTRA_VH_LIST + title) as List<*>?
         var newList = arrayListOf<FileExpandableAdapter.VH>()
         if (cache != null) {
             for (vh in cache) {
-                var newVh = vh.clone() as FileExpandableAdapter.VH
-                if (newVh != null) {
-                    newList.add(newVh)
+                if (vh is FileExpandableAdapter.VH) {
+                    var newVh = vh.clone() as FileExpandableAdapter.VH?
+                    if (newVh != null) {
+                        newList.add(newVh)
+                    }
                 }
             }
         }
