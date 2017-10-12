@@ -69,16 +69,20 @@ public class MainService extends Service {
     }
 
     public void startHelper(boolean waiting, boolean search) {
-        mDiscoverHelper.start(waiting, search);
+        if (mDiscoverHelper != null)
+            mDiscoverHelper.start(waiting, search);
     }
 
     public void stopHelper(boolean waiting, boolean search) {
-        mDiscoverHelper.stop(waiting, search);
-        setMessageListener(null);
+        if (mDiscoverHelper != null) {
+            mDiscoverHelper.stop(waiting, search);
+            setMessageListener(null);
+        }
     }
 
     public void setMessageListener(DiscoverHelper.IMessageListener listener) {
-        mDiscoverHelper.setMessageListener(listener);
+        if (mDiscoverHelper != null)
+            mDiscoverHelper.setMessageListener(listener);
     }
 
 }
