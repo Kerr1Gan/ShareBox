@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="video_media_controller_time_text_style">
         <item name="android:layout_height">wrap_content</item>
@@ -10,11 +10,11 @@
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="video_media_controller_seekbar_style" parent="android:Widget.SeekBar">
+    <style name="video_media_controller_seekbar_style" parent="android:Widget.Material.SeekBar" tools:targetApi="lollipop">
         <item name="android:progressDrawable">@drawable/video_progressbar</item>
         <item name="android:minHeight">5dp</item>
         <item name="android:maxHeight">5dp</item>
-        <item name="android:thumb">@mipmap/btn_video_progress_thumb</item>
+        <!--<item name="android:thumb"></item>-->
         <item name="android:thumbOffset">8dp</item>
         <item name="android:paddingLeft">16dp</item>
         <item name="android:paddingRight">16dp</item>
