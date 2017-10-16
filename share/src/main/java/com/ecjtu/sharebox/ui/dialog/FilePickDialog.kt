@@ -377,6 +377,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         return true
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun updateFileMap(fileList: MutableList<String>, itemHolder: MutableMap<String, FilePickDialog.TabItemHolder>): MutableMap<String, List<String>> {
         var map = mutableMapOf<String, List<String>>()
         var index = 0
@@ -417,6 +418,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         return map
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun updateAllFileList(fileList: MutableList<String>, itemHolder: MutableMap<String, FilePickDialog.TabItemHolder>): MutableMap<String, List<String>> {
         var map = mutableMapOf<String, List<String>>()
         for (element in itemHolder.entries) {
@@ -489,7 +491,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
             for (packageInfo in installedApps) {
                 arrayList.add(packageInfo.applicationInfo.sourceDir)
             }
-            localMap.put("已安装", arrayList)
+            localMap.put(context.getString(R.string.installed), arrayList)
         }
 
         val names = FileUtil.foldFiles(fileList as MutableList<String>, localMap)

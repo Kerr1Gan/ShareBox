@@ -52,6 +52,7 @@
     <string name="do_you_want_to_clear_the_cache">Do you want to clear the cache?</string>
     <string name="you_will_clear_cache">you will clear %s cache</string>
 
+    <string name="installed">已安装</string>
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->
