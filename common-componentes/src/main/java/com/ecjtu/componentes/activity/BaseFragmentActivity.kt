@@ -22,7 +22,7 @@ open class BaseFragmentActivity : BaseActionActivity() {
 
         @JvmOverloads
         @JvmStatic
-        fun newInstance(context: Context, fragment: Class<*>, bundle: Bundle? = null,
+        open fun newInstance(context: Context, fragment: Class<*>, bundle: Bundle? = null,
                                       clazz: Class<out Activity> = getActivityClazz()): Intent {
             val intent = Intent(context, clazz)
             intent.putExtra(EXTRA_FRAGMENT_NAME, fragment.name)
