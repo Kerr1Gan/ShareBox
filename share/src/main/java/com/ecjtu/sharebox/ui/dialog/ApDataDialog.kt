@@ -113,6 +113,10 @@ class ApDataDialog(context: Context, activity: Activity) : BaseBottomSheetDialog
             }
         }
 
+        vg.findViewById(R.id.enter).setOnClickListener {
+            val dlg = IPSearchDialog(ownerActivity)
+            dlg.show()
+        }
     }
 
     private fun darkImageView(img: ImageView): ImageView {

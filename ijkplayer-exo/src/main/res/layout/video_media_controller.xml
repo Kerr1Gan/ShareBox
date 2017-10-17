@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/btn_video_back"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <!-- 视频标题 -->
         <TextView
@@ -56,7 +56,8 @@
                 style="@style/video_media_controller_seekbar_style"
                 android:layout_toLeftOf="@+id/time"
                 android:layout_toRightOf="@+id/time_current"
-                android:indeterminate="false" />
+                android:indeterminate="false"
+                android:theme="@style/video_media_controller_seekbar_style" />
 
             <!-- 总时间 -->
             <TextView
@@ -72,10 +73,10 @@
                 android:layout_height="30dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:background="@null"
                 android:layout_centerVertical="true"
-                android:src="@mipmap/btn_video_expand"
-                android:scaleType="fitXY"/>
+                android:background="@null"
+                android:scaleType="fitXY"
+                android:src="@mipmap/btn_video_expand" />
         </RelativeLayout>
     </LinearLayout>
 
