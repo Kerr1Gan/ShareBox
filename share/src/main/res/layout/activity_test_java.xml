@@ -11,4 +11,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/circularButton1"/>
 
+    <com.ecjtu.sharebox.ui.widget.CircleImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@android:color/black"/>
 </LinearLayout>
