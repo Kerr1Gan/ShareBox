@@ -44,15 +44,19 @@ abstract class BaseActionActivity : AppCompatActivity(), WeakHandler.IHandleMess
         registerActions(mIntentFilter)
 
         mSimpleHandler = SimpleHandler(this)
+        mLocalBroadcastManger?.registerReceiver(mBroadcastReceiver, mIntentFilter)
     }
 
     override fun onResume() {
         super.onResume()
-        mLocalBroadcastManger?.registerReceiver(mBroadcastReceiver, mIntentFilter)
     }
 
     override fun onStop() {
         super.onStop()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
         mLocalBroadcastManger?.unregisterReceiver(mBroadcastReceiver)
     }
 
@@ -83,6 +87,7 @@ abstract class BaseActionActivity : AppCompatActivity(), WeakHandler.IHandleMess
         for (action in array) {
             intentFilter.addAction(action)
         }
+        mLocalBroadcastManger?.unregisterReceiver(mBroadcastReceiver)
         mLocalBroadcastManger?.registerReceiver(mBroadcastReceiver, intentFilter)
         mIntentFilter = intentFilter
     }

@@ -9,6 +9,7 @@ import android.graphics.Paint
 import android.net.Uri
 import android.preference.PreferenceManager
 import android.support.design.widget.BottomSheetBehavior
+import android.support.v4.content.LocalBroadcastManager
 import android.text.TextUtils
 import android.util.TypedValue
 import android.view.View
@@ -28,6 +29,11 @@ import kotlin.concurrent.thread
  */
 
 class ApDataDialog(context: Context, activity: Activity) : BaseBottomSheetDialog(context, activity) {
+
+    companion object {
+        const val ACTION_UPDATE_DEVICE = "update_device_action"
+        const val EXTRA_IP = "extra_ip"
+    }
 
     override fun onCreateView(): View? {
         var vg = layoutInflater.inflate(R.layout.dialog_ap_data, null)
@@ -115,6 +121,11 @@ class ApDataDialog(context: Context, activity: Activity) : BaseBottomSheetDialog
 
         vg.findViewById(R.id.enter).setOnClickListener {
             val dlg = IPSearchDialog(ownerActivity)
+            dlg.setCallback { ip ->
+                LocalBroadcastManager.getInstance(context).sendBroadcast(Intent().apply {
+                    setAction(ACTION_UPDATE_DEVICE).putExtra(EXTRA_IP, ip)
+                })
+            }
             dlg.show()
         }
     }

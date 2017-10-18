@@ -18,7 +18,7 @@ class AsyncNetwork : BaseNetwork() {
 
     private var mThread: Thread? = null
 
-    override fun request(urlStr: String, mutableMap: MutableMap<String, String>?) {
+    override fun request(urlStr: String, mutableMap: MutableMap<String, String>?): BaseNetwork {
         mThread = thread {
             Log.e(TAG, "thread begin " + toString() + " threads count:" + sThreadsCount.incrementAndGet())
             try {
@@ -28,6 +28,7 @@ class AsyncNetwork : BaseNetwork() {
             }
             Log.e(TAG, "thread end " + toString() + " threads count:" + sThreadsCount.decrementAndGet())
         }
+        return this
     }
 
     override fun cancel() {

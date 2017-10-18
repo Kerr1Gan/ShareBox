@@ -1,7 +1,10 @@
 package com.ecjtu.sharebox.presenter
 
 import android.Manifest
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.net.wifi.WifiInfo
@@ -11,6 +14,7 @@ import android.preference.PreferenceManager
 import android.provider.Settings
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.ActivityCompat
+import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.LinearLayoutManager
@@ -95,6 +99,17 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         private const val TAG_FRAGMENT = "FilePickDialogFragment"
     }
 
+    private val mUpdateDeviceInfoReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.extras != null) {
+                val ip = intent.extras.getString(ApDataDialog.EXTRA_IP)
+                if (!TextUtils.isEmpty(ip)) {
+                    Toast.makeText(owner,"找到设备："+ip,Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
     init {
         mToolbar = findViewById(R.id.toolbar) as Toolbar
         mDrawerLayout = findViewById(R.id.drawer_layout) as DrawerLayout
@@ -174,6 +189,9 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         initDrawerLayout()
 
         doSearch()
+
+        val filter = IntentFilter(ApDataDialog.ACTION_UPDATE_DEVICE)
+        LocalBroadcastManager.getInstance(owner).registerReceiver(mUpdateDeviceInfoReceiver, filter)
     }
 
     private fun initDrawerLayout() {
@@ -248,9 +266,9 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
             }
             R.id.refresh -> {
                 if (owner.refreshing) {
-                    owner.getMainService()?.prepareAndStartHelper(true,true)
+                    owner.getMainService()?.prepareAndStartHelper(true, true)
                 } else {
-                    owner.getMainService()?.stopHelper(true,true)
+                    owner.getMainService()?.stopHelper(true, true)
                 }
                 return true
             }
@@ -503,12 +521,14 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
     }
 
     fun onDestroy() {
-        owner.getMainService()?.stopHelper(true,true)
+        owner.getMainService()?.stopHelper(true, true)
         mPhotoHelper?.clearCache()
         mImageHelper?.clearCache()
+        LocalBroadcastManager.getInstance(owner).unregisterReceiver(mUpdateDeviceInfoReceiver)
     }
 
     fun getRecyclerView(): RecyclerView? {
         return mRecyclerView
     }
+
 }
