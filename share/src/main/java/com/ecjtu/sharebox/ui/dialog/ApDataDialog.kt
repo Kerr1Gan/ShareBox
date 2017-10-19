@@ -16,9 +16,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.ecjtu.qrcode.QrUtils
 import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.R
-import com.ecjtu.sharebox.util.qrimage.QrUtils
 import org.ecjtu.channellibrary.wifiutil.NetworkUtil
 import org.ecjtu.channellibrary.wifiutil.WifiUtil
 import kotlin.concurrent.thread
@@ -127,6 +127,10 @@ class ApDataDialog(context: Context, activity: Activity) : BaseBottomSheetDialog
                 })
             }
             dlg.show()
+        }
+
+        vg.findViewById(R.id.qr_code).setOnClickListener {
+
         }
     }
 

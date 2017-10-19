@@ -111,13 +111,24 @@
             </LinearLayout>
 
             <ImageView
+                android:id="@+id/qr_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_margin="20dp"
+                app:srcCompat="@drawable/ic_qr_code" />
+
+            <ImageView
+                android:id="@+id/enter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
-                android:layout_margin="20dp"
-                app:srcCompat="@drawable/ic_enter"
-                android:id="@+id/enter"/>
+                android:layout_marginTop="20dp"
+                android:layout_toLeftOf="@id/qr_code"
+                app:srcCompat="@drawable/ic_enter" />
+
+
         </RelativeLayout>
 
     </android.support.v4.widget.NestedScrollView>

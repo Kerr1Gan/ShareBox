@@ -1,4 +1,4 @@
-package com.ecjtu.sharebox.util.qrimage;
+package com.ecjtu.qrcode;
 
 
 import com.google.zxing.EncodeHintType;

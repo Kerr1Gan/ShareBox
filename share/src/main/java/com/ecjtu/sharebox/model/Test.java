@@ -1,4 +1,4 @@
-package com.ecjtu.sharebox.domain;
+package com.ecjtu.sharebox.model;
 
 import android.text.Editable;
 import android.text.TextWatcher;

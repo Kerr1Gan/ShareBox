@@ -30,7 +30,7 @@ dependencies {
     //compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile project(':channellibrary')
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    compile files('libs/zxing.jar')
+
     //glide
     //compile 'com.github.bumptech.glide:glide:3.6.1'
     compile project(':circularprogresslibrary')
@@ -51,6 +51,7 @@ dependencies {
     compile project(':netcore')
     compile project(':common-componentes')
     compile project(':parcel')
+    compile project(':qrcode')
 }
 
 repositories {
