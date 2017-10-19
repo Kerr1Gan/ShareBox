@@ -16,6 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.ecjtu.qrcode.QRCodeScannerActivity
 import com.ecjtu.qrcode.QrUtils
 import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.R
@@ -130,7 +131,7 @@ class ApDataDialog(context: Context, activity: Activity) : BaseBottomSheetDialog
         }
 
         vg.findViewById(R.id.qr_code).setOnClickListener {
-
+            ownerActivity.startActivity(Intent(ownerActivity, QRCodeScannerActivity::class.java))
         }
     }
 

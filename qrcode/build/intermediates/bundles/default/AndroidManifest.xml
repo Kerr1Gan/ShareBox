@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    package="com.QRCodeReaderView"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.ecjtu.qrcode"
     android:versionCode="1"
     android:versionName="2.0.2" >
 
     <uses-sdk
-        android:minSdkVersion="10"
-        android:targetSdkVersion="25" />
+        android:minSdkVersion="15"
+        android:targetSdkVersion="21" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <application>
+        <activity
+            android:name="com.ecjtu.qrcode.QRCodeScannerActivity"
+            android:label="扫描二维码"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+    </application>
 
 </manifest>

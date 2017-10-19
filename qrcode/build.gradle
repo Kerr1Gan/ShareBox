@@ -31,8 +31,8 @@ android {
   buildToolsVersion '25.0.2'
 
   defaultConfig {
-    minSdkVersion 10
-    targetSdkVersion 25
+    minSdkVersion 15
+    targetSdkVersion 21
     versionCode 1
     versionName libVersionCode
   }
@@ -47,6 +47,7 @@ android {
 
 dependencies {
   compile 'com.google.zxing:core:3.2.1'
+  compile 'com.android.support:appcompat-v7:24.2.0'
   testCompile 'junit:junit:4.12'
   testCompile 'org.mockito:mockito-core:2.7.5'
   testCompile "org.robolectric:robolectric:3.2.2"
