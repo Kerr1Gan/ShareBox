@@ -156,8 +156,8 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
                 @Override
                 public Unit invoke(Integer integer) {
                     if (integer == 0) {
-                        Bundle bundle = WebViewFragment.Companion.openWithMIME(path);
-                        Intent intent = ActionBarFragmentActivity.Companion.newInstance(mContext, WebViewFragment.class, bundle);
+                        Bundle bundle = WebViewFragment.openWithMIME(path);
+                        Intent intent = ActionBarFragmentActivity.newInstance(mContext, WebViewFragment.class, bundle);
                         mContext.startActivity(intent);
                     } else if (integer == 1) {
                         openFile(path);

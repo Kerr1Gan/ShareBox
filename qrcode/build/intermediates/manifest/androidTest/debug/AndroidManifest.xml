@@ -20,7 +20,6 @@
 
         <activity
             android:name="com.ecjtu.qrcode.QRCodeScannerActivity"
-            android:exported="true"
             android:label="扫描二维码"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>

@@ -33,7 +33,7 @@
         <item name="drawerArrowStyle">@style/AppTheme.DrawerArrowToggle</item>
     </style>
 
-    <style name="MainActivityStyle">
+    <style name="MainActivityStyle" parent="">
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 

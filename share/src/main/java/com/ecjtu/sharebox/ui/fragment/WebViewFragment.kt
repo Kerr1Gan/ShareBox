@@ -34,10 +34,12 @@ class WebViewFragment : Fragment() {
         const val TYPE_MIME = TYPE_DEFAULT shl 1
         const val INTERFACE_NAME = "android"
 
+        @JvmStatic
         fun openUrl(url: String): Bundle {
             return Bundle().apply { putString(WebViewFragment.EXTRA_URL, url) }
         }
 
+        @JvmStatic
         fun openInnerUrl(url: String): Bundle {
             return Bundle().apply {
                 putString(WebViewFragment.EXTRA_URL, url)
@@ -45,6 +47,7 @@ class WebViewFragment : Fragment() {
             }
         }
 
+        @JvmStatic
         fun openWithMIME(url: String): Bundle {
             return Bundle().apply {
                 putString(WebViewFragment.EXTRA_URL, url)
