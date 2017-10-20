@@ -1,5 +1,6 @@
 package com.ecjtu.qrcode;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -18,6 +20,8 @@ import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
  */
 
 public class QRCodeScannerActivity extends AppCompatActivity implements QRCodeReaderView.OnQRCodeReadListener {
+
+    public static final String EXTRA = "qrcode_extra";
 
     private QRCodeReaderView mQRCodeReader;
 
@@ -70,6 +74,7 @@ public class QRCodeScannerActivity extends AppCompatActivity implements QRCodeRe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
+            setResult(RESULT_CANCELED);
             finish();
             return true;
         }
@@ -78,7 +83,17 @@ public class QRCodeScannerActivity extends AppCompatActivity implements QRCodeRe
 
     @Override
     public void onQRCodeRead(String text, PointF[] points) {
+        Log.i("QRCodeScannerActivity", "onQRCodeRead: " + text);
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA, text);
+        setResult(RESULT_OK,intent);
+        finish();
+    }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setResult(RESULT_CANCELED);
     }
 
     private int getStatusBarHeight() {

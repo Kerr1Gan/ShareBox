@@ -1,7 +1,6 @@
 package com.ecjtu.sharebox.ui.dialog
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
@@ -16,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import com.ecjtu.qrcode.QRCodeScannerActivity
 import com.ecjtu.qrcode.QrUtils
 import com.ecjtu.sharebox.Constants
@@ -29,7 +29,7 @@ import kotlin.concurrent.thread
  * Created by KerriGan on 2017/6/10.
  */
 
-class ApDataDialog(context: Context, activity: Activity) : BaseBottomSheetDialog(context, activity) {
+class ApDataDialog(activity: Activity) : BaseBottomSheetDialog(activity, activity) {
 
     companion object {
         const val ACTION_UPDATE_DEVICE = "update_device_action"
@@ -131,7 +131,7 @@ class ApDataDialog(context: Context, activity: Activity) : BaseBottomSheetDialog
         }
 
         vg.findViewById(R.id.qr_code).setOnClickListener {
-            ownerActivity.startActivity(Intent(ownerActivity, QRCodeScannerActivity::class.java))
+            getFragmentHost()?.startActivityForResult(Intent(context, QRCodeScannerActivity::class.java), 100)
         }
     }
 
@@ -147,5 +147,18 @@ class ApDataDialog(context: Context, activity: Activity) : BaseBottomSheetDialog
         mOthers = true
         mPort = port
         mIp = ip
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode != 100) {
+            return
+        }
+        if (resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                val text = data.getStringExtra(QRCodeScannerActivity.EXTRA)
+                Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }
