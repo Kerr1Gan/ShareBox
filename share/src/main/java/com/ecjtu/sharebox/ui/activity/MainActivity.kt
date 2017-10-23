@@ -80,11 +80,6 @@ class MainActivity : ImmersiveFragmentActivity() {
                     recyclerView.paddingBottom + getNavigationBarHeight(this))
         }
 
-        //init service
-        val intent = Intent(this, MainService::class.java)
-        startService(intent)
-        bindService(intent, mMainServiceConnection, Context.BIND_AUTO_CREATE)
-
         //ad
 //        initAd()
 
@@ -105,6 +100,11 @@ class MainActivity : ImmersiveFragmentActivity() {
         getMainApplication().closeActivityByIndex(1)
         var name = PreferenceManager.getDefaultSharedPreferences(this).getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
         (findViewById(R.id.text_name) as TextView).setText(name)
+
+        //resume service
+        val intent = Intent(this, MainService::class.java)
+        startService(intent)
+        bindService(intent, mMainServiceConnection, Context.BIND_AUTO_CREATE)
     }
 
     override fun onStop() {
