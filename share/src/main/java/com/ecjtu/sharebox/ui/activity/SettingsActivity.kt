@@ -247,9 +247,8 @@ class SettingsActivity : AppCompatPreferenceActivity() {
                         putString(PreferenceInfo.PREF_DEVICE_NAME, stringValue).apply()
                 preference.summary = stringValue
             } else if (preference is SelectPreference) {
+                // Cache
                 preference.summary = stringValue
-                // clear cache
-                Glide.get(preference.context).clearDiskCache()
             } else {
                 // For all other preferences, set the summary to the value's
                 // simple string representation.

@@ -1,11 +1,15 @@
 package com.ecjtu.sharebox.ui.fragment
 
+import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
+import android.graphics.Point
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.TextUtils
 import android.view.*
+import com.ecjtu.componentes.activity.BaseActionActivity
 import com.ecjtu.sharebox.R
 import tv.danmaku.ijk.media.exo.video.AndroidMediaController
 import tv.danmaku.ijk.media.exo.video.IjkVideoView
@@ -73,6 +77,11 @@ class IjkVideoFragment : Fragment(), GestureDetector.OnGestureListener, View.OnT
 
         mGestureDetector = GestureDetector(activity, this)
         initOrientationListener()
+
+        if (isNavigationBarShow(activity)) {
+            val root = view.findViewById(R.id.root)
+            root.setPadding(root.paddingLeft, root.paddingTop, view.paddingRight, view.paddingBottom + getNavigationBarHeight(activity))
+        }
     }
 
     private val mCallback = SimpleMediaController.MediaPlayerCallback {
@@ -183,4 +192,28 @@ class IjkVideoFragment : Fragment(), GestureDetector.OnGestureListener, View.OnT
         return mGestureDetector?.onTouchEvent(event) ?: false
     }
 
+    fun isNavigationBarShow(activity: Activity): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            val display = activity.windowManager.defaultDisplay
+            val size = Point()
+            val realSize = Point()
+            display.getSize(size)
+            display.getRealSize(realSize)
+            return realSize.y !== size.y
+        } else {
+            val menu = ViewConfiguration.get(activity).hasPermanentMenuKey()
+            val back = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK)
+            return !(menu || back)
+        }
+    }
+
+    fun getNavigationBarHeight(activity: Activity): Int {
+        if (!isNavigationBarShow(activity)) {
+            return 0
+        }
+        val resources = activity.resources
+        val resourceId = resources.getIdentifier(BaseActionActivity.NAVIGATION_BAR_HEIGHT, "dimen", "android")
+        //获取NavigationBar的高度
+        return resources.getDimensionPixelSize(resourceId)
+    }
 }

@@ -9,6 +9,7 @@ import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
 import com.ecjtu.sharebox.R;
 
 /**
@@ -42,7 +43,7 @@ public class SelectPreference extends DialogPreference {
         builder.setPositiveButton(R.string.positive, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                Glide.get(getContext()).clearDiskCache();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
