@@ -16,22 +16,22 @@ import com.ecjtu.sharebox.R;
  * Created by Ethan_Xiang on 2017/8/11.
  */
 
-public class SelectPreference extends DialogPreference {
+public class CachePreference extends DialogPreference {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public SelectPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public CachePreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public SelectPreference(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CachePreference(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
-    public SelectPreference(Context context, AttributeSet attrs) {
+    public CachePreference(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public SelectPreference(Context context) {
+    public CachePreference(Context context) {
         super(context, null);
     }
 
@@ -43,7 +43,12 @@ public class SelectPreference extends DialogPreference {
         builder.setPositiveButton(R.string.positive, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Glide.get(getContext()).clearDiskCache();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Glide.get(getContext()).clearDiskCache();
+                    }
+                }).start();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

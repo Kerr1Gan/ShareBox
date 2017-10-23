@@ -30,7 +30,7 @@
         android:positiveButtonText="@null"
         android:title="@string/pref_title_add_friends_to_messages"/>
 
-    <com.ecjtu.sharebox.ui.preference.SelectPreference
+    <com.ecjtu.sharebox.ui.preference.CachePreference
         android:key="@string/key_clear_cache"
         android:title="@string/clear_cache" />
 
