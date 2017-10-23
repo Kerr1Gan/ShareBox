@@ -15,13 +15,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
+import com.ecjtu.netcore.RequestManager
+import com.ecjtu.netcore.network.IRequestCallback
 import com.ecjtu.qrcode.QRCodeScannerActivity
 import com.ecjtu.qrcode.QrUtils
 import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.R
 import org.ecjtu.channellibrary.wifiutil.NetworkUtil
 import org.ecjtu.channellibrary.wifiutil.WifiUtil
+import java.net.HttpURLConnection
 import kotlin.concurrent.thread
 
 
@@ -34,6 +36,7 @@ class ApDataDialog(activity: Activity) : BaseBottomSheetDialog(activity, activit
     companion object {
         const val ACTION_UPDATE_DEVICE = "update_device_action"
         const val EXTRA_IP = "extra_ip"
+        const val EXTRA_JSON = "extra_json"
     }
 
     override fun onCreateView(): View? {
@@ -123,8 +126,13 @@ class ApDataDialog(activity: Activity) : BaseBottomSheetDialog(activity, activit
         vg.findViewById(R.id.enter).setOnClickListener {
             val dlg = IPSearchDialog(ownerActivity)
             dlg.setCallback { ip ->
-                LocalBroadcastManager.getInstance(context).sendBroadcast(Intent().apply {
-                    setAction(ACTION_UPDATE_DEVICE).putExtra(EXTRA_IP, ip)
+                RequestManager.requestDeviceInfo(ip, object : IRequestCallback {
+                    override fun onSuccess(httpURLConnection: HttpURLConnection?, response: String) {
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(Intent().apply {
+                            setAction(ACTION_UPDATE_DEVICE).putExtra(EXTRA_IP, ip)
+                            putExtra(EXTRA_JSON, response)
+                        })
+                    }
                 })
             }
             dlg.show()
@@ -157,7 +165,14 @@ class ApDataDialog(activity: Activity) : BaseBottomSheetDialog(activity, activit
         if (resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 val text = data.getStringExtra(QRCodeScannerActivity.EXTRA)
-                Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+                RequestManager.requestDeviceInfo(text, object : IRequestCallback {
+                    override fun onSuccess(httpURLConnection: HttpURLConnection?, response: String) {
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(Intent().apply {
+                            setAction(ACTION_UPDATE_DEVICE).putExtra(EXTRA_IP, text)
+                            putExtra(EXTRA_JSON, response)
+                        })
+                    }
+                })
             }
         }
     }

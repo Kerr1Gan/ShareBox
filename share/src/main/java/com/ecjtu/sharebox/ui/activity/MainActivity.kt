@@ -24,6 +24,7 @@ import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
 import com.ecjtu.sharebox.service.MainService
+import com.ecjtu.sharebox.ui.dialog.ApDataDialog
 import com.ecjtu.sharebox.ui.fragment.SplashFragment
 import com.ecjtu.sharebox.util.admob.AdmobCallback
 import com.ecjtu.sharebox.util.admob.AdmobManager
@@ -419,5 +420,4 @@ class MainActivity : ImmersiveFragmentActivity() {
     fun getMainService(): MainService? {
         return mMainService
     }
-
 }

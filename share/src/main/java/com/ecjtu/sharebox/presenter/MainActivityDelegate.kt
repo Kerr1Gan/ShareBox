@@ -50,7 +50,9 @@ import com.ecjtu.sharebox.util.photo.PickPhotoHelper
 import org.ecjtu.channellibrary.devicesearch.DeviceSearcher
 import org.ecjtu.channellibrary.devicesearch.DiscoverHelper
 import org.ecjtu.channellibrary.wifiutil.NetworkUtil
+import org.ecjtu.easyserver.server.ConversionFactory
 import org.ecjtu.easyserver.server.DeviceInfo
+import org.json.JSONObject
 import java.io.File
 import java.lang.Exception
 
@@ -105,7 +107,16 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
             if (intent?.extras != null) {
                 val ip = intent.extras.getString(ApDataDialog.EXTRA_IP)
                 if (!TextUtils.isEmpty(ip)) {
-                    Toast.makeText(owner,"找到设备："+ip,Toast.LENGTH_SHORT).show()
+                    val json = intent.extras.getString(ApDataDialog.EXTRA_JSON)
+                    try {
+                        val deviceInfo = ConversionFactory.json2DeviceInfo(JSONObject(json))
+                        Toast.makeText(owner, "找到设备：" + ip, Toast.LENGTH_SHORT).show()
+                        if(mDeviceInfoList.indexOf(deviceInfo)<0){
+                            mDeviceInfoList.add(deviceInfo)
+                            mRecyclerView?.adapter?.notifyDataSetChanged()
+                        }
+                    } catch (ex: Exception) {
+                    }
                 }
             }
         }
@@ -261,7 +272,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
                     Toast.makeText(owner, R.string.need_wifi_or_hotspot, Toast.LENGTH_SHORT).show()
                 } else {
                     val dialog = ApDataDialog(owner)
-                    SimpleDialogFragment(dialog).show(owner.supportFragmentManager,"ap_data_dialog")
+                    SimpleDialogFragment(dialog).show(owner.supportFragmentManager, "ap_data_dialog")
                 }
                 return true
             }
@@ -294,7 +305,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
 
         if (hasPermission) {
             var dialog = ApDataDialog(owner)
-            SimpleDialogFragment(dialog).show(owner.supportFragmentManager,"ap_data_dialog")
+            SimpleDialogFragment(dialog).show(owner.supportFragmentManager, "ap_data_dialog")
         }
     }
 

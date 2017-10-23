@@ -11,6 +11,7 @@ import com.ecjtu.sharebox.async.FindAllFilesHelper
 import com.ecjtu.sharebox.notification.ServerComingNotification
 import com.ecjtu.sharebox.ui.fragment.PageFragment
 import com.ecjtu.sharebox.util.file.FileUtil
+import org.json.JSONObject
 
 /**
  * Created by KerriGan on 2017/6/11.
@@ -51,17 +52,17 @@ class TestActivity : AppCompatActivity() {
 //        var intent=RotateNoCreateActivity.newInstance(this,IjkVideoFragment::class.java)
 //        startActivity(intent)
 
-        var task = FindAllFilesHelper(this)
-        task.startScanning { map->
-            val result = arrayListOf<MutableMap<String,List<String>>>()
-
-            for(entry in map){
-                val localMap = LinkedHashMap<String,List<String>>()
-                FileUtil.foldFiles(entry.value as MutableList<String>, localMap as java.util.LinkedHashMap<String, MutableList<String>>)
-                result.add(localMap)
-            }
-            task.release()
-        }
+//        var task = FindAllFilesHelper(this)
+//        task.startScanning { map->
+//            val result = arrayListOf<MutableMap<String,List<String>>>()
+//
+//            for(entry in map){
+//                val localMap = LinkedHashMap<String,List<String>>()
+//                FileUtil.foldFiles(entry.value as MutableList<String>, localMap as java.util.LinkedHashMap<String, MutableList<String>>)
+//                result.add(localMap)
+//            }
+//            task.release()
+//        }
 //        var intent=RotateNoCreateActivity.newInstance(this,IjkVideoFragment::class.java)
 //        startActivity(intent)
 
@@ -77,6 +78,37 @@ class TestActivity : AppCompatActivity() {
 //            task.release()
 //        }
 
-        ServerComingNotification(this).buildServerComingNotification("title","content","ticker").send()
+//        ServerComingNotification(this).buildServerComingNotification("title","content","ticker").send()
+
+        val jsonObject = JSONObject("{\n" +
+                "    \"name\": \"BeJson\",\n" +
+                "    \"url\": \"http://www.bejson.com\",\n" +
+                "    \"page\": 88,\n" +
+                "    \"isNonProfit\": true,\n" +
+                "    \"address\": {\n" +
+                "        \"street\": \"科技园路.\",\n" +
+                "        \"city\": \"江苏苏州\",\n" +
+                "        \"country\": \"中国\"\n" +
+                "    },\n" +
+                "    \"links\": [\n" +
+                "        {\n" +
+                "            \"name\": \"Google\",\n" +
+                "            \"url\": \"http://www.google.com\"\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"name\": \"Baidu\",\n" +
+                "            \"url\": \"http://www.baidu.com\"\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"name\": \"SoSo\",\n" +
+                "            \"url\": \"http://www.SoSo.com\"\n" +
+                "        }\n" +
+                "    ]\n" +
+                "}")
+
+        try {
+            val jsonObj2 = JSONObject("")
+        }catch (ex:Exception){
+        }
     }
 }
