@@ -110,7 +110,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
                     val json = intent.extras.getString(ApDataDialog.EXTRA_JSON)
                     try {
                         val deviceInfo = ConversionFactory.json2DeviceInfo(JSONObject(json))
-                        Toast.makeText(owner, "找到设备：" + ip, Toast.LENGTH_SHORT).show()
+                        ServerComingNotification(context!!).buildServerComingNotification("搜索到新的设备", deviceInfo.name, "ShareBox:" + "找到新的设备").send()
                         if(mDeviceInfoList.indexOf(deviceInfo)<0){
                             mDeviceInfoList.add(deviceInfo)
                             mRecyclerView?.adapter?.notifyDataSetChanged()

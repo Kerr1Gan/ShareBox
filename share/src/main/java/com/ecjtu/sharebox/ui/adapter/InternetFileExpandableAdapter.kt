@@ -135,6 +135,8 @@ class InternetFileExpandableAdapter(expandableListView: FileExpandableListView) 
             bundle.putString(IjkVideoFragment.EXTRA_URI_PATH, path)
             val i = RotateNoCreateActivity.newInstance(context, IjkVideoFragment::class.java, bundle)
             context.startActivity(i)
+        } else{
+
         }
     }
 }

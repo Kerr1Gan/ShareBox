@@ -12,11 +12,12 @@ import com.ecjtu.sharebox.ui.activity.MainActivity
 class ServerComingNotification(context: Context) : SimpleNotification(context) {
 
     companion object {
-        const val ID = 0x100
+        @JvmField
+        var ID = 0x100
     }
 
     fun buildServerComingNotification(title: String, content: String, ticker: String): ServerComingNotification {
-        super.buildNotification(ID, title, content, ticker, R.mipmap.ic_launcher)
+        super.buildNotification(ID++, title, content, ticker, R.mipmap.ic_launcher)
         val intent = Intent(context, MainActivity::class.java)
 //        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK)
 //        fullScreenIntent(getCurrentBuilder(), 100, intent)
