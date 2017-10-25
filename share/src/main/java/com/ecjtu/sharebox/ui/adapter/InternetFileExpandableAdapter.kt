@@ -17,6 +17,7 @@ import com.ecjtu.sharebox.ui.fragment.IjkVideoFragment
 import com.ecjtu.sharebox.ui.fragment.WebViewFragment
 import com.ecjtu.sharebox.ui.widget.FileExpandableListView
 import com.ecjtu.sharebox.util.cache.CacheUtil
+import com.ecjtu.sharebox.util.file.FileOpenIntentUtil
 import com.ecjtu.sharebox.util.file.FileUtil
 import com.ecjtu.sharebox.util.hash.HashUtil
 import org.ecjtu.easyserver.server.DeviceInfo
@@ -48,7 +49,7 @@ class InternetFileExpandableAdapter(expandableListView: FileExpandableListView) 
     override fun onClick(v: View?) {
         var tag = v?.getTag()
         if (tag != null && tag is String) {
-            openFile("http://${mDeviceInfo?.ip}:${mDeviceInfo?.port}/File/${HashUtil.BKDRHash(tag)}")
+            openFile(tag)
             return
         }
         super.onClick(v)
@@ -60,7 +61,6 @@ class InternetFileExpandableAdapter(expandableListView: FileExpandableListView) 
             val dlg = TextItemDialog(context)
             var path = v.getTag() as String
             val type = FileUtil.getMediaFileTypeByName(path)
-            path = "http://${mDeviceInfo?.ip}:${mDeviceInfo?.port}/File/${HashUtil.BKDRHash(path)}"
             if (type === FileUtil.MediaFileType.MOVIE) {
                 dlg.setupItem(arrayOf(context.getString(R.string.open), context.getString(R.string.cancel)))
                 dlg.setOnClickListener { integer ->
@@ -130,13 +130,18 @@ class InternetFileExpandableAdapter(expandableListView: FileExpandableListView) 
     }
 
     override fun openFile(path: String?) {
+        val uri = "http://${mDeviceInfo?.ip}:${mDeviceInfo?.port}/File/${HashUtil.BKDRHash(path!!)}"
         if (mTabHolder.type === FileUtil.MediaFileType.MOVIE) {
             val bundle = Bundle()
-            bundle.putString(IjkVideoFragment.EXTRA_URI_PATH, path)
+            bundle.putString(IjkVideoFragment.EXTRA_URI_PATH, uri)
             val i = RotateNoCreateActivity.newInstance(context, IjkVideoFragment::class.java, bundle)
             context.startActivity(i)
-        } else{
-
+        } else {
+            val i = FileOpenIntentUtil.openFile(uri)
+            try {
+                context.startActivity(i)
+            } catch (ignore: Exception) {
+            }
         }
     }
 }

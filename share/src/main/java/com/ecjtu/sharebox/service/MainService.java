@@ -7,7 +7,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import org.ecjtu.channellibrary.devicesearch.DiscoverHelper;
+import org.ecjtu.channellibrary.udphelper.FindDeviceManager;
 
 /**
  * Created by KerriGan on 2017/6/18.
@@ -17,7 +17,7 @@ public class MainService extends Service {
 
     private static final String TAG = "MainService";
 
-    private DiscoverHelper mDiscoverHelper;
+    private FindDeviceManager mFindDeviceManager;
 
     @Nullable
     @Override
@@ -49,40 +49,33 @@ public class MainService extends Service {
     }
 
     public void createHelper(String name, int port, String icon) {
-        if (mDiscoverHelper != null) {
-            stopHelper(true, true);
+        if (mFindDeviceManager != null) {
+            stopSearch();
         }
-        mDiscoverHelper = new DiscoverHelper(this, name, String.valueOf(port), icon);
-        mDiscoverHelper.updateTime(System.currentTimeMillis());
+        mFindDeviceManager = new FindDeviceManager((name + "," + port + "," + icon).getBytes());
     }
 
-    public void prepareAndStartHelper(boolean waiting, boolean search) {
-        DiscoverHelper.IMessageListener listener = mDiscoverHelper.getMessageListener();
-        stopHelper(waiting, search);
-        setMessageListener(listener);
-        prepareHelper(waiting, search);
-        startHelper(waiting, search);
+    public void startSearch() {
+        startSearch(false);
     }
 
-    public void prepareHelper(boolean waiting, boolean search) {
-        mDiscoverHelper.prepare(this, waiting, search);
+    public void startSearch(boolean hidden) {
+        if (mFindDeviceManager != null) {
+            mFindDeviceManager.hide(hidden);
+            mFindDeviceManager.start();
+        }
     }
 
-    public void startHelper(boolean waiting, boolean search) {
-        if (mDiscoverHelper != null)
-            mDiscoverHelper.start(waiting, search);
-    }
-
-    public void stopHelper(boolean waiting, boolean search) {
-        if (mDiscoverHelper != null) {
-            mDiscoverHelper.stop(waiting, search);
+    public void stopSearch() {
+        if (mFindDeviceManager != null) {
+            mFindDeviceManager.stop();
             setMessageListener(null);
         }
     }
 
-    public void setMessageListener(DiscoverHelper.IMessageListener listener) {
-        if (mDiscoverHelper != null)
-            mDiscoverHelper.setMessageListener(listener);
+    public void setMessageListener(FindDeviceManager.IReceiveMsg listener) {
+        if (mFindDeviceManager != null)
+            mFindDeviceManager.setReceiveListener(listener);
     }
 
 }

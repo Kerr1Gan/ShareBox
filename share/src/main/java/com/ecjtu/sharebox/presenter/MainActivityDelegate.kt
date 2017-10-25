@@ -31,6 +31,7 @@ import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.PreferenceInfo
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.getMainApplication
+import com.ecjtu.sharebox.model.DeviceModel
 import com.ecjtu.sharebox.notification.ServerComingNotification
 import com.ecjtu.sharebox.ui.activity.MainActivity
 import com.ecjtu.sharebox.ui.activity.SettingsActivity
@@ -48,13 +49,11 @@ import com.ecjtu.sharebox.util.activity.ActivityUtil
 import com.ecjtu.sharebox.util.photo.CapturePhotoHelper
 import com.ecjtu.sharebox.util.photo.PickPhotoHelper
 import org.ecjtu.channellibrary.devicesearch.DeviceSearcher
-import org.ecjtu.channellibrary.devicesearch.DiscoverHelper
 import org.ecjtu.channellibrary.wifiutil.NetworkUtil
 import org.ecjtu.easyserver.server.ConversionFactory
 import org.ecjtu.easyserver.server.DeviceInfo
 import org.json.JSONObject
 import java.io.File
-import java.lang.Exception
 
 
 /**
@@ -111,7 +110,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
                     try {
                         val deviceInfo = ConversionFactory.json2DeviceInfo(JSONObject(json))
                         ServerComingNotification(context!!).buildServerComingNotification("搜索到新的设备", deviceInfo.name, "ShareBox:" + "找到新的设备").send()
-                        if(mDeviceInfoList.indexOf(deviceInfo)<0){
+                        if (mDeviceInfoList.indexOf(deviceInfo) < 0) {
                             mDeviceInfoList.add(deviceInfo)
                             mRecyclerView?.adapter?.notifyDataSetChanged()
                         }
@@ -278,9 +277,9 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
             }
             R.id.refresh -> {
                 if (owner.refreshing) {
-                    owner.getMainService()?.prepareAndStartHelper(true, true)
+                    owner.getMainService()?.startSearch()
                 } else {
-                    owner.getMainService()?.stopHelper(true, true)
+                    owner.getMainService()?.stopSearch()
                 }
                 return true
             }
@@ -378,68 +377,142 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         if (TextUtils.isEmpty(port)) return
 
         owner.getMainService()?.createHelper(name, port.toInt(), "/API/Icon")
-        owner.getMainService()?.setMessageListener { msg, deviceSet, handler ->
-            var state = owner.getMainApplication().getSavedInstance().get(Constants.AP_STATE)
-            var ip = ""
+        owner.getMainService()?.setMessageListener { ip, _, msg ->
+            val state = owner.getMainApplication().getSavedInstance().get(Constants.AP_STATE)
+            var self = ""
             if (state == Constants.NetWorkState.WIFI) {
                 val ips = NetworkUtil.getLocalWLANIps()
                 if (ips.isNotEmpty())
-                    ip = NetworkUtil.getLocalWLANIps()[0]
+                    self = NetworkUtil.getLocalWLANIps()[0]
             } else if (state == Constants.NetWorkState.AP) {
                 val ips = NetworkUtil.getLocalApIps()
                 if (ips.isNotEmpty())
-                    ip = NetworkUtil.getLocalApIps()[0]
+                    self = NetworkUtil.getLocalApIps()[0]
             }
-            when (msg) {
-                DiscoverHelper.MSG_FIND_DEVICE -> {
+            val msgStr = String(msg)
+            val params = msgStr.split(",")
+            if (params.size >= 3) {
+                try {
+                    val devModel = DeviceModel(params[0], params[1].toInt(), params[2])
+                    if (!isSelf(self, ip)) {
+                        owner.getHandler()?.post {
+                            applyDeviceInfo(ip, devModel)
+                        }
+                    }
+                } catch (ex: Exception) {
+                    ex.printStackTrace()
+                }
+            }
+        }
+//        owner.getMainService()?.setMessageListener { msg, deviceSet, handler ->
+//            var state = owner.getMainApplication().getSavedInstance().get(Constants.AP_STATE)
+//            var ip = ""
+//            if (state == Constants.NetWorkState.WIFI) {
+//                val ips = NetworkUtil.getLocalWLANIps()
+//                if (ips.isNotEmpty())
+//                    ip = NetworkUtil.getLocalWLANIps()[0]
+//            } else if (state == Constants.NetWorkState.AP) {
+//                val ips = NetworkUtil.getLocalApIps()
+//                if (ips.isNotEmpty())
+//                    ip = NetworkUtil.getLocalApIps()[0]
+//            }
+//            when (msg) {
+//                DiscoverHelper.MSG_FIND_DEVICE -> {
+//
+//                    for (obj in deviceSet) {
+//                        if (isSelf(ip, obj)) continue
+//                        val index = mClientSet.indexOf(obj)
+//                        if (index < 0) {
+//                            mClientSet.add(obj)
+//                            ServerComingNotification(owner).buildServerComingNotification("搜索到新的设备", obj.name, "ShareBox:" + "找到新的设备").send()
+//                        } else {
+//                            val old = mClientSet.get(index)
+//                            old.name = obj.name
+//                            old.room = obj.room
+//                        }
+//                    }
+//                    applyDeviceInfo(mClientSet)
+//                    if (owner.refreshing) {
+//                        var msg = handler.obtainMessage(DiscoverHelper.MSG_START_FIND_DEVICE)
+//                        handler.sendMessageDelayed(msg, DELAY_TIME)
+//                    }
+//                }
+//                DiscoverHelper.MSG_BEING_SEARCHED -> {
+//                    for (obj in deviceSet) {
+//                        if (isSelf(ip, obj)) continue
+//                        var index = mServerSet.indexOf(obj)
+//                        if (index < 0) {
+//                            mServerSet.add(obj)
+//                        } else {
+//                            var old = mServerSet.get(index)
+//                            old.name = obj.name
+//                            old.room = obj.room
+//                        }
+//                    }
+//                    applyDeviceInfo(mServerSet)
+//                    if (owner.refreshing) {
+//                        var msg = handler.obtainMessage(DiscoverHelper.MSG_START_BEING_SEARCHED)
+//                        handler.sendMessageDelayed(msg, DELAY_TIME)
+//                    }
+//                }
+//                DiscoverHelper.MSG_START_FIND_DEVICE -> {
+//                    owner.getMainService()?.prepareAndStartHelper(true, true)
+//                }
+//                DiscoverHelper.MSG_START_BEING_SEARCHED -> {
+//                    owner.getMainService()?.prepareAndStartHelper(true, true)
+//                }
+//            }
+//        }
 
-                    for (obj in deviceSet) {
-                        if (isSelf(ip, obj)) continue
-                        val index = mClientSet.indexOf(obj)
-                        if (index < 0) {
-                            mClientSet.add(obj)
-                            ServerComingNotification(owner).buildServerComingNotification("搜索到新的设备", obj.name, "ShareBox:" + "找到新的设备").send()
-                        } else {
-                            val old = mClientSet.get(index)
-                            old.name = obj.name
-                            old.room = obj.room
-                        }
-                    }
-                    applyDeviceInfo(mClientSet)
-                    if (owner.refreshing) {
-                        var msg = handler.obtainMessage(DiscoverHelper.MSG_START_FIND_DEVICE)
-                        handler.sendMessageDelayed(msg, DELAY_TIME)
-                    }
+        if (owner.refreshing) {
+            owner.getMainService()?.startSearch()
+        }
+    }
+
+    private fun applyDeviceInfo(ip: String, deviceModel: DeviceModel) {
+        var flag: Boolean
+        flag = false
+        var old: DeviceInfo? = null
+        for (info in mDeviceInfoList) {
+            if (info.ip.equals(ip)) {
+                flag = true
+                old = info
+            }
+        }
+
+        if (!flag) {
+            val deviceInfo = DeviceInfo(deviceModel.name, ip, deviceModel.port, deviceModel.icon)
+            mDeviceInfoList.add(deviceInfo)
+            mRecyclerView?.adapter?.notifyDataSetChanged()
+        } else {
+
+            if (deviceModel.port != 0) {
+                var needUpdate = false
+                if (old?.port != deviceModel.port || old.icon != deviceModel.icon) {
+                    needUpdate = true
+                    Log.e(TAG, "need update recycler view")
                 }
-                DiscoverHelper.MSG_BEING_SEARCHED -> {
-                    for (obj in deviceSet) {
-                        if (isSelf(ip, obj)) continue
-                        var index = mServerSet.indexOf(obj)
-                        if (index < 0) {
-                            mServerSet.add(obj)
-                        } else {
-                            var old = mServerSet.get(index)
-                            old.name = obj.name
-                            old.room = obj.room
-                        }
-                    }
-                    applyDeviceInfo(mServerSet)
-                    if (owner.refreshing) {
-                        var msg = handler.obtainMessage(DiscoverHelper.MSG_START_BEING_SEARCHED)
-                        handler.sendMessageDelayed(msg, DELAY_TIME)
-                    }
-                }
-                DiscoverHelper.MSG_START_FIND_DEVICE -> {
-                    owner.getMainService()?.prepareAndStartHelper(true, true)
-                }
-                DiscoverHelper.MSG_START_BEING_SEARCHED -> {
-                    owner.getMainService()?.prepareAndStartHelper(true, true)
+
+                old?.name = deviceModel.name
+                old?.port = deviceModel.port
+                old?.icon = deviceModel.icon
+
+                if (needUpdate) {
+                    mRecyclerView?.adapter?.notifyDataSetChanged()
                 }
             }
         }
 
-        if (owner.refreshing) {
-            owner.getMainService()?.prepareAndStartHelper(true, true)
+        val index = mViewSwitcher?.indexOfChild(mRecyclerView)
+        val nextIndex = mViewSwitcher?.indexOfChild(mViewSwitcher?.nextView)
+        if (mDeviceInfoList.size != 0) {
+            if (index == nextIndex) {
+                mViewSwitcher?.showNext()
+            }
+        } else {
+            if (index != nextIndex) {
+                mViewSwitcher?.showNext()
+            }
         }
     }
 
@@ -532,8 +605,17 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         return false
     }
 
+    private fun isSelf(self: String, ip: String): Boolean {
+        if (DEBUG) return false
+
+        if (self == ip) {
+            return true
+        }
+        return false
+    }
+
     fun onDestroy() {
-        owner.getMainService()?.stopHelper(true, true)
+        owner.getMainService()?.stopSearch()
         mPhotoHelper?.clearCache()
         mImageHelper?.clearCache()
         LocalBroadcastManager.getInstance(owner).unregisterReceiver(mUpdateDeviceInfoReceiver)

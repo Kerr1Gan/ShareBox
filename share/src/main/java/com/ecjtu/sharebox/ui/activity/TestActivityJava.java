@@ -3,16 +3,16 @@ package com.ecjtu.sharebox.ui.activity;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
+import android.util.Log;
 
-import com.dd.CircularProgressButton;
 import com.ecjtu.sharebox.R;
+
+import org.ecjtu.channellibrary.udphelper.FindDeviceManager;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,33 +39,48 @@ public class TestActivityJava extends AppCompatActivity {
 //        JSONObject root=Info.deviceInfo2Json(info);
 //        info=Info.json2DeviceInfo(root);
 
-        final CircularProgressButton circularButton1 = (CircularProgressButton) findViewById(R.id.circularButton1);
-        circularButton1.setIndeterminateProgressMode(true);
-        circularButton1.setOnClickListener(new View.OnClickListener() {
+//        final CircularProgressButton circularButton1 = (CircularProgressButton) findViewById(R.id.circularButton1);
+//        circularButton1.setIndeterminateProgressMode(true);
+//        circularButton1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (circularButton1.getProgress() == 0) {
+//                    circularButton1.setProgress(50);
+//                } else if (circularButton1.getProgress() == 100) {
+//                    circularButton1.setProgress(0);
+//                } else {
+//                    circularButton1.setProgress(100);
+//                }
+//            }
+//        });
+//
+////        Intent intent=ImmersiveFragmentActivity.newInstance(this, WebViewFragment.class);
+////        startActivity(intent);
+//
+//        final Map<String, List<String>> map = new HashMap<>();
+//
+//        for (int i = 0; i < 10000; i++) {
+//            List<String> childList = new ArrayList<>();
+//            for (int j = 0; j < 100; j++) {
+//                childList.add(new String("Child Say Hello" + j));
+//            }
+//            map.put("HelloWorld" + i, childList);
+//        }
+
+        FindDeviceManager manager = new FindDeviceManager();
+        manager.setBrodcastData("Hello World".getBytes());
+        manager.setReceiveListener(new FindDeviceManager.IReceiveMsg() {
             @Override
-            public void onClick(View v) {
-                if (circularButton1.getProgress() == 0) {
-                    circularButton1.setProgress(50);
-                } else if (circularButton1.getProgress() == 100) {
-                    circularButton1.setProgress(0);
-                } else {
-                    circularButton1.setProgress(100);
-                }
+            public void onReceive(String ip, int port, byte[] msg) {
+                Log.e("FindDeviceManager", "onReceive: ip " + ip + " port " + port + " msg " + new String(msg));
             }
         });
+        manager.start();
+    }
 
-//        Intent intent=ImmersiveFragmentActivity.newInstance(this, WebViewFragment.class);
-//        startActivity(intent);
-
-        final Map<String, List<String>> map = new HashMap<>();
-
-        for (int i = 0; i < 10000; i++) {
-            List<String> childList = new ArrayList<>();
-            for (int j = 0; j < 100; j++) {
-                childList.add(new String("Child Say Hello" + j));
-            }
-            map.put("HelloWorld" + i, childList);
-        }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     public void saveParcel(Map<String, List<String>> map, FileOutputStream fos) throws IOException {

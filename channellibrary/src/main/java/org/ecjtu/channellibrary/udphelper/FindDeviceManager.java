@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.io.InterruptedIOException;
+import java.lang.ref.WeakReference;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -20,7 +21,7 @@ public class FindDeviceManager {
 
     private static final int UDP_PORT = 1111;
 
-    private static final int RECEIVE_TIME_OUT = 2500;
+    private static final int DEFAULT_TIME_OUT = 2500;
 
     private volatile byte[] mBroadcastData;
 
@@ -30,6 +31,8 @@ public class FindDeviceManager {
 
     private DatagramSocket mReceiveSocket;
 
+    private int mPollingInterval = DEFAULT_TIME_OUT;
+
     private Runnable mBroadcastWorker = new Runnable() {
 
         @Override
@@ -37,9 +40,10 @@ public class FindDeviceManager {
             Log.i(TAG, "run: broadcast worker begin");
             while (!Thread.interrupted()) {
                 try {
-                    mBroadcastSocket = new DatagramSocket();
-                    mBroadcastSocket.setSoTimeout(RECEIVE_TIME_OUT);
-
+                    if (mBroadcastSocket == null) {
+                        mBroadcastSocket = new DatagramSocket();
+                        mBroadcastSocket.setSoTimeout(DEFAULT_TIME_OUT);
+                    }
                     byte[] sendData = new byte[1];
                     InetAddress broadIP = InetAddress.getByName("255.255.255.255");// 255.255.255.255 会发送给局域网内所有设备 https://segmentfault.com/q/1010000004918877
                     DatagramPacket sendPack = new DatagramPacket(sendData, sendData.length, broadIP, UDP_PORT);
@@ -65,7 +69,7 @@ public class FindDeviceManager {
                 }
 
                 try {
-                    wait(RECEIVE_TIME_OUT);
+                    Thread.sleep(mPollingInterval);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                     Thread.currentThread().interrupt();
@@ -83,10 +87,22 @@ public class FindDeviceManager {
             Log.i(TAG, "run: receive worker begin");
             while (!Thread.interrupted()) {
                 try {
-                    mReceiveSocket = new DatagramSocket(UDP_PORT);
+                    if (mReceiveSocket == null) {
+                        mReceiveSocket = new DatagramSocket(UDP_PORT);
+                    }
                     byte[] data = new byte[1024 * 10];
                     DatagramPacket pack = new DatagramPacket(data, data.length);
                     mReceiveSocket.receive(pack);
+                    if (mReceiveListener != null) {
+                        int offset = pack.getOffset();
+                        int len = pack.getLength();
+                        byte[] local = new byte[len];
+                        System.arraycopy(pack.getData(), offset, local, 0, len);
+                        IReceiveMsg listener = mReceiveListener.get();
+                        if (listener != null) {
+                            listener.onReceive(pack.getAddress().getHostAddress(), pack.getPort(), local);
+                        }
+                    }
                 } catch (SocketException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -104,7 +120,13 @@ public class FindDeviceManager {
 
     private Thread mReceiveThread;
 
+    private WeakReference<IReceiveMsg> mReceiveListener;
+
     public FindDeviceManager() {
+    }
+
+    public FindDeviceManager(byte[] data) {
+        mBroadcastData = data;
     }
 
     public void start() {
@@ -165,7 +187,7 @@ public class FindDeviceManager {
         mReceiveThread = null;
     }
 
-    public void setBrocastData(byte[] data) {
+    public void setBrodcastData(byte[] data) {
         mBroadcastData = data;
     }
 
@@ -173,7 +195,19 @@ public class FindDeviceManager {
         mHidden = hide;
     }
 
-    public boolean isHide(){
+    public boolean isHide() {
         return mHidden;
+    }
+
+    public void setReceiveListener(IReceiveMsg listener) {
+        mReceiveListener = new WeakReference<>(listener);
+    }
+
+    public void setPollingInterval(int millis) {
+        mPollingInterval = millis;
+    }
+
+    public interface IReceiveMsg {
+        void onReceive(String ip, int port, byte[] msg);
     }
 }
