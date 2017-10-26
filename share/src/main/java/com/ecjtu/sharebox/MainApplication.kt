@@ -83,9 +83,9 @@ class MainApplication : Application() {
                     if (activity == act || act == null) {
                         iter.remove()
                     }
-                    if (act is MainActivity) {
-                        mSavedInstance.clear()
-                    }
+//                    if (act is MainActivity) {
+//                        mSavedInstance.clear()
+//                    }
                 }
             }
 

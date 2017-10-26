@@ -61,7 +61,6 @@ public class MainService extends Service {
 
     public void startSearch(boolean hidden) {
         if (mFindDeviceManager != null) {
-            mFindDeviceManager.stop();
             mFindDeviceManager.hide(hidden);
             mFindDeviceManager.start();
         }
