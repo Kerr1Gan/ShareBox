@@ -14,7 +14,7 @@ import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory
 import com.bumptech.glide.load.engine.cache.LruResourceCache
 import com.bumptech.glide.module.AppGlideModule
 import com.ecjtu.sharebox.parcel.FileExpandableVhCache
-import com.ecjtu.sharebox.ui.adapter.FileExpandableAdapter
+import com.ecjtu.sharebox.ui.activity.MainActivity
 import com.ecjtu.sharebox.ui.dialog.FilePickDialog
 import com.google.android.gms.ads.MobileAds
 import com.tencent.bugly.crashreport.CrashReport
@@ -82,6 +82,9 @@ class MainApplication : Application() {
                     val act = obj.get()
                     if (activity == act || act == null) {
                         iter.remove()
+                    }
+                    if (act is MainActivity) {
+                        mSavedInstance.clear()
                     }
                 }
             }

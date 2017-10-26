@@ -6,7 +6,9 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.AsyncTask
+import android.os.Build
 import android.os.Message
+import android.support.annotation.RequiresApi
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.TabLayout
 import android.support.v4.view.PagerAdapter
@@ -64,6 +66,8 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
     private val mSavedState = if (ownerActivity != null) ownerActivity.getMainApplication().getSavedInstance() else null
 
     private var mDoOk = false
+
+    private var mSelectAll = false
 
     companion object {
         const val EXTRA_VH_LIST = "extra_vh_list"
@@ -577,6 +581,11 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         val progressDialog = ProgressDialog(context, ownerActivity).apply {
             setOnDismissListener {
                 findAllTask.release()
+                mSelectAll = true
+                ownerActivity.runOnUiThread {
+                    val toolbar = findViewById(R.id.toolbar) as Toolbar?
+                    toolbar?.menu?.findItem(R.id.select_all)?.setTitle("cancel")
+                }
             }
             show()
         }
@@ -605,9 +614,9 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                     mTempMap.put(EXTRA_VH_LIST + title, newArr as ArrayList<FileExpandableAdapter.VH>)
                 }
             }
-
             progressDialog.cancel()
         }
+
     }
 
     private fun cancelAllTask() {
@@ -639,6 +648,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
             }
         }
 
+        @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
         override fun onStateChanged(bottomSheet: View, newState: Int) {
             if (newState == BottomSheetBehavior.STATE_EXPANDED) {
                 val attrsArray = intArrayOf(android.R.attr.homeAsUpIndicator)

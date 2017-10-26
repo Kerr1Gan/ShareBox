@@ -404,65 +404,6 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
                 }
             }
         }
-//        owner.getMainService()?.setMessageListener { msg, deviceSet, handler ->
-//            var state = owner.getMainApplication().getSavedInstance().get(Constants.AP_STATE)
-//            var ip = ""
-//            if (state == Constants.NetWorkState.WIFI) {
-//                val ips = NetworkUtil.getLocalWLANIps()
-//                if (ips.isNotEmpty())
-//                    ip = NetworkUtil.getLocalWLANIps()[0]
-//            } else if (state == Constants.NetWorkState.AP) {
-//                val ips = NetworkUtil.getLocalApIps()
-//                if (ips.isNotEmpty())
-//                    ip = NetworkUtil.getLocalApIps()[0]
-//            }
-//            when (msg) {
-//                DiscoverHelper.MSG_FIND_DEVICE -> {
-//
-//                    for (obj in deviceSet) {
-//                        if (isSelf(ip, obj)) continue
-//                        val index = mClientSet.indexOf(obj)
-//                        if (index < 0) {
-//                            mClientSet.add(obj)
-//                            ServerComingNotification(owner).buildServerComingNotification("搜索到新的设备", obj.name, "ShareBox:" + "找到新的设备").send()
-//                        } else {
-//                            val old = mClientSet.get(index)
-//                            old.name = obj.name
-//                            old.room = obj.room
-//                        }
-//                    }
-//                    applyDeviceInfo(mClientSet)
-//                    if (owner.refreshing) {
-//                        var msg = handler.obtainMessage(DiscoverHelper.MSG_START_FIND_DEVICE)
-//                        handler.sendMessageDelayed(msg, DELAY_TIME)
-//                    }
-//                }
-//                DiscoverHelper.MSG_BEING_SEARCHED -> {
-//                    for (obj in deviceSet) {
-//                        if (isSelf(ip, obj)) continue
-//                        var index = mServerSet.indexOf(obj)
-//                        if (index < 0) {
-//                            mServerSet.add(obj)
-//                        } else {
-//                            var old = mServerSet.get(index)
-//                            old.name = obj.name
-//                            old.room = obj.room
-//                        }
-//                    }
-//                    applyDeviceInfo(mServerSet)
-//                    if (owner.refreshing) {
-//                        var msg = handler.obtainMessage(DiscoverHelper.MSG_START_BEING_SEARCHED)
-//                        handler.sendMessageDelayed(msg, DELAY_TIME)
-//                    }
-//                }
-//                DiscoverHelper.MSG_START_FIND_DEVICE -> {
-//                    owner.getMainService()?.prepareAndStartHelper(true, true)
-//                }
-//                DiscoverHelper.MSG_START_BEING_SEARCHED -> {
-//                    owner.getMainService()?.prepareAndStartHelper(true, true)
-//                }
-//            }
-//        }
 
         if (owner.refreshing) {
             owner.getMainService()?.startSearch()

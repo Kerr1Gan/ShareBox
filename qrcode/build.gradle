@@ -27,7 +27,7 @@ android {
     abortOnError false
   }
 
-  compileSdkVersion 25
+  compileSdkVersion 23
   buildToolsVersion '25.0.2'
 
   defaultConfig {

@@ -1,5 +1,7 @@
 package com.ecjtu.sharebox.ui.adapter
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +19,6 @@ import com.ecjtu.sharebox.ui.fragment.IjkVideoFragment
 import com.ecjtu.sharebox.ui.fragment.WebViewFragment
 import com.ecjtu.sharebox.ui.widget.FileExpandableListView
 import com.ecjtu.sharebox.util.cache.CacheUtil
-import com.ecjtu.sharebox.util.file.FileOpenIntentUtil
 import com.ecjtu.sharebox.util.file.FileUtil
 import com.ecjtu.sharebox.util.hash.HashUtil
 import org.ecjtu.easyserver.server.DeviceInfo
@@ -58,33 +59,34 @@ class InternetFileExpandableAdapter(expandableListView: FileExpandableListView) 
     override fun onLongClick(v: View?): Boolean {
         v?.let {
             val context = v.context
-            val dlg = TextItemDialog(context)
-            var path = v.getTag() as String
-            val type = FileUtil.getMediaFileTypeByName(path)
-            if (type === FileUtil.MediaFileType.MOVIE) {
-                dlg.setupItem(arrayOf(context.getString(R.string.open), context.getString(R.string.cancel)))
-                dlg.setOnClickListener { integer ->
-                    if (integer == 0) {
-                        openFile(path)
-                    } else if (integer == 1) {
+            if(v.getTag() is String){
+                val dlg = TextItemDialog(context)
+                var path = v.getTag() as String
+                val type = FileUtil.getMediaFileTypeByName(path)
+                if (type === FileUtil.MediaFileType.MOVIE) {
+                    dlg.setupItem(arrayOf(context.getString(R.string.open), context.getString(R.string.cancel)))
+                    dlg.setOnClickListener { integer ->
+                        if (integer == 0) {
+                            openFile(path)
+                        } else if (integer == 1) {
+                        }
+                        dlg.cancel()
                     }
-                    dlg.cancel()
-                    null
-                }
-            } else {
-                dlg.setupItem(arrayOf(context.getString(R.string.open), context.getString(R.string.open_by_others), context.getString(R.string.cancel)))
-                dlg.setOnClickListener { integer ->
-                    if (integer == 0) {
-                        val bundle = WebViewFragment.openWithMIME(path)
-                        val intent = ActionBarFragmentActivity.newInstance(context, WebViewFragment::class.java, bundle)
-                        context.startActivity(intent)
-                    } else if (integer == 1) {
-                        openFile(path)
+                } else {
+                    dlg.setupItem(arrayOf(context.getString(R.string.open), context.getString(R.string.open_by_others), context.getString(R.string.cancel)))
+                    dlg.setOnClickListener { integer ->
+                        if (integer == 0) {
+                            val bundle = WebViewFragment.openWithMIME(path)
+                            val intent = ActionBarFragmentActivity.newInstance(context, WebViewFragment::class.java, bundle)
+                            context.startActivity(intent)
+                        } else if (integer == 1) {
+                            openFile(path)
+                        }
+                        dlg.cancel()
                     }
-                    dlg.cancel()
                 }
+                dlg.show()
             }
-            dlg.show()
         }
         return true
     }
@@ -130,16 +132,20 @@ class InternetFileExpandableAdapter(expandableListView: FileExpandableListView) 
     }
 
     override fun openFile(path: String?) {
-        val uri = "http://${mDeviceInfo?.ip}:${mDeviceInfo?.port}/File/${HashUtil.BKDRHash(path!!)}"
+        val local = "http://${mDeviceInfo?.ip}:${mDeviceInfo?.port}/File/${HashUtil.BKDRHash(path!!)}"
         if (mTabHolder.type === FileUtil.MediaFileType.MOVIE) {
             val bundle = Bundle()
-            bundle.putString(IjkVideoFragment.EXTRA_URI_PATH, uri)
+            bundle.putString(IjkVideoFragment.EXTRA_URI_PATH, local)
             val i = RotateNoCreateActivity.newInstance(context, IjkVideoFragment::class.java, bundle)
             context.startActivity(i)
         } else {
-            val i = FileOpenIntentUtil.openFile(uri)
             try {
-                context.startActivity(i)
+                val intent = Intent()
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                intent.action = Intent.ACTION_VIEW
+                val uri = Uri.parse(local)
+                intent.setData(uri)
+                context.startActivity(intent)
             } catch (ignore: Exception) {
             }
         }

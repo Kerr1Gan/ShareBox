@@ -45,9 +45,9 @@ object FileOpenIntentUtil {
 
     //Android获取一个用于打开所有文件的intent
     fun getAllIntent(param: String): Intent {
-
         val intent = Intent()
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.addCategory("android.intent.category.DEFAULT")
         intent.action = Intent.ACTION_VIEW
         val uri = Uri.fromFile(File(param))
         intent.setData(uri)

@@ -76,6 +76,11 @@ public class TestActivityJava extends AppCompatActivity {
             }
         });
         manager.start();
+
+        if (null instanceof String) {
+            int x = 0;
+            x++;
+        }
     }
 
     @Override

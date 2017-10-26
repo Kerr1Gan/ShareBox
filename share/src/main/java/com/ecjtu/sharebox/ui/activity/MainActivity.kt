@@ -24,7 +24,6 @@ import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
 import com.ecjtu.sharebox.service.MainService
-import com.ecjtu.sharebox.ui.dialog.ApDataDialog
 import com.ecjtu.sharebox.ui.fragment.SplashFragment
 import com.ecjtu.sharebox.util.admob.AdmobCallback
 import com.ecjtu.sharebox.util.admob.AdmobManager
@@ -326,9 +325,11 @@ class MainActivity : ImmersiveFragmentActivity() {
                     var name = PreferenceManager.getDefaultSharedPreferences(this).
                             getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
                     if (mService != null && mService!!.ip != null && mService!!.port != 0) {
-                        val deviceInfo = getMainApplication().getSavedInstance().get(Constants.KEY_INFO_OBJECT) as DeviceInfo
-                        registerServerInfo(mService!!.ip, mService!!.port, name,
-                                deviceInfo.fileMap)
+                        val deviceInfo = getMainApplication().getSavedInstance().get(Constants.KEY_INFO_OBJECT) as DeviceInfo?
+                        deviceInfo?.let {
+                            registerServerInfo(mService!!.ip, mService!!.port, name,
+                                    deviceInfo.fileMap)
+                        }
                     }
                     runOnUiThread { mDelegate?.doSearch() }
                 }

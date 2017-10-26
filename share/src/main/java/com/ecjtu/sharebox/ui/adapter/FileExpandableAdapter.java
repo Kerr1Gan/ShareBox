@@ -135,39 +135,41 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
     @Override
     public boolean onLongClick(final View v) {
         final TextItemDialog dlg = new TextItemDialog(mExpandableListView.getContext());
-        final String path = (String) v.getTag();
-        FileUtil.MediaFileType type = FileUtil.INSTANCE.getMediaFileTypeByName(path);
-        if (type == FileUtil.MediaFileType.MOVIE) {
-            dlg.setupItem(new String[]{mContext.getString(R.string.open), mContext.getString(R.string.cancel)});
-            dlg.setOnClickListener(new Function1<Integer, Unit>() {
-                @Override
-                public Unit invoke(Integer integer) {
-                    if (integer == 0) {
-                        openFile(path);
-                    } else if (integer == 1) {
+        if(v.getTag() instanceof String){
+            final String path = (String) v.getTag();
+            FileUtil.MediaFileType type = FileUtil.INSTANCE.getMediaFileTypeByName(path);
+            if (type == FileUtil.MediaFileType.MOVIE) {
+                dlg.setupItem(new String[]{mContext.getString(R.string.open), mContext.getString(R.string.cancel)});
+                dlg.setOnClickListener(new Function1<Integer, Unit>() {
+                    @Override
+                    public Unit invoke(Integer integer) {
+                        if (integer == 0) {
+                            openFile(path);
+                        } else if (integer == 1) {
+                        }
+                        dlg.cancel();
+                        return null;
                     }
-                    dlg.cancel();
-                    return null;
-                }
-            });
-        } else {
-            dlg.setupItem(new String[]{mContext.getString(R.string.open), mContext.getString(R.string.open_by_others), mContext.getString(R.string.cancel)});
-            dlg.setOnClickListener(new Function1<Integer, Unit>() {
-                @Override
-                public Unit invoke(Integer integer) {
-                    if (integer == 0) {
-                        Bundle bundle = WebViewFragment.openWithMIME(path);
-                        Intent intent = ActionBarFragmentActivity.newInstance(mContext, WebViewFragment.class, bundle);
-                        mContext.startActivity(intent);
-                    } else if (integer == 1) {
-                        openFile(path);
+                });
+            } else {
+                dlg.setupItem(new String[]{mContext.getString(R.string.open), mContext.getString(R.string.open_by_others), mContext.getString(R.string.cancel)});
+                dlg.setOnClickListener(new Function1<Integer, Unit>() {
+                    @Override
+                    public Unit invoke(Integer integer) {
+                        if (integer == 0) {
+                            Bundle bundle = WebViewFragment.openWithMIME(path);
+                            Intent intent = ActionBarFragmentActivity.newInstance(mContext, WebViewFragment.class, bundle);
+                            mContext.startActivity(intent);
+                        } else if (integer == 1) {
+                            openFile(path);
+                        }
+                        dlg.cancel();
+                        return null;
                     }
-                    dlg.cancel();
-                    return null;
-                }
-            });
+                });
+            }
+            dlg.show();
         }
-        dlg.show();
         return true;
     }
 
