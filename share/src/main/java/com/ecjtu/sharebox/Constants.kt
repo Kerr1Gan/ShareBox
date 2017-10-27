@@ -12,7 +12,7 @@ object Constants{
 
     const val KEY_INFO_OBJECT="com.ecjtu.sharebox.Info"
 
-    const val KEY_SERVER_PORT="key_server_port"
+    const val PREF_SERVER_PORT ="pref_server_port"
 
     enum class NetWorkState{
         NONE,

@@ -317,8 +317,8 @@ class MainActivity : ImmersiveFragmentActivity() {
                     var intent = EasyServerService.getApIntent(this)
                     startService(intent)
                     getHandler()?.sendEmptyMessageDelayed(MSG_LOADING_SERVER, Int.MAX_VALUE.toLong())
-                } else {
-                    getMainApplication().getSavedInstance().remove(Constants.KEY_SERVER_PORT)
+                } else if (getHandler()?.hasMessages(MSG_LOADING_SERVER) == false) {
+//                    PreferenceManager.getDefaultSharedPreferences(this).edit().remove(Constants.PREF_SERVER_PORT).apply()
                 }
 
                 if (!flag && mDelegate != null) {
@@ -354,7 +354,7 @@ class MainActivity : ImmersiveFragmentActivity() {
     }
 
     fun registerServerInfo(hostIP: String, port: Int, name: String, mutableMap: MutableMap<String, List<String>>) {
-        getMainApplication().getSavedInstance().put(Constants.KEY_SERVER_PORT, port.toString())
+        PreferenceManager.getDefaultSharedPreferences(this).edit().putInt(Constants.PREF_SERVER_PORT, port).apply()
         val deviceInfo = getMainApplication().getSavedInstance().get(Constants.KEY_INFO_OBJECT) as DeviceInfo
         deviceInfo.apply {
             this.name = name

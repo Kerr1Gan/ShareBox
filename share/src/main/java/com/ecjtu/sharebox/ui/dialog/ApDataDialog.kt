@@ -65,7 +65,7 @@ class ApDataDialog(activity: Activity) : BaseBottomSheetDialog(activity, activit
 
     private fun initView(vg: ViewGroup) {
         var ip = if (mOthers) mIp else ""
-        var port = if (mOthers) mPort else PreferenceManager.getDefaultSharedPreferences(ownerActivity).getInt(Constants.KEY_SERVER_PORT, mPort)
+        var port = if (mOthers) mPort else PreferenceManager.getDefaultSharedPreferences(ownerActivity).getInt(Constants.PREF_SERVER_PORT, mPort)
 
         var ap = vg.findViewById(R.id.text_ap) as TextView
         var name = vg.findViewById(R.id.text_name) as TextView

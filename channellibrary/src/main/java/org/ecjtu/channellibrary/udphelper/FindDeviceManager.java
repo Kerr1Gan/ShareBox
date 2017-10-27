@@ -10,6 +10,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by Ethan_Xiang on 2017/10/24.
@@ -33,16 +34,22 @@ public class FindDeviceManager {
 
     private int mPollingInterval = DEFAULT_TIME_OUT;
 
+    private static AtomicInteger sBroadcastThreadsCount = new AtomicInteger();
+
+    private static AtomicInteger sReceiveThreadsCount = new AtomicInteger();
+
     private Runnable mBroadcastWorker = new Runnable() {
 
         @Override
         public void run() {
-            Log.i(TAG, "run: broadcast worker begin");
+            Log.i(TAG, "run: broadcast worker begin threads count " + sBroadcastThreadsCount.incrementAndGet());
+            DatagramSocket localSocket = null;
             try {
                 if (mBroadcastSocket == null) {
                     mBroadcastSocket = new DatagramSocket();
                     mBroadcastSocket.setSoTimeout(DEFAULT_TIME_OUT);
                 }
+                localSocket = mBroadcastSocket;
                 while (!Thread.interrupted()) {
                     try {
                         byte[] sendData = new byte[1];
@@ -52,7 +59,7 @@ public class FindDeviceManager {
                             byte[] local = new byte[mBroadcastData.length];
                             System.arraycopy(mBroadcastData, 0, local, 0, mBroadcastData.length);
                             sendPack.setData(local);
-                            mBroadcastSocket.send(sendPack);
+                            localSocket.send(sendPack);
                         }
                     } catch (UnknownHostException e) {
                         e.printStackTrace();
@@ -78,7 +85,10 @@ public class FindDeviceManager {
                 e.printStackTrace();
                 Log.i(TAG, "run: broadcast bind port failure");
             }
-            Log.i(TAG, "run: broadcast worker end");
+            if (localSocket != null) {
+                localSocket.close();
+            }
+            Log.i(TAG, "run: broadcast worker end threads count " + sBroadcastThreadsCount.decrementAndGet());
         }
 
     };
@@ -87,16 +97,18 @@ public class FindDeviceManager {
 
         @Override
         public void run() {
-            Log.i(TAG, "run: receive worker begin");
+            Log.i(TAG, "run: receive worker begin threads count " + sReceiveThreadsCount.incrementAndGet());
+            DatagramSocket localSocket = null;
             try {
                 if (mReceiveSocket == null) {
                     mReceiveSocket = new DatagramSocket(UDP_PORT);
                 }
+                localSocket = mReceiveSocket;
                 while (!Thread.interrupted()) {
                     try {
                         byte[] data = new byte[1024 * 10];
                         DatagramPacket pack = new DatagramPacket(data, data.length);
-                        mReceiveSocket.receive(pack);
+                        localSocket.receive(pack);
                         if (mReceiveListener != null) {
                             int offset = pack.getOffset();
                             int len = pack.getLength();
@@ -108,8 +120,8 @@ public class FindDeviceManager {
                             }
                         }
                     } catch (SocketException e) {
-                        Thread.currentThread().interrupt();
                         e.printStackTrace();
+                        Thread.currentThread().interrupt();
                     } catch (IOException e) {
                         e.printStackTrace();
                         if (e instanceof InterruptedIOException) {
@@ -121,7 +133,10 @@ public class FindDeviceManager {
                 e.printStackTrace();
                 Log.i(TAG, "run: receive bind port failure");
             }
-            Log.i(TAG, "run: receive worker end");
+            if (localSocket != null) {
+                localSocket.close();
+            }
+            Log.i(TAG, "run: receive worker end threads count " + sReceiveThreadsCount.decrementAndGet());
         }
     };
 
