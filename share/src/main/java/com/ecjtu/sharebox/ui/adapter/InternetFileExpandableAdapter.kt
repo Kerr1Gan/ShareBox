@@ -17,6 +17,8 @@ import com.ecjtu.sharebox.ui.dialog.FilePickDialog
 import com.ecjtu.sharebox.ui.dialog.TextItemDialog
 import com.ecjtu.sharebox.ui.fragment.IjkVideoFragment
 import com.ecjtu.sharebox.ui.fragment.WebViewFragment
+import com.ecjtu.sharebox.ui.holder.FileExpandableProperty
+import com.ecjtu.sharebox.ui.holder.TabItemHolder
 import com.ecjtu.sharebox.ui.widget.FileExpandableListView
 import com.ecjtu.sharebox.util.cache.CacheUtil
 import com.ecjtu.sharebox.util.file.FileUtil
@@ -31,7 +33,7 @@ class InternetFileExpandableAdapter(expandableListView: FileExpandableListView) 
 
     private var mDeviceInfo: DeviceInfo? = null
 
-    override fun initData(holder: FilePickDialog.TabItemHolder?, oldCache: List<VH>?) {
+    override fun initData(holder: TabItemHolder?, oldCache: List<FileExpandableProperty>?) {
         super.initData(holder, oldCache)
     }
 

@@ -369,9 +369,12 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
 
         val name = PreferenceManager.getDefaultSharedPreferences(owner).
                 getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
-        val port = PreferenceManager.getDefaultSharedPreferences(owner).getInt(Constants.PREF_SERVER_PORT, 0)
+        var port = PreferenceManager.getDefaultSharedPreferences(owner).getInt(Constants.PREF_SERVER_PORT, 0)
 
-        if (port == 0) return
+        if (port == 0) {
+            port = owner.getServerService()?.port ?: 0
+            if (port == 0) return
+        }
 
         owner.getMainService()?.createHelper(name, port, "/API/Icon")
         owner.getMainService()?.setMessageListener { ip, _, msg ->

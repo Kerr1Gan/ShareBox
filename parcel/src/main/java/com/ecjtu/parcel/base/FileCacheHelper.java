@@ -14,6 +14,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * Created by Ethan_Xiang on 2017/7/21.
  * 该类可以跨进程使用
  */
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class FileCacheHelper {
 
     private ReentrantReadWriteLock mReentrantLock;

@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        app:theme="@style/WhiteToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        app:navigationIcon="?android:attr/homeAsUpIndicator"
-        app:title="@string/select_file"
-        app:titleTextColor="@android:color/white"
+        app:contentInsetStart="0dp"
         app:contentInsetStartWithNavigation="0dp"
-        app:contentInsetStart="0dp">
+        app:navigationIcon="?android:attr/homeAsUpIndicator"
+        app:theme="@style/WhiteToolbar"
+        app:title="@string/select_file"
+        app:titleTextColor="@android:color/white">
 
         <ProgressBar
+            android:id="@+id/progress_bar"
+            style="@style/WhiteProgressBar"
             android:layout_width="wrap_content"
             android:layout_height="?android:attr/actionBarSize"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            style="@style/WhiteProgressBar"
             android:layout_gravity="right"
-            android:id="@+id/progress_bar"/>
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp" />
 
     </android.support.v7.widget.Toolbar>
 
@@ -33,15 +33,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tabIndicatorColor="@color/colorPrimary"
-        app:tabMode="scrollable">
-    </android.support.design.widget.TabLayout>
+        app:tabMode="scrollable" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@android:color/white"/>
+        android:background="@android:color/white" />
 
 
 </LinearLayout>

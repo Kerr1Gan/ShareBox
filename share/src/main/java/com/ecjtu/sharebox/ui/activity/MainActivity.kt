@@ -421,4 +421,8 @@ class MainActivity : ImmersiveFragmentActivity() {
     fun getMainService(): MainService? {
         return mMainService
     }
+
+    fun getServerService():IAidlInterface?{
+        return mService
+    }
 }

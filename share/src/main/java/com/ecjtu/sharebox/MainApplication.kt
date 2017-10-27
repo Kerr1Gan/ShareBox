@@ -13,7 +13,7 @@ import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory
 import com.bumptech.glide.load.engine.cache.LruResourceCache
 import com.bumptech.glide.module.AppGlideModule
-import com.ecjtu.sharebox.parcel.FileExpandableVhCache
+import com.ecjtu.sharebox.parcel.FileExpandablePropertyCache
 import com.ecjtu.sharebox.ui.activity.MainActivity
 import com.ecjtu.sharebox.ui.dialog.FilePickDialog
 import com.google.android.gms.ads.MobileAds
@@ -336,17 +336,17 @@ class MainApplication : Application() {
 
     private fun loadCache() {
         val array = arrayOf("Movie", "Music", "Photo", "Doc", "Apk", "Rar")
-        val cache = FileExpandableVhCache(filesDir.absolutePath)
+        val cache = FileExpandablePropertyCache(filesDir.absolutePath)
         for (key in array) {
-            mSavedInstance.put(FilePickDialog.EXTRA_VH_LIST + key, cache.get(key))
+            mSavedInstance.put(FilePickDialog.EXTRA_PROPERTY_LIST + key, cache.get(key))
         }
     }
 
     fun saveCache() {
         val array = arrayOf("Movie", "Music", "Photo", "Doc", "Apk", "Rar")
-        val cache = FileExpandableVhCache(filesDir.absolutePath)
+        val cache = FileExpandablePropertyCache(filesDir.absolutePath)
         for (key in array) {
-            val obj = mSavedInstance.get(FilePickDialog.EXTRA_VH_LIST + key)
+            val obj = mSavedInstance.get(FilePickDialog.EXTRA_PROPERTY_LIST + key)
             if (obj != null && (obj is List<*>)) {
                 cache.put(key, obj)
             }

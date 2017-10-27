@@ -26,6 +26,8 @@ class FindAllFilesHelper(val context: Context) {
 
     private var mCallback: ((map: MutableMap<String, List<String>>) -> Unit)? = null
 
+    private var mProgressListener: ((taskIndex: Int, taskSize: Int) -> Unit)? = null
+
     init {
         mHandlerThread = HandlerThread(TAG)
         mHandlerThread?.start()
@@ -33,12 +35,14 @@ class FindAllFilesHelper(val context: Context) {
         mHandler = object : Handler(looper) {
             override fun handleMessage(msg: Message?) {
                 super.handleMessage(msg)
-
                 if (mFilesMap == null) {
                     mFilesMap = linkedMapOf()
                 }
                 val index = msg!!.what
                 findFilesWithType(context, mTaskList.get(index), mFilesMap!!)
+
+                mProgressListener?.invoke(index + 1, mTaskList.size)
+
                 if (index == mTaskList.size - 1 && mHandlerThread?.isInterrupted == false) {
                     mCallback?.invoke(mFilesMap!!)
                 }
@@ -51,6 +55,10 @@ class FindAllFilesHelper(val context: Context) {
         for (index in 0 until mTaskList.size) {
             mHandler?.obtainMessage(index)?.sendToTarget()
         }
+    }
+
+    fun setProgressCallback(listener: ((taskIndex: Int, taskSize: Int) -> Unit)?) {
+        mProgressListener = listener
     }
 
     fun release() {
