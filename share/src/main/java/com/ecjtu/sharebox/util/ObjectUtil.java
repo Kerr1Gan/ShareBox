@@ -28,6 +28,7 @@ public class ObjectUtil {
         try {
             return deepCopyOrThrow(src);
         } catch (Exception ignore) {
+            ignore.printStackTrace();
             return null;
         }
     }
