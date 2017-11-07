@@ -14,7 +14,7 @@ import java.io.IOException;
 public class Test {
 
 
-    public Test(int x){
+    public Test(int x) {
         setListener2(0, new IListener() {
             @Override
             public void onClick() {
@@ -29,65 +29,67 @@ public class Test {
             }
         });
 
-        String[] strs=new String[2];
-        String[] strs2=new String[]{"123","321"};
+        String[] strs = new String[2];
+        String[] strs2 = new String[]{"123", "321"};
 
 
         try {
-            int xx=0/0;
-        }catch (NumberFormatException | IOError e2){
+            int xx = 0 / 0;
+        } catch (NumberFormatException | IOError e2) {
 
         }
 
-        int j=0;
-        for(int i=0;i<10;i++){
+        int j = 0;
+        for (int i = 0; i < 10; i++) {
+            loop:
             j++;
-            if(j==2){
+            if (j == 2) {
                 i--;
-                j=0;
+                j = 0;
             }
         }
 
-        Integer iii=0;
+        Integer iii = 0;
 
-        if(iii instanceof Integer){
+        if (iii instanceof Integer) {
 
         }
     }
 
-    public <T extends String> void  addAll(T param){
+    public <T extends String> void addAll(T param) {
 
     }
 
-    public <T> void  addAll2(T param){
+    public <T> void addAll2(T param) {
 
     }
 
-    public Test(int x,int y,int z){
+    public Test(int x, int y, int z) {
 
     }
 
-    protected void add() throws IOException{
+    protected void add() throws IOException {
 
     }
 
-    public void setListener2(int x,IListener listener){
-        listener.onClick();
-    }
-    public void setListener1(IListener listener){
+    public void setListener2(int x, IListener listener) {
         listener.onClick();
     }
 
-    public static class Test2 extends Test{
-        public Test2(int x){
+    public void setListener1(IListener listener) {
+        listener.onClick();
+    }
+
+    public static class Test2 extends Test {
+        public Test2(int x) {
             super(x);
-            for(int i=0;i<1000;i++){
+            for (int i = 0; i < 1000; i++) {
 
-        }
+            }
         }
 
-        public Test2(int x,int y,int z){
-            super(x,y,z);
+        public Test2(int x, int y, int z) {
+            super(x, y, z);
         }
 
         @Override
@@ -100,7 +102,7 @@ public class Test {
         }
     }
 
-    public static class Test3 extends Test2{
+    public static class Test3 extends Test2 {
 
         public Test3(int x) {
             super(x);
@@ -112,14 +114,14 @@ public class Test {
         }
     }
 
-    private View.OnClickListener mOnClickListener=new View.OnClickListener() {
+    private View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
 
         }
     };
 
-    private TextWatcher mWatcher=new TextWatcher() {
+    private TextWatcher mWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -136,7 +138,7 @@ public class Test {
         }
     };
 
-    public interface IListener{
+    public interface IListener {
         void onClick();
     }
 }

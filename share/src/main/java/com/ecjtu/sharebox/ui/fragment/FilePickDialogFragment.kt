@@ -2,6 +2,7 @@ package com.ecjtu.sharebox.ui.fragment
 
 import android.app.Dialog
 import android.content.DialogInterface
+import android.content.pm.PackageInfo
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AlertDialog
@@ -78,30 +79,50 @@ class FilePickDialogFragment : AppCompatDialogFragment {
             }
         }
         mFindFilesHelper?.startScanning { map ->
-            for (entry in map) {
-                val title = entry.key
-                val fileList = entry.value
+            run {
+                for (entry in map) {
+                    val title = entry.key
+                    val fileList = entry.value
 
-                val localMap = LinkedHashMap<String, MutableList<String>>()
-                if (title.equals("Apk", true)) {
-                    val arrayList = ArrayList<String>()
-                    val installedApps = FileUtil.getInstalledApps(context, false)
-                    for (packageInfo in installedApps) {
-                        arrayList.add(packageInfo.applicationInfo.sourceDir)
-                    }
-                    localMap.put(context.getString(R.string.installed), arrayList)
-                }
-
-                if (fileList is MutableList<String>) {
-                    val names = FileUtil.foldFiles(fileList, localMap)
-                    val newArr = ArrayList<FileExpandableProperty>()
-                    names?.let {
-                        for (name in names.iterator()) {
-                            val vh = FileExpandableProperty(name, localMap.get(name))
-                            newArr.add(vh)
+                    val localMap = LinkedHashMap<String, MutableList<String>>()
+                    if (title.equals("Apk", true)) {
+                        val arrayList = ArrayList<String>()
+                        if (context == null) return@run
+                        val installedApps = FileUtil.getInstalledApps(context, false)
+                        Collections.sort(installedApps, object : Comparator<PackageInfo> {
+                            override fun compare(lhs: PackageInfo?, rhs: PackageInfo?): Int {
+                                if (lhs == null || rhs == null) {
+                                    return 0
+                                }
+                                if (lhs.lastUpdateTime < rhs.lastUpdateTime) {
+                                    return 1
+                                } else if (lhs.lastUpdateTime > rhs.lastUpdateTime) {
+                                    return -1
+                                } else {
+                                    return 0
+                                }
+                            }
+                        })
+                        for (packageInfo in installedApps) {
+                            arrayList.add(packageInfo.applicationInfo.sourceDir)
                         }
+                        localMap.put(context.getString(R.string.installed), arrayList)
                     }
-                    saveInstance.put(FilePickDialog.EXTRA_PROPERTY_LIST + title, newArr)
+
+                    if (fileList is MutableList<String>) {
+                        val names = FileUtil.foldFiles(fileList, localMap)
+                        val newArr = ArrayList<FileExpandableProperty>()
+                        names?.let {
+                            for (name in names.iterator()) {
+                                val vh = FileExpandableProperty(name, localMap.get(name))
+                                newArr.add(vh)
+                            }
+                        }
+                        saveInstance.put(FilePickDialog.EXTRA_PROPERTY_LIST + title, newArr)
+                    }
+                }
+                mActivity?.let {
+                    FilePickDialogFragment(mActivity!!).show(mActivity?.supportFragmentManager, "show_file_pick_dialog")
                 }
             }
             dialog.cancel()

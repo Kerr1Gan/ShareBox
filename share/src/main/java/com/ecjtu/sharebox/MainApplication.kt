@@ -7,6 +7,7 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Environment
 import android.support.v4.content.LocalBroadcastManager
+import android.util.Log
 import com.bumptech.glide.Glide
 import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.load.DecodeFormat
@@ -35,6 +36,8 @@ class MainApplication : Application() {
 
     private val mActivityList = ArrayList<WeakReference<Activity?>>()
 
+    private val FILE_CATEGORIES = arrayOf("Movie", "Music", "Photo", "Doc", "Apk", "Rar")
+
     override fun onCreate() {
         super.onCreate()
         if (isAppMainProcess(packageName)) {
@@ -45,6 +48,7 @@ class MainApplication : Application() {
     }
 
     private fun initMainProcess() {
+        Log.i("ShareBox","init main process")
         val module = SimpleGlideModule()
         val builder = GlideBuilder()
         module.applyOptions(this, builder)
@@ -335,7 +339,7 @@ class MainApplication : Application() {
     }
 
     private fun loadCache() {
-        val array = arrayOf("Movie", "Music", "Photo", "Doc", "Apk", "Rar")
+        val array = FILE_CATEGORIES
         val cache = FileExpandablePropertyCache(filesDir.absolutePath)
         for (key in array) {
             mSavedInstance.put(FilePickDialog.EXTRA_PROPERTY_LIST + key, cache.get(key))
@@ -343,7 +347,7 @@ class MainApplication : Application() {
     }
 
     fun saveCache() {
-        val array = arrayOf("Movie", "Music", "Photo", "Doc", "Apk", "Rar")
+        val array = FILE_CATEGORIES
         val cache = FileExpandablePropertyCache(filesDir.absolutePath)
         for (key in array) {
             val obj = mSavedInstance.get(FilePickDialog.EXTRA_PROPERTY_LIST + key)

@@ -19,7 +19,7 @@ import com.ecjtu.sharebox.ui.dialog.InternetFilePickDialog
 import com.ecjtu.sharebox.ui.dialog.TextItemDialog
 import com.ecjtu.sharebox.ui.fragment.SimpleDialogFragment
 import com.ecjtu.sharebox.ui.holder.DeviceRecyclerProperty
-import com.ecjtu.sharebox.ui.holder.TabItemHolder
+import com.ecjtu.sharebox.ui.holder.TabItemProperty
 import com.ecjtu.sharebox.util.file.FileUtil
 import org.ecjtu.easyserver.server.ConversionFactory
 import org.ecjtu.easyserver.server.DeviceInfo
@@ -93,11 +93,11 @@ class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerProperty>, 
                 mWeakRef?.get()?.runOnUiThread {
                     if (mWeakRef?.get() != null) {
                         InternetFilePickDialog(mWeakRef?.get()!!, mWeakRef?.get(), deviceInfo!!).apply {
-                            val holders: MutableMap<String, TabItemHolder> = mutableMapOf()
+                            val holders: MutableMap<String, TabItemProperty> = mutableMapOf()
                             if (deviceInfo.fileMap?.entries != null) {
                                 for (entry in deviceInfo.fileMap!!.entries) {
                                     val type = FileUtil.string2MediaFileType(entry.key)
-                                    val holder = TabItemHolder(entry.key, type,
+                                    val holder = TabItemProperty(entry.key, type,
                                             null,
                                             entry.value)
                                     holders.put(entry.key, holder)

@@ -24,7 +24,6 @@ public class TestActivityJava extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_java);
 
-
 //        Map<String,List<String>> map=new LinkedHashMap<>();
 //        List<String> lst=new ArrayList<>();
 //        lst.add("/sdcard/test.mp4");

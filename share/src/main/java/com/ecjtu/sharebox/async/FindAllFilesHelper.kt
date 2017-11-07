@@ -72,6 +72,7 @@ class FindAllFilesHelper(val context: Context) {
         when (type) {
             "Movie" -> {
                 list = FileUtil.getAllMediaFile(context, null)
+                list.reverse()
                 var strList = arrayListOf<String>()
                 for (path in list.iterator()) {
                     strList.add(path.absolutePath)
@@ -80,6 +81,7 @@ class FindAllFilesHelper(val context: Context) {
             }
             "Music" -> {
                 list = FileUtil.getAllMusicFile(context, null)
+                list.reverse()
                 var strList = arrayListOf<String>()
                 for (path in list.iterator()) {
                     strList.add(path.absolutePath)
@@ -88,6 +90,7 @@ class FindAllFilesHelper(val context: Context) {
             }
             "Photo" -> {
                 list = FileUtil.getImagesByDCIM(context)
+                list.reverse()
                 var strList = arrayListOf<String>()
                 for (path in list.iterator()) {
                     strList.add(path.absolutePath)
@@ -96,6 +99,7 @@ class FindAllFilesHelper(val context: Context) {
             }
             "Doc" -> {
                 list = FileUtil.getAllDocFile(context, null)
+                list.reverse()
                 var strList = arrayListOf<String>()
                 for (path in list.iterator()) {
                     strList.add(path.absolutePath)
@@ -104,6 +108,7 @@ class FindAllFilesHelper(val context: Context) {
             }
             "Apk" -> {
                 list = FileUtil.getAllApkFile(context, null)
+                list.reverse()
                 var strList = arrayListOf<String>()
                 for (path in list.iterator()) {
                     strList.add(path.absolutePath)
@@ -112,6 +117,7 @@ class FindAllFilesHelper(val context: Context) {
             }
             "Rar" -> {
                 list = FileUtil.getAllRarFile(context, null)
+                list.reverse()
                 var strList = arrayListOf<String>()
                 for (path in list.iterator()) {
                     strList.add(path.absolutePath)

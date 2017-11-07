@@ -6,7 +6,7 @@ import android.widget.ExpandableListView;
 
 import com.ecjtu.sharebox.ui.adapter.FileExpandableAdapter;
 import com.ecjtu.sharebox.ui.holder.FileExpandableProperty;
-import com.ecjtu.sharebox.ui.holder.TabItemHolder;
+import com.ecjtu.sharebox.ui.holder.TabItemProperty;
 
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class FileExpandableListView extends ExpandableListView {
 
     private FileExpandableAdapter mAdapter = getFileExpandableAdapter();
 
-    public void initData(TabItemHolder holder, List<FileExpandableProperty> oldCache) {
+    public void initData(TabItemProperty holder, List<FileExpandableProperty> oldCache) {
         mAdapter.initData(holder, oldCache);
     }
 

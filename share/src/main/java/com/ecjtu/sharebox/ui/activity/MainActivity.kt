@@ -17,6 +17,8 @@ import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
+import android.widget.Toast
+import com.bumptech.glide.Glide
 import com.ecjtu.componentes.activity.ImmersiveFragmentActivity
 import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.PreferenceInfo
@@ -31,6 +33,7 @@ import org.ecjtu.easyserver.IAidlInterface
 import org.ecjtu.easyserver.server.DeviceInfo
 import org.ecjtu.easyserver.server.impl.service.EasyServerService
 import org.ecjtu.easyserver.server.util.cache.ServerInfoParcelableHelper
+import kotlin.concurrent.thread
 
 class MainActivity : ImmersiveFragmentActivity() {
 
@@ -39,9 +42,9 @@ class MainActivity : ImmersiveFragmentActivity() {
         private val MSG_SERVICE_STARTED = 0x10
         val MSG_START_SERVER = 0x11
         private val MSG_LOADING_SERVER = 0x12
-        @JvmStatic
-        val MSG_CLOSE_APP = -1
+        const val MSG_CLOSE_APP = -1
         const val DEBUG = true
+        const val MSG_RELEASE_APPLICATION = 0x13
     }
 
     private var mDelegate: MainActivityDelegate? = null
@@ -127,6 +130,9 @@ class MainActivity : ImmersiveFragmentActivity() {
             unbindService(mMainServiceConnection)
         } catch (ignore: java.lang.Exception) {
         }
+        // release main process
+        System.exit(0)
+        Glide.get(this).clearMemory()
         super.onDestroy()
     }
 
@@ -376,6 +382,24 @@ class MainActivity : ImmersiveFragmentActivity() {
         return super.onKeyDown(keyCode, event)
     }
 
+    override fun onBackPressed() {
+        val handler = getHandler()
+        if (handler?.hasMessages(MSG_RELEASE_APPLICATION) == true) {
+            handler.removeMessages(MSG_RELEASE_APPLICATION)
+            super.onBackPressed()
+        } else {
+            handler?.sendEmptyMessageDelayed(MSG_RELEASE_APPLICATION, Int.MAX_VALUE.toLong())
+            Toast.makeText(this, "再次点击将退出应用", Toast.LENGTH_SHORT).show()
+            thread {
+                try {
+                    Thread.sleep(3 * 1000)
+                    handler?.removeMessages(MSG_RELEASE_APPLICATION)
+                } catch (ignore: Exception) {
+                }
+            }
+        }
+    }
+
     private fun initAd() {
         mAdManager = AdmobManager(this)
         mAdManager?.loadInterstitialAd(getString(R.string.admob_ad_02), object : AdmobCallback {
@@ -422,7 +446,7 @@ class MainActivity : ImmersiveFragmentActivity() {
         return mMainService
     }
 
-    fun getServerService():IAidlInterface?{
+    fun getServerService(): IAidlInterface? {
         return mService
     }
 }

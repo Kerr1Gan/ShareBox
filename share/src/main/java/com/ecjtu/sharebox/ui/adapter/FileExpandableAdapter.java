@@ -33,7 +33,7 @@ import com.ecjtu.sharebox.ui.dialog.TextItemDialog;
 import com.ecjtu.sharebox.ui.fragment.IjkVideoFragment;
 import com.ecjtu.sharebox.ui.fragment.WebViewFragment;
 import com.ecjtu.sharebox.ui.holder.FileExpandableProperty;
-import com.ecjtu.sharebox.ui.holder.TabItemHolder;
+import com.ecjtu.sharebox.ui.holder.TabItemProperty;
 import com.ecjtu.sharebox.ui.widget.FileExpandableListView;
 import com.ecjtu.sharebox.util.cache.CacheUtil;
 import com.ecjtu.sharebox.util.file.FileOpenIntentUtil;
@@ -42,6 +42,8 @@ import com.ecjtu.sharebox.util.image.ImageUtil;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -55,9 +57,9 @@ import kotlin.jvm.functions.Function1;
 public class FileExpandableAdapter extends BaseExpandableListAdapter implements View.OnClickListener,
         View.OnLongClickListener {
 
-    protected TabItemHolder mTabHolder;
+    protected TabItemProperty mTabHolder;
 
-    protected List<String> mFileList;
+    private List<String> mFileList;
 
     private static final int CACHE_SIZE = 5 * 1024 * 1024;
 
@@ -86,7 +88,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         mContext = expandableListView.getContext();
     }
 
-    public void initData(TabItemHolder holder, List<FileExpandableProperty> oldCache) {
+    public void initData(TabItemProperty holder, List<FileExpandableProperty> oldCache) {
         mTabHolder = holder;
         mFileList = mTabHolder.getFileList();
 
@@ -396,10 +398,24 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
             if (mTitle.equalsIgnoreCase("Apk")) {
                 List<String> arrayList = new ArrayList<String>();
                 List<PackageInfo> installedApps = FileUtil.INSTANCE.getInstalledApps(mContext, false);
+                Collections.sort(installedApps, new Comparator<PackageInfo>() {
+                    public int compare(PackageInfo lhs, PackageInfo rhs) {
+                        if (lhs == null || rhs == null) {
+                            return 0;
+                        }
+                        if (lhs.lastUpdateTime < rhs.lastUpdateTime) {
+                            return 1;
+                        } else if (lhs.lastUpdateTime > rhs.lastUpdateTime) {
+                            return -1;
+                        } else {
+                            return 0;
+                        }
+                    }
+                });
                 for (PackageInfo packageInfo : installedApps) {
                     arrayList.add(packageInfo.applicationInfo.sourceDir);
                 }
-                res.put("已安装", arrayList);
+                res.put(mContext.getString(R.string.installed), arrayList);
                 mInstalledAppNames = FileUtil.INSTANCE.getInstallAppsNameByPathArray(mContext, arrayList.toArray(new String[0]));
             }
 
@@ -413,6 +429,8 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
             });
             mWorker = null;
         }
+
+
     }
 
     protected void openFile(String path) {

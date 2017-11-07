@@ -6,12 +6,14 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.async.FindAllFilesHelper
 import com.ecjtu.sharebox.notification.ServerComingNotification
 import com.ecjtu.sharebox.ui.fragment.PageFragment
 import com.ecjtu.sharebox.util.file.FileUtil
 import org.json.JSONObject
+import javax.security.auth.login.LoginException
 
 /**
  * Created by KerriGan on 2017/6/11.
@@ -110,5 +112,17 @@ class TestActivity : AppCompatActivity() {
             val jsonObj2 = JSONObject("")
         }catch (ex:Exception){
         }
+
+        loop@
+        for(i in 0..5){
+            Log.e("KotlinTest","loop begin")
+            break@loop
+            Log.e("KotlinTest","$i")
+        }
+
+        loop2@if(5>1){
+            return@loop2
+        }
+
     }
 }

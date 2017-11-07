@@ -1,5 +1,6 @@
 package com.ecjtu.sharebox.ui.holder;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +8,7 @@ import java.util.List;
  * Created by Ethan_Xiang on 2017/10/27.
  */
 
-public class FileExpandableProperty implements Cloneable {
+public class FileExpandableProperty implements Cloneable, Serializable {
     private List<String> childList;
 
     private String group;
