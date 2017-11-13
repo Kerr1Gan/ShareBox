@@ -11,6 +11,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Message
+import android.preference.PreferenceManager
 import android.support.annotation.RequiresApi
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.TabLayout
@@ -32,6 +33,7 @@ import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.ui.adapter.FileExpandableAdapter
 import com.ecjtu.sharebox.ui.holder.FileExpandableProperty
 import com.ecjtu.sharebox.ui.holder.TabItemProperty
+import com.ecjtu.sharebox.ui.state.StateMachine
 import com.ecjtu.sharebox.ui.widget.FileExpandableListView
 import com.ecjtu.sharebox.util.ObjectUtil
 import com.ecjtu.sharebox.util.file.FileUtil
@@ -73,8 +75,11 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
 
     private var mDoOk = false
 
+    private var mToolbarMachine: StateMachine? = null
+
     companion object {
         const val EXTRA_PROPERTY_LIST = "extra_property_list"
+        private const val PREF_SELECT_ALL = "pref_extra_select_all"
     }
 
     override fun initializeDialog() {
@@ -138,6 +143,18 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         }
 
         toolbar.inflateMenu(R.menu.menu_file_pick)
+
+        mToolbarMachine = object : StateMachine(context, R.array.file_pick_dialog_toolbar_array, null) {
+            override fun updateView(index: Int) {
+                super.updateView(index)
+                toolbar.menu.findItem(R.id.select_all).setTitle(getArrayStringByIndex(index))
+            }
+        }
+        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREF_SELECT_ALL, false)) {
+            mToolbarMachine?.updateView(1)
+        }
+
+        toolbar.menu.findItem(R.id.select_all)
 
         toolbar.setOnMenuItemClickListener(this)
 
@@ -440,6 +457,29 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         return map
     }
 
+    private fun clearFileMap(itemHolder: MutableMap<String, TabItemProperty>) {
+        var index = 0
+        // load current scanning files
+        for (element in itemHolder.entries) {
+            var pager: View? = mViewPagerViews.get(index++) ?: continue
+            pager = pager as FileExpandableListView
+            pager.fileExpandableAdapter.selectAll(false)
+        }
+
+        // load cache files
+        for (element in itemHolder.entries) {
+            var title = element.key
+            if (mSavedState == null) continue
+            var obj = mSavedState.get(EXTRA_PROPERTY_LIST + title)
+            var vhList = if (obj != null) obj as List<FileExpandableProperty> else null
+            if (vhList != null) {
+                for (vh in vhList) {
+                    vh.activate(false)
+                }
+            }
+        }
+    }
+
     protected fun setTabItemsHolder(holder: MutableMap<String, TabItemProperty>) {
         mTabItemHolders = holder
     }
@@ -472,10 +512,6 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
 
     override fun handleMessage(msg: Message) {
 
-    }
-
-    private fun selectViewPager(fileExpandableListView: FileExpandableListView) {
-        fileExpandableListView.fileExpandableAdapter.selectAll(true)
     }
 
     private fun makePropertyList(fileList: List<String>, map: LinkedHashMap<String, MutableList<String>>? = null, title: String, isActivated: Boolean): List<FileExpandableProperty>? {
@@ -535,15 +571,6 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         cancelAllTask()
         var fileList = mutableListOf<String>()
 
-//        for (entry in mTabItemHolders!!.entries) {
-//            var title = entry.key
-//            var key = EXTRA_PROPERTY_LIST + title
-//            var vhList = mTempMap.get(key)
-//            if (mSavedState != null && vhList != null) {
-//                mSavedState.put(key, vhList)
-//            }
-//        }
-
         for (entry in mViewPagerViews) {
             var pager = entry.value as FileExpandableListView
             var adapter = pager.fileExpandableAdapter
@@ -572,46 +599,54 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
     }
 
     private fun doSelectAll() {
-        val findAllTask = FindAllFilesHelper(context)
-
-        val progressDialog = ProgressDialog(context, ownerActivity).apply {
-            setOnDismissListener {
-                findAllTask.release()
-                ownerActivity.runOnUiThread {
-                    val toolbar = findViewById(R.id.toolbar) as Toolbar?
-                    toolbar?.menu?.findItem(R.id.select_all)?.setTitle("cancel")
-                }
-            }
-            show()
-        }
-
-        findAllTask.startScanning { map ->
-            mTempMap.clear()
-            val res = LinkedHashMap<String, MutableList<String>>()
-            for (entry in map) {
-                res.clear()
-                var title = entry.key
-                var fileList = entry.value
-                if (fileList != null) {
-                    var newArr: List<FileExpandableProperty>? = makePropertyList(fileList, res, title, true) ?: continue
-                    if (mSavedState != null) {
-                        mSavedState.put(EXTRA_PROPERTY_LIST + title, newArr!!)
-                    }
-                    for (view in mViewPagerViews) {
-                        var viewPager = view.value as FileExpandableListView
-                        if (viewPager.fileExpandableAdapter.title.equals(title)) {
-                            viewPager.fileExpandableAdapter.replaceVhList(newArr)
-                            viewPager.post {
-                                viewPager.loadedData()
-                            }
+        val isSelectAll = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREF_SELECT_ALL, false)
+        if (!isSelectAll) {
+            val findAllTask = FindAllFilesHelper(context)
+            val progressDialog = ProgressDialog(context, ownerActivity).apply {
+                setOnDismissListener {
+                    findAllTask.release()
+                    ownerActivity.runOnUiThread {
+                        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREF_SELECT_ALL, false)) {
+                            mToolbarMachine?.updateView(1)
                         }
                     }
-                    mTempMap.put(EXTRA_PROPERTY_LIST + title, newArr as ArrayList<FileExpandableProperty>)
                 }
+                show()
             }
-            progressDialog.cancel()
+            findAllTask.startScanning { map ->
+                mTempMap.clear()
+                val res = LinkedHashMap<String, MutableList<String>>()
+                for (entry in map) {
+                    res.clear()
+                    var title = entry.key
+                    var fileList = entry.value
+                    if (fileList != null) {
+                        var newArr: List<FileExpandableProperty>? = makePropertyList(fileList, res, title, true) ?: continue
+                        if (mSavedState != null) {
+                            mSavedState.put(EXTRA_PROPERTY_LIST + title, newArr!!)
+                        }
+                        for (view in mViewPagerViews) {
+                            var viewPager = view.value as FileExpandableListView
+                            if (viewPager.fileExpandableAdapter.title.equals(title)) {
+                                viewPager.fileExpandableAdapter.replaceVhList(newArr)
+                                viewPager.post {
+                                    viewPager.loadedData()
+                                }
+                            }
+                        }
+                        mTempMap.put(EXTRA_PROPERTY_LIST + title, newArr as ArrayList<FileExpandableProperty>)
+                    }
+                }
+                progressDialog.cancel()
+                PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(PREF_SELECT_ALL, true).apply()
+            }
+        } else {
+            PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(PREF_SELECT_ALL, false).apply()
+            mToolbarMachine?.updateView(0)
+            mTabItemHolders?.let {
+                clearFileMap(mTabItemHolders!!)
+            }
         }
-
     }
 
     private fun cancelAllTask() {

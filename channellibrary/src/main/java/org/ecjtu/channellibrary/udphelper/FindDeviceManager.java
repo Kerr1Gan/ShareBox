@@ -50,7 +50,7 @@ public class FindDeviceManager {
                     mBroadcastSocket.setSoTimeout(DEFAULT_TIME_OUT);
                 }
                 localSocket = mBroadcastSocket;
-                while (!Thread.interrupted()) {
+                while (!Thread.currentThread().isInterrupted()) {
                     try {
                         byte[] sendData = new byte[1];
                         InetAddress broadIP = InetAddress.getByName("255.255.255.255");// 255.255.255.255 会发送给局域网内所有设备 https://segmentfault.com/q/1010000004918877
@@ -70,7 +70,7 @@ public class FindDeviceManager {
                         }
                     }
 
-                    if (Thread.interrupted()) {
+                    if (Thread.currentThread().isInterrupted()) {
                         break;
                     }
 
@@ -104,7 +104,7 @@ public class FindDeviceManager {
                     mReceiveSocket = new DatagramSocket(UDP_PORT);
                 }
                 localSocket = mReceiveSocket;
-                while (!Thread.interrupted()) {
+                while (!Thread.currentThread().isInterrupted()) {
                     try {
                         byte[] data = new byte[1024 * 10];
                         DatagramPacket pack = new DatagramPacket(data, data.length);

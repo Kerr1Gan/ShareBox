@@ -62,7 +62,7 @@ object FileUtil {
 
             if (c != null) {
                 c.moveToFirst()
-                while (!c.isAfterLast && !Thread.interrupted()) {
+                while (!c.isAfterLast && !Thread.currentThread().isInterrupted) {
                     val filePath = c.getString(
                             c.getColumnIndex(android.provider.MediaStore
                                     .Files.FileColumns.DATA)) ?: continue
@@ -105,60 +105,6 @@ object FileUtil {
 
         return null
     }
-
-    fun getFileImageByType(path: String): Bitmap? {
-        var code = -1
-        if (path.endsWith(".doc"))
-            code = 0
-        else if (path.endsWith(".html"))
-            code = 1
-        else if (path.endsWith(".movie"))
-            code = 2
-        else if (path.endsWith(".mp3"))
-            code = 3
-        else if (path.endsWith(".pdf"))
-            code = 4
-        else if (path.endsWith(".ppt"))
-            code = 5
-        else if (path.endsWith(".psd"))
-            code = 6
-        else if (path.endsWith(".rar"))
-            code = 7
-        else if (path.endsWith(".txt"))
-            code = 8
-        else if (path.endsWith(".xls"))
-            code = 9
-        else if (path.endsWith(".zip"))
-            code = 10
-
-        var b: Bitmap? = null
-        when (code) {
-            0 -> b = getBitmapByFactory("doc")
-            1 -> b = getBitmapByFactory("html")
-            2 -> b = getBitmapByFactory("movie")
-            3 -> b = getBitmapByFactory("mp3")
-            4 -> b = getBitmapByFactory("pdf")
-            5 -> b = getBitmapByFactory("ppt")
-            6 -> b = getBitmapByFactory("psd")
-            7 -> b = getBitmapByFactory("rar")
-            8 -> b = getBitmapByFactory("txt")
-            9 -> b = getBitmapByFactory("xls")
-            10 -> b = getBitmapByFactory("zip")
-        }
-
-        return b
-    }
-
-    fun getBitmapByFactory(key: String): Bitmap? {
-        val b: Bitmap? = null
-        //        ImageElement ele= (ImageElement) ObjectsPool.getInstance().getElement(key);
-        //        if(ele!=null && !ele.isRecycled())
-        //        {
-        //            b=ele.getBitmap();
-        //        }
-        return b
-    }
-
 
     var MOVIE_FORMAT = arrayOf(".mp4", ".avi", ".mkv", ".rmvb", ".wmv")
     var MP3_FORMAT = arrayOf(".mp3", ".wav")
@@ -307,7 +253,7 @@ object FileUtil {
         var wxList = output[TX_PATH[0]]
         var qqList = output[TX_PATH[1]]
         for (f in input) {
-            if (Thread.interrupted())
+            if (Thread.currentThread().isInterrupted)
                 return null
             var root = f
             root = root.substring(0, root.lastIndexOf(File.separator))
@@ -328,7 +274,7 @@ object FileUtil {
             }
 
             for (pre in prefix) {
-                if (Thread.interrupted()) return null
+                if (Thread.currentThread().isInterrupted) return null
                 if (root.startsWith(pre) && wxList?.indexOf(f) ?: -1 < 0 && qqList?.indexOf(f) ?: -1 < 0) {
                     val lst = output[pre]
                     if (lst?.indexOf(f) ?: 0 < 0)

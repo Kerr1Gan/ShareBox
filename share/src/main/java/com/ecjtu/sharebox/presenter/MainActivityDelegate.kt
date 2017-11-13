@@ -188,7 +188,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
 
         mWifiImageStateMachine = object : StateMachine(owner, R.array.main_activity_delegate_array, mWifiImage) {
             override fun updateView(index: Int) {
-                val value = getArrayValueByIndex(index)
+                val value = getArrayRefByIndex(index)
                 value?.let {
                     mWifiImage.setImageResource(value)
                 }
