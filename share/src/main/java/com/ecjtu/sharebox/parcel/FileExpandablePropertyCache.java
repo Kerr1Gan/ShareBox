@@ -42,12 +42,15 @@ public class FileExpandablePropertyCache extends ParcelableFileCacheHelper {
 
     @Override
     protected <T> Parcel writeParcel(Parcel parcel, T object) {
-        if (!(object instanceof List) || ((List) object).size() <= 0 || !(((List) object).get(0) instanceof FileExpandableProperty)) {
+        if (!(object instanceof List)) {
             return null;
         }
         List list = (List) object;
         parcel.writeInt(list.size());
         for (int i = 0; i < list.size(); i++) {
+            if (!(list.get(i) instanceof FileExpandableProperty)) {
+                break;
+            }
             FileExpandableProperty vh = (FileExpandableProperty) list.get(i);
             List<String> childList = vh.getChildList();
             parcel.writeStringList(childList);

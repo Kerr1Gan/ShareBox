@@ -40,5 +40,6 @@ public class ExampleUnitTest {
 
         DeviceInfo info=new DeviceInfo("123","192.168.43.1",8080,"/icon",map);
 
+        List list = (List)null;
     }
 }

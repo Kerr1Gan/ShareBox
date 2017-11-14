@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatDialogFragment
+import android.util.Log
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.ecjtu.sharebox.R
@@ -21,6 +22,10 @@ import java.util.*
  * Created by KerriGan on 2017/6/11.
  */
 class FilePickDialogFragment : AppCompatDialogFragment {
+
+    companion object {
+        const private val TAG = "FilePickDialogFragment"
+    }
 
     private var mActivity: FragmentActivity? = null
 
@@ -41,6 +46,7 @@ class FilePickDialogFragment : AppCompatDialogFragment {
         var flag = false
         for (key in array) {
             if (map.get(FilePickDialog.EXTRA_PROPERTY_LIST + key) == null) {
+                Log.i(TAG, "instance key $key is null")
                 flag = true
             }
         }

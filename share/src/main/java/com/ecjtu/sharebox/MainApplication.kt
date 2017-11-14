@@ -48,7 +48,7 @@ class MainApplication : Application() {
     }
 
     private fun initMainProcess() {
-        Log.i("ShareBox","init main process")
+        Log.i("ShareBox", "init main process")
         val module = SimpleGlideModule()
         val builder = GlideBuilder()
         module.applyOptions(this, builder)
@@ -87,9 +87,9 @@ class MainApplication : Application() {
                     if (activity == act || act == null) {
                         iter.remove()
                     }
-                    if (act is MainActivity) {
-                        mSavedInstance.clear()
-                    }
+                }
+                if (activity is MainActivity) {
+                    mSavedInstance.clear()
                 }
             }
 
