@@ -20,7 +20,7 @@ public class FileExpandablePropertyCache extends ParcelableFileCacheHelper {
     }
 
     @Override
-    protected <T> T readParcel(Parcel parcel) {
+    public <T> T readParcel(Parcel parcel) {
         int size = parcel.readInt();
         List<FileExpandableProperty> ret = new ArrayList<>();
         for (int i = 0; i < size; i++) {
@@ -41,7 +41,7 @@ public class FileExpandablePropertyCache extends ParcelableFileCacheHelper {
     }
 
     @Override
-    protected <T> Parcel writeParcel(Parcel parcel, T object) {
+    public  <T> Parcel writeParcel(Parcel parcel, T object) {
         if (!(object instanceof List)) {
             return null;
         }

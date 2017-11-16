@@ -82,9 +82,9 @@ public abstract class ParcelableFileCacheHelper extends FileCacheHelper {
         System.gc();
     }
 
-    protected abstract <T> T readParcel(Parcel parcel);
+    public abstract <T> T readParcel(Parcel parcel);
 
-    protected abstract <T> Parcel writeParcel(Parcel parcel, T object);
+    public abstract <T> Parcel writeParcel(Parcel parcel, T object);
 
     public int getVersion() {
         return 1;

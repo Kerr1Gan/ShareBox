@@ -115,7 +115,7 @@ class MainApplication : Application() {
         System.exit(0)
     }
 
-    fun closeActivityByIndex(start: Int, end: Int = mActivityList.size) {
+    fun closeActivitiesByIndex(start: Int, end: Int = mActivityList.size) {
         if (start >= end) return
         var index = 0
         val iter = mActivityList.iterator()

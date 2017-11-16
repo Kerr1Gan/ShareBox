@@ -1,5 +1,6 @@
 package com.ecjtu.sharebox.ui.fragment
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.DialogInterface
 import android.content.pm.PackageInfo
@@ -21,6 +22,7 @@ import java.util.*
 /**
  * Created by KerriGan on 2017/6/11.
  */
+@SuppressLint("ValidFragment")
 class FilePickDialogFragment : AppCompatDialogFragment {
 
     companion object {

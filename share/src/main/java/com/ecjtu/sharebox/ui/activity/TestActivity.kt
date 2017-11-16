@@ -8,12 +8,8 @@ import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.ecjtu.sharebox.R
-import com.ecjtu.sharebox.async.FindAllFilesHelper
-import com.ecjtu.sharebox.notification.ServerComingNotification
 import com.ecjtu.sharebox.ui.fragment.PageFragment
-import com.ecjtu.sharebox.util.file.FileUtil
 import org.json.JSONObject
-import javax.security.auth.login.LoginException
 
 /**
  * Created by KerriGan on 2017/6/11.
@@ -80,7 +76,7 @@ class TestActivity : AppCompatActivity() {
 //            task.release()
 //        }
 
-//        ServerComingNotification(this).buildServerComingNotification("title","content","ticker").send()
+//        ServerNotification(this).buildServerComingNotification("title","content","ticker").send()
 
         val jsonObject = JSONObject("{\n" +
                 "    \"name\": \"BeJson\",\n" +

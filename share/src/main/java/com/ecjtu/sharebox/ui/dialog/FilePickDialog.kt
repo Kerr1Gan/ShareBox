@@ -430,11 +430,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         // load cache files
         for (element in itemHolder.entries) {
             var title = element.key
-            var strList: MutableList<String>? = if (element.value.fileList != null) {
-                element.value.fileList as MutableList<String>
-            } else {
-                mutableListOf()
-            }
+            var strList: MutableList<String>? = mutableListOf()
             if (mSavedState == null) continue
 
             var obj = mSavedState.get(EXTRA_PROPERTY_LIST + title)

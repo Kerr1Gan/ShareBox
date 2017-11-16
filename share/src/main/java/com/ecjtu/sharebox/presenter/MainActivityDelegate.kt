@@ -32,7 +32,7 @@ import com.ecjtu.sharebox.PreferenceInfo
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.model.DeviceModel
-import com.ecjtu.sharebox.notification.ServerComingNotification
+import com.ecjtu.sharebox.notification.ServerNotification
 import com.ecjtu.sharebox.ui.activity.MainActivity
 import com.ecjtu.sharebox.ui.activity.SettingsActivity
 import com.ecjtu.sharebox.ui.adapter.DeviceRecyclerViewAdapter
@@ -56,6 +56,7 @@ import org.json.JSONObject
 import java.io.File
 
 
+@Suppress("UsePropertyAccessSyntax")
 /**
  * Created by KerriGan on 2017/6/2.
  */
@@ -109,7 +110,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
                     val json = intent.extras.getString(ApDataDialog.EXTRA_JSON)
                     try {
                         val deviceInfo = ConversionFactory.json2DeviceInfo(JSONObject(json))
-                        ServerComingNotification(context!!).buildServerComingNotification("搜索到新的设备", deviceInfo.name, "ShareBox:" + "找到新的设备").send()
+                        ServerNotification(context!!).buildServerComingNotification("搜索到新的设备", deviceInfo.name, "ShareBox:" + "找到新的设备").send()
                         if (mDeviceInfoList.indexOf(deviceInfo) < 0) {
                             mDeviceInfoList.add(deviceInfo)
                             mRecyclerView?.adapter?.notifyDataSetChanged()
