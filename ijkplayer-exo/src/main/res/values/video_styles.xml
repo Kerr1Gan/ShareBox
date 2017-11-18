@@ -24,6 +24,8 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:scaleType">fitXY</item>
+        <item name="android:colorControlNormal">#1296db</item>
+        <item name="android:colorControlHighlight">#1296db</item>
     </style>
 
 
