@@ -26,7 +26,7 @@
         <activity
             android:name=".ui.activity.MainActivity"
             android:launchMode="singleInstance"
-            android:theme="@style/MainActivityStyle">
+            android:theme="@style/CCImageStatusBarStyle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

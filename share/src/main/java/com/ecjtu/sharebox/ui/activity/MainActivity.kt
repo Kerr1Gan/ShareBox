@@ -27,6 +27,7 @@ import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
 import com.ecjtu.sharebox.service.MainService
 import com.ecjtu.sharebox.ui.fragment.SplashFragment
+import com.ecjtu.sharebox.util.MetricUtil
 import com.ecjtu.sharebox.util.admob.AdmobCallback
 import com.ecjtu.sharebox.util.admob.AdmobManager
 import org.ecjtu.easyserver.IAidlInterface
@@ -62,7 +63,6 @@ class MainActivity : ImmersiveFragmentActivity() {
     private var mMainService: MainService? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(R.style.ImageStatusBarStyle)
         super.onCreate(savedInstanceState)
 //        loadSplash()
         setContentView(R.layout.activity_main)
