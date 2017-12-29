@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.ecjtu.channellibrary.wifidirect.WifiDirectManager;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -20,7 +21,7 @@ public class ExampleInstrumentedTest {
     public void useAppContext() throws Exception {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
-
-        assertEquals("com.newindia.sharebox", appContext.getPackageName());
+        WifiDirectManager.getInstance(appContext).getIPFromMac("123123");
+        assertEquals("com.ecjtu.sharebox", appContext.getPackageName());
     }
 }

@@ -14,8 +14,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by Ethan_Xiang on 2017/10/24.
+ * <p>
+ * 在热点环境下或者某些局域网下，udp不能正常使用.2017.12.28
+ * </p>
  */
-
 public class FindDeviceManager {
 
     private static final String TAG = "FindDeviceManager";
@@ -215,7 +217,7 @@ public class FindDeviceManager {
         mReceiveSocket = null;
     }
 
-    public void setBrodcastData(byte[] data) {
+    public void setBroadcastData(byte[] data) {
         mBroadcastData = data;
     }
 

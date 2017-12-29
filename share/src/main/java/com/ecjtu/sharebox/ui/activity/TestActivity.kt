@@ -76,7 +76,7 @@ class TestActivity : AppCompatActivity() {
 //            task.release()
 //        }
 
-//        ServerNotification(this).buildServerComingNotification("title","content","ticker").send()
+//        ServerNotification(this).buildServerNotification("title","content","ticker").send()
 
         val jsonObject = JSONObject("{\n" +
                 "    \"name\": \"BeJson\",\n" +

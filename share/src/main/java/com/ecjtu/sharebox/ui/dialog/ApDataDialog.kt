@@ -83,8 +83,9 @@ class ApDataDialog(activity: Activity) : BaseBottomSheetDialog(activity, activit
 
             vg.findViewById(R.id.qr_container)?.visibility = View.GONE
         } else if (NetworkUtil.isHotSpot(context)) {
-            if (TextUtils.isEmpty(ip))
-                ip = NetworkUtil.getLocalApIps()[0]
+            val ips = NetworkUtil.getLocalApIps()
+            if (TextUtils.isEmpty(ip) && ips.size > 1)
+                ip = ips[0]
             ap.text = context.getString(R.string.hotspot)
             var config = NetworkUtil.getHotSpotConfiguration(context)
             var ssid = config.SSID
