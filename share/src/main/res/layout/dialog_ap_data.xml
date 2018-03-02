@@ -43,6 +43,44 @@
                     android:layout_marginTop="5dp"
                     android:text="@string/password_with_colon" />
 
+                <TextView
+                    android:id="@+id/text_ip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/ip_with_colon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="35dp"
+                    android:text="@string/web"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="@string/use_browser_scanning_qr_code_to_enter" />
+
+                <TextView
+                    android:id="@+id/text_url"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp" />
+
+                <ImageView
+                    android:id="@+id/image_url"
+                    android:layout_width="250dp"
+                    android:layout_height="250dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="20dp"
+                    android:scaleType="center"
+                    android:src="@mipmap/unconnect" />
+
                 <LinearLayout
                     android:id="@+id/qr_container"
                     android:layout_width="wrap_content"
@@ -74,36 +112,6 @@
                         android:src="@mipmap/unconnect" />
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/web"
-                    android:textColor="@android:color/black"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:text="@string/use_browser_scanning_qr_code_to_enter" />
-
-                <TextView
-                    android:id="@+id/text_url"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp" />
-
-                <ImageView
-                    android:id="@+id/image_url"
-                    android:layout_width="250dp"
-                    android:layout_height="250dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_margin="20dp"
-                    android:scaleType="center"
-                    android:src="@mipmap/unconnect" />
-
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
@@ -127,8 +135,6 @@
                 android:layout_marginTop="20dp"
                 android:layout_toLeftOf="@id/qr_code"
                 app:srcCompat="@drawable/ic_enter" />
-
-
         </RelativeLayout>
 
     </android.support.v4.widget.NestedScrollView>

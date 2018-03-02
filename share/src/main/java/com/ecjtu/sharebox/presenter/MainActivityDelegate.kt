@@ -82,7 +82,8 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
     private val mRequestPermission = arrayOf(Manifest.permission.ACCESS_NETWORK_STATE,
             Manifest.permission.CHANGE_NETWORK_STATE,
             Manifest.permission.ACCESS_NETWORK_STATE,
-            Manifest.permission.CHANGE_WIFI_STATE)
+            Manifest.permission.CHANGE_WIFI_STATE,
+            Manifest.permission.WRITE_SETTINGS)
 
     private var mRecyclerView: RecyclerView? = null
 

@@ -70,10 +70,16 @@ class ApDataDialog(activity: Activity) : BaseBottomSheetDialog(activity, activit
         var ap = vg.findViewById(R.id.text_ap) as TextView
         var name = vg.findViewById(R.id.text_name) as TextView
         var pwd = vg.findViewById(R.id.text_pwd) as TextView
+        val textIp = vg.findViewById(R.id.text_ip) as TextView
 
         if (NetworkUtil.isWifi(context)) {
-            if (TextUtils.isEmpty(ip))
-                ip = NetworkUtil.getLocalWLANIps()[0]
+            if (TextUtils.isEmpty(ip)) {
+                val ips = NetworkUtil.getLocalWLANIps()
+                if (ips.isNotEmpty()) {
+                    ip = ips[0]
+                }
+            }
+            textIp.text = String.format(mFormat, textIp.text.toString(), "$ip:$port")
             ap.text = context.getString(R.string.wifi)
             var wifiInfo = NetworkUtil.getConnectWifiInfo(context)
             var ssid = wifiInfo.ssid.drop(1)
@@ -83,9 +89,16 @@ class ApDataDialog(activity: Activity) : BaseBottomSheetDialog(activity, activit
 
             vg.findViewById(R.id.qr_container)?.visibility = View.GONE
         } else if (NetworkUtil.isHotSpot(context)) {
-            val ips = NetworkUtil.getLocalApIps()
-            if (TextUtils.isEmpty(ip) && ips.size > 1)
+            var ips = NetworkUtil.getLocalApIps()
+            if (TextUtils.isEmpty(ip) && ips.isNotEmpty())
                 ip = ips[0]
+            else {
+                ips = NetworkUtil.getLocalWLANIps()
+                if (ips.isNotEmpty()) {
+                    ip = ips[0]
+                }
+            }
+            textIp.text = String.format(mFormat, textIp.text.toString(), "$ip:$port")
             ap.text = context.getString(R.string.hotspot)
             var config = NetworkUtil.getHotSpotConfiguration(context)
             var ssid = config.SSID

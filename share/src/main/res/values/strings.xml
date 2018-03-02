@@ -38,6 +38,7 @@
     <string name="help">Help</string>
     <string name="name_with_colon">Name:</string>
     <string name="password_with_colon">Password:</string>
+    <string name="ip_with_colon">Ip:</string>
     <string name="qr_code">QRCode</string>
     <string name="use_browser_scanning_qr_code_to_connect">用浏览器扫描二维码连接热点:</string>
     <string name="web">Web</string>

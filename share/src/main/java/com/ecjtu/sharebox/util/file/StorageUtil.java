@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
 public class StorageUtil {
 
     /**
-     * 获取内置和外置sd卡路径
+     * isRemove true 外置存储卡，false 内置存储卡
      * @param context
      * @param isRemove
      * @returnd
