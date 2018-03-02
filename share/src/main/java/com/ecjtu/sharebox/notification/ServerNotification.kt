@@ -16,7 +16,7 @@ class ServerNotification(context: Context) : SimpleNotification(context) {
         var ID = 0x100
     }
 
-    fun buildServerComingNotification(title: String, content: String, ticker: String): ServerNotification {
+    fun buildServerNotification(title: String, content: String, ticker: String): ServerNotification {
         super.buildNotification(ID++, title, content, ticker, R.mipmap.ic_launcher)
         val intent = Intent(context, MainActivity::class.java)
 //        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK)

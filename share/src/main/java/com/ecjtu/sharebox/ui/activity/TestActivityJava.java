@@ -67,7 +67,7 @@ public class TestActivityJava extends AppCompatActivity {
 //        }
 
         FindDeviceManager manager = new FindDeviceManager();
-        manager.setBrodcastData("Hello World".getBytes());
+        manager.setBroadcastData("Hello World".getBytes());
         manager.setReceiveListener(new FindDeviceManager.IReceiveMsg() {
             @Override
             public void onReceive(String ip, int port, byte[] msg) {
