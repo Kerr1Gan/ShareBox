@@ -6,7 +6,7 @@
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:colorControlHighlight">@color/cc_colorDark</item>
-        <item name="android:colorAccent">@color/cc_colorPrimary</item>
+        <item name="android:colorAccent">@color/cc_colorAccent</item>
         <item name="colorPrimary">@color/cc_colorPrimary</item>
         <item name="colorPrimaryDark">@color/cc_colorPrimaryDark</item>
         <item name="colorAccent">@color/cc_colorAccent</item>
