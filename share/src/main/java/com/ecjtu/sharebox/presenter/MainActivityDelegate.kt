@@ -56,10 +56,10 @@ import org.json.JSONObject
 import java.io.File
 
 
-@Suppress("UsePropertyAccessSyntax")
 /**
  * Created by KerriGan on 2017/6/2.
  */
+@Suppress("UsePropertyAccessSyntax")
 class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner), ActivityCompat.OnRequestPermissionsResultCallback {
 
     private var mToolbar: Toolbar

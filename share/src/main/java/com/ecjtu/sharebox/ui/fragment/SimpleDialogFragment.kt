@@ -1,5 +1,6 @@
 package com.ecjtu.sharebox.ui.fragment
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
@@ -15,6 +16,7 @@ class SimpleDialogFragment : AppCompatDialogFragment {
 
     constructor() : super()
 
+    @SuppressLint("ValidFragment")
     constructor(dialog: Dialog) {
         mDialog = dialog
         if(mDialog is IActivityResult){
