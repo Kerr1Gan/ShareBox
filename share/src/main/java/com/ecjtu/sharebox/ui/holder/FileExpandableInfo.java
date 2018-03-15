@@ -8,7 +8,7 @@ import java.util.List;
  * Created by Ethan_Xiang on 2017/10/27.
  */
 
-public class FileExpandableProperty implements Cloneable, Serializable {
+public class FileExpandableInfo implements Cloneable, Serializable {
     private List<String> childList;
 
     private String group;
@@ -17,7 +17,7 @@ public class FileExpandableProperty implements Cloneable, Serializable {
 
     private List<String> activatedList = new ArrayList<>();
 
-    public FileExpandableProperty(String group, List<String> childList) {
+    public FileExpandableInfo(String group, List<String> childList) {
         this.group = group;
         this.childList = childList;
     }

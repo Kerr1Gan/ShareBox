@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 
-
 /**
  * Created by KerriGan on 2017/7/12.
  */

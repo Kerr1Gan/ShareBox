@@ -27,6 +27,8 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import com.ecjtu.componentes.activity.ActionBarFragmentActivity
+import com.ecjtu.netcore.RequestManager
+import com.ecjtu.netcore.network.IRequestCallback
 import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.PreferenceInfo
 import com.ecjtu.sharebox.R
@@ -36,10 +38,7 @@ import com.ecjtu.sharebox.notification.ServerNotification
 import com.ecjtu.sharebox.ui.activity.MainActivity
 import com.ecjtu.sharebox.ui.activity.SettingsActivity
 import com.ecjtu.sharebox.ui.adapter.DeviceRecyclerViewAdapter
-import com.ecjtu.sharebox.ui.dialog.ApDataDialog
-import com.ecjtu.sharebox.ui.dialog.EditNameDialog
-import com.ecjtu.sharebox.ui.dialog.TextItemDialog
-import com.ecjtu.sharebox.ui.dialog.WifiBottomSheetDialog
+import com.ecjtu.sharebox.ui.dialog.*
 import com.ecjtu.sharebox.ui.fragment.FilePickDialogFragment
 import com.ecjtu.sharebox.ui.fragment.HelpFragment
 import com.ecjtu.sharebox.ui.fragment.SimpleDialogFragment
@@ -54,6 +53,7 @@ import org.ecjtu.easyserver.server.ConversionFactory
 import org.ecjtu.easyserver.server.DeviceInfo
 import org.json.JSONObject
 import java.io.File
+import java.net.HttpURLConnection
 
 
 /**
@@ -284,6 +284,20 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
                     owner.getMainService()?.stopSearch()
                 }
                 return true
+            }
+            R.id.search_ip -> {
+                val dlg = IPSearchDialog(owner)
+                dlg.setCallback { ip ->
+                    RequestManager.requestDeviceInfo(ip, object : IRequestCallback {
+                        override fun onSuccess(httpURLConnection: HttpURLConnection?, response: String) {
+                            LocalBroadcastManager.getInstance(owner).sendBroadcast(Intent().apply {
+                                setAction(ApDataDialog.ACTION_UPDATE_DEVICE).putExtra(ApDataDialog.EXTRA_IP, ip)
+                                putExtra(ApDataDialog.EXTRA_JSON, response)
+                            })
+                        }
+                    })
+                }
+                dlg.show()
             }
         }
         return false

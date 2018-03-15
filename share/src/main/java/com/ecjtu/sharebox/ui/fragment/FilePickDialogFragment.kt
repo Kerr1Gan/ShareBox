@@ -15,7 +15,7 @@ import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.async.FindAllFilesHelper
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.ui.dialog.FilePickDialog
-import com.ecjtu.sharebox.ui.holder.FileExpandableProperty
+import com.ecjtu.sharebox.ui.holder.FileExpandableInfo
 import com.ecjtu.sharebox.util.file.FileUtil
 import java.util.*
 
@@ -119,10 +119,10 @@ class FilePickDialogFragment : AppCompatDialogFragment {
 
                     if (fileList is MutableList<String>) {
                         val names = FileUtil.foldFiles(fileList, localMap)
-                        val newArr = ArrayList<FileExpandableProperty>()
+                        val newArr = ArrayList<FileExpandableInfo>()
                         names?.let {
                             for (name in names.iterator()) {
-                                val vh = FileExpandableProperty(name, localMap.get(name))
+                                val vh = FileExpandableInfo(name, localMap.get(name))
                                 newArr.add(vh)
                             }
                         }

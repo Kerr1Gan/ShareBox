@@ -18,8 +18,8 @@ import com.ecjtu.sharebox.ui.dialog.ApDataDialog
 import com.ecjtu.sharebox.ui.dialog.InternetFilePickDialog
 import com.ecjtu.sharebox.ui.dialog.TextItemDialog
 import com.ecjtu.sharebox.ui.fragment.SimpleDialogFragment
-import com.ecjtu.sharebox.ui.holder.DeviceRecyclerProperty
-import com.ecjtu.sharebox.ui.holder.TabItemProperty
+import com.ecjtu.sharebox.ui.holder.DeviceRecyclerInfo
+import com.ecjtu.sharebox.ui.holder.TabItemInfo
 import com.ecjtu.sharebox.util.file.FileUtil
 import org.ecjtu.easyserver.server.ConversionFactory
 import org.ecjtu.easyserver.server.DeviceInfo
@@ -31,7 +31,7 @@ import java.net.HttpURLConnection
 /**
  * Created by Ethan_Xiang on 2017/7/3.
  */
-class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerProperty>, View.OnClickListener,
+class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerInfo>, View.OnClickListener,
         View.OnLongClickListener {
 
     private var mDeviceList: MutableList<DeviceInfo>? = null
@@ -47,14 +47,14 @@ class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerProperty>, 
         return mDeviceList?.size ?: 0
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): DeviceRecyclerProperty? {
+    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): DeviceRecyclerInfo? {
         val v = LayoutInflater.from(parent?.context).inflate(R.layout.layout_device_item, parent, false)
         v.setOnClickListener(this)
         v.setOnLongClickListener(this)
-        return DeviceRecyclerProperty(v)
+        return DeviceRecyclerInfo(v)
     }
 
-    override fun onBindViewHolder(holder: DeviceRecyclerProperty?, position: Int) {
+    override fun onBindViewHolder(holder: DeviceRecyclerInfo?, position: Int) {
         val info = mDeviceList?.get(position)
 
         val iconUrl = "${info?.ip}:${info?.port}${info?.icon}"
@@ -93,11 +93,11 @@ class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerProperty>, 
                 mWeakRef?.get()?.runOnUiThread {
                     if (mWeakRef?.get() != null) {
                         InternetFilePickDialog(mWeakRef?.get()!!, mWeakRef?.get(), deviceInfo!!).apply {
-                            val holders: MutableMap<String, TabItemProperty> = mutableMapOf()
+                            val holders: MutableMap<String, TabItemInfo> = mutableMapOf()
                             if (deviceInfo.fileMap?.entries != null) {
                                 for (entry in deviceInfo.fileMap!!.entries) {
                                     val type = FileUtil.string2MediaFileType(entry.key)
-                                    val holder = TabItemProperty(entry.key, type,
+                                    val holder = TabItemInfo(entry.key, type,
                                             null,
                                             entry.value)
                                     holders.put(entry.key, holder)

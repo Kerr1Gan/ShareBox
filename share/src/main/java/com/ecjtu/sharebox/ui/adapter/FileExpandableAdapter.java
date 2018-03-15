@@ -32,8 +32,8 @@ import com.ecjtu.sharebox.async.AppThumbTask;
 import com.ecjtu.sharebox.ui.dialog.TextItemDialog;
 import com.ecjtu.sharebox.ui.fragment.IjkVideoFragment;
 import com.ecjtu.sharebox.ui.fragment.WebViewFragment;
-import com.ecjtu.sharebox.ui.holder.FileExpandableProperty;
-import com.ecjtu.sharebox.ui.holder.TabItemProperty;
+import com.ecjtu.sharebox.ui.holder.FileExpandableInfo;
+import com.ecjtu.sharebox.ui.holder.TabItemInfo;
 import com.ecjtu.sharebox.ui.widget.FileExpandableListView;
 import com.ecjtu.sharebox.util.cache.CacheUtil;
 import com.ecjtu.sharebox.util.file.FileOpenIntentUtil;
@@ -57,7 +57,7 @@ import kotlin.jvm.functions.Function1;
 public class FileExpandableAdapter extends BaseExpandableListAdapter implements View.OnClickListener,
         View.OnLongClickListener {
 
-    protected TabItemProperty mTabHolder;
+    protected TabItemInfo mTabHolder;
 
     private List<String> mFileList;
 
@@ -69,7 +69,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         }
     };
 
-    private List<FileExpandableProperty> mPropertyList = new ArrayList<>();
+    private List<FileExpandableInfo> mPropertyList = new ArrayList<>();
 
     private Worker mWorker = null;
 
@@ -88,7 +88,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         mContext = expandableListView.getContext();
     }
 
-    public void initData(TabItemProperty holder, List<FileExpandableProperty> oldCache) {
+    public void initData(TabItemInfo holder, List<FileExpandableInfo> oldCache) {
         mTabHolder = holder;
         mFileList = mTabHolder.getFileList();
 
@@ -114,8 +114,8 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
 
     @Override
     public void onClick(View v) {
-        if (!(v.getTag() instanceof FileExpandableProperty)) return;
-        FileExpandableProperty vh = (FileExpandableProperty) v.getTag();
+        if (!(v.getTag() instanceof FileExpandableInfo)) return;
+        FileExpandableInfo vh = (FileExpandableInfo) v.getTag();
         int position = mPropertyList.indexOf(vh);
         int id = v.getId();
 
@@ -179,16 +179,16 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
 
     public void onFoldFiles(LinkedHashMap<String, List<String>> foldFiles, String[] names) {
         if (names == null) return;
-        List<FileExpandableProperty> newArr = new ArrayList<>();
+        List<FileExpandableInfo> newArr = new ArrayList<>();
 
         boolean selectAll = mSelectAll;
         mSelectAll = false;
         for (String name : names) {
-            FileExpandableProperty vh = new FileExpandableProperty(name, foldFiles.get(name));
+            FileExpandableInfo vh = new FileExpandableInfo(name, foldFiles.get(name));
             if (selectAll) {
                 vh.activate(true);
             }
-            for (FileExpandableProperty last : mPropertyList) {
+            for (FileExpandableInfo last : mPropertyList) {
                 if (last.getGroup().equals(vh.getGroup())) {
                     vh.activate(last.isActivated());
                     vh.setActivatedList(last.getActivatedList());
@@ -238,7 +238,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        FileExpandableProperty vh = (FileExpandableProperty) getGroup(groupPosition);
+        FileExpandableInfo vh = (FileExpandableInfo) getGroup(groupPosition);
         String f = vh.getGroup();
         String thumb = null;
         if (vh.getChildList().size() != 0)
@@ -283,7 +283,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         String f = (String) getChild(groupPosition, childPosition);
-        FileExpandableProperty vh = (FileExpandableProperty) getGroup(groupPosition);
+        FileExpandableInfo vh = (FileExpandableInfo) getGroup(groupPosition);
         if (convertView == null)
             convertView = LayoutInflater.from(mContext).inflate(R.layout.layout_file_item, parent, false);
 
@@ -453,7 +453,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         public void onClick(View v) {
             String file = (String) v.getTag();
             CheckBox checkBox = (CheckBox) v;
-            FileExpandableProperty vh = (FileExpandableProperty) v.getTag(R.id.extra_tag);
+            FileExpandableInfo vh = (FileExpandableInfo) v.getTag(R.id.extra_tag);
 
             if (checkBox.isChecked()) {
                 vh.activateItem(true, file);
@@ -467,7 +467,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
     public List<String> getSelectedFile() {
         List<String> files = new ArrayList<>();
         for (int i = 0; i < mPropertyList.size(); i++) {
-            FileExpandableProperty vh = mPropertyList.get(i);
+            FileExpandableInfo vh = mPropertyList.get(i);
             files.addAll(vh.getActivatedList());
         }
         return files;
@@ -479,17 +479,17 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
 
     public void selectAll(boolean select) {
         mSelectAll = select;
-        for (FileExpandableProperty vh : mPropertyList) {
+        for (FileExpandableInfo vh : mPropertyList) {
             vh.activate(select);
         }
         notifyDataSetChanged();
     }
 
-    public void replaceVhList(List<FileExpandableProperty> vhList) {
+    public void replaceVhList(List<FileExpandableInfo> vhList) {
         mPropertyList = vhList;
     }
 
-    public List<FileExpandableProperty> getPropertyList() {
+    public List<FileExpandableInfo> getPropertyList() {
         return mPropertyList;
     }
 

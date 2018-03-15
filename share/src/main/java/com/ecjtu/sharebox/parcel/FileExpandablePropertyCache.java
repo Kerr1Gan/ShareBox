@@ -4,7 +4,7 @@ package com.ecjtu.sharebox.parcel;
 import android.os.Parcel;
 
 import com.ecjtu.parcel.base.ParcelableFileCacheHelper;
-import com.ecjtu.sharebox.ui.holder.FileExpandableProperty;
+import com.ecjtu.sharebox.ui.holder.FileExpandableInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ public class FileExpandablePropertyCache extends ParcelableFileCacheHelper {
     @Override
     public <T> T readParcel(Parcel parcel) {
         int size = parcel.readInt();
-        List<FileExpandableProperty> ret = new ArrayList<>();
+        List<FileExpandableInfo> ret = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             List<String> childList = new ArrayList<>();
             parcel.readStringList(childList);
@@ -31,7 +31,7 @@ public class FileExpandablePropertyCache extends ParcelableFileCacheHelper {
             List<String> activatedList = new ArrayList<>();
             parcel.readStringList(activatedList);
 
-            FileExpandableProperty child = new FileExpandableProperty(group, childList);
+            FileExpandableInfo child = new FileExpandableInfo(group, childList);
             child.setActivated(isActivated);
             child.setActivatedList(activatedList);
 
@@ -48,10 +48,10 @@ public class FileExpandablePropertyCache extends ParcelableFileCacheHelper {
         List list = (List) object;
         parcel.writeInt(list.size());
         for (int i = 0; i < list.size(); i++) {
-            if (!(list.get(i) instanceof FileExpandableProperty)) {
+            if (!(list.get(i) instanceof FileExpandableInfo)) {
                 break;
             }
-            FileExpandableProperty vh = (FileExpandableProperty) list.get(i);
+            FileExpandableInfo vh = (FileExpandableInfo) list.get(i);
             List<String> childList = vh.getChildList();
             parcel.writeStringList(childList);
             parcel.writeString(vh.getGroup());

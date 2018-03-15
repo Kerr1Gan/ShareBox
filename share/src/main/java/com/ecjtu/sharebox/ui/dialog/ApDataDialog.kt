@@ -39,14 +39,6 @@ class ApDataDialog(activity: Activity) : BaseBottomSheetDialog(activity, activit
         const val EXTRA_JSON = "extra_json"
     }
 
-    override fun onCreateView(): View? {
-        var vg = layoutInflater.inflate(R.layout.dialog_ap_data, null)
-
-        fullScreenLayout(vg)
-
-        initView(vg as ViewGroup)
-        return vg
-    }
 
     private val mFormat = "%s %s"
 
@@ -55,6 +47,15 @@ class ApDataDialog(activity: Activity) : BaseBottomSheetDialog(activity, activit
     private var mPort = 8000
 
     private var mIp = ""
+
+    override fun onCreateView(): View? {
+        var vg = layoutInflater.inflate(R.layout.dialog_ap_data, null)
+
+        fullScreenLayout(vg)
+
+        initView(vg as ViewGroup)
+        return vg
+    }
 
     override fun onViewCreated(view: View?): Boolean {
         var behavior = BottomSheetBehavior.from(findViewById(android.support.design.R.id.design_bottom_sheet))
@@ -85,7 +86,7 @@ class ApDataDialog(activity: Activity) : BaseBottomSheetDialog(activity, activit
             var ssid = wifiInfo.ssid.drop(1)
             ssid = ssid.dropLast(1)
             name.setText(String.format(mFormat, name.text.toString(), ssid))
-            pwd.visibility = View.INVISIBLE
+            pwd.visibility = View.GONE
 
             vg.findViewById(R.id.qr_container)?.visibility = View.GONE
         } else if (NetworkUtil.isHotSpot(context)) {

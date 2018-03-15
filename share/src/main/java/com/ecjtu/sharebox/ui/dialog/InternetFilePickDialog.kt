@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.ui.adapter.FileExpandableAdapter
 import com.ecjtu.sharebox.ui.adapter.InternetFileExpandableAdapter
-import com.ecjtu.sharebox.ui.holder.TabItemProperty
+import com.ecjtu.sharebox.ui.holder.TabItemInfo
 import com.ecjtu.sharebox.ui.widget.FileExpandableListView
 import org.ecjtu.easyserver.server.DeviceInfo
 
@@ -24,7 +24,7 @@ class InternetFilePickDialog : FilePickDialog {
 
     private var mName: String? = null
 
-    fun setup(name: String, holder: MutableMap<String, TabItemProperty>) {
+    fun setup(name: String, holder: MutableMap<String, TabItemInfo>) {
         mName = name
         setTabItemsHolder(holder)
     }

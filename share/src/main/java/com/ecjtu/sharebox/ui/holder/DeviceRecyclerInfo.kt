@@ -9,7 +9,7 @@ import com.ecjtu.sharebox.R
 /**
  * Created by Ethan_Xiang on 2017/10/27.
  */
-class DeviceRecyclerProperty(item: View) : RecyclerView.ViewHolder(item) {
+class DeviceRecyclerInfo(item: View) : RecyclerView.ViewHolder(item) {
     var icon: ImageView? = null
     var name: TextView? = null
     var thumb: ImageView? = null
