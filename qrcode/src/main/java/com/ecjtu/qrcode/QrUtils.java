@@ -36,7 +36,7 @@ public class QrUtils {
 //            hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);//设置容错级别,H为最高
 //            hints.put(EncodeHintType.MAX_SIZE, LOGO_WIDTH_MAX);// 设置图片的最大值
 //            hints.put(EncodeHintType.MIN_SIZE, LOGO_WIDTH_MIN);// 设置图片的最小值
-            hints.put(EncodeHintType.MARGIN, 1);//设置白色边距值
+            hints.put(EncodeHintType.MARGIN, 1);// 设置白色边距值
 //            // 生成二维矩阵,编码时指定大小,不要生成了图片以后再进行缩放,这样会模糊导致识别失败
 //            BitMatrix matrix = new MultiFormatWriter().encode(content,
 //                    BarcodeFormat.QR_CODE, CODE_WIDTH, CODE_WIDTH, hints);

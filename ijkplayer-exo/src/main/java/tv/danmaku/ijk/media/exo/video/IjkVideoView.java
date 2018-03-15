@@ -19,7 +19,9 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.MediaController;
 
+import java.io.FilterInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -31,6 +33,7 @@ import tv.danmaku.ijk.media.player.AndroidMediaPlayer;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 import tv.danmaku.ijk.media.player.TextureMediaPlayer;
+import tv.danmaku.ijk.media.player.misc.IMediaDataSource;
 import tv.danmaku.ijk.media.player.misc.ITrackInfo;
 
 /**
@@ -198,7 +201,6 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
                 break;
         }
     }
-
 
     /**
      * Sets video path.
@@ -1102,5 +1104,9 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
 
     public int getSelectedTrack(int trackType) {
         return MediaPlayerCompat.getSelectedTrack(mMediaPlayer, trackType);
+    }
+
+    public IMediaController getMediaController() {
+        return mMediaController;
     }
 }
