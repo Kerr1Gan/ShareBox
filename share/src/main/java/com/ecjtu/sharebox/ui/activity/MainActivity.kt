@@ -27,7 +27,6 @@ import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.presenter.MainActivityDelegate
 import com.ecjtu.sharebox.service.MainService
 import com.ecjtu.sharebox.ui.fragment.SplashFragment
-import com.ecjtu.sharebox.util.MetricUtil
 import com.ecjtu.sharebox.util.admob.AdmobCallback
 import com.ecjtu.sharebox.util.admob.AdmobManager
 import org.ecjtu.easyserver.IAidlInterface
@@ -41,7 +40,8 @@ class MainActivity : ImmersiveFragmentActivity() {
     companion object {
         const private val TAG = "MainActivity"
         private val MSG_SERVICE_STARTED = 0x10
-        val MSG_START_SERVER = 0x11
+        const val MSG_START_SERVER = 0x11
+        const val MSG_STOP_SERVER = 0x14
         private val MSG_LOADING_SERVER = 0x12
         const val MSG_CLOSE_APP = -1
         const val DEBUG = true
@@ -212,7 +212,11 @@ class MainActivity : ImmersiveFragmentActivity() {
                 when (state) {
                     WIFI_AP_STATE_ENABLED -> {
                         if (mDelegate?.checkCurrentNetwork(null) ?: false) {
-                            getHandler()?.obtainMessage(MSG_START_SERVER)?.sendToTarget()
+                            if (mService != null) {
+                                getHandler()?.obtainMessage(MSG_START_SERVER)?.sendToTarget()
+                            } else {
+                                startServerService()
+                            }
                         }
                         var s = ""
                         when (state) {
@@ -225,6 +229,7 @@ class MainActivity : ImmersiveFragmentActivity() {
                         Log.i("WifiApReceiver", "ap " + s)
                     }
                     WIFI_AP_STATE_DISABLED -> {
+                        getHandler()?.obtainMessage(MSG_STOP_SERVER)?.sendToTarget()
                         mDelegate?.checkCurrentNetwork(null)
                     }
                     else -> {
@@ -240,14 +245,19 @@ class MainActivity : ImmersiveFragmentActivity() {
                     }
                 }
             } else if (action == WIFI_STATE_CHANGED_ACTION) {
-                var state = intent.getIntExtra(EXTRA_WIFI_STATE, -1)
-                when (state) {
+                val localState = intent.getIntExtra(EXTRA_WIFI_STATE, -1)
+                when (localState) {
                     WIFI_STATE_ENABLED -> {
                         if (mDelegate?.checkCurrentNetwork(null) ?: false) {
-                            getHandler()?.obtainMessage(MSG_START_SERVER)?.sendToTarget()
+                            if (mService != null) {
+                                getHandler()?.obtainMessage(MSG_START_SERVER)?.sendToTarget()
+                            } else {
+                                startServerService()
+                            }
                         }
                     }
                     WIFI_STATE_DISABLED -> {
+                        getHandler()?.obtainMessage(MSG_STOP_SERVER)?.sendToTarget()
                         mDelegate?.checkCurrentNetwork(null)
                     }
                 }
@@ -262,7 +272,7 @@ class MainActivity : ImmersiveFragmentActivity() {
                 var info = intent.getParcelableExtra<NetworkInfo>(EXTRA_NETWORK_INFO)
                 Log.i("WifiApReceiver", "NetworkInfo " + info?.toString() ?: "null")
                 if (info != null && info.type == TYPE_MOBILE && (info.state == NetworkInfo.State.CONNECTED ||
-                        info.state == NetworkInfo.State.DISCONNECTED)) {
+                                info.state == NetworkInfo.State.DISCONNECTED)) {
                     mDelegate?.checkCurrentNetwork(null)
                 }
             } else if (action == org.ecjtu.easyserver.server.Constants.ACTION_CLOSE_SERVER) {
@@ -328,8 +338,7 @@ class MainActivity : ImmersiveFragmentActivity() {
                 }
 
                 if (!flag && mDelegate != null) {
-                    var name = PreferenceManager.getDefaultSharedPreferences(this).
-                            getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
+                    var name = PreferenceManager.getDefaultSharedPreferences(this).getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
                     if (mService != null && mService!!.ip != null && mService!!.port != 0) {
                         val deviceInfo = getMainApplication().getSavedInstance().get(Constants.KEY_INFO_OBJECT) as DeviceInfo?
                         deviceInfo?.let {
@@ -339,6 +348,9 @@ class MainActivity : ImmersiveFragmentActivity() {
                     }
                     runOnUiThread { mDelegate?.doSearch() }
                 }
+            }
+            MSG_STOP_SERVER -> {
+                stopServerService()
             }
             MSG_CLOSE_APP -> {
                 try {
@@ -436,9 +448,7 @@ class MainActivity : ImmersiveFragmentActivity() {
             mMainService = (service as MainService.MainServiceBinder).service
 
             //start server
-            var intent = Intent(this@MainActivity, EasyServerService::class.java)
-            startService(intent)
-            bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE)
+            startServerService()
         }
     }
 
@@ -448,5 +458,22 @@ class MainActivity : ImmersiveFragmentActivity() {
 
     fun getServerService(): IAidlInterface? {
         return mService
+    }
+
+    fun stopServerService() {
+        try {
+            unbindService(mServiceConnection)
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        } finally {
+            stopService(Intent(this, EasyServerService::class.java))
+            mService = null
+        }
+    }
+
+    fun startServerService() {
+        var intent = Intent(this@MainActivity, EasyServerService::class.java)
+        startService(intent)
+        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE)
     }
 }
