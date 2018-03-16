@@ -84,7 +84,7 @@ open class WifiBottomSheetDialog : CloseBottomSheetDialog {
             mCircularButton?.progress = PROGRESS_START
         }
 
-        (vg.findViewById(R.id.text_title) as TextView).setText(R.string.hotspot)
+        setTitle(context.getString(R.string.hotspot),vg)
     }
 
     private fun usingLast() {

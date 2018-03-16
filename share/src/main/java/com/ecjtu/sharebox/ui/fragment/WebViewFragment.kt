@@ -34,10 +34,12 @@ class WebViewFragment : Fragment() {
         const val TYPE_MIME = TYPE_DEFAULT shl 1
         const val INTERFACE_NAME = "android"
 
+        @JvmStatic
         fun openUrl(url: String): Bundle {
             return Bundle().apply { putString(WebViewFragment.EXTRA_URL, url) }
         }
 
+        @JvmStatic
         fun openInnerUrl(url: String): Bundle {
             return Bundle().apply {
                 putString(WebViewFragment.EXTRA_URL, url)
@@ -45,6 +47,7 @@ class WebViewFragment : Fragment() {
             }
         }
 
+        @JvmStatic
         fun openWithMIME(url: String): Bundle {
             return Bundle().apply {
                 putString(WebViewFragment.EXTRA_URL, url)
@@ -64,7 +67,7 @@ class WebViewFragment : Fragment() {
         initWebView()
 
         if (arguments != null) {
-            var url = arguments.get(EXTRA_URL) as String
+            var url = arguments.get(EXTRA_URL) as String?
             var type = arguments.get(EXTRA_TYPE)
             if (type == null) {
                 type = TYPE_DEFAULT
@@ -107,7 +110,7 @@ class WebViewFragment : Fragment() {
         mWebView?.addJavascriptInterface(mJsInterface, INTERFACE_NAME)
     }
 
-    private fun toDoWithMIME(mime: String?, url: String) {
+    private fun toDoWithMIME(mime: String?, url: String?) {
         if (mime?.startsWith("text") == true) {
             var arr = FileUtil.readFileContent(File(url))
             if (arr != null) {

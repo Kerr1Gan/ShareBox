@@ -12,10 +12,9 @@ import android.preference.*
 import android.text.TextUtils
 import android.text.format.Formatter
 import android.view.MenuItem
-
-import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.PreferenceInfo
-import com.ecjtu.sharebox.ui.preference.SelectPreference
+import com.ecjtu.sharebox.R
+import com.ecjtu.sharebox.ui.preference.CachePreference
 import com.ecjtu.sharebox.util.activity.ActivityUtil
 import com.ecjtu.sharebox.util.cache.CacheUtil
 import com.ecjtu.sharebox.util.file.FileUtil
@@ -105,7 +104,7 @@ class SettingsActivity : AppCompatPreferenceActivity() {
             }
 
             PreferenceManager.getDefaultSharedPreferences(activity).edit().
-                    putString(getString(R.string.key_clear_cache), Formatter.formatFileSize(activity, size)).commit()
+                    putString(getString(R.string.key_clear_cache), Formatter.formatFileSize(activity, size)).apply()
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
@@ -246,7 +245,8 @@ class SettingsActivity : AppCompatPreferenceActivity() {
                 PreferenceManager.getDefaultSharedPreferences(preference.context).edit().
                         putString(PreferenceInfo.PREF_DEVICE_NAME, stringValue).apply()
                 preference.summary = stringValue
-            } else if (preference is SelectPreference) {
+            } else if (preference is CachePreference) {
+                // Cache
                 preference.summary = stringValue
             } else {
                 // For all other preferences, set the summary to the value's

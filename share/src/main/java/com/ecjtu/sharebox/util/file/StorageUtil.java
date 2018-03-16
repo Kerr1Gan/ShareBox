@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
 public class StorageUtil {
 
     /**
-     * 获取内置和外置sd卡路径
+     * isRemove true 外置存储卡，false 内置存储卡
      * @param context
      * @param isRemove
      * @returnd
@@ -27,7 +27,7 @@ public class StorageUtil {
             storageVolumeClazz = Class.forName("android.os.storage.StorageVolume");
             Method getVolumeList = mStorageManager.getClass().getMethod("getVolumeList");
             Method getPath = storageVolumeClazz.getMethod("getPath");
-            Method isRemovable = storageVolumeClazz.getMethod("isRemovable");
+            Method isRemovable = storageVolumeClazz.getMethod("`");
             Object result = getVolumeList.invoke(mStorageManager);
             final int length = Array.getLength(result);
             for (int i = 0; i < length; i++) {

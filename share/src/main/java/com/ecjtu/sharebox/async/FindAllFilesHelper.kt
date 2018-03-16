@@ -26,6 +26,8 @@ class FindAllFilesHelper(val context: Context) {
 
     private var mCallback: ((map: MutableMap<String, List<String>>) -> Unit)? = null
 
+    private var mProgressListener: ((taskIndex: Int, taskSize: Int) -> Unit)? = null
+
     init {
         mHandlerThread = HandlerThread(TAG)
         mHandlerThread?.start()
@@ -33,12 +35,14 @@ class FindAllFilesHelper(val context: Context) {
         mHandler = object : Handler(looper) {
             override fun handleMessage(msg: Message?) {
                 super.handleMessage(msg)
-
                 if (mFilesMap == null) {
                     mFilesMap = linkedMapOf()
                 }
                 val index = msg!!.what
                 findFilesWithType(context, mTaskList.get(index), mFilesMap!!)
+
+                mProgressListener?.invoke(index + 1, mTaskList.size)
+
                 if (index == mTaskList.size - 1 && mHandlerThread?.isInterrupted == false) {
                     mCallback?.invoke(mFilesMap!!)
                 }
@@ -53,6 +57,10 @@ class FindAllFilesHelper(val context: Context) {
         }
     }
 
+    fun setProgressCallback(listener: ((taskIndex: Int, taskSize: Int) -> Unit)?) {
+        mProgressListener = listener
+    }
+
     fun release() {
         mHandler?.removeCallbacksAndMessages(null)
         mHandlerThread?.quit()
@@ -64,6 +72,7 @@ class FindAllFilesHelper(val context: Context) {
         when (type) {
             "Movie" -> {
                 list = FileUtil.getAllMediaFile(context, null)
+                list.reverse()
                 var strList = arrayListOf<String>()
                 for (path in list.iterator()) {
                     strList.add(path.absolutePath)
@@ -72,6 +81,7 @@ class FindAllFilesHelper(val context: Context) {
             }
             "Music" -> {
                 list = FileUtil.getAllMusicFile(context, null)
+                list.reverse()
                 var strList = arrayListOf<String>()
                 for (path in list.iterator()) {
                     strList.add(path.absolutePath)
@@ -80,6 +90,7 @@ class FindAllFilesHelper(val context: Context) {
             }
             "Photo" -> {
                 list = FileUtil.getImagesByDCIM(context)
+                list.reverse()
                 var strList = arrayListOf<String>()
                 for (path in list.iterator()) {
                     strList.add(path.absolutePath)
@@ -88,6 +99,7 @@ class FindAllFilesHelper(val context: Context) {
             }
             "Doc" -> {
                 list = FileUtil.getAllDocFile(context, null)
+                list.reverse()
                 var strList = arrayListOf<String>()
                 for (path in list.iterator()) {
                     strList.add(path.absolutePath)
@@ -96,6 +108,7 @@ class FindAllFilesHelper(val context: Context) {
             }
             "Apk" -> {
                 list = FileUtil.getAllApkFile(context, null)
+                list.reverse()
                 var strList = arrayListOf<String>()
                 for (path in list.iterator()) {
                     strList.add(path.absolutePath)
@@ -104,6 +117,7 @@ class FindAllFilesHelper(val context: Context) {
             }
             "Rar" -> {
                 list = FileUtil.getAllRarFile(context, null)
+                list.reverse()
                 var strList = arrayListOf<String>()
                 for (path in list.iterator()) {
                     strList.add(path.absolutePath)

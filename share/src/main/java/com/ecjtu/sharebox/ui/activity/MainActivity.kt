@@ -17,6 +17,9 @@ import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
+import android.widget.Toast
+import com.bumptech.glide.Glide
+import com.ecjtu.componentes.activity.ImmersiveFragmentActivity
 import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.PreferenceInfo
 import com.ecjtu.sharebox.R
@@ -30,17 +33,19 @@ import org.ecjtu.easyserver.IAidlInterface
 import org.ecjtu.easyserver.server.DeviceInfo
 import org.ecjtu.easyserver.server.impl.service.EasyServerService
 import org.ecjtu.easyserver.server.util.cache.ServerInfoParcelableHelper
+import kotlin.concurrent.thread
 
 class MainActivity : ImmersiveFragmentActivity() {
 
     companion object {
         const private val TAG = "MainActivity"
         private val MSG_SERVICE_STARTED = 0x10
-        val MSG_START_SERVER = 0x11
+        const val MSG_START_SERVER = 0x11
+        const val MSG_STOP_SERVER = 0x14
         private val MSG_LOADING_SERVER = 0x12
-        @JvmStatic
-        val MSG_CLOSE_APP = -1
+        const val MSG_CLOSE_APP = -1
         const val DEBUG = true
+        const val MSG_RELEASE_APPLICATION = 0x13
     }
 
     private var mDelegate: MainActivityDelegate? = null
@@ -58,7 +63,6 @@ class MainActivity : ImmersiveFragmentActivity() {
     private var mMainService: MainService? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(R.style.ImageStatusBarStyle)
         super.onCreate(savedInstanceState)
 //        loadSplash()
         setContentView(R.layout.activity_main)
@@ -78,11 +82,6 @@ class MainActivity : ImmersiveFragmentActivity() {
                     recyclerView.paddingBottom + getNavigationBarHeight(this))
         }
 
-        //init service
-        val intent = Intent(this, MainService::class.java)
-        startService(intent)
-        bindService(intent, mMainServiceConnection, Context.BIND_AUTO_CREATE)
-
         //ad
 //        initAd()
 
@@ -100,9 +99,14 @@ class MainActivity : ImmersiveFragmentActivity() {
 
     override fun onResume() {
         super.onResume()
-        getMainApplication().closeActivityByIndex(1)
+        getMainApplication().closeActivitiesByIndex(1)
         var name = PreferenceManager.getDefaultSharedPreferences(this).getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
         (findViewById(R.id.text_name) as TextView).setText(name)
+
+        //resume service
+        val intent = Intent(this, MainService::class.java)
+        startService(intent)
+        bindService(intent, mMainServiceConnection, Context.BIND_AUTO_CREATE)
     }
 
     override fun onStop() {
@@ -126,6 +130,9 @@ class MainActivity : ImmersiveFragmentActivity() {
             unbindService(mMainServiceConnection)
         } catch (ignore: java.lang.Exception) {
         }
+        // release main process
+        System.exit(0)
+        Glide.get(this).clearMemory()
         super.onDestroy()
     }
 
@@ -205,7 +212,11 @@ class MainActivity : ImmersiveFragmentActivity() {
                 when (state) {
                     WIFI_AP_STATE_ENABLED -> {
                         if (mDelegate?.checkCurrentNetwork(null) ?: false) {
-                            getHandler()?.obtainMessage(MSG_START_SERVER)?.sendToTarget()
+                            if (mService != null) {
+                                getHandler()?.obtainMessage(MSG_START_SERVER)?.sendToTarget()
+                            } else {
+                                startServerService()
+                            }
                         }
                         var s = ""
                         when (state) {
@@ -218,6 +229,7 @@ class MainActivity : ImmersiveFragmentActivity() {
                         Log.i("WifiApReceiver", "ap " + s)
                     }
                     WIFI_AP_STATE_DISABLED -> {
+                        getHandler()?.obtainMessage(MSG_STOP_SERVER)?.sendToTarget()
                         mDelegate?.checkCurrentNetwork(null)
                     }
                     else -> {
@@ -233,14 +245,19 @@ class MainActivity : ImmersiveFragmentActivity() {
                     }
                 }
             } else if (action == WIFI_STATE_CHANGED_ACTION) {
-                var state = intent.getIntExtra(EXTRA_WIFI_STATE, -1)
-                when (state) {
+                val localState = intent.getIntExtra(EXTRA_WIFI_STATE, -1)
+                when (localState) {
                     WIFI_STATE_ENABLED -> {
                         if (mDelegate?.checkCurrentNetwork(null) ?: false) {
-                            getHandler()?.obtainMessage(MSG_START_SERVER)?.sendToTarget()
+                            if (mService != null) {
+                                getHandler()?.obtainMessage(MSG_START_SERVER)?.sendToTarget()
+                            } else {
+                                startServerService()
+                            }
                         }
                     }
                     WIFI_STATE_DISABLED -> {
+                        getHandler()?.obtainMessage(MSG_STOP_SERVER)?.sendToTarget()
                         mDelegate?.checkCurrentNetwork(null)
                     }
                 }
@@ -255,7 +272,7 @@ class MainActivity : ImmersiveFragmentActivity() {
                 var info = intent.getParcelableExtra<NetworkInfo>(EXTRA_NETWORK_INFO)
                 Log.i("WifiApReceiver", "NetworkInfo " + info?.toString() ?: "null")
                 if (info != null && info.type == TYPE_MOBILE && (info.state == NetworkInfo.State.CONNECTED ||
-                        info.state == NetworkInfo.State.DISCONNECTED)) {
+                                info.state == NetworkInfo.State.DISCONNECTED)) {
                     mDelegate?.checkCurrentNetwork(null)
                 }
             } else if (action == org.ecjtu.easyserver.server.Constants.ACTION_CLOSE_SERVER) {
@@ -316,20 +333,24 @@ class MainActivity : ImmersiveFragmentActivity() {
                     var intent = EasyServerService.getApIntent(this)
                     startService(intent)
                     getHandler()?.sendEmptyMessageDelayed(MSG_LOADING_SERVER, Int.MAX_VALUE.toLong())
-                } else {
-                    getMainApplication().getSavedInstance().remove(Constants.KEY_SERVER_PORT)
+                } else if (getHandler()?.hasMessages(MSG_LOADING_SERVER) == false) {
+//                    PreferenceManager.getDefaultSharedPreferences(this).edit().remove(Constants.PREF_SERVER_PORT).apply()
                 }
 
                 if (!flag && mDelegate != null) {
-                    var name = PreferenceManager.getDefaultSharedPreferences(this).
-                            getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
+                    var name = PreferenceManager.getDefaultSharedPreferences(this).getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
                     if (mService != null && mService!!.ip != null && mService!!.port != 0) {
-                        val deviceInfo = getMainApplication().getSavedInstance().get(Constants.KEY_INFO_OBJECT) as DeviceInfo
-                        registerServerInfo(mService!!.ip, mService!!.port, name,
-                                deviceInfo.fileMap)
+                        val deviceInfo = getMainApplication().getSavedInstance().get(Constants.KEY_INFO_OBJECT) as DeviceInfo?
+                        deviceInfo?.let {
+                            registerServerInfo(mService!!.ip, mService!!.port, name,
+                                    deviceInfo.fileMap)
+                        }
                     }
                     runOnUiThread { mDelegate?.doSearch() }
                 }
+            }
+            MSG_STOP_SERVER -> {
+                stopServerService()
             }
             MSG_CLOSE_APP -> {
                 try {
@@ -351,7 +372,7 @@ class MainActivity : ImmersiveFragmentActivity() {
     }
 
     fun registerServerInfo(hostIP: String, port: Int, name: String, mutableMap: MutableMap<String, List<String>>) {
-        getMainApplication().getSavedInstance().put(Constants.KEY_SERVER_PORT, port.toString())
+        PreferenceManager.getDefaultSharedPreferences(this).edit().putInt(Constants.PREF_SERVER_PORT, port).apply()
         val deviceInfo = getMainApplication().getSavedInstance().get(Constants.KEY_INFO_OBJECT) as DeviceInfo
         deviceInfo.apply {
             this.name = name
@@ -371,6 +392,24 @@ class MainActivity : ImmersiveFragmentActivity() {
             }
         }
         return super.onKeyDown(keyCode, event)
+    }
+
+    override fun onBackPressed() {
+        val handler = getHandler()
+        if (handler?.hasMessages(MSG_RELEASE_APPLICATION) == true) {
+            handler.removeMessages(MSG_RELEASE_APPLICATION)
+            super.onBackPressed()
+        } else {
+            handler?.sendEmptyMessageDelayed(MSG_RELEASE_APPLICATION, Int.MAX_VALUE.toLong())
+            Toast.makeText(this, "再次点击将退出应用", Toast.LENGTH_SHORT).show()
+            thread {
+                try {
+                    Thread.sleep(3 * 1000)
+                    handler?.removeMessages(MSG_RELEASE_APPLICATION)
+                } catch (ignore: Exception) {
+                }
+            }
+        }
     }
 
     private fun initAd() {
@@ -409,9 +448,7 @@ class MainActivity : ImmersiveFragmentActivity() {
             mMainService = (service as MainService.MainServiceBinder).service
 
             //start server
-            var intent = Intent(this@MainActivity, EasyServerService::class.java)
-            startService(intent)
-            bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE)
+            startServerService()
         }
     }
 
@@ -419,4 +456,24 @@ class MainActivity : ImmersiveFragmentActivity() {
         return mMainService
     }
 
+    fun getServerService(): IAidlInterface? {
+        return mService
+    }
+
+    fun stopServerService() {
+        try {
+            unbindService(mServiceConnection)
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        } finally {
+            stopService(Intent(this, EasyServerService::class.java))
+            mService = null
+        }
+    }
+
+    fun startServerService() {
+        var intent = Intent(this@MainActivity, EasyServerService::class.java)
+        startService(intent)
+        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE)
+    }
 }

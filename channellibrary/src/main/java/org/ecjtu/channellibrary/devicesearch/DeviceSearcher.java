@@ -50,7 +50,7 @@ public abstract class DeviceSearcher extends Thread {
     @Override
     public void run() {
         try {
-            if (Thread.interrupted()) return;
+            if (Thread.currentThread().isInterrupted()) return;
             onSearchStart();
             mHostSocket = new DatagramSocket();
             // 设置接收超时时间
@@ -60,7 +60,7 @@ public abstract class DeviceSearcher extends Thread {
             InetAddress broadIP = InetAddress.getByName("255.255.255.255");//255.255.255.255 会发送给局域网内所有设备 https://segmentfault.com/q/1010000004918877
             DatagramPacket sendPack = new DatagramPacket(sendData, sendData.length, broadIP, DEVICE_FIND_PORT);
 
-            for (int i = 0; i < 3 && !Thread.interrupted(); i++) {
+            for (int i = 0; i < 3 && !Thread.currentThread().isInterrupted(); i++) {
 
                 // 发送搜索广播
                 mPackType = PACKET_TYPE_FIND_DEVICE_REQ_10;

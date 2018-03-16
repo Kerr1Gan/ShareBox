@@ -38,6 +38,7 @@
     <string name="help">Help</string>
     <string name="name_with_colon">Name:</string>
     <string name="password_with_colon">Password:</string>
+    <string name="ip_with_colon">Ip:</string>
     <string name="qr_code">QRCode</string>
     <string name="use_browser_scanning_qr_code_to_connect">用浏览器扫描二维码连接热点:</string>
     <string name="web">Web</string>
@@ -52,6 +53,7 @@
     <string name="do_you_want_to_clear_the_cache">Do you want to clear the cache?</string>
     <string name="you_will_clear_cache">you will clear %s cache</string>
 
+    <string name="installed">已安装</string>
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->

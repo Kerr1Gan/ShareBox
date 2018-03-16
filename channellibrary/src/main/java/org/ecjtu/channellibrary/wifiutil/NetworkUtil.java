@@ -35,7 +35,7 @@ public class NetworkUtil {
     /* 代理端口 */
     private static int PROXY_PORT = 0;
 
-    private static String NetworkUtil="NetworkUtil";
+    private static String NetworkUtil = "NetworkUtil";
 
     /**
      * 判断当前是否有网络连接
@@ -47,7 +47,7 @@ public class NetworkUtil {
         boolean network = isWifi(context);
         boolean mobilework = isMobile(context);
         if (!network && !mobilework) { // 无网络连接
-            Log.i(NetworkUtil," 无网路链接！");
+            Log.i(NetworkUtil, " 无网路链接！");
             return false;
         } else if (network == true && mobilework == false) { // wifi连接
             Log.i(NetworkUtil, "wifi连接");
@@ -109,39 +109,37 @@ public class NetworkUtil {
         return false;
     }
 
-    public static boolean isHotSpot(Context context){
+    public static boolean isHotSpot(Context context) {
         try {
-            WifiManager wifiManager= (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
             Method method = wifiManager.getClass().getDeclaredMethod("isWifiApEnabled");
             method.setAccessible(true);
             return (Boolean) method.invoke(wifiManager);
+        } catch (Throwable ignored) {
         }
-        catch (Throwable ignored) {}
         return false;
     }
 
-    public static WifiConfiguration getHotSpotConfiguration(Context context){
+    public static WifiConfiguration getHotSpotConfiguration(Context context) {
         return WifiUtil.getWifiApConfiguration(context);
     }
 
-    public static WifiInfo getConnectWifiInfo(Context context){
+    public static WifiInfo getConnectWifiInfo(Context context) {
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         return wifiManager.getConnectionInfo();
     }
 
     /**
-     *  result[0] is self ip,result[1] is host ip,result[2] is isWifiEnable,true or false.
+     * result[0] is self ip,result[1] is host ip,result[2] is isWifiEnable,true or false.
      */
-    public static ArrayList<String> getWifiHostAndSelfIP(Context context)
-    {
+    public static ArrayList<String> getWifiHostAndSelfIP(Context context) {
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         String isWifiEnable;
         if (!wifiManager.isWifiEnabled()) {
-            isWifiEnable="false";
-        }
-        else
-            isWifiEnable="true";
-        ArrayList<String> result=new ArrayList<>();
+            isWifiEnable = "false";
+        } else
+            isWifiEnable = "true";
+        ArrayList<String> result = new ArrayList<>();
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
         String IPAddress = intToIp(wifiInfo.getIpAddress());
         result.add(IPAddress);
@@ -184,19 +182,19 @@ public class NetworkUtil {
 //        return ((i >> 24) & 0xFF) + "." + ((i >> 16) & 0xFF) + "."
 //                + ((i >> 8) & 0xFF) + "." + (i & 0xFF);
         return ((i >> 0) & 0xFF) + "." + ((i >> 8) & 0xFF) + "."
-                + ((i >> 16) & 0xFF) + "." + (i>>24 & 0xFF);
+                + ((i >> 16) & 0xFF) + "." + (i >> 24 & 0xFF);
     }
 
     //byte 数组与 int 的相互转换
     public static int byteArrayToInt(byte[] b) {
-        return   b[0] & 0xFF |
+        return b[0] & 0xFF |
                 (b[1] & 0xFF) << 8 |
                 (b[2] & 0xFF) << 16 |
                 (b[3] & 0xFF) << 24;
     }
 
     public static byte[] intToByteArray(int a) {
-        return new byte[] {
+        return new byte[]{
                 (byte) ((a >> 24) & 0xFF),
                 (byte) ((a >> 16) & 0xFF),
                 (byte) ((a >> 8) & 0xFF),
@@ -204,24 +202,24 @@ public class NetworkUtil {
         };
     }
 
-    public static String[] getLocalWLANIps(){
+    public static String[] getLocalWLANIps() {
         return getIpFromInterface("wlan");
     }
 
-    public static String[] getLocalApIps(){
+    public static String[] getLocalApIps() {
         return getIpFromInterface("ap");
     }
 
-    public static String[] getIpFromInterface(String name){
-        List<String> result=new ArrayList<>();
+    public static String[] getIpFromInterface(String name) {
+        List<String> result = new ArrayList<>();
         try {
-            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
                 NetworkInterface intf = en.nextElement();
-                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
                     InetAddress inetAddress = enumIpAddr.nextElement();
 
                     String iface = intf.getName();
-                    if(iface.contains(name)){
+                    if (iface.contains(name)) {
                         if (inetAddress instanceof Inet4Address && isUsableAddress(inetAddress)) { // fix for Galaxy Nexus. IPv4 is easy to use :-)
                             result.add(getDottedDecimalIP(inetAddress.getAddress()));
                         }
@@ -237,18 +235,18 @@ public class NetworkUtil {
 
     private static String getDottedDecimalIP(byte[] ipAddr) {
         String ipAddrStr = "";
-        for (int i=0; i<ipAddr.length; i++) {
+        for (int i = 0; i < ipAddr.length; i++) {
             if (i > 0) {
                 ipAddrStr += ".";
             }
-            ipAddrStr += ipAddr[i]&0xFF;
+            ipAddrStr += ipAddr[i] & 0xFF;
         }
         return ipAddrStr;
     }
 
     private final static boolean isUsableAddress(InetAddress addr) {
 
-        if (addr.isLoopbackAddress() == true || addr.isLinkLocalAddress() == true) {
+        if (addr.isLoopbackAddress() || addr.isLinkLocalAddress()) {
             return false;
         }
 

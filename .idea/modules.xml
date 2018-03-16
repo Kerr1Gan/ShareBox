@@ -5,10 +5,13 @@
       <module fileurl="file://$PROJECT_DIR$/ShareBox.iml" filepath="$PROJECT_DIR$/ShareBox.iml" />
       <module fileurl="file://$PROJECT_DIR$/channellibrary/channellibrary.iml" filepath="$PROJECT_DIR$/channellibrary/channellibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/circularprogresslibrary/circularprogresslibrary.iml" filepath="$PROJECT_DIR$/circularprogresslibrary/circularprogresslibrary.iml" />
-      <module fileurl="file://$PROJECT_DIR$/easyserver/easyserver.iml" filepath="$PROJECT_DIR$/easyserver/easyserver.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-componentes/common-componentes.iml" filepath="$PROJECT_DIR$/common-componentes/common-componentes.iml" />
       <module fileurl="file://$PROJECT_DIR$/ijkplayer-exo/ijkplayer-exo.iml" filepath="$PROJECT_DIR$/ijkplayer-exo/ijkplayer-exo.iml" />
       <module fileurl="file://$PROJECT_DIR$/ijkplayer-java/ijkplayer-java.iml" filepath="$PROJECT_DIR$/ijkplayer-java/ijkplayer-java.iml" />
       <module fileurl="file://$PROJECT_DIR$/materialstepper/materialstepper.iml" filepath="$PROJECT_DIR$/materialstepper/materialstepper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/netcore/netcore.iml" filepath="$PROJECT_DIR$/netcore/netcore.iml" />
+      <module fileurl="file://$PROJECT_DIR$/parcel/parcel.iml" filepath="$PROJECT_DIR$/parcel/parcel.iml" />
+      <module fileurl="file://$PROJECT_DIR$/qrcode/qrcode.iml" filepath="$PROJECT_DIR$/qrcode/qrcode.iml" />
       <module fileurl="file://$PROJECT_DIR$/share/share.iml" filepath="$PROJECT_DIR$/share/share.iml" />
     </modules>
   </component>

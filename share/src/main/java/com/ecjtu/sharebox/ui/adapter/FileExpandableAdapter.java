@@ -25,14 +25,15 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.ecjtu.componentes.activity.ActionBarFragmentActivity;
+import com.ecjtu.componentes.activity.RotateNoCreateActivity;
 import com.ecjtu.sharebox.R;
 import com.ecjtu.sharebox.async.AppThumbTask;
-import com.ecjtu.sharebox.ui.activity.ActionBarFragmentActivity;
-import com.ecjtu.sharebox.ui.activity.RotateNoCreateActivity;
-import com.ecjtu.sharebox.ui.dialog.FilePickDialog;
 import com.ecjtu.sharebox.ui.dialog.TextItemDialog;
 import com.ecjtu.sharebox.ui.fragment.IjkVideoFragment;
 import com.ecjtu.sharebox.ui.fragment.WebViewFragment;
+import com.ecjtu.sharebox.ui.holder.FileExpandableInfo;
+import com.ecjtu.sharebox.ui.holder.TabItemInfo;
 import com.ecjtu.sharebox.ui.widget.FileExpandableListView;
 import com.ecjtu.sharebox.util.cache.CacheUtil;
 import com.ecjtu.sharebox.util.file.FileOpenIntentUtil;
@@ -41,6 +42,8 @@ import com.ecjtu.sharebox.util.image.ImageUtil;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -54,9 +57,9 @@ import kotlin.jvm.functions.Function1;
 public class FileExpandableAdapter extends BaseExpandableListAdapter implements View.OnClickListener,
         View.OnLongClickListener {
 
-    protected FilePickDialog.TabItemHolder mTabHolder;
+    protected TabItemInfo mTabHolder;
 
-    protected List<String> mFileList;
+    private List<String> mFileList;
 
     private static final int CACHE_SIZE = 5 * 1024 * 1024;
 
@@ -66,7 +69,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         }
     };
 
-    private List<VH> mVHList = new ArrayList<>();
+    private List<FileExpandableInfo> mPropertyList = new ArrayList<>();
 
     private Worker mWorker = null;
 
@@ -85,7 +88,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         mContext = expandableListView.getContext();
     }
 
-    public void initData(FilePickDialog.TabItemHolder holder, List<VH> oldCache) {
+    public void initData(TabItemInfo holder, List<FileExpandableInfo> oldCache) {
         mTabHolder = holder;
         mFileList = mTabHolder.getFileList();
 
@@ -95,7 +98,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         mExpandableListView.setDividerHeight(1);
 
         if (oldCache != null) {
-            mVHList = oldCache;
+            mPropertyList = oldCache;
         }
         mExpandableListView.setAdapter(this);
     }
@@ -111,9 +114,9 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
 
     @Override
     public void onClick(View v) {
-        if (!(v.getTag() instanceof VH)) return;
-        VH vh = (VH) v.getTag();
-        int position = mVHList.indexOf(vh);
+        if (!(v.getTag() instanceof FileExpandableInfo)) return;
+        FileExpandableInfo vh = (FileExpandableInfo) v.getTag();
+        int position = mPropertyList.indexOf(vh);
         int id = v.getId();
 
         if (id == R.id.select_all) {
@@ -135,69 +138,87 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
     @Override
     public boolean onLongClick(final View v) {
         final TextItemDialog dlg = new TextItemDialog(mExpandableListView.getContext());
-        dlg.setOnClickListener(new Function1<Integer, Unit>() {
-            @Override
-            public Unit invoke(Integer integer) {
-                String path = (String) v.getTag();
-                if (integer == 0) {
-                    Bundle bundle = WebViewFragment.Companion.openWithMIME(path);
-                    Intent intent = ActionBarFragmentActivity.Companion.newInstance(mContext, WebViewFragment.class, bundle);
-                    mContext.startActivity(intent);
-                } else if (integer == 1) {
-                    openFile(path);
-                }
-                dlg.cancel();
-                return null;
+        if (v.getTag() instanceof String) {
+            final String path = (String) v.getTag();
+            FileUtil.MediaFileType type = FileUtil.INSTANCE.getMediaFileTypeByName(path);
+            if (type == FileUtil.MediaFileType.MOVIE) {
+                dlg.setupItem(new String[]{mContext.getString(R.string.open), mContext.getString(R.string.cancel)});
+                dlg.setOnClickListener(new Function1<Integer, Unit>() {
+                    @Override
+                    public Unit invoke(Integer integer) {
+                        if (integer == 0) {
+                            openFile(path);
+                        } else if (integer == 1) {
+                        }
+                        dlg.cancel();
+                        return null;
+                    }
+                });
+            } else {
+                dlg.setupItem(new String[]{mContext.getString(R.string.open), mContext.getString(R.string.open_by_others), mContext.getString(R.string.cancel)});
+                dlg.setOnClickListener(new Function1<Integer, Unit>() {
+                    @Override
+                    public Unit invoke(Integer integer) {
+                        if (integer == 0) {
+                            Bundle bundle = WebViewFragment.openWithMIME(path);
+                            Intent intent = ActionBarFragmentActivity.newInstance(mContext, WebViewFragment.class, bundle);
+                            mContext.startActivity(intent);
+                        } else if (integer == 1) {
+                            openFile(path);
+                        }
+                        dlg.cancel();
+                        return null;
+                    }
+                });
             }
-        });
-        dlg.setupItem(new String[]{mContext.getString(R.string.open), mContext.getString(R.string.open_by_others), mContext.getString(R.string.cancel)});
-        dlg.show();
+            dlg.show();
+        }
         return true;
     }
 
 
     public void onFoldFiles(LinkedHashMap<String, List<String>> foldFiles, String[] names) {
         if (names == null) return;
-        List<VH> newArr = new ArrayList<>();
+        List<FileExpandableInfo> newArr = new ArrayList<>();
 
         boolean selectAll = mSelectAll;
         mSelectAll = false;
         for (String name : names) {
-            VH vh = new VH(name, foldFiles.get(name));
+            FileExpandableInfo vh = new FileExpandableInfo(name, foldFiles.get(name));
             if (selectAll) {
                 vh.activate(true);
             }
-            for (VH last : mVHList) {
-                if (last.group.equals(vh.group)) {
+            for (FileExpandableInfo last : mPropertyList) {
+                if (last.getGroup().equals(vh.getGroup())) {
                     vh.activate(last.isActivated());
-                    vh.activatedList = last.activatedList;
+                    vh.setActivatedList(last.getActivatedList());
                 }
             }
             newArr.add(vh);
         }
 
-        mVHList = newArr;
+        mPropertyList = newArr;
         notifyDataSetChanged();
     }
 
     @Override
     public int getGroupCount() {
-        return mVHList.size();
+        return mPropertyList.size();
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return mVHList.get(groupPosition).childList.size();
+        return mPropertyList.get(groupPosition).getChildList().size();
     }
 
     @Override
     public Object getGroup(int groupPosition) {
-        return mVHList.get(groupPosition);
+        return mPropertyList.get(groupPosition);
     }
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return mVHList.get(groupPosition).childList.get(childPosition);
+        return mPropertyList.get(groupPosition).getChildList().get(childPosition);
     }
 
     @Override
@@ -217,11 +238,11 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        VH vh = (VH) getGroup(groupPosition);
-        String f = vh.group;
+        FileExpandableInfo vh = (FileExpandableInfo) getGroup(groupPosition);
+        String f = vh.getGroup();
         String thumb = null;
-        if (vh.childList.size() != 0)
-            thumb = vh.childList.get(0);
+        if (vh.getChildList().size() != 0)
+            thumb = vh.getChildList().get(0);
         if (convertView == null)
             convertView = LayoutInflater.from(mContext).inflate(R.layout.layout_file_group_item, parent, false);
 
@@ -242,7 +263,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         child.setActivated(vh.isActivated());
 
         TextView fileCount = (TextView) convertView.findViewById(R.id.file_count);
-        fileCount.setText(String.valueOf(vh.childList.size()));
+        fileCount.setText(String.valueOf(vh.getChildList().size()));
 
         convertView.setTag(getGroup(groupPosition));
         child.setTag(getGroup(groupPosition));
@@ -250,10 +271,10 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         child.setOnClickListener(this);
         convertView.setOnLongClickListener(this);
 
-        int activeSize = vh.activatedList.size();
-        if (activeSize != 0 && activeSize != vh.childList.size()) {
+        int activeSize = vh.getActivatedList().size();
+        if (activeSize != 0 && activeSize != vh.getChildList().size()) {
             child.setBackgroundResource(R.mipmap.check_normal_pure);
-            child.setText(String.valueOf(vh.activatedList.size()));
+            child.setText(String.valueOf(vh.getActivatedList().size()));
         }
         if (isExpanded) mExpandableListView.expandGroup(groupPosition);
         return convertView;
@@ -262,7 +283,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         String f = (String) getChild(groupPosition, childPosition);
-        VH vh = (VH) getGroup(groupPosition);
+        FileExpandableInfo vh = (FileExpandableInfo) getGroup(groupPosition);
         if (convertView == null)
             convertView = LayoutInflater.from(mContext).inflate(R.layout.layout_file_item, parent, false);
 
@@ -296,15 +317,15 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
     }
 
     protected void setGroupViewThumb(FileUtil.MediaFileType type, String thumb, ImageView icon, TextView text) {
-        setGroupViewThumb(type,thumb,icon,text,null);
+        setGroupViewThumb(type, thumb, icon, text, null);
     }
 
     protected void setGroupViewThumb(FileUtil.MediaFileType type, String thumb, ImageView icon, TextView text, RequestOptions options) {
         if (type == FileUtil.MediaFileType.MOVIE ||
                 type == FileUtil.MediaFileType.IMG) {
-            if(options==null){
+            if (options == null) {
                 Glide.with(mContext).load(thumb).listener(mRequestListener).into(icon);
-            }else{
+            } else {
                 Glide.with(mContext).load(thumb).listener(mRequestListener).apply(options).into(icon);
             }
         } else if (type == FileUtil.MediaFileType.APP) {
@@ -324,15 +345,15 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
     }
 
     protected void setChildViewThumb(FileUtil.MediaFileType type, String f, ImageView icon) {
-        setChildViewThumb(type,f,icon,null);
+        setChildViewThumb(type, f, icon, null);
     }
 
-    protected void setChildViewThumb(FileUtil.MediaFileType type, String f, ImageView icon,RequestOptions options) {
+    protected void setChildViewThumb(FileUtil.MediaFileType type, String f, ImageView icon, RequestOptions options) {
         if (type == FileUtil.MediaFileType.MOVIE ||
                 type == FileUtil.MediaFileType.IMG) {
-            if(options==null){
+            if (options == null) {
                 Glide.with(mContext).load(f).listener(mRequestListener).into(icon);
-            }else{
+            } else {
                 Glide.with(mContext).load(f).listener(mRequestListener).apply(options).into(icon);
             }
         } else if (type == FileUtil.MediaFileType.APP) {
@@ -367,69 +388,6 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         }
     };
 
-    public static class VH implements Cloneable {
-
-        public List<String> childList;
-
-        public String group;
-
-        private boolean isActivated = false;
-
-        private List<String> activatedList = new ArrayList<>();
-
-        public VH(String group, List<String> childList) {
-            this.group = group;
-            this.childList = childList;
-        }
-
-        public boolean isActivated() {
-            return isActivated;
-        }
-
-        public void activate(boolean active) {
-            isActivated = active;
-            if (isActivated) {
-                activatedList.clear();
-                activatedList.addAll(childList);
-            } else {
-                activatedList.clear();
-            }
-        }
-
-        public void activateItem(boolean active, String file) {
-            if (active) {
-                if (activatedList.indexOf(file) < 0) {
-                    activatedList.add(file);
-                }
-                if (activatedList.size() == childList.size()) {
-                    isActivated = true;
-                }
-            } else {
-                activatedList.remove(file);
-                if (activatedList.size() != childList.size()) {
-                    isActivated = false;
-                }
-            }
-        }
-
-        public boolean isItemActivated(String file) {
-            return activatedList.indexOf(file) >= 0;
-        }
-
-        public List<String> getActivatedList() {
-            return activatedList;
-        }
-
-        @Override
-        public Object clone() {
-            try {
-                return super.clone();
-            } catch (CloneNotSupportedException e) {
-                return null;
-            }
-        }
-    }
-
     class Worker extends Thread {
 
         @Override
@@ -440,10 +398,24 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
             if (mTitle.equalsIgnoreCase("Apk")) {
                 List<String> arrayList = new ArrayList<String>();
                 List<PackageInfo> installedApps = FileUtil.INSTANCE.getInstalledApps(mContext, false);
+                Collections.sort(installedApps, new Comparator<PackageInfo>() {
+                    public int compare(PackageInfo lhs, PackageInfo rhs) {
+                        if (lhs == null || rhs == null) {
+                            return 0;
+                        }
+                        if (lhs.lastUpdateTime < rhs.lastUpdateTime) {
+                            return 1;
+                        } else if (lhs.lastUpdateTime > rhs.lastUpdateTime) {
+                            return -1;
+                        } else {
+                            return 0;
+                        }
+                    }
+                });
                 for (PackageInfo packageInfo : installedApps) {
                     arrayList.add(packageInfo.applicationInfo.sourceDir);
                 }
-                res.put("已安装", arrayList);
+                res.put(mContext.getString(R.string.installed), arrayList);
                 mInstalledAppNames = FileUtil.INSTANCE.getInstallAppsNameByPathArray(mContext, arrayList.toArray(new String[0]));
             }
 
@@ -457,6 +429,8 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
             });
             mWorker = null;
         }
+
+
     }
 
     protected void openFile(String path) {
@@ -479,7 +453,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         public void onClick(View v) {
             String file = (String) v.getTag();
             CheckBox checkBox = (CheckBox) v;
-            VH vh = (VH) v.getTag(R.id.extra_tag);
+            FileExpandableInfo vh = (FileExpandableInfo) v.getTag(R.id.extra_tag);
 
             if (checkBox.isChecked()) {
                 vh.activateItem(true, file);
@@ -492,8 +466,8 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
 
     public List<String> getSelectedFile() {
         List<String> files = new ArrayList<>();
-        for (int i = 0; i < mVHList.size(); i++) {
-            VH vh = mVHList.get(i);
+        for (int i = 0; i < mPropertyList.size(); i++) {
+            FileExpandableInfo vh = mPropertyList.get(i);
             files.addAll(vh.getActivatedList());
         }
         return files;
@@ -505,18 +479,18 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
 
     public void selectAll(boolean select) {
         mSelectAll = select;
-        for (VH vh : mVHList) {
+        for (FileExpandableInfo vh : mPropertyList) {
             vh.activate(select);
         }
         notifyDataSetChanged();
     }
 
-    public void replaceVhList(List<VH> vhList) {
-        mVHList = vhList;
+    public void replaceVhList(List<FileExpandableInfo> vhList) {
+        mPropertyList = vhList;
     }
 
-    public List<VH> getVhList() {
-        return mVHList;
+    public List<FileExpandableInfo> getPropertyList() {
+        return mPropertyList;
     }
 
     public String getTitle() {

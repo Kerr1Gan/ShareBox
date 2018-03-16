@@ -2,21 +2,26 @@ package com.ecjtu.sharebox.ui.dialog
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.BottomSheetDialog
+import android.support.v4.app.Fragment
 import android.util.DisplayMetrics
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import com.ecjtu.sharebox.R
+import com.ecjtu.sharebox.ui.fragment.SimpleDialogFragment
 
 
 /**
  * Created by KerriGan on 2017/6/2.
  */
 
-abstract class BaseBottomSheetDialog : BottomSheetDialog {
+abstract class BaseBottomSheetDialog : BottomSheetDialog, SimpleDialogFragment.IActivityResult {
+
+    private var mFragmentHost: Fragment? = null
 
     constructor(context: Context, activity: Activity? = null, theme: Int = 0) : super(context, theme) {
         //do nothing
@@ -100,4 +105,16 @@ abstract class BaseBottomSheetDialog : BottomSheetDialog {
     public fun windowTranslucent() {
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    }
+
+    override fun setFragmentHost(fragment: Fragment?) {
+        mFragmentHost = fragment
+    }
+
+    override fun getFragmentHost(): Fragment? {
+        return mFragmentHost
+    }
+
 }

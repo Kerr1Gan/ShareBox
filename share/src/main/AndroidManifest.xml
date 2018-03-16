@@ -8,7 +8,8 @@
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <!-- Bugly -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -26,7 +27,7 @@
         <activity
             android:name=".ui.activity.MainActivity"
             android:launchMode="singleInstance"
-            android:theme="@style/MainActivityStyle">
+            android:theme="@style/CCImageStatusBarStyle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,9 +35,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".ui.activity.ImmersiveFragmentActivity"
-            android:theme="@style/ImageStatusBarStyle" />
         <activity
             android:name=".ui.activity.TestActivity"
             android:exported="true" />
@@ -55,15 +53,6 @@
             android:exported="true"
             android:label="@string/title_activity_settings"
             android:theme="@style/AppPreferenceTheme" />
-        <activity
-            android:name=".ui.activity.ActionBarFragmentActivity"
-            android:exported="true"
-            android:theme="@style/AppPreferenceTheme" />
-
-        <activity
-            android:name=".ui.activity.RotateNoCreateActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize|mcc|mnc"
-            android:theme="@style/ImageStatusBarStyle" />
     </application>
 
 </manifest>

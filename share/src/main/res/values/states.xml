@@ -5,4 +5,9 @@
         <item>@mipmap/hotspot</item>
         <item>@mipmap/wifi_off</item>
     </array>
+
+    <string-array name="file_pick_dialog_toolbar_array">
+        <item>ALL</item>
+        <item>CANCEL</item>
+    </string-array>
 </resources>

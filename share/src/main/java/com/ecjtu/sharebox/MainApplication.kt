@@ -7,12 +7,16 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Environment
 import android.support.v4.content.LocalBroadcastManager
+import android.util.Log
 import com.bumptech.glide.Glide
 import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory
 import com.bumptech.glide.load.engine.cache.LruResourceCache
 import com.bumptech.glide.module.AppGlideModule
+import com.ecjtu.sharebox.parcel.FileExpandablePropertyCache
+import com.ecjtu.sharebox.ui.activity.MainActivity
+import com.ecjtu.sharebox.ui.dialog.FilePickDialog
 import com.google.android.gms.ads.MobileAds
 import com.tencent.bugly.crashreport.CrashReport
 import org.ecjtu.channellibrary.wifidirect.WifiDirectManager
@@ -32,6 +36,8 @@ class MainApplication : Application() {
 
     private val mActivityList = ArrayList<WeakReference<Activity?>>()
 
+    private val FILE_CATEGORIES = arrayOf("Movie", "Music", "Photo", "Doc", "Apk", "Rar")
+
     override fun onCreate() {
         super.onCreate()
         if (isAppMainProcess(packageName)) {
@@ -42,6 +48,7 @@ class MainApplication : Application() {
     }
 
     private fun initMainProcess() {
+        Log.i("ShareBox", "init main process")
         val module = SimpleGlideModule()
         val builder = GlideBuilder()
         module.applyOptions(this, builder)
@@ -59,6 +66,8 @@ class MainApplication : Application() {
         initError()
 
         initSDK()
+
+        loadCache()
 
         this.registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
             override fun onActivityPaused(activity: Activity?) {
@@ -78,6 +87,9 @@ class MainApplication : Application() {
                     if (activity == act || act == null) {
                         iter.remove()
                     }
+                }
+                if (activity is MainActivity) {
+                    mSavedInstance.clear()
                 }
             }
 
@@ -103,7 +115,7 @@ class MainApplication : Application() {
         System.exit(0)
     }
 
-    fun closeActivityByIndex(start: Int, end: Int = mActivityList.size) {
+    fun closeActivitiesByIndex(start: Int, end: Int = mActivityList.size) {
         if (start >= end) return
         var index = 0
         val iter = mActivityList.iterator()
@@ -324,5 +336,24 @@ class MainApplication : Application() {
             }
         }
         return false
+    }
+
+    private fun loadCache() {
+        val array = FILE_CATEGORIES
+        val cache = FileExpandablePropertyCache(filesDir.absolutePath)
+        for (key in array) {
+            mSavedInstance.put(FilePickDialog.EXTRA_PROPERTY_LIST + key, cache.get(key))
+        }
+    }
+
+    fun saveCache() {
+        val array = FILE_CATEGORIES
+        val cache = FileExpandablePropertyCache(filesDir.absolutePath)
+        for (key in array) {
+            val obj = mSavedInstance.get(FilePickDialog.EXTRA_PROPERTY_LIST + key)
+            if (obj != null && (obj is List<*>)) {
+                cache.put(key, obj)
+            }
+        }
     }
 }

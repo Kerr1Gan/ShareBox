@@ -1,7 +1,10 @@
 package com.ecjtu.sharebox.presenter
 
 import android.Manifest
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.net.wifi.WifiInfo
@@ -11,6 +14,7 @@ import android.preference.PreferenceManager
 import android.provider.Settings
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.ActivityCompat
+import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.LinearLayoutManager
@@ -22,37 +26,40 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
+import com.ecjtu.componentes.activity.ActionBarFragmentActivity
+import com.ecjtu.netcore.RequestManager
+import com.ecjtu.netcore.network.IRequestCallback
 import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.PreferenceInfo
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.getMainApplication
-import com.ecjtu.sharebox.notification.ServerComingNotification
-import com.ecjtu.sharebox.ui.activity.ActionBarFragmentActivity
+import com.ecjtu.sharebox.model.DeviceModel
+import com.ecjtu.sharebox.notification.ServerNotification
 import com.ecjtu.sharebox.ui.activity.MainActivity
 import com.ecjtu.sharebox.ui.activity.SettingsActivity
 import com.ecjtu.sharebox.ui.adapter.DeviceRecyclerViewAdapter
-import com.ecjtu.sharebox.ui.dialog.ApDataDialog
-import com.ecjtu.sharebox.ui.dialog.EditNameDialog
-import com.ecjtu.sharebox.ui.dialog.TextItemDialog
-import com.ecjtu.sharebox.ui.dialog.WifiBottomSheetDialog
+import com.ecjtu.sharebox.ui.dialog.*
 import com.ecjtu.sharebox.ui.fragment.FilePickDialogFragment
 import com.ecjtu.sharebox.ui.fragment.HelpFragment
+import com.ecjtu.sharebox.ui.fragment.SimpleDialogFragment
 import com.ecjtu.sharebox.ui.fragment.WebViewFragment
 import com.ecjtu.sharebox.ui.state.StateMachine
 import com.ecjtu.sharebox.util.activity.ActivityUtil
 import com.ecjtu.sharebox.util.photo.CapturePhotoHelper
 import com.ecjtu.sharebox.util.photo.PickPhotoHelper
 import org.ecjtu.channellibrary.devicesearch.DeviceSearcher
-import org.ecjtu.channellibrary.devicesearch.DiscoverHelper
 import org.ecjtu.channellibrary.wifiutil.NetworkUtil
+import org.ecjtu.easyserver.server.ConversionFactory
 import org.ecjtu.easyserver.server.DeviceInfo
+import org.json.JSONObject
 import java.io.File
-import java.lang.Exception
+import java.net.HttpURLConnection
 
 
 /**
  * Created by KerriGan on 2017/6/2.
  */
+@Suppress("UsePropertyAccessSyntax")
 class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner), ActivityCompat.OnRequestPermissionsResultCallback {
 
     private var mToolbar: Toolbar
@@ -75,7 +82,8 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
     private val mRequestPermission = arrayOf(Manifest.permission.ACCESS_NETWORK_STATE,
             Manifest.permission.CHANGE_NETWORK_STATE,
             Manifest.permission.ACCESS_NETWORK_STATE,
-            Manifest.permission.CHANGE_WIFI_STATE)
+            Manifest.permission.CHANGE_WIFI_STATE,
+            Manifest.permission.WRITE_SETTINGS)
 
     private var mRecyclerView: RecyclerView? = null
 
@@ -93,6 +101,26 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         const val DEBUG = true
         private const val TAG = "MainActivityDelegate"
         private const val TAG_FRAGMENT = "FilePickDialogFragment"
+    }
+
+    private val mUpdateDeviceInfoReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.extras != null) {
+                val ip = intent.extras.getString(ApDataDialog.EXTRA_IP)
+                if (!TextUtils.isEmpty(ip)) {
+                    val json = intent.extras.getString(ApDataDialog.EXTRA_JSON)
+                    try {
+                        val deviceInfo = ConversionFactory.json2DeviceInfo(JSONObject(json))
+                        ServerNotification(context!!).buildServerNotification("搜索到新的设备", deviceInfo.name, "ShareBox:" + "找到新的设备").send()
+                        if (mDeviceInfoList.indexOf(deviceInfo) < 0) {
+                            mDeviceInfoList.add(deviceInfo)
+                            mRecyclerView?.adapter?.notifyDataSetChanged()
+                        }
+                    } catch (ex: Exception) {
+                    }
+                }
+            }
+        }
     }
 
     init {
@@ -162,7 +190,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
 
         mWifiImageStateMachine = object : StateMachine(owner, R.array.main_activity_delegate_array, mWifiImage) {
             override fun updateView(index: Int) {
-                val value = getArrayValueByIndex(index)
+                val value = getArrayRefByIndex(index)
                 value?.let {
                     mWifiImage.setImageResource(value)
                 }
@@ -174,6 +202,9 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         initDrawerLayout()
 
         doSearch()
+
+        val filter = IntentFilter(ApDataDialog.ACTION_UPDATE_DEVICE)
+        LocalBroadcastManager.getInstance(owner).registerReceiver(mUpdateDeviceInfoReceiver, filter)
     }
 
     private fun initDrawerLayout() {
@@ -241,18 +272,32 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
                 if (state == Constants.NetWorkState.MOBILE || state == Constants.NetWorkState.NONE) {
                     Toast.makeText(owner, R.string.need_wifi_or_hotspot, Toast.LENGTH_SHORT).show()
                 } else {
-                    val dialog = ApDataDialog(owner, owner)
-                    dialog.show()
+                    val dialog = ApDataDialog(owner)
+                    SimpleDialogFragment(dialog).show(owner.supportFragmentManager, "ap_data_dialog")
                 }
                 return true
             }
             R.id.refresh -> {
                 if (owner.refreshing) {
-                    owner.getMainService()?.prepareAndStartHelper(true,true)
+                    owner.getMainService()?.startSearch()
                 } else {
-                    owner.getMainService()?.stopHelper(true,true)
+                    owner.getMainService()?.stopSearch()
                 }
                 return true
+            }
+            R.id.search_ip -> {
+                val dlg = IPSearchDialog(owner)
+                dlg.setCallback { ip ->
+                    RequestManager.requestDeviceInfo(ip, object : IRequestCallback {
+                        override fun onSuccess(httpURLConnection: HttpURLConnection?, response: String) {
+                            LocalBroadcastManager.getInstance(owner).sendBroadcast(Intent().apply {
+                                setAction(ApDataDialog.ACTION_UPDATE_DEVICE).putExtra(ApDataDialog.EXTRA_IP, ip)
+                                putExtra(ApDataDialog.EXTRA_JSON, response)
+                            })
+                        }
+                    })
+                }
+                dlg.show()
             }
         }
         return false
@@ -274,8 +319,8 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         }
 
         if (hasPermission) {
-            var dialog = ApDataDialog(owner, owner)
-            dialog.show()
+            var dialog = ApDataDialog(owner)
+            SimpleDialogFragment(dialog).show(owner.supportFragmentManager, "ap_data_dialog")
         }
     }
 
@@ -340,76 +385,91 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
 
         val name = PreferenceManager.getDefaultSharedPreferences(owner).
                 getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
-        var obj = owner.getMainApplication().getSavedInstance().get(Constants.KEY_SERVER_PORT)
-        var port = ""
-        if (obj is String)
-            port = obj
+        var port = PreferenceManager.getDefaultSharedPreferences(owner).getInt(Constants.PREF_SERVER_PORT, 0)
 
-        if (TextUtils.isEmpty(port)) return
+        if (port == 0) {
+            port = owner.getServerService()?.port ?: 0
+            if (port == 0) return
+        }
 
-        owner.getMainService()?.createHelper(name, port.toInt(), "/API/Icon")
-        owner.getMainService()?.setMessageListener { msg, deviceSet, handler ->
-            var state = owner.getMainApplication().getSavedInstance().get(Constants.AP_STATE)
-            var ip = ""
+        owner.getMainService()?.createHelper(name, port, "/API/Icon")
+        owner.getMainService()?.setMessageListener { ip, _, msg ->
+            val state = owner.getMainApplication().getSavedInstance().get(Constants.AP_STATE)
+            var self = ""
             if (state == Constants.NetWorkState.WIFI) {
                 val ips = NetworkUtil.getLocalWLANIps()
                 if (ips.isNotEmpty())
-                    ip = NetworkUtil.getLocalWLANIps()[0]
+                    self = NetworkUtil.getLocalWLANIps()[0]
             } else if (state == Constants.NetWorkState.AP) {
                 val ips = NetworkUtil.getLocalApIps()
                 if (ips.isNotEmpty())
-                    ip = NetworkUtil.getLocalApIps()[0]
+                    self = NetworkUtil.getLocalApIps()[0]
             }
-            when (msg) {
-                DiscoverHelper.MSG_FIND_DEVICE -> {
-
-                    for (obj in deviceSet) {
-                        if (isSelf(ip, obj)) continue
-                        val index = mClientSet.indexOf(obj)
-                        if (index < 0) {
-                            mClientSet.add(obj)
-                            ServerComingNotification(owner).buildServerComingNotification("搜索到新的设备", obj.name, "ShareBox:" + "找到新的设备").send()
-                        } else {
-                            val old = mClientSet.get(index)
-                            old.name = obj.name
-                            old.room = obj.room
+            val msgStr = String(msg)
+            val params = msgStr.split(",")
+            if (params.size >= 3) {
+                try {
+                    val devModel = DeviceModel(params[0], params[1].toInt(), params[2])
+                    if (!isSelf(self, ip)) {
+                        owner.getHandler()?.post {
+                            applyDeviceInfo(ip, devModel)
                         }
                     }
-                    applyDeviceInfo(mClientSet)
-                    if (owner.refreshing) {
-                        var msg = handler.obtainMessage(DiscoverHelper.MSG_START_FIND_DEVICE)
-                        handler.sendMessageDelayed(msg, DELAY_TIME)
-                    }
-                }
-                DiscoverHelper.MSG_BEING_SEARCHED -> {
-                    for (obj in deviceSet) {
-                        if (isSelf(ip, obj)) continue
-                        var index = mServerSet.indexOf(obj)
-                        if (index < 0) {
-                            mServerSet.add(obj)
-                        } else {
-                            var old = mServerSet.get(index)
-                            old.name = obj.name
-                            old.room = obj.room
-                        }
-                    }
-                    applyDeviceInfo(mServerSet)
-                    if (owner.refreshing) {
-                        var msg = handler.obtainMessage(DiscoverHelper.MSG_START_BEING_SEARCHED)
-                        handler.sendMessageDelayed(msg, DELAY_TIME)
-                    }
-                }
-                DiscoverHelper.MSG_START_FIND_DEVICE -> {
-                    owner.getMainService()?.prepareAndStartHelper(true, true)
-                }
-                DiscoverHelper.MSG_START_BEING_SEARCHED -> {
-                    owner.getMainService()?.prepareAndStartHelper(true, true)
+                } catch (ex: Exception) {
+                    ex.printStackTrace()
                 }
             }
         }
 
         if (owner.refreshing) {
-            owner.getMainService()?.prepareAndStartHelper(true, true)
+            owner.getMainService()?.startSearch()
+        }
+    }
+
+    private fun applyDeviceInfo(ip: String, deviceModel: DeviceModel) {
+        var flag: Boolean
+        flag = false
+        var old: DeviceInfo? = null
+        for (info in mDeviceInfoList) {
+            if (info.ip.equals(ip)) {
+                flag = true
+                old = info
+            }
+        }
+
+        if (!flag) {
+            val deviceInfo = DeviceInfo(deviceModel.name, ip, deviceModel.port, deviceModel.icon)
+            mDeviceInfoList.add(deviceInfo)
+            mRecyclerView?.adapter?.notifyDataSetChanged()
+        } else {
+
+            if (deviceModel.port != 0) {
+                var needUpdate = false
+                if (old?.port != deviceModel.port || old.icon != deviceModel.icon) {
+                    needUpdate = true
+                    Log.e(TAG, "need update recycler view")
+                }
+
+                old?.name = deviceModel.name
+                old?.port = deviceModel.port
+                old?.icon = deviceModel.icon
+
+                if (needUpdate) {
+                    mRecyclerView?.adapter?.notifyDataSetChanged()
+                }
+            }
+        }
+
+        val index = mViewSwitcher?.indexOfChild(mRecyclerView)
+        val nextIndex = mViewSwitcher?.indexOfChild(mViewSwitcher?.nextView)
+        if (mDeviceInfoList.size != 0) {
+            if (index == nextIndex) {
+                mViewSwitcher?.showNext()
+            }
+        } else {
+            if (index != nextIndex) {
+                mViewSwitcher?.showNext()
+            }
         }
     }
 
@@ -502,13 +562,24 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         return false
     }
 
+    private fun isSelf(self: String, ip: String): Boolean {
+        if (DEBUG) return false
+
+        if (self == ip) {
+            return true
+        }
+        return false
+    }
+
     fun onDestroy() {
-        owner.getMainService()?.stopHelper(true,true)
+        owner.getMainService()?.stopSearch()
         mPhotoHelper?.clearCache()
         mImageHelper?.clearCache()
+        LocalBroadcastManager.getInstance(owner).unregisterReceiver(mUpdateDeviceInfoReceiver)
     }
 
     fun getRecyclerView(): RecyclerView? {
         return mRecyclerView
     }
+
 }
