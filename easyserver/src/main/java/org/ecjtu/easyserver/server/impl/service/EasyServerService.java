@@ -43,6 +43,8 @@ import static org.ecjtu.easyserver.server.impl.server.EasyServer.TYPE_P2P;
  */
 public class EasyServerService extends Service implements HostInterface.ICallback {
 
+    private static final String TAG_NAME = "EasyServerService";
+
     private EasyServer mEasyServer = null;
 
     private Notification mNotification;
@@ -99,6 +101,7 @@ public class EasyServerService extends Service implements HostInterface.ICallbac
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.i(TAG_NAME, "onCreate");
         isBind = false;
         initNotification();
         initEasyServer();
@@ -165,15 +168,20 @@ public class EasyServerService extends Service implements HostInterface.ICallbac
     @Override
     public void onDestroy() {
         System.out.println("easyserver后台服务终止");
+        Log.i(TAG_NAME, "onDestroy");
         isBind = false;
         super.onDestroy();
 
         stopForeground(true);
         this.unregisterReceiver(mReceiver);
 
-        if (mEasyServer != null)
+        if (mEasyServer != null) {
             mEasyServer.interrupt();
-
+            try {
+                mEasyServer.join(10 * 1000);
+            } catch (InterruptedException e) {
+            }
+        }
     }
 
     @Override
@@ -225,7 +233,7 @@ public class EasyServerService extends Service implements HostInterface.ICallbac
 
     @Override
     public void ready(Object server, String hostIP, int port) {
-        Log.d("easyserver", "server ready " + server.toString());
+        Log.i(TAG_NAME, "server ready " + server.toString() + " host ip:" + hostIP + " port:" + port);
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
         editor.putString(Constants.PREF_KEY_HOST_IP, hostIP);
         editor.putInt(Constants.PREF_KEY_HOST_PORT, port);

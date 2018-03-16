@@ -99,10 +99,8 @@ public class HTTPHeader
 	{
 		String bigName = name.toUpperCase();
 		try {
-			//��ȡһ��
 			String lineStr = reader.readLine();
 			while (lineStr != null && 0 < lineStr.length()) {
-				//������Ϣͷ
 				HTTPHeader header = new HTTPHeader(lineStr);
 				if (header.hasName() == false) {
 					 lineStr = reader.readLine();

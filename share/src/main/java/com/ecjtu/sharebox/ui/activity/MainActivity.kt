@@ -244,7 +244,7 @@ class MainActivity : ImmersiveFragmentActivity() {
                         Log.i("WifiApReceiver", "ap " + s)
                     }
                 }
-            } else if (action == WIFI_STATE_CHANGED_ACTION) {
+            } else if (action == WIFI_STATE_CHANGED_ACTION) { // wifi 连接上时，有可能不会回调
                 val localState = intent.getIntExtra(EXTRA_WIFI_STATE, -1)
                 when (localState) {
                     WIFI_STATE_ENABLED -> {
@@ -272,8 +272,12 @@ class MainActivity : ImmersiveFragmentActivity() {
                 var info = intent.getParcelableExtra<NetworkInfo>(EXTRA_NETWORK_INFO)
                 Log.i("WifiApReceiver", "NetworkInfo " + info?.toString() ?: "null")
                 if (info != null && info.type == TYPE_MOBILE && (info.state == NetworkInfo.State.CONNECTED ||
-                                info.state == NetworkInfo.State.DISCONNECTED)) {
+                        info.state == NetworkInfo.State.DISCONNECTED)) {
                     mDelegate?.checkCurrentNetwork(null)
+                } else if (info != null && (info.state == NetworkInfo.State.CONNECTED)) {
+                    if (mDelegate?.checkCurrentNetwork(null) == true) {
+                        startServerService()
+                    }
                 }
             } else if (action == org.ecjtu.easyserver.server.Constants.ACTION_CLOSE_SERVER) {
                 getHandler()?.sendEmptyMessage(MSG_CLOSE_APP)
@@ -461,6 +465,8 @@ class MainActivity : ImmersiveFragmentActivity() {
     }
 
     fun stopServerService() {
+        Log.i(TAG, "stopServerService")
+        if (mService == null) return
         try {
             unbindService(mServiceConnection)
         } catch (ex: Exception) {
@@ -472,8 +478,11 @@ class MainActivity : ImmersiveFragmentActivity() {
     }
 
     fun startServerService() {
-        var intent = Intent(this@MainActivity, EasyServerService::class.java)
-        startService(intent)
-        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE)
+        Log.i(TAG, "startServerService")
+        if (mService == null) {
+            var intent = Intent(this@MainActivity, EasyServerService::class.java)
+            startService(intent)
+            bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE)
+        }
     }
 }
