@@ -1,11 +1,138 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ShareBox</string>
-    <string name="movie">视频</string>
-    <string name="music">音乐</string>
-    <string name="photo">照片</string>
-    <string name="doc">文档</string>
-    <string name="apk">安装包</string>
-    <string name="rar">压缩包</string>
 
+    <string name="movie">Movie</string>
+    <string name="music">Music</string>
+    <string name="photo">Photo</string>
+    <string name="doc">Doc</string>
+    <string name="apk">Apk</string>
+    <string name="rar">Rar</string>
+
+    <string name="wifi">WIFI</string>
+    <string name="hotspot">Hotspot</string>
+    <string name="edit_name">"Edit Name"</string>
+    <string name="loading">LOADING</string>
+    <string name="close">关闭</string>
+    <string name="open">打开</string>
+    <string name="open_by_others">其他方式打开</string>
+    <string name="name_too_long">名字太长啦呆逼</string>
+    <string name="no_permission">No Permission</string>
+    <string name="failure">失败</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <string name="client_has_not_yet_ready_try_later">对方还未准备好，请稍后再试</string>
+    <string name="details">详细信息</string>
+    <string name="positive">确定</string>
+    <string name="cancel">取消</string>
+    <string name="select_success">选择成功</string>
+
+    <string name="pick_from_camera">从照相机选择</string>
+    <string name="pick_from_album">从相册选择</string>
+    <string name="need_wifi_or_hotspot">需要连接WIFI或者开启热点</string>
+    <string name="cellular">移动数据</string>
+    <string name="no_internet">"No Internet"</string>
+
+    <string name="exit">exit</string>
+    <string name="faq">FAQ</string>
+    <string name="setting">Setting</string>
+    <string name="help">Help</string>
+    <string name="name_with_colon">Name:</string>
+    <string name="password_with_colon">Password:</string>
+    <string name="ip_with_colon">Ip:</string>
+    <string name="qr_code">QRCode</string>
+    <string name="use_browser_scanning_qr_code_to_connect">用浏览器扫描二维码连接热点:</string>
+    <string name="web">Web</string>
+    <string name="use_browser_scanning_qr_code_to_enter">用浏览器扫描二维码进入网页版:</string>
+    <string name="edit">Edit</string>
+    <string name="name">name</string>
+    <string name="select_file">选择文件</string>
+    <string name="view_help">View Help</string>
+    <string name="no_server_connect_to_another_wifi">No server,connect to another wifi</string>
+    <string name="also_you_can_share_videos">Also,you can share videos</string>
+    <string name="clear_cache">Clear cache</string>
+    <string name="do_you_want_to_clear_the_cache">Do you want to clear the cache?</string>
+    <string name="you_will_clear_cache">you will clear %s cache</string>
+
+    <string name="installed">已安装</string>
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_social_recommendations">Enable social recommendations</string>
+    <string name="pref_description_social_recommendations">Recommendations for people to contact
+        based on your message history
+    </string>
+
+    <string name="pref_title_display_name">Display name</string>
+    <string name="pref_default_display_name">KerriGan</string>
+
+    <string name="key_device_name">device_name</string>
+    <string name="key_clear_cache">clear_cache</string>
+
+    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
+    <string-array name="pref_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
+    <!-- Settings for Data & Sync -->
+    <string name="pref_header_data_sync">Data &amp; sync</string>
+
+    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <string-array name="list_preference_entries">
+        <item>Entry 1</item>
+        <item>Entry 2</item>
+        <item>Entry 3</item>
+    </string-array>
+
+    <string-array name="list_preference_entry_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="multi_select_list_preference_default_value" />
+
+    <string name="pref_title_system_sync_settings">System sync settings</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+
+    <string name="pref_title_new_message_notifications">New message notifications</string>
+
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_ringtone_silent">Silent</string>
+
+    <string name="pref_title_vibrate">Vibrate</string>
+    <string name="key_notification_message_ringtone">notifications_new_message_ringtone</string>
+    <string name="key_default_notification_message_ringtone">"content://settings/system/notification_sound"</string>
+    <string name="key_notification_vibrate">notifications_new_message_vibrate</string>
+    <string name="key_notification_on">notifications_new_message</string>
+
+
+    <string name="pref_permission">Permission</string>
 </resources>

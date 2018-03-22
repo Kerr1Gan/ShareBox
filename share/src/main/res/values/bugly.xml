@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bugly_id">18b1313e86</string>
+    <string name="bugly_id" translatable="false">18b1313e86</string>
 </resources>
