@@ -101,7 +101,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
     private var mWifiImageStateMachine: StateMachine? = null
 
     companion object {
-        const val DEBUG = true
+        const val DEBUG = false
         private const val TAG = "MainActivityDelegate"
         private const val TAG_FRAGMENT = "FilePickDialogFragment"
     }
@@ -556,7 +556,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
             icon.setImageBitmap(BitmapFactory.decodeFile(iconFile.absolutePath))
             thread {
                 var deviceInfo = owner.getMainApplication().getSavedInstance().get(Constants.KEY_INFO_OBJECT) as DeviceInfo?
-                deviceInfo?.iconPath = owner.filesDir.absolutePath
+                deviceInfo?.iconPath = owner.filesDir.absolutePath + "/" + Constants.ICON_HEAD
                 val helper = ServerInfoParcelableHelper(owner.filesDir.absolutePath)
                 helper.put(Constants.KEY_INFO_OBJECT, deviceInfo)
                 val intent = EasyServerService.getSetupServerIntent(owner, Constants.KEY_INFO_OBJECT)

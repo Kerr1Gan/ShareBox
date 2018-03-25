@@ -35,7 +35,7 @@
             android:id="@+id/ap_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/app_name"
+            android:hint="@string/ap_name"
             android:singleLine="true"
             android:textColor="@android:color/black" />
     </android.support.design.widget.TextInputLayout>
