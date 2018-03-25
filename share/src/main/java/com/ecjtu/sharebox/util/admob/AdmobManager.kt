@@ -18,7 +18,7 @@ import java.lang.ref.WeakReference
 open class AdmobManager(context: Context) : RewardedVideoAdListener, AdListener() {
 
     companion object {
-        private const val DEBUG = true
+        private const val DEBUG = false
     }
 
     private val mRequestBuilder = AdRequest.Builder()
