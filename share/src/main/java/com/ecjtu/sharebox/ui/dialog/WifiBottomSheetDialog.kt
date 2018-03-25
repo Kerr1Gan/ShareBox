@@ -12,7 +12,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import com.dd.CircularProgressButton
 import com.ecjtu.sharebox.R
@@ -84,7 +83,7 @@ open class WifiBottomSheetDialog : CloseBottomSheetDialog {
             mCircularButton?.progress = PROGRESS_START
         }
 
-        setTitle(context.getString(R.string.hotspot),vg)
+        setTitle(context.getString(R.string.hotspot), vg)
     }
 
     private fun usingLast() {
@@ -178,7 +177,7 @@ open class WifiBottomSheetDialog : CloseBottomSheetDialog {
         mCircularButton?.isIndeterminateProgressMode = true
         mCircularButton?.setOnClickListener {
             if (mHotspotName?.text.toString() == "" || mHotspotPwd?.text.toString() == "") {
-                Toast.makeText(context, "请正确填入名字和密码", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, R.string.input_correct_wifi_name_pwd, Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             if (mCircularButton?.progress == PROGRESS_START) {

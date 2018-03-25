@@ -22,7 +22,7 @@ class IPSearchDialog(activity: Activity) : CloseBottomSheetDialog(activity, acti
 
     override fun onCreateView(): View? {
         val supView = super.onCreateView()
-        setTitle("IP搜索", supView as ViewGroup)
+        setTitle(context.getString(R.string.searched_by_ip), supView as ViewGroup)
         val child = layoutInflater.inflate(R.layout.layout_ip_search_dialog, supView, false)
         supView.addView(child)
         return supView
@@ -34,10 +34,10 @@ class IPSearchDialog(activity: Activity) : CloseBottomSheetDialog(activity, acti
             (findViewById(R.id.progress_bar) as ProgressBar).visibility = View.VISIBLE
             edit?.let {
                 mIp = edit.text.toString()
-                if(!mIp.startsWith("http://")){
-                    mIp = "http://"+mIp
+                if (!mIp.startsWith("http://")) {
+                    mIp = "http://" + mIp
                 }
-                AsyncNetwork().request(mIp).setRequestCallback(object :IRequestCallbackV2{
+                AsyncNetwork().request(mIp).setRequestCallback(object : IRequestCallbackV2 {
                     override fun onSuccess(httpURLConnection: HttpURLConnection?, response: String) {
                         view.post {
                             (findViewById(R.id.progress_bar) as ProgressBar).visibility = View.INVISIBLE

@@ -37,11 +37,10 @@
                     android:background="@color/colorPrimary"
                     android:fitsSystemWindows="true"
                     android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                    app:title="@string/app_name"
-                    app:titleTextColor="@android:color/white"
+                    app:contentInsetStart="0dp"
                     app:contentInsetStartWithNavigation="0dp"
-                    app:contentInsetStart="0dp">
-                </android.support.v7.widget.Toolbar>
+                    app:title="@string/app_name"
+                    app:titleTextColor="@android:color/white"/>
 
                 <android.support.design.widget.CoordinatorLayout
                     android:layout_width="match_parent"
@@ -69,12 +68,12 @@
                                 android:orientation="horizontal">
 
                                 <ImageView
+                                    android:id="@+id/image_wifi"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
                                     android:layout_marginLeft="20dp"
-                                    android:src="@mipmap/hotspot"
-                                    android:id="@+id/image_wifi" />
+                                    android:src="@mipmap/hotspot" />
 
                                 <TextView
                                     android:id="@+id/ap_name"
@@ -82,8 +81,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
                                     android:layout_marginLeft="10dp"
-                                    android:textColor="@android:color/white"
                                     android:singleLine="true"
+                                    android:textColor="@android:color/white"
                                     android:textSize="20sp" />
                             </LinearLayout>
 
@@ -148,79 +147,80 @@
                     android:orientation="vertical">
 
                     <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/icon"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:src="@mipmap/logo"
+                        android:layout_gravity="center_horizontal"
                         android:layout_margin="45dp"
-                        android:id="@+id/icon"
-                        android:layout_gravity="center_horizontal"/>
+                        android:src="@drawable/ic_boy"
+                        tools:ignore="VectorDrawableCompat" />
 
                     <TextView
+                        android:id="@+id/text_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="12.5dp"
-                        android:textSize="18sp"
-                        android:gravity="center"
                         android:layout_gravity="center_horizontal"
                         android:background="@drawable/ripple_drawer_layout_item"
-                        android:id="@+id/text_name"
+                        android:gravity="center"
+                        android:padding="12.5dp"
+                        android:singleLine="true"
                         android:textColor="@android:color/white"
-                        android:singleLine="true"/>
+                        android:textSize="18sp" />
 
                     <TextView
+                        android:id="@+id/text_faq"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="12.5dp"
-                        android:text="@string/faq"
-                        android:textSize="18sp"
-                        android:textColor="@android:color/white"
+                        android:background="@drawable/ripple_drawer_layout_item"
                         android:drawableLeft="@mipmap/faq"
                         android:drawablePadding="15dp"
                         android:gravity="center_vertical"
-                        android:id="@+id/text_faq"
-                        android:background="@drawable/ripple_drawer_layout_item"/>
+                        android:padding="12.5dp"
+                        android:text="@string/faq"
+                        android:textColor="@android:color/white"
+                        android:textSize="18sp" />
 
                     <TextView
+                        android:id="@+id/text_setting"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="12.5dp"
-                        android:text="@string/setting"
-                        android:textSize="18sp"
-                        android:textColor="@android:color/white"
+                        android:background="@drawable/ripple_drawer_layout_item"
                         android:drawableLeft="@mipmap/setting"
                         android:drawablePadding="15dp"
                         android:gravity="center_vertical"
-                        android:id="@+id/text_setting"
-                        android:background="@drawable/ripple_drawer_layout_item"/>
+                        android:padding="12.5dp"
+                        android:text="@string/setting"
+                        android:textColor="@android:color/white"
+                        android:textSize="18sp" />
 
                     <TextView
+                        android:id="@+id/text_help"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="12.5dp"
-                        android:text="@string/help"
-                        android:textSize="18sp"
-                        android:textColor="@android:color/white"
+                        android:background="@drawable/ripple_drawer_layout_item"
                         android:drawableLeft="@mipmap/help"
                         android:drawablePadding="15dp"
                         android:gravity="center_vertical"
-                        android:id="@+id/text_help"
-                        android:background="@drawable/ripple_drawer_layout_item"/>
+                        android:padding="12.5dp"
+                        android:text="@string/help"
+                        android:textColor="@android:color/white"
+                        android:textSize="18sp" />
 
                 </LinearLayout>
             </ScrollView>
 
             <TextView
+                android:id="@+id/btn_close"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="12.5dp"
-                android:textAllCaps="true"
-                android:text="@string/exit"
-                android:id="@+id/btn_close"
-                android:textSize="18sp"
-                android:textColor="@android:color/white"
-                android:drawablePadding="15dp"
                 android:background="@drawable/ripple_drawer_layout_item"
-                android:gravity="center" />
+                android:drawablePadding="15dp"
+                android:gravity="center"
+                android:padding="12.5dp"
+                android:text="@string/exit"
+                android:textAllCaps="true"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
         </LinearLayout>
     </android.support.v4.widget.DrawerLayout>
 

@@ -55,7 +55,7 @@ class FilePickDialogFragment : AppCompatDialogFragment {
 
         return if (flag) {
             val builder = AlertDialog.Builder(context)
-            builder.setTitle("正在初始化中")
+            builder.setTitle(R.string.is_being_initialized)
                     .setView(R.layout.dialog_file_pick_loading)
                     .setPositiveButton(R.string.positive, { dialog: DialogInterface, which: Int ->
                     })

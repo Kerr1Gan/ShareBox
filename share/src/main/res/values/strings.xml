@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">ShareBox</string>
+    <string name="app_name">Video sharing</string>
 
-    <string name="movie">Movie</string>
+    <string name="movie">Video</string>
     <string name="music">Music</string>
     <string name="photo">Photo</string>
     <string name="doc">Doc</string>
@@ -12,27 +12,27 @@
     <string name="hotspot">Hotspot</string>
     <string name="edit_name">"Edit Name"</string>
     <string name="loading">LOADING</string>
-    <string name="close">关闭</string>
-    <string name="open">打开</string>
-    <string name="open_by_others">其他方式打开</string>
-    <string name="name_too_long">名字太长啦呆逼</string>
+    <string name="close">Close</string>
+    <string name="open">Open</string>
+    <string name="open_by_others">Open by other app</string>
+    <string name="name_too_long">name is too long</string>
     <string name="no_permission">No Permission</string>
-    <string name="failure">失败</string>
+    <string name="failure">fail</string>
     <string name="title_activity_settings">Settings</string>
 
-    <string name="client_has_not_yet_ready_try_later">对方还未准备好，请稍后再试</string>
-    <string name="details">详细信息</string>
-    <string name="positive">确定</string>
-    <string name="cancel">取消</string>
-    <string name="select_success">选择成功</string>
+    <string name="client_has_not_yet_ready_try_later">Not ready yet. Please try again later.</string>
+    <string name="details">Detailed information</string>
+    <string name="positive">Positive</string>
+    <string name="cancel">Cancel</string>
+    <string name="select_success">Select success</string>
 
-    <string name="pick_from_camera">从照相机选择</string>
-    <string name="pick_from_album">从相册选择</string>
-    <string name="need_wifi_or_hotspot">需要连接WIFI或者开启热点</string>
-    <string name="cellular">移动数据</string>
+    <string name="pick_from_camera">Selection from camera </string>
+    <string name="pick_from_album">Select from the album</string>
+    <string name="need_wifi_or_hotspot">Need to connect to WIFI or turn on hot spots</string>
+    <string name="cellular">Cellular</string>
     <string name="no_internet">"No Internet"</string>
 
-    <string name="exit">exit</string>
+    <string name="exit">Exit</string>
     <string name="faq">FAQ</string>
     <string name="setting">Setting</string>
     <string name="help">Help</string>
@@ -40,12 +40,12 @@
     <string name="password_with_colon">Password:</string>
     <string name="ip_with_colon">Ip:</string>
     <string name="qr_code">QRCode</string>
-    <string name="use_browser_scanning_qr_code_to_connect">用浏览器扫描二维码连接热点:</string>
+    <string name="use_browser_scanning_qr_code_to_connect">Scanning QR codes with browsers to connect hot spots:</string>
     <string name="web">Web</string>
-    <string name="use_browser_scanning_qr_code_to_enter">用浏览器扫描二维码进入网页版:</string>
+    <string name="use_browser_scanning_qr_code_to_enter">Scanning QR codes into a web page with a browser:</string>
     <string name="edit">Edit</string>
     <string name="name">name</string>
-    <string name="select_file">选择文件</string>
+    <string name="select_file">Select the file</string>
     <string name="view_help">View Help</string>
     <string name="no_server_connect_to_another_wifi">No server,connect to another wifi</string>
     <string name="also_you_can_share_videos">Also,you can share videos</string>
@@ -135,4 +135,28 @@
 
 
     <string name="pref_permission">Permission</string>
+
+    <string name="searched_new_device">Searched new device</string>
+    <string name="find_new_device">Find new device</string>
+    <string name="searched_by_ip">Searched by ip</string>
+    <string name="click_to_exit_app">Double click to exit app</string>
+    <string name="input_correct_wifi_name_pwd">Input correct wifi name password</string>
+    <string name="ap_name">Ap name</string>
+    <string name="ap_pwd">Ap pwd</string>
+    <string name="input_ip_to_search">Input ip to search</string>
+    <string name="ready">Ready</string>
+    <string name="end">End</string>
+    <string name="is_being_initialized">Being initialized</string>
+    <string-array name="help_fragment_steps">
+        <item>Step One</item>
+        <item>Step two</item>
+        <item>Step three</item>
+        <item>Finish</item>
+    </string-array>
+    <string-array name="help_fragment_summaries">
+        <item>Go to set name</item>
+        <item>Connect network</item>
+        <item>Pick files</item>
+        <item>Ready</item>
+    </string-array>
 </resources>

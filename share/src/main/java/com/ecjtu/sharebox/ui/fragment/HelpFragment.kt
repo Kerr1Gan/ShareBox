@@ -42,8 +42,8 @@ class HelpFragment : Fragment(), IStepperAdapter {
     }
 
     private fun initContent() {
-        mTitles = arrayOf("Step One", "Step two", "Step three", "Finish")
-        mSummaries = arrayOf("Go to set name", "Connect network", "Pick files", "准备完毕")
+        mTitles = resources.getStringArray(R.array.help_fragment_steps)
+        mSummaries = resources.getStringArray(R.array.help_fragment_summaries)
     }
 
     override fun getTitle(index: Int): String {
@@ -137,8 +137,8 @@ class HelpFragment : Fragment(), IStepperAdapter {
             }
 
             3 -> {
-                contentView.text = "准备完毕"
-                (view?.findViewById(R.id.button_next) as TextView).text = "结束"
+                contentView.setText(R.string.ready)
+                (view?.findViewById(R.id.button_next) as TextView).setText(R.string.end)
             }
         }
     }

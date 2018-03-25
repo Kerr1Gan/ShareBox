@@ -110,7 +110,7 @@ class SettingsActivity : AppCompatPreferenceActivity() {
             // updated to reflect the new value, per the Android Design
             // guidelines.
             bindPreferenceSummaryToValue(findPreference(getString(R.string.key_device_name)))
-            bindPreferenceSummaryToValue(findPreference("example_list"))
+//            bindPreferenceSummaryToValue(findPreference("example_list"))
             bindPreferenceSummaryToValue(findPreference(getString(R.string.key_clear_cache)))
         }
 

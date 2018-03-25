@@ -406,7 +406,7 @@ class MainActivity : ImmersiveFragmentActivity() {
             super.onBackPressed()
         } else {
             handler?.sendEmptyMessageDelayed(MSG_RELEASE_APPLICATION, Int.MAX_VALUE.toLong())
-            Toast.makeText(this, "再次点击将退出应用", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.click_to_exit_app, Toast.LENGTH_SHORT).show()
             thread {
                 try {
                     Thread.sleep(3 * 1000)

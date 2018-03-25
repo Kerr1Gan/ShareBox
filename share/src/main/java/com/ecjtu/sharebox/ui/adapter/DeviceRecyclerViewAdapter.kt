@@ -60,7 +60,7 @@ class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerInfo>, View
         val iconUrl = "${info?.ip}:${info?.port}${info?.icon}"
         holder?.itemView?.setTag(R.id.extra_tag, position)
         Glide.with(holder?.itemView?.context).load("http://" + iconUrl).
-                apply(RequestOptions().placeholder(R.mipmap.logo).skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE)).
+                apply(RequestOptions().placeholder(R.drawable.ic_boy).skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE)).
                 into(holder?.icon) // 规避缓存机制导致图片不刷新
 
         holder?.name?.setText(info?.name)
