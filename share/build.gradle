@@ -47,7 +47,7 @@ dependencies {
     compile 'com.tencent.bugly:crashreport:latest.release'
     testCompile 'junit:junit:4.12'
     compile(name: 'easyserver-release', ext: 'aar')
-    compile 'com.google.android.gms:play-services-ads:11.8.0'
+    compile 'com.google.firebase:firebase-ads:11.4.0'
 //    compile project(':easyserver')
     compile project(':netcore')
     compile project(':common-componentes')

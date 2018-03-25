@@ -120,14 +120,14 @@
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
     <!-- Example settings for Notifications -->
-    <string name="pref_header_notifications">Notifications</string>
+    <string name="pref_header_notifications">通知</string>
 
-    <string name="pref_title_new_message_notifications">New message notifications</string>
+    <string name="pref_title_new_message_notifications">显示通知</string>
 
-    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_title_ringtone">铃声</string>
     <string name="pref_ringtone_silent">Silent</string>
 
-    <string name="pref_title_vibrate">Vibrate</string>
+    <string name="pref_title_vibrate">振动</string>
     <string name="key_notification_message_ringtone">notifications_new_message_ringtone</string>
     <string name="key_default_notification_message_ringtone">"content://settings/system/notification_sound"</string>
     <string name="key_notification_vibrate">notifications_new_message_vibrate</string>
@@ -148,15 +148,15 @@
     <string name="end">结束</string>
     <string name="is_being_initialized">正在初始化中</string>
     <string-array name="help_fragment_steps">
-        <item>Step One</item>
-        <item>Step two</item>
-        <item>Step three</item>
-        <item>Finish</item>
+        <item>第一步</item>
+        <item>第二步</item>
+        <item>第三步</item>
+        <item>完成</item>
     </string-array>
     <string-array name="help_fragment_summaries">
-        <item>Go to set name</item>
-        <item>Connect network</item>
-        <item>Pick files</item>
-        <item>Ready</item>
+        <item>设置名字</item>
+        <item>连接网络</item>
+        <item>选择文件</item>
+        <item>准备好了</item>
     </string-array>
 </resources>
