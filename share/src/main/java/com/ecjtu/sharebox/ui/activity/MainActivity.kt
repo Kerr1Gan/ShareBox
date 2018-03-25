@@ -82,8 +82,8 @@ class MainActivity : ImmersiveFragmentActivity() {
                     recyclerView.paddingBottom + getNavigationBarHeight(this))
         }
 
-        //ad
-//        initAd()
+        // ad
+        initAd()
 
         mReceiver = WifiApReceiver()
         var filter = IntentFilter()
@@ -107,6 +107,7 @@ class MainActivity : ImmersiveFragmentActivity() {
         val intent = Intent(this, MainService::class.java)
         startService(intent)
         bindService(intent, mMainServiceConnection, Context.BIND_AUTO_CREATE)
+
     }
 
     override fun onStop() {
