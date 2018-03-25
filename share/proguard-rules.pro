@@ -103,15 +103,14 @@
     native <methods>;
 }
 
--keep public class * implements org.ecjtu.easyserver.servlet.BaseServlet{*;}
-
+#-keep public class * implements org.ecjtu.easyserver.servlet.BaseServlet{*;}
 #-keep public class org.ecjtu.easyserver.server.ServerManager{*;}
--keep public class org.ecjtu.easyserver.server.util.AssetsUtil{*;}
--keep public class org.ecjtu.easyserver.server.DeviceInfo{*;}
--keep public class org.ecjtu.easyserver.server.impl.service.EasyServerService{*;}
--keep public class org.ecjtu.easyserver.server.impl.server.EasyServer{*;}
-
--keepnames class org.ecjtu.easyserver.server.impl.service.EasyServerService$* {*;}
+#-keep public class org.ecjtu.easyserver.server.util.AssetsUtil{*;}
+#-keep public class org.ecjtu.easyserver.server.DeviceInfo{*;}
+#-keep public class org.ecjtu.easyserver.server.impl.service.EasyServerService{*;}
+#-keep public class org.ecjtu.easyserver.server.impl.server.EasyServer{*;}
+#-keepnames class org.ecjtu.easyserver.server.impl.service.EasyServerService$* {*;}
+-keep public class org.ecjtu.easyserver.**{*;}
 
 # 不混淆 Bugly
 -dontwarn com.tencent.bugly.**
