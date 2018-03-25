@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Point
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -67,6 +68,9 @@ class IjkVideoFragment : Fragment(), GestureDetector.OnGestureListener, View.OnT
             val uri = arg.getString(EXTRA_URI_PATH, "")
             if (!TextUtils.isEmpty(uri)) {
                 mVideoView?.setVideoPath(uri)
+                mVideoView?.start()
+            } else if (arg.getParcelable<Uri>("data") != null) {
+                mVideoView?.setVideoURI(arg.getParcelable<Uri>("data"))
                 mVideoView?.start()
             } else {
                 activity.finish()

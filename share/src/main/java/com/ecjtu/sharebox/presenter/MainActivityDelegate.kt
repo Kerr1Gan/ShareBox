@@ -51,9 +51,12 @@ import org.ecjtu.channellibrary.devicesearch.DeviceSearcher
 import org.ecjtu.channellibrary.wifiutil.NetworkUtil
 import org.ecjtu.easyserver.server.ConversionFactory
 import org.ecjtu.easyserver.server.DeviceInfo
+import org.ecjtu.easyserver.server.impl.service.EasyServerService
+import org.ecjtu.easyserver.server.util.cache.ServerInfoParcelableHelper
 import org.json.JSONObject
 import java.io.File
 import java.net.HttpURLConnection
+import kotlin.concurrent.thread
 
 
 /**
@@ -550,6 +553,14 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         if (iconFile.exists()) {
             val icon = findViewById(R.id.drawer_view)?.findViewById(R.id.icon) as ImageView //有相同id 找到错误的view
             icon.setImageBitmap(BitmapFactory.decodeFile(iconFile.absolutePath))
+            thread {
+                var deviceInfo = owner.getMainApplication().getSavedInstance().get(Constants.KEY_INFO_OBJECT) as DeviceInfo?
+                deviceInfo?.iconPath = owner.filesDir.absolutePath
+                val helper = ServerInfoParcelableHelper(owner.filesDir.absolutePath)
+                helper.put(Constants.KEY_INFO_OBJECT, deviceInfo)
+                val intent = EasyServerService.getSetupServerIntent(owner, Constants.KEY_INFO_OBJECT)
+                owner.startService(intent)
+            }
         }
     }
 

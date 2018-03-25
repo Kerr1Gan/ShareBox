@@ -53,25 +53,22 @@
             android:label="@string/title_activity_settings"
             android:theme="@style/AppPreferenceTheme" />
 
-        <activity
-            android:name=".ui.activity.IjkVideoActivity"
-            android:exported="true"
-            android:process=":player">
+        <activity android:name=".ui.activity.IjkVideoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
                     android:mimeType="video/*"
-                    android:scheme="http" />
+                    android:scheme="file" />
                 <data
                     android:mimeType="video/*"
-                    android:scheme="file" />
-                <!--<data android:mimeType="audio/*" android:scheme="http"/>-->
-                <!--<data android:mimeType="audio/*" android:scheme="file"/>-->
+                    android:scheme="http" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

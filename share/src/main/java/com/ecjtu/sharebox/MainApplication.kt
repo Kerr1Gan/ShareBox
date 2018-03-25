@@ -40,7 +40,7 @@ class MainApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        if (isAppMainProcess(packageName)) {
+        if (isAppMainProcess(BuildConfig.APPLICATION_ID)) {
             initMainProcess()
         } else {
             //child process
