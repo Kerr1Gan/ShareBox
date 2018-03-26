@@ -159,4 +159,8 @@
         <item>Pick files</item>
         <item>Ready</item>
     </string-array>
+
+    <string name="connect_wifi">Connect wifi</string>
+    <string name="or">or</string>
+    <string name="connect_ap">Connect ap</string>
 </resources>

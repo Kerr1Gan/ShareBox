@@ -11,6 +11,12 @@
         android:layout_marginTop="12dp" />
 
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/or" />
+
+    <TextView
         android:id="@+id/item_content_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -34,7 +40,7 @@
             android:id="@+id/button_prev"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
             android:text="@android:string/cancel" />
 
     </LinearLayout>

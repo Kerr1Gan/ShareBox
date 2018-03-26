@@ -159,4 +159,8 @@
         <item>选择文件</item>
         <item>准备好了</item>
     </string-array>
+
+    <string name="connect_wifi">连接Wifi</string>
+    <string name="or">或者</string>
+    <string name="connect_ap">连接热点</string>
 </resources>

@@ -97,10 +97,10 @@ class HelpFragment : Fragment(), IStepperAdapter {
             }
 
             1 -> {
-                contentView.text = "connect wifi"
+                contentView.text = getString(R.string.connect_wifi)
                 contentView.paintFlags = Paint.UNDERLINE_TEXT_FLAG
-                val contentView2 = view?.findViewById(R.id.item_content_2) as TextView
-                contentView2.text = "open hotspot"
+                val contentView2 = view.findViewById(R.id.item_content_2) as TextView
+                contentView2.text = getString(R.string.connect_ap)
                 contentView2.paintFlags = Paint.UNDERLINE_TEXT_FLAG
 
                 contentView.setOnClickListener {
