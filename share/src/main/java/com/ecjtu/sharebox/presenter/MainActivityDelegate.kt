@@ -213,10 +213,15 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
 
     private fun initDrawerLayout() {
         mTextName = findViewById(R.id.text_name) as TextView
-
+        val locale = owner.resources.configuration.locale
+        val lan = locale.language.toLowerCase() + "_" + locale.country.toLowerCase()
+        var faq = "faq.html"
+        if (lan == "zh_cn") {
+            faq = "faq_$lan.html"
+        }
         findViewById(R.id.text_faq)?.setOnClickListener {
             var intent = ActionBarFragmentActivity.newInstance(owner, WebViewFragment::class.java,
-                    WebViewFragment.openInnerUrl("faq.html"), "FAQ")
+                    WebViewFragment.openInnerUrl(faq), "FAQ")
             owner.startActivity(intent)
         }
 
@@ -255,13 +260,11 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
             var dlg = EditNameDialog(activity = owner, context = owner)
             dlg.show()
             dlg.setOnDismissListener({
-                mTextName?.setText(PreferenceManager.getDefaultSharedPreferences(owner).
-                        getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL))
+                mTextName?.setText(PreferenceManager.getDefaultSharedPreferences(owner).getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL))
             })
         }
 
-        mTextName?.setText(PreferenceManager.getDefaultSharedPreferences(owner).
-                getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL))
+        mTextName?.setText(PreferenceManager.getDefaultSharedPreferences(owner).getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL))
         checkIconHead()
     }
 
@@ -387,8 +390,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
 
     fun doSearch() {
 
-        val name = PreferenceManager.getDefaultSharedPreferences(owner).
-                getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
+        val name = PreferenceManager.getDefaultSharedPreferences(owner).getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
         var port = PreferenceManager.getDefaultSharedPreferences(owner).getInt(Constants.PREF_SERVER_PORT, 0)
 
         if (port == 0) {
