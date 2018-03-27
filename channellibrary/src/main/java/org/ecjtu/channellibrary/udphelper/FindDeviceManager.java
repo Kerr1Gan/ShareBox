@@ -3,7 +3,6 @@ package org.ecjtu.channellibrary.udphelper;
 import android.util.Log;
 
 import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.lang.ref.WeakReference;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -67,7 +66,7 @@ public class FindDeviceManager {
                         e.printStackTrace();
                     } catch (IOException e) {
                         e.printStackTrace();
-                        if (e instanceof InterruptedIOException) {
+                        if (Thread.interrupted()) {
                             Thread.currentThread().interrupt();
                         }
                     }
@@ -126,7 +125,7 @@ public class FindDeviceManager {
                         Thread.currentThread().interrupt();
                     } catch (IOException e) {
                         e.printStackTrace();
-                        if (e instanceof InterruptedIOException) {
+                        if (Thread.interrupted()) {
                             Thread.currentThread().interrupt();
                         }
                     }
