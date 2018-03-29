@@ -2,10 +2,10 @@ package com.ecjtu.sharebox
 
 import android.app.Activity
 import android.app.ActivityManager
-import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.os.Environment
+import android.support.multidex.MultiDexApplication
 import android.support.v4.content.LocalBroadcastManager
 import android.util.Log
 import com.bumptech.glide.Glide
@@ -31,7 +31,7 @@ import kotlin.collections.ArrayList
 /**
  * Created by KerriGan on 2017/6/9 0009.
  */
-class MainApplication : Application() {
+class MainApplication : MultiDexApplication() {
     private val mSavedInstance = HashMap<String, Any>()
 
     private val mActivityList = ArrayList<WeakReference<Activity?>>()
