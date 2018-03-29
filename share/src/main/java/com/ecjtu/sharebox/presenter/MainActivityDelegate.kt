@@ -17,6 +17,7 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
@@ -101,7 +102,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
     private var mWifiImageStateMachine: StateMachine? = null
 
     companion object {
-        const val DEBUG = false
+        const val DEBUG = true
         private const val TAG = "MainActivityDelegate"
         private const val TAG_FRAGMENT = "FilePickDialogFragment"
     }
@@ -275,7 +276,8 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
 
                 var map = owner.getMainApplication().getSavedInstance()
                 var state = map.get(Constants.AP_STATE)
-
+                val dialog = AlertDialog.Builder(owner).create()
+                SimpleDialogFragment(dialog).show(owner.supportFragmentManager, "ap_data_dialog")
                 if (state == Constants.NetWorkState.MOBILE || state == Constants.NetWorkState.NONE) {
                     Toast.makeText(owner, R.string.need_wifi_or_hotspot, Toast.LENGTH_SHORT).show()
                 } else {
