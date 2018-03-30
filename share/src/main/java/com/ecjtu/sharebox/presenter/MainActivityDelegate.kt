@@ -276,8 +276,6 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
 
                 var map = owner.getMainApplication().getSavedInstance()
                 var state = map.get(Constants.AP_STATE)
-                val dialog = AlertDialog.Builder(owner).create()
-                SimpleDialogFragment(dialog).show(owner.supportFragmentManager, "ap_data_dialog")
                 if (state == Constants.NetWorkState.MOBILE || state == Constants.NetWorkState.NONE) {
                     Toast.makeText(owner, R.string.need_wifi_or_hotspot, Toast.LENGTH_SHORT).show()
                 } else {

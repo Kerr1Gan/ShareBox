@@ -51,13 +51,13 @@ public class FindDeviceManager {
                     mBroadcastSocket.setSoTimeout(DEFAULT_TIME_OUT);
                 }
                 localSocket = mBroadcastSocket;
+                byte[] sendData = new byte[1];
+                byte[] local = new byte[mBroadcastData.length];
                 while (!Thread.currentThread().isInterrupted()) {
                     try {
-                        byte[] sendData = new byte[1];
                         InetAddress broadIP = InetAddress.getByName("255.255.255.255");// 255.255.255.255 会发送给局域网内所有设备 https://segmentfault.com/q/1010000004918877
                         DatagramPacket sendPack = new DatagramPacket(sendData, sendData.length, broadIP, UDP_PORT);
                         if (mBroadcastData != null) {
-                            byte[] local = new byte[mBroadcastData.length];
                             System.arraycopy(mBroadcastData, 0, local, 0, mBroadcastData.length);
                             sendPack.setData(local);
                             localSocket.send(sendPack);
@@ -105,9 +105,9 @@ public class FindDeviceManager {
                     mReceiveSocket = new DatagramSocket(UDP_PORT);
                 }
                 localSocket = mReceiveSocket;
+                byte[] data = new byte[1024 * 10];
                 while (!Thread.currentThread().isInterrupted()) {
                     try {
-                        byte[] data = new byte[1024 * 10];
                         DatagramPacket pack = new DatagramPacket(data, data.length);
                         localSocket.receive(pack);
                         if (mReceiveListener != null) {
@@ -125,7 +125,7 @@ public class FindDeviceManager {
                         Thread.currentThread().interrupt();
                     } catch (IOException e) {
                         e.printStackTrace();
-                        if (Thread.interrupted()) {
+                        if (Thread.interrupted()) { // 该方法调用后将会清楚interrupt标志位，而Thread.currentThread.interrupted()不会清除标志位
                             Thread.currentThread().interrupt();
                         }
                     }

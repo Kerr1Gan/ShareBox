@@ -30,9 +30,10 @@ class SimpleDialogFragment : AppCompatDialogFragment {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return if (mDialog != null) {
+        val local = mDialog
+        return if (local != null) {
             mReset = false
-            mDialog!!
+            local
         } else {
             mReset = true
             AlertDialog.Builder(context).create()
