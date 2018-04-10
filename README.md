@@ -4,6 +4,8 @@
 
 家庭看片神器，可以用手机播放电脑里的视频，也可以用电脑播放手机里的视频，使用简单，能稳定运行在后台，目前支持的设备有Windows，Mac，Android。
 
+最新版本下载 [Release](https://github.com/Kerr1Gan/ShareBox/releases/download/master/share-release.apk)
+
 功能
 --------
 1. 手机分享视频等文件给其他手机
@@ -14,7 +16,6 @@
 预览
 --------
 ![phone](https://kerr1gan.github.io/sharebox/mobile.png)
-
 
 ![desktop](https://kerr1gan.github.io/sharebox/desktop.png)
 
