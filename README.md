@@ -11,8 +11,10 @@
 3. 电脑分享视频等文件给手机
 4. 电脑分享视频等文件给其他电脑
 
+预览
+--------
 ![phone](https://kerr1gan.github.io/sharebox/mobile.png)
-功能
+
 
 ![desktop](https://kerr1gan.github.io/sharebox/desktop.png)
 
