@@ -122,3 +122,7 @@
 # Admob
 -keep public class com.google.**{*;}
 -dontwarn com.google.**
+
+# 不混淆 ijk ++
+-keep class tv.danmaku.**{*;}
+# ijk --
