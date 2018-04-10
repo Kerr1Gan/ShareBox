@@ -4,17 +4,17 @@
 
 家庭看片神器，可以用手机播放电脑里的视频，也可以用电脑播放手机里的视频，使用简单，能稳定运行在后台，目前支持的设备有Windows，Mac，Android。
 
-![phone](https://kerr1gan.github.io/sharebox/mobile.png)
 功能
-
-![desktop](https://kerr1gan.github.io/sharebox/desktop.png)
-功能
-
 --------
 1. 手机分享视频等文件给其他手机
 2. 手机分享视频等文件给电脑
 3. 电脑分享视频等文件给手机
 4. 电脑分享视频等文件给其他电脑
+
+![phone](https://kerr1gan.github.io/sharebox/mobile.png)
+功能
+
+![desktop](https://kerr1gan.github.io/sharebox/desktop.png)
 
 贡献
 --------
