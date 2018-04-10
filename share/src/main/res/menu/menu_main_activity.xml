@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/refresh"
+        android:icon="@drawable/rotate_refresh"
+        android:title="Refresh"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/qr_code"
+        android:icon="@mipmap/qr_code"
+        android:title="Qr"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/search_ip"
+        android:icon="@drawable/ic_add"
+        android:title="Search by ip"
+        app:showAsAction="always" />
+</menu>

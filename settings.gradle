@@ -1,1 +1,1 @@
-include ':app', ':channellibrary', ':floatinglibrary'
+include ':share', ':channellibrary', ':circularprogresslibrary', ':materialstepper', ':ijkplayer-java', ':ijkplayer-exo', ':netcore', ':parcel', ':common-componentes', ':qrcode'
