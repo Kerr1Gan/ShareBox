@@ -41,6 +41,6 @@ Thanks
 * The **java player** [Java desktop program][https://github.com/clayandgithub/javaplayer].
 * Everyone who has contributed code and reported issues!
 
-* [LICENSE](https://github.com/Kerr1Gan/ShareBox/blob/master/LICENSE)
+> [LICENSE](https://github.com/Kerr1Gan/ShareBox/blob/master/LICENSE)
 
 > 有问题及时联系 mnsync@outlook.com
