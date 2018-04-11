@@ -8,7 +8,7 @@
 
 [Android](https://github.com/Kerr1Gan/ShareBox/releases/download/master/share-release.apk)
 
-[Windows 64](http://www.flesh.com/ShareBox_Win.zip)
+[Windows 64](http://www.fleshapps.com/ShareBox_Win.zip)
 
 功能
 --------
