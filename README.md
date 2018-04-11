@@ -34,6 +34,13 @@
 1. bug有一些但不影响正常使用，欢迎大家贡献代码
 2. 也可以提一些设计稿，或者新功能之类的可以提Issue或发邮件至下方邮箱
 
+Thanks
+------
+* The **vlc** [Open souce video player][http://www.videolan.org/].
+* The **vlcj** [Java framework for the vlc media player][https://github.com/caprica/vlcj].
+* The **java player** [Java desktop program][https://github.com/clayandgithub/javaplayer].
+* Everyone who has contributed code and reported issues!
+
 * [LICENSE](https://github.com/Kerr1Gan/ShareBox/blob/master/LICENSE)
 
 > 有问题及时联系 mnsync@outlook.com
