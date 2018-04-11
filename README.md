@@ -24,7 +24,7 @@
 贡献
 --------
 1. bug有一些但不影响正常使用，欢迎大家贡献代码
-2. 也可以提一些设计稿，或者新功能之类的发邮件至下方邮箱
+2. 也可以提一些设计稿，或者新功能之类的可以提Issue或发邮件至下方邮箱
 
 * [LICENSE](https://github.com/Kerr1Gan/ShareBox/blob/master/LICENSE)
 
