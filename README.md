@@ -10,6 +10,8 @@
 
 [Windows 64](http://www.fleshapps.com/ShareBox_Win.zip)
 
+[Mac 64](http://www.fleshapps.com/ShareBox_Mac.zip)
+
 [Web]() (直接在浏览器中输入程序显示的ip和端口号即可进入,例如:192.168.43.1:8000)
 
 功能
@@ -23,7 +25,7 @@
 安装
 --------
 1. Android直接安装apk，打开就可以使用了。
-2. Windows平台需要安装Java环境，然后在解压目录下打开控制台，输入 java -jar ShareBox.jar 回车即可运行。
+2. Windows和Mac平台需要安装Java环境，然后在解压目录下打开控制台，输入 java -jar ShareBox.jar 回车即可运行。
 
 使用
 --------
