@@ -8,12 +8,20 @@
 
 [Android](https://github.com/Kerr1Gan/ShareBox/releases/download/master/share-release.apk)
 
+[Windows 64](http://www.flesh.com/ShareBox_Win.zip)
+
 功能
 --------
 1. 手机分享视频等文件给其他手机
 2. 手机分享视频等文件给电脑
 3. 电脑分享视频等文件给手机
 4. 电脑分享视频等文件给其他电脑
+
+使用
+--------
+1. Android直接安装apk，打开就可以使用了。
+2. Windows平台需要安装Java环境，然后在解压目录下打开控制台，输入 java -jar ShareBox.jar 回车即可运行。
+
 
 预览
 --------
