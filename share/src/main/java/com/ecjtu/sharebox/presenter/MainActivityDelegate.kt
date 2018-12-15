@@ -17,7 +17,6 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
@@ -36,7 +35,7 @@ import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.model.DeviceModel
 import com.ecjtu.sharebox.notification.ServerNotification
-import com.ecjtu.sharebox.ui.activity.MainActivity
+import com.ecjtu.sharebox.ui.main.MainActivity
 import com.ecjtu.sharebox.ui.activity.SettingsActivity
 import com.ecjtu.sharebox.ui.adapter.DeviceRecyclerViewAdapter
 import com.ecjtu.sharebox.ui.dialog.*

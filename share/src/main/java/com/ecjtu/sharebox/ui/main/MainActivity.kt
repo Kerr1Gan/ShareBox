@@ -1,4 +1,4 @@
-package com.ecjtu.sharebox.ui.activity
+package com.ecjtu.sharebox.ui.main
 
 import android.animation.ObjectAnimator
 import android.content.*
@@ -36,7 +36,7 @@ import org.ecjtu.easyserver.server.impl.service.EasyServerService
 import org.ecjtu.easyserver.server.util.cache.ServerInfoParcelableHelper
 import kotlin.concurrent.thread
 
-class MainActivity : ImmersiveFragmentActivity() {
+class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
 
     companion object {
         const private val TAG = "MainActivity"
@@ -62,6 +62,8 @@ class MainActivity : ImmersiveFragmentActivity() {
     private var mAdManager: AdmobManager? = null
 
     private var mMainService: MainService? = null
+
+    private lateinit var presenter: MainContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,11 +97,15 @@ class MainActivity : ImmersiveFragmentActivity() {
         filter.addAction(org.ecjtu.easyserver.server.Constants.ACTION_CLOSE_SERVER)
         filter.addAction(org.ecjtu.easyserver.server.Constants.ACTION_UPDATE_SERVER)
         registerReceiver(mReceiver, filter)
+
+        presenter = MainPresenter()
     }
 
 
     override fun onResume() {
         super.onResume()
+        presenter.takeView(this)
+
         getMainApplication().closeActivitiesByIndex(1)
         var name = PreferenceManager.getDefaultSharedPreferences(this).getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
         (findViewById<View>(R.id.text_name) as TextView).setText(name)
@@ -117,6 +123,7 @@ class MainActivity : ImmersiveFragmentActivity() {
 
     override fun onPause() {
         super.onPause()
+        presenter.dropView()
     }
 
     override fun onDestroy() {
