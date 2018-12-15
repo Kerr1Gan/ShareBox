@@ -59,19 +59,19 @@ open class WifiBottomSheetDialog : CloseBottomSheetDialog {
     }
 
     private fun initView(vg: ViewGroup) {
-        mHotspotName = vg.findViewById(R.id.ap_name) as TextInputEditText
-        mHotspotPwd = vg.findViewById(R.id.ap_pwd) as TextInputEditText
+        mHotspotName = vg.findViewById<View>(R.id.ap_name) as TextInputEditText
+        mHotspotPwd = vg.findViewById<View>(R.id.ap_pwd) as TextInputEditText
 
-        mNameTextInput = vg.findViewById(R.id.text_input_ap) as TextInputLayout
+        mNameTextInput = vg.findViewById<View>(R.id.text_input_ap) as TextInputLayout
 
-        mPwdTextInput = vg.findViewById(R.id.text_input_pwd) as TextInputLayout
+        mPwdTextInput = vg.findViewById<View>(R.id.text_input_pwd) as TextInputLayout
 
         mHotspotName?.addTextChangedListener(mTextWatcherName)
         mHotspotPwd?.addTextChangedListener(mTextWatcherPwd)
 
         setupCircularProgressButton(vg)
 
-        vg.findViewById(R.id.text_use_last).setOnClickListener {
+        vg.findViewById<View>(R.id.text_use_last).setOnClickListener {
             usingLast()
         }
 
@@ -173,7 +173,7 @@ open class WifiBottomSheetDialog : CloseBottomSheetDialog {
     }
 
     fun setupCircularProgressButton(vg: ViewGroup) {
-        mCircularButton = vg.findViewById(R.id.circle_progress) as CircularProgressButton
+        mCircularButton = vg.findViewById<View>(R.id.circle_progress) as CircularProgressButton
         mCircularButton?.isIndeterminateProgressMode = true
         mCircularButton?.setOnClickListener {
             if (mHotspotName?.text.toString() == "" || mHotspotPwd?.text.toString() == "") {

@@ -57,7 +57,7 @@ class MainApplication : MultiDexApplication() {
 
         Glide.init(glide)
 
-        WifiDirectManager.getInstance(this)
+//        WifiDirectManager.getInstance(this)
 
         LocalBroadcastManager.getInstance(this)
 

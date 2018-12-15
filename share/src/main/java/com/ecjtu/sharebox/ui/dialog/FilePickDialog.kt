@@ -134,7 +134,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
     open protected fun initView(vg: ViewGroup) {
         initData()
 
-        var toolbar = vg.findViewById(R.id.toolbar) as Toolbar
+        var toolbar = vg.findViewById<View>(R.id.toolbar) as Toolbar
 
         toolbar.setNavigationIcon(ColorDrawable(Color.TRANSPARENT))
 
@@ -160,9 +160,9 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
 
         mBehavior?.setBottomSheetCallback(BottomSheetCallback(toolbar, this))
 
-        mTabLayout = vg.findViewById(R.id.tab_layout) as TabLayout
-        mViewPager = vg.findViewById(R.id.view_pager) as ViewPager
-        mProgressBar = vg.findViewById(R.id.progress_bar) as ProgressBar
+        mTabLayout = vg.findViewById<View>(R.id.tab_layout) as TabLayout
+        mViewPager = vg.findViewById<View>(R.id.view_pager) as ViewPager
+        mProgressBar = vg.findViewById<View>(R.id.progress_bar) as ProgressBar
 
         mViewPager?.adapter = getViewPagerAdapter()
 

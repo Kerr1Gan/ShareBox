@@ -20,7 +20,7 @@ class SplashFragment : Fragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adView = view?.findViewById(R.id.adView) as AdView
+        val adView = view?.findViewById<View>(R.id.adView) as AdView
         val request = AdRequest.Builder()
         adView.loadAd(request.build())
     }

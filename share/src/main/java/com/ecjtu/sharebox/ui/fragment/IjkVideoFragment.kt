@@ -54,7 +54,7 @@ class IjkVideoFragment : Fragment(), GestureDetector.OnGestureListener, View.OnT
             mMediaController = AndroidMediaController(context)
         mMediaController?.setMediaPlayerCallback(mCallback)
 
-        mVideoView = view?.findViewById(R.id.video_view) as IjkVideoView
+        mVideoView = view?.findViewById<View>(R.id.video_view) as IjkVideoView
         mVideoView?.setMediaController(mMediaController)
         mVideoView?.setOnInfoListener { mp, what, extra ->
             if (what == IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
@@ -83,8 +83,10 @@ class IjkVideoFragment : Fragment(), GestureDetector.OnGestureListener, View.OnT
         initOrientationListener()
 
         if (isNavigationBarShow(activity)) {
-            val root = view.findViewById(R.id.root)
-            root.setPadding(root.paddingLeft, root.paddingTop, view.paddingRight, view.paddingBottom + getNavigationBarHeight(activity))
+            val root = view.findViewById<View>(R.id.root)
+            if(root!=null){
+                root.setPadding(root.paddingLeft, root.paddingTop, view.paddingRight, view.paddingBottom + getNavigationBarHeight(activity))
+            }
         }
     }
 

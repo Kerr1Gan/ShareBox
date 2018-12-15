@@ -31,7 +31,7 @@ class VideoPlayerFragment : Fragment() {
 
         initOrientation()
 
-        var videoView = view?.findViewById(R.id.video_view) as VideoView
+        var videoView = view?.findViewById<View>(R.id.video_view) as VideoView
         var bundle = arguments
         if (bundle != null) {
             var path = bundle.getString(EXTRA_URI_PATH)

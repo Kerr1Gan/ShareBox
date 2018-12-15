@@ -26,7 +26,7 @@ open class CloseBottomSheetDialog : BaseBottomSheetDialog, View.OnClickListener 
     override fun onViewCreated(view: View?): Boolean {
         super.onViewCreated(view)
         transparentDialog()
-        var v = findViewById(R.id.btn_close)
+        var v = findViewById<View>(R.id.btn_close)
 
         (v?.parent as ViewGroup).setOnClickListener() {
             dismiss()
@@ -40,8 +40,8 @@ open class CloseBottomSheetDialog : BaseBottomSheetDialog, View.OnClickListener 
 
     open fun setTitle(title: String, vg: ViewGroup? = null) {
         if (vg == null)
-            (findViewById(R.id.text_title) as TextView).setText(title)
+            (findViewById<View>(R.id.text_title) as TextView).setText(title)
         else
-            (vg.findViewById(R.id.text_title) as TextView).setText(title)
+            (vg.findViewById<View>(R.id.text_title) as TextView).setText(title)
     }
 }

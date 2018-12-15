@@ -150,7 +150,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         mViewSwitcher?.addView(view0)
         mViewSwitcher?.addView(view1)
 
-        view0.findViewById(R.id.button_help).setOnClickListener {
+        view0.findViewById<View>(R.id.button_help).setOnClickListener {
             val intent = ActionBarFragmentActivity.newInstance(owner, HelpFragment::class.java, title = "Help")
             owner.startActivity(intent)
         }
@@ -554,7 +554,7 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
     fun checkIconHead() {
         val iconFile = File(owner.filesDir, Constants.ICON_HEAD)
         if (iconFile.exists()) {
-            val icon = findViewById(R.id.drawer_view)?.findViewById(R.id.icon) as ImageView //有相同id 找到错误的view
+            val icon = findViewById(R.id.drawer_view)?.findViewById<View>(R.id.icon) as ImageView //有相同id 找到错误的view
             icon.setImageBitmap(BitmapFactory.decodeFile(iconFile.absolutePath))
             thread {
                 var deviceInfo = owner.getMainApplication().getSavedInstance().get(Constants.KEY_INFO_OBJECT) as DeviceInfo?

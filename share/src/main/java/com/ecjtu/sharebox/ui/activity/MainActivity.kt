@@ -16,6 +16,7 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import com.bumptech.glide.Glide
@@ -66,13 +67,13 @@ class MainActivity : ImmersiveFragmentActivity() {
         super.onCreate(savedInstanceState)
 //        loadSplash()
         setContentView(R.layout.activity_main)
-        var toolbar = findViewById(R.id.toolbar) as Toolbar
+        var toolbar = findViewById<View>(R.id.toolbar) as Toolbar
 
         setSupportActionBar(toolbar)
 
         mDelegate = MainActivityDelegate(this)
 
-        var drawer = findViewById(R.id.drawer_view)
+        var drawer = findViewById<View>(R.id.drawer_view)
 
         if (isNavigationBarShow(this)) {
             drawer.setPadding(drawer.paddingLeft, drawer.paddingTop, drawer.paddingRight,
@@ -101,7 +102,7 @@ class MainActivity : ImmersiveFragmentActivity() {
         super.onResume()
         getMainApplication().closeActivitiesByIndex(1)
         var name = PreferenceManager.getDefaultSharedPreferences(this).getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
-        (findViewById(R.id.text_name) as TextView).setText(name)
+        (findViewById<View>(R.id.text_name) as TextView).setText(name)
 
         //resume service
         val intent = Intent(this, MainService::class.java)

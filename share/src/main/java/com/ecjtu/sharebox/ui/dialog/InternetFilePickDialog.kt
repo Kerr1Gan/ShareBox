@@ -3,6 +3,7 @@ package com.ecjtu.sharebox.ui.dialog
 import android.app.Activity
 import android.content.Context
 import android.support.v7.widget.Toolbar
+import android.view.View
 import android.view.ViewGroup
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.ui.adapter.FileExpandableAdapter
@@ -32,7 +33,7 @@ class InternetFilePickDialog : FilePickDialog {
     override fun initView(vg: ViewGroup) {
         super.initView(vg)
         refresh(false)
-        var toolbar = vg.findViewById(R.id.toolbar) as Toolbar
+        var toolbar = vg.findViewById<View>(R.id.toolbar) as Toolbar
         toolbar.title = mName
         toolbar.menu.clear()
     }

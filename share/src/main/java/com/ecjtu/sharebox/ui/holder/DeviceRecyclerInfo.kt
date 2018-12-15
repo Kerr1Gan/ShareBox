@@ -16,9 +16,9 @@ class DeviceRecyclerInfo(item: View) : RecyclerView.ViewHolder(item) {
     var fileCount: TextView? = null
 
     init {
-        icon = item.findViewById(R.id.icon) as ImageView
-        name = item.findViewById(R.id.name) as TextView
-        thumb = item.findViewById(R.id.content) as ImageView
-        fileCount = item.findViewById(R.id.file_count) as TextView
+        icon = item.findViewById<View>(R.id.icon) as ImageView
+        name = item.findViewById<View>(R.id.name) as TextView
+        thumb = item.findViewById<View>(R.id.content) as ImageView
+        fileCount = item.findViewById<View>(R.id.file_count) as TextView
     }
 }

@@ -38,13 +38,13 @@ class InternetFileExpandableAdapter(expandableListView: FileExpandableListView) 
 
     override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup?): View {
         var ret = super.getGroupView(groupPosition, isExpanded, convertView, parent)
-        ret.findViewById(R.id.select_all).visibility = View.INVISIBLE
+        ret.findViewById<View>(R.id.select_all).visibility = View.INVISIBLE
         return ret
     }
 
     override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup?): View {
         var ret = super.getChildView(groupPosition, childPosition, isLastChild, convertView, parent)
-        ret.findViewById(R.id.check_box).visibility = View.INVISIBLE
+        ret.findViewById<View>(R.id.check_box).visibility = View.INVISIBLE
         return ret
     }
 

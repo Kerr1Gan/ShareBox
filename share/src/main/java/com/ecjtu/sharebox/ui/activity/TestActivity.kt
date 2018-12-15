@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
 import com.ecjtu.sharebox.R
 import com.ecjtu.sharebox.ui.fragment.PageFragment
 import org.json.JSONObject
@@ -20,8 +21,8 @@ class TestActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_file_pick)
-        var mTabLayout = findViewById(R.id.tab_layout) as TabLayout
-        var mViewPager = findViewById(R.id.view_pager) as ViewPager
+        var mTabLayout = findViewById<View>(R.id.tab_layout) as TabLayout
+        var mViewPager = findViewById<View>(R.id.view_pager) as ViewPager
 
 //        mViewPager?.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(mTabLayout))
 

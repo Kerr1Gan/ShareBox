@@ -37,7 +37,7 @@ class HelpFragment : Fragment(), IStepperAdapter {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         initContent()
-        mVerticalStepperView = view!!.findViewById(R.id.vertical_stepper_view) as VerticalStepperView
+        mVerticalStepperView = view!!.findViewById<View>(R.id.vertical_stepper_view) as VerticalStepperView
         mVerticalStepperView!!.setStepperAdapter(this)
     }
 
@@ -62,13 +62,13 @@ class HelpFragment : Fragment(), IStepperAdapter {
         val inflateView = LayoutInflater.from(context).inflate(if (index != 1) R.layout.layout_vertical_stepper_sample_item_1 else R.layout.layout_vertical_stepper_sample_item_2,
                 parent, false)
         initEventListener(index, inflateView)
-        val nextButton = inflateView.findViewById(R.id.button_next) as Button
+        val nextButton = inflateView.findViewById<View>(R.id.button_next) as Button
         nextButton.setOnClickListener {
             if (!mVerticalStepperView!!.nextStep()) {
                 activity.finish()
             }
         }
-        val prevButton = inflateView.findViewById(R.id.button_prev) as Button
+        val prevButton = inflateView.findViewById<View>(R.id.button_prev) as Button
         prevButton.setOnClickListener {
             mVerticalStepperView!!.prevStep()
         }
@@ -84,7 +84,7 @@ class HelpFragment : Fragment(), IStepperAdapter {
     }
 
     private fun initEventListener(index: Int, view: View?) {
-        val contentView = view?.findViewById(R.id.item_content_1) as TextView
+        val contentView = view?.findViewById<View>(R.id.item_content_1) as TextView
         when (index) {
             0 -> {
                 contentView.paintFlags = Paint.UNDERLINE_TEXT_FLAG
@@ -99,7 +99,7 @@ class HelpFragment : Fragment(), IStepperAdapter {
             1 -> {
                 contentView.text = getString(R.string.connect_wifi)
                 contentView.paintFlags = Paint.UNDERLINE_TEXT_FLAG
-                val contentView2 = view.findViewById(R.id.item_content_2) as TextView
+                val contentView2 = view.findViewById<View>(R.id.item_content_2) as TextView
                 contentView2.text = getString(R.string.connect_ap)
                 contentView2.paintFlags = Paint.UNDERLINE_TEXT_FLAG
 
@@ -138,7 +138,7 @@ class HelpFragment : Fragment(), IStepperAdapter {
 
             3 -> {
                 contentView.setText(R.string.ready)
-                (view?.findViewById(R.id.button_next) as TextView).setText(R.string.end)
+                (view?.findViewById<View>(R.id.button_next) as TextView).setText(R.string.end)
             }
         }
     }

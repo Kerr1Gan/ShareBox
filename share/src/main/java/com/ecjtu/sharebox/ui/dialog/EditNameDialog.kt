@@ -54,13 +54,13 @@ class EditNameDialog(context: Context, activity: Activity) : CloseBottomSheetDia
     }
 
     private fun init(vg: ViewGroup) {
-        val editName = vg.findViewById(R.id.edit_name) as EditText
+        val editName = vg.findViewById<View>(R.id.edit_name) as EditText
         var name = PreferenceManager.getDefaultSharedPreferences(context).
                 getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
 
         editName.setText(name)
 
-        vg.findViewById(R.id.btn_edit).setOnClickListener {
+        vg.findViewById<View>(R.id.btn_edit).setOnClickListener {
             PreferenceManager.getDefaultSharedPreferences(context)
                     .edit()
                     .putString(PreferenceInfo.PREF_DEVICE_NAME, editName.text.toString())

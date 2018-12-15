@@ -29,9 +29,9 @@ class IPSearchDialog(activity: Activity) : CloseBottomSheetDialog(activity, acti
     }
 
     override fun onViewCreated(view: View?): Boolean {
-        val edit = view?.findViewById(R.id.edit) as TextView?
-        view?.findViewById(R.id.positive)?.setOnClickListener {
-            (findViewById(R.id.progress_bar) as ProgressBar).visibility = View.VISIBLE
+        val edit = view?.findViewById<View>(R.id.edit) as TextView?
+        view?.findViewById<View>(R.id.positive)?.setOnClickListener {
+            (findViewById<View>(R.id.progress_bar) as ProgressBar).visibility = View.VISIBLE
             edit?.let {
                 mIp = edit.text.toString()
                 if (!mIp.startsWith("http://")) {
@@ -40,7 +40,7 @@ class IPSearchDialog(activity: Activity) : CloseBottomSheetDialog(activity, acti
                 AsyncNetwork().request(mIp).setRequestCallback(object : IRequestCallbackV2 {
                     override fun onSuccess(httpURLConnection: HttpURLConnection?, response: String) {
                         view.post {
-                            (findViewById(R.id.progress_bar) as ProgressBar).visibility = View.INVISIBLE
+                            (findViewById<View>(R.id.progress_bar) as ProgressBar).visibility = View.INVISIBLE
                             mListener?.invoke(mIp)
                         }
                         this@IPSearchDialog.cancel()
@@ -48,7 +48,7 @@ class IPSearchDialog(activity: Activity) : CloseBottomSheetDialog(activity, acti
 
                     override fun onError(httpURLConnection: HttpURLConnection?, exception: Exception) {
                         view.post {
-                            (findViewById(R.id.progress_bar) as ProgressBar).visibility = View.INVISIBLE
+                            (findViewById<View>(R.id.progress_bar) as ProgressBar).visibility = View.INVISIBLE
                             mListener?.invoke("")
                         }
                         this@IPSearchDialog.cancel()

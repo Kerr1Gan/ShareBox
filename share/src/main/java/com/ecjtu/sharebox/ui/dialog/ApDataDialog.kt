@@ -58,7 +58,7 @@ class ApDataDialog(activity: Activity) : BaseBottomSheetDialog(activity, activit
     }
 
     override fun onViewCreated(view: View?): Boolean {
-        var behavior = BottomSheetBehavior.from(findViewById(android.support.design.R.id.design_bottom_sheet))
+        var behavior = BottomSheetBehavior.from(findViewById<View>(android.support.design.R.id.design_bottom_sheet))
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
         behavior.skipCollapsed = true
         return true
@@ -68,10 +68,10 @@ class ApDataDialog(activity: Activity) : BaseBottomSheetDialog(activity, activit
         var ip = if (mOthers) mIp else ""
         var port = if (mOthers) mPort else PreferenceManager.getDefaultSharedPreferences(ownerActivity).getInt(Constants.PREF_SERVER_PORT, mPort)
 
-        var ap = vg.findViewById(R.id.text_ap) as TextView
-        var name = vg.findViewById(R.id.text_name) as TextView
-        var pwd = vg.findViewById(R.id.text_pwd) as TextView
-        val textIp = vg.findViewById(R.id.text_ip) as TextView
+        var ap = vg.findViewById<View>(R.id.text_ap) as TextView
+        var name = vg.findViewById<View>(R.id.text_name) as TextView
+        var pwd = vg.findViewById<View>(R.id.text_pwd) as TextView
+        val textIp = vg.findViewById<View>(R.id.text_ip) as TextView
 
         if (NetworkUtil.isWifi(context)) {
             if (TextUtils.isEmpty(ip)) {
@@ -88,7 +88,7 @@ class ApDataDialog(activity: Activity) : BaseBottomSheetDialog(activity, activit
             name.setText(String.format(mFormat, name.text.toString(), ssid))
             pwd.visibility = View.GONE
 
-            vg.findViewById(R.id.qr_container)?.visibility = View.GONE
+            vg.findViewById<View>(R.id.qr_container)?.visibility = View.GONE
         } else if (NetworkUtil.isHotSpot(context)) {
             var ips = NetworkUtil.getLocalApIps()
             if (TextUtils.isEmpty(ip) && ips.isNotEmpty())
@@ -110,14 +110,14 @@ class ApDataDialog(activity: Activity) : BaseBottomSheetDialog(activity, activit
                 var px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 250f, context.resources.displayMetrics)
                 val qr = QrUtils.createQRImage(WifiUtil.setupWifiDataProtocol(ssid, preSharedKey), px.toInt(), px.toInt())
                 ownerActivity.runOnUiThread {
-                    darkImageView(vg.findViewById(R.id.image_qr) as ImageView)
+                    darkImageView(vg.findViewById<View>(R.id.image_qr) as ImageView)
                             .setImageBitmap(qr)
                 }
             }
         }
 
         var url = "http://$ip:$port"
-        (vg.findViewById(R.id.text_url) as TextView).apply {
+        (vg.findViewById<View>(R.id.text_url) as TextView).apply {
             paintFlags = Paint.UNDERLINE_TEXT_FLAG
             setText(url)
             setOnClickListener {
@@ -133,12 +133,12 @@ class ApDataDialog(activity: Activity) : BaseBottomSheetDialog(activity, activit
             var px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 250f, context.resources.displayMetrics)
             val qr = QrUtils.createQRImage(url, px.toInt(), px.toInt())
             ownerActivity.runOnUiThread {
-                darkImageView(vg.findViewById(R.id.image_url) as ImageView)
+                darkImageView(vg.findViewById<View>(R.id.image_url) as ImageView)
                         .setImageBitmap(qr)
             }
         }
 
-        vg.findViewById(R.id.enter).setOnClickListener {
+        vg.findViewById<View>(R.id.enter).setOnClickListener {
             val dlg = IPSearchDialog(ownerActivity)
             dlg.setCallback { ip ->
                 RequestManager.requestDeviceInfo(ip, object : IRequestCallback {
@@ -153,7 +153,7 @@ class ApDataDialog(activity: Activity) : BaseBottomSheetDialog(activity, activit
             dlg.show()
         }
 
-        vg.findViewById(R.id.qr_code).setOnClickListener {
+        vg.findViewById<View>(R.id.qr_code).setOnClickListener {
             getFragmentHost()?.startActivityForResult(Intent(context, QRCodeScannerActivity::class.java), 100)
         }
     }

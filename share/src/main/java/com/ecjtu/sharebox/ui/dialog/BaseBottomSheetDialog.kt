@@ -54,7 +54,7 @@ abstract class BaseBottomSheetDialog : BottomSheetDialog, SimpleDialogFragment.I
     }
 
     protected open fun onCreateView(): View? {
-        var behavior = BottomSheetBehavior.from(findViewById(android.support.design.R.id.design_bottom_sheet))
+        var behavior = BottomSheetBehavior.from(findViewById<View>(android.support.design.R.id.design_bottom_sheet))
         return null
     }
 
@@ -82,12 +82,12 @@ abstract class BaseBottomSheetDialog : BottomSheetDialog, SimpleDialogFragment.I
     }
 
     protected fun transparentDialog() {
-        getWindow().findViewById(R.id.design_bottom_sheet)
+        getWindow().findViewById<View>(R.id.design_bottom_sheet)
                 .setBackgroundResource(android.R.color.transparent)
     }
 
     public fun fullScreenBehavior(): Boolean {
-        var behavior = BottomSheetBehavior.from(findViewById(android.support.design.R.id.design_bottom_sheet))
+        var behavior = BottomSheetBehavior.from(findViewById<View>(android.support.design.R.id.design_bottom_sheet))
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
         behavior.skipCollapsed = true
         return true

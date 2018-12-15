@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatDialogFragment
 import android.util.Log
+import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.ecjtu.sharebox.R
@@ -80,8 +81,8 @@ class FilePickDialogFragment : AppCompatDialogFragment {
         mFindFilesHelper?.setProgressCallback { taskIndex, taskSize ->
             mActivity?.runOnUiThread {
                 val pert = taskIndex * 1f / (taskSize * 1f) * 100
-                val bar = (dialog as AlertDialog).findViewById(R.id.progress_bar) as ProgressBar
-                val txt = dialog.findViewById(R.id.percent) as TextView
+                val bar = (dialog as AlertDialog).findViewById<View>(R.id.progress_bar) as ProgressBar
+                val txt = dialog.findViewById<View>(R.id.percent) as TextView
                 txt.setText("${pert.toInt()}%")
                 bar.progress = pert.toInt()
             }
