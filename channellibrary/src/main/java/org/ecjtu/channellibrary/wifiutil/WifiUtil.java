@@ -333,7 +333,7 @@ public class WifiUtil {
 
             return (WifiConfiguration) method.invoke(wifiManager);
         } catch (Exception e) {
-//            Log.e(this.getClass().toString(), "", e);
+            e.printStackTrace();
             return null;
         }
     }
