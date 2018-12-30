@@ -24,8 +24,7 @@ import tv.danmaku.ijk.media.player.IMediaPlayer
 class IjkVideoFragment : Fragment(), GestureDetector.OnGestureListener, View.OnTouchListener {
 
     companion object {
-        @JvmField
-        val EXTRA_URI_PATH = "extra_uri_path"
+        const val EXTRA_URI_PATH = "extra_uri_path"
     }
 
     private var mMediaController: AndroidMediaController? = null
@@ -40,11 +39,11 @@ class IjkVideoFragment : Fragment(), GestureDetector.OnGestureListener, View.OnT
 
     private var mIgnoreOrientation: Boolean = false
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_ijk_video_player, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_ijk_video_player, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         init(view)
     }
@@ -73,29 +72,29 @@ class IjkVideoFragment : Fragment(), GestureDetector.OnGestureListener, View.OnT
                 mVideoView?.setVideoURI(arg.getParcelable<Uri>("data"))
                 mVideoView?.start()
             } else {
-                activity.finish()
+                activity?.finish()
             }
         } else {
-            activity.finish()
+            activity?.finish()
         }
 
         mGestureDetector = GestureDetector(activity, this)
         initOrientationListener()
 
-        if (isNavigationBarShow(activity)) {
+        if (isNavigationBarShow(activity!!)) {
             val root = view.findViewById<View>(R.id.root)
             if(root!=null){
-                root.setPadding(root.paddingLeft, root.paddingTop, view.paddingRight, view.paddingBottom + getNavigationBarHeight(activity))
+                root.setPadding(root.paddingLeft, root.paddingTop, view.paddingRight, view.paddingBottom + getNavigationBarHeight(activity!!))
             }
         }
     }
 
     private val mCallback = SimpleMediaController.MediaPlayerCallback {
         mIgnoreOrientation = !mIgnoreOrientation
-        if (activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) {
-            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT)
+        if (activity!!.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) {
+            activity!!.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT)
         } else {
-            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
+            activity!!.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
         }
     }
 
@@ -123,14 +122,14 @@ class IjkVideoFragment : Fragment(), GestureDetector.OnGestureListener, View.OnT
 
     private fun setOrientationConfig(orientation: Int) {
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN)
-            activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE)
+            activity!!.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            activity!!.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN)
+            activity!!.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE)
             //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
         } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-            activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN)
-            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            activity!!.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN)
+            activity!!.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
             val flags: Int
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
                 flags = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
@@ -141,7 +140,7 @@ class IjkVideoFragment : Fragment(), GestureDetector.OnGestureListener, View.OnT
             } else {
                 flags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
             }
-            activity.getWindow().getDecorView().setSystemUiVisibility(flags)
+            activity!!.getWindow().getDecorView().setSystemUiVisibility(flags)
         }
     }
 
@@ -153,13 +152,13 @@ class IjkVideoFragment : Fragment(), GestureDetector.OnGestureListener, View.OnT
                 }
                 // 设置竖屏
                 if (rotation >= 0 && rotation <= 45 || rotation >= 315 || rotation >= 135 && rotation <= 225) {
-                    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+                    activity!!.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
                 } else if (rotation > 45 && rotation < 135 || rotation > 225 && rotation < 315) {
                     // 设置横屏
                     if (rotation > 225 && rotation < 315) {
-                        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+                        activity!!.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
                     } else {
-                        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE)
+                        activity!!.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE)
                     }
                 }
             }
@@ -189,7 +188,7 @@ class IjkVideoFragment : Fragment(), GestureDetector.OnGestureListener, View.OnT
 
     override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
         if (e2.rawX - e1.rawX > 200 && Math.abs(e2.rawY - e1.rawY) < 200 && velocityX > 500) {
-            activity.finish()
+            activity!!.finish()
         }
         return false
     }
@@ -205,7 +204,7 @@ class IjkVideoFragment : Fragment(), GestureDetector.OnGestureListener, View.OnT
             val realSize = Point()
             display.getSize(size)
             display.getRealSize(realSize)
-            return realSize.y !== size.y
+            return realSize.y != size.y
         } else {
             val menu = ViewConfiguration.get(activity).hasPermanentMenuKey()
             val back = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK)

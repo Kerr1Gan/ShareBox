@@ -31,11 +31,11 @@ class HelpFragment : Fragment(), IStepperAdapter {
 
     private var mSummaries: Array<String>? = null
 
-    override fun onCreateView(inflater: LayoutInflater?, parent: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, parent: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_vertical_stepper_adapter, parent, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initContent()
         mVerticalStepperView = view!!.findViewById<View>(R.id.vertical_stepper_view) as VerticalStepperView
         mVerticalStepperView!!.setStepperAdapter(this)
@@ -65,7 +65,7 @@ class HelpFragment : Fragment(), IStepperAdapter {
         val nextButton = inflateView.findViewById<View>(R.id.button_next) as Button
         nextButton.setOnClickListener {
             if (!mVerticalStepperView!!.nextStep()) {
-                activity.finish()
+                activity?.finish()
             }
         }
         val prevButton = inflateView.findViewById<View>(R.id.button_prev) as Button
@@ -91,7 +91,7 @@ class HelpFragment : Fragment(), IStepperAdapter {
                 contentView.text = mSummaries?.get(index)
                 contentView.setOnClickListener {
                     if (index == mVerticalStepperView?.currentStep) {
-                        EditNameDialog(activity, activity).show()
+                        EditNameDialog(activity!!, activity!!).show()
                     }
                 }
             }
@@ -119,7 +119,7 @@ class HelpFragment : Fragment(), IStepperAdapter {
 
                 contentView2.setOnClickListener {
                     if (index != mVerticalStepperView?.currentStep) return@setOnClickListener
-                    val dlg = WifiBottomSheetDialog(activity, activity)
+                    val dlg = WifiBottomSheetDialog(activity!!, activity)
                     dlg.show()
                 }
             }
@@ -129,8 +129,8 @@ class HelpFragment : Fragment(), IStepperAdapter {
                 contentView.text = mSummaries?.get(index)
                 contentView.setOnClickListener {
                     if (index == mVerticalStepperView?.currentStep) {
-                        FilePickDialogFragment(this@HelpFragment.activity).apply {
-                            show(this@HelpFragment.activity.supportFragmentManager, "FilePickDialogFragment")
+                        FilePickDialogFragment(this@HelpFragment.activity!!).apply {
+                            show(this@HelpFragment.activity!!.supportFragmentManager, "FilePickDialogFragment")
                         }
                     }
                 }

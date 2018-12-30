@@ -19,10 +19,10 @@ class IjkVideoActivity : AppCompatActivity() {
         setContentView(R.layout.activity_ijk_video)
 
         if (supportFragmentManager.findFragmentByTag(TAG) == null) {
-            val fragment = IjkVideoFragment()
             if (intent != null) {
+                val fragment = IjkVideoFragment()
                 fragment.arguments = intent.extras
-                fragment.arguments.putParcelable("data", intent.data)
+                fragment.arguments?.putParcelable("data", intent.data)
                 supportFragmentManager.beginTransaction()
                         .add(R.id.container, fragment, TAG)
                         .commit()

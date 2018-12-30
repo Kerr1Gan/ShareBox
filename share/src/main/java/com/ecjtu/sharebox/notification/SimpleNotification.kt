@@ -3,11 +3,10 @@ package com.ecjtu.sharebox.notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.preference.PreferenceManager
+import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
-import android.support.v7.app.NotificationCompat
 import android.text.TextUtils
 import com.ecjtu.sharebox.R
 
@@ -18,7 +17,7 @@ abstract class SimpleNotification(val context: Context) {
 
     private var mBuilder: NotificationCompat.Builder? = null
 
-    open fun buildNotification(id: Int, title: String, contentText: String, ticker: String,smallIcon:Int = R.mipmap.ic_launcher): NotificationCompat.Builder {
+    open fun buildNotification(id: Int, title: String, contentText: String, ticker: String, smallIcon: Int = R.mipmap.ic_launcher): NotificationCompat.Builder {
         val builder = NotificationCompat.Builder(context)
         builder.setContentTitle(title)
         builder.setContentText(contentText)
@@ -36,7 +35,7 @@ abstract class SimpleNotification(val context: Context) {
             builder.setSound(Uri.parse(ringtoneUri))
         }
         if (vibrate) {
-            builder.setDefaults(builder.mNotification.defaults or NotificationCompat.DEFAULT_VIBRATE)
+            builder.setDefaults(NotificationCompat.DEFAULT_ALL or NotificationCompat.DEFAULT_VIBRATE)
         }
         mBuilder = builder
         return builder
@@ -52,7 +51,7 @@ abstract class SimpleNotification(val context: Context) {
     }
 
     open fun sendNotification(id: Int, builder: NotificationCompat.Builder?, tag: String? = null) {
-        NotificationManagerCompat.from(context).notify(tag, id, builder?.build())
+        NotificationManagerCompat.from(context).notify(tag, id, builder?.build()!!)
     }
 
     open fun cancelNotification(id: Int, tag: String? = null) {

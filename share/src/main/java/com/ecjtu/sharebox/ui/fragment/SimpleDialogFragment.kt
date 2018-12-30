@@ -36,11 +36,11 @@ class SimpleDialogFragment : AppCompatDialogFragment {
             local
         } else {
             mReset = true
-            AlertDialog.Builder(context).create()
+            AlertDialog.Builder(context!!).create()
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (mReset) {
             dismiss()
         }

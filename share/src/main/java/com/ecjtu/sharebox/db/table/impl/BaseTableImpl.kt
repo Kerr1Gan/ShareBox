@@ -1,6 +1,5 @@
 package com.ecjtu.sharebox.db.table.impl
 
-import android.database.sqlite.SQLiteDatabase
 import com.ecjtu.sharebox.db.table.BaseTable
 
 /**

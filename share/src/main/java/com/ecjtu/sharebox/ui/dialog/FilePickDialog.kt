@@ -174,7 +174,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
     open fun getViewPagerAdapter(): PagerAdapter {
         return object : PagerAdapter() {
 
-            override fun isViewFromObject(view: View?, `object`: Any?): Boolean = view == `object`
+            override fun isViewFromObject(view: View, `object`: Any): Boolean = view == `object`
 
             override fun getCount(): Int = mTabItemHolders?.size ?: 0
 
@@ -183,7 +183,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                 return mTabItemHolders?.get(key)?.title as CharSequence
             }
 
-            override fun instantiateItem(container: ViewGroup?, position: Int): Any {
+            override fun instantiateItem(container: ViewGroup, position: Int): Any {
                 var vg: FileExpandableListView? = null
 
                 vg = mViewPagerViews.get(position) as FileExpandableListView?
@@ -228,7 +228,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                 return vg
             }
 
-            override fun destroyItem(container: ViewGroup?, position: Int, `object`: Any?) {
+            override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
                 var title = mTabItemHolders?.keys?.elementAt(position) as String
                 if (mTabItemHolders?.get(title)?.task != null) {
                     var task = mTabItemHolders?.get(title)?.task

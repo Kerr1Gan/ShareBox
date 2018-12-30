@@ -27,7 +27,7 @@ import java.util.*
 class FilePickDialogFragment : AppCompatDialogFragment {
 
     companion object {
-        const private val TAG = "FilePickDialogFragment"
+        private const val TAG = "FilePickDialogFragment"
     }
 
     private var mActivity: FragmentActivity? = null
@@ -45,7 +45,7 @@ class FilePickDialogFragment : AppCompatDialogFragment {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val map = activity.getMainApplication().getSavedInstance()
+        val map = activity!!.getMainApplication().getSavedInstance()
         var flag = false
         for (key in array) {
             if (map.get(FilePickDialog.EXTRA_PROPERTY_LIST + key) == null) {
@@ -55,7 +55,7 @@ class FilePickDialogFragment : AppCompatDialogFragment {
         }
 
         return if (flag) {
-            val builder = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(context!!)
             builder.setTitle(R.string.is_being_initialized)
                     .setView(R.layout.dialog_file_pick_loading)
                     .setPositiveButton(R.string.positive, { dialog: DialogInterface, which: Int ->
@@ -71,13 +71,13 @@ class FilePickDialogFragment : AppCompatDialogFragment {
             }
             mLoadingDialog!!
         } else {
-            FilePickDialog(context, mActivity)
+            FilePickDialog(context!!, mActivity)
         }
     }
 
     private fun onShowDialog(dialog: DialogInterface) {
-        val saveInstance = activity.getMainApplication().getSavedInstance()
-        mFindFilesHelper = FindAllFilesHelper(context)
+        val saveInstance = activity!!.getMainApplication().getSavedInstance()
+        mFindFilesHelper = FindAllFilesHelper(context!!)
         mFindFilesHelper?.setProgressCallback { taskIndex, taskSize ->
             mActivity?.runOnUiThread {
                 val pert = taskIndex * 1f / (taskSize * 1f) * 100
@@ -97,7 +97,7 @@ class FilePickDialogFragment : AppCompatDialogFragment {
                     if (title.equals("Apk", true)) {
                         val arrayList = ArrayList<String>()
                         if (context == null) return@run
-                        val installedApps = FileUtil.getInstalledApps(context, false)
+                        val installedApps = FileUtil.getInstalledApps(context!!, false)
                         Collections.sort(installedApps, object : Comparator<PackageInfo> {
                             override fun compare(lhs: PackageInfo?, rhs: PackageInfo?): Int {
                                 if (lhs == null || rhs == null) {
@@ -115,7 +115,7 @@ class FilePickDialogFragment : AppCompatDialogFragment {
                         for (packageInfo in installedApps) {
                             arrayList.add(packageInfo.applicationInfo.sourceDir)
                         }
-                        localMap.put(context.getString(R.string.installed), arrayList)
+                        localMap.put(context!!.getString(R.string.installed), arrayList)
                     }
 
                     if (fileList is MutableList<String>) {

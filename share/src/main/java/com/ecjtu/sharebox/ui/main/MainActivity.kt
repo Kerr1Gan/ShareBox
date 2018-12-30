@@ -39,11 +39,11 @@ import kotlin.concurrent.thread
 class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
 
     companion object {
-        const private val TAG = "MainActivity"
-        private val MSG_SERVICE_STARTED = 0x10
+        private const val TAG = "MainActivity"
+        private const val MSG_SERVICE_STARTED = 0x10
         const val MSG_START_SERVER = 0x11
         const val MSG_STOP_SERVER = 0x14
-        private val MSG_LOADING_SERVER = 0x12
+        private const val MSG_LOADING_SERVER = 0x12
         const val MSG_CLOSE_APP = -1
         const val DEBUG = true
         const val MSG_RELEASE_APPLICATION = 0x13
@@ -180,7 +180,7 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    protected inner class WifiApReceiver : BroadcastReceiver() {
+    private inner class WifiApReceiver : BroadcastReceiver() {
         val WIFI_AP_STATE_DISABLING = 10
 
         val WIFI_AP_STATE_DISABLED = 11
