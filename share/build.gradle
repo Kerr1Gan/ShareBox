@@ -62,6 +62,8 @@ dependencies {
     compile project(':qrcode')
     compile 'com.android.support:multidex:1.0.1'
     implementation project(':mvp-dagger')
+
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
 }
 
 repositories {

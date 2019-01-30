@@ -6,7 +6,7 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import com.ecjtu.sharebox.db.room.IpMessage;
+import com.ecjtu.sharebox.db.room.entity.IpMessage;
 
 import java.util.List;
 
@@ -16,8 +16,8 @@ public interface IpMessageDao {
     List<IpMessage> getAllMessage();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertSms(IpMessage sms);
+    void insert(IpMessage sms);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    void updateSms(IpMessage sms);
+    void update(IpMessage sms);
 }

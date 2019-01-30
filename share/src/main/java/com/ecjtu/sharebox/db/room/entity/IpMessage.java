@@ -1,4 +1,4 @@
-package com.ecjtu.sharebox.db.room;
+package com.ecjtu.sharebox.db.room.entity;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
@@ -16,8 +16,7 @@ public class IpMessage {
     @ColumnInfo(name = "port")
     private String port;
 
-    public IpMessage(int id, String ip, String port) {
-        this.id = id;
+    public IpMessage(String ip, String port) {
         this.ip = ip;
         this.port = port;
     }

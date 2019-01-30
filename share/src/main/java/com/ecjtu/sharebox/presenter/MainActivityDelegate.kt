@@ -32,10 +32,12 @@ import com.ecjtu.netcore.network.IRequestCallback
 import com.ecjtu.sharebox.Constants
 import com.ecjtu.sharebox.PreferenceInfo
 import com.ecjtu.sharebox.R
+import com.ecjtu.sharebox.db.room.RoomRepository
+import com.ecjtu.sharebox.db.room.ShareDatabase
+import com.ecjtu.sharebox.db.room.entity.IpMessage
 import com.ecjtu.sharebox.getMainApplication
 import com.ecjtu.sharebox.model.DeviceModel
 import com.ecjtu.sharebox.notification.ServerNotification
-import com.ecjtu.sharebox.ui.main.MainActivity
 import com.ecjtu.sharebox.ui.activity.SettingsActivity
 import com.ecjtu.sharebox.ui.adapter.DeviceRecyclerViewAdapter
 import com.ecjtu.sharebox.ui.dialog.*
@@ -43,10 +45,12 @@ import com.ecjtu.sharebox.ui.fragment.FilePickDialogFragment
 import com.ecjtu.sharebox.ui.fragment.HelpFragment
 import com.ecjtu.sharebox.ui.fragment.SimpleDialogFragment
 import com.ecjtu.sharebox.ui.fragment.WebViewFragment
+import com.ecjtu.sharebox.ui.main.MainActivity
 import com.ecjtu.sharebox.ui.state.StateMachine
 import com.ecjtu.sharebox.util.activity.ActivityUtil
 import com.ecjtu.sharebox.util.photo.CapturePhotoHelper
 import com.ecjtu.sharebox.util.photo.PickPhotoHelper
+import okhttp3.*
 import org.ecjtu.channellibrary.devicesearch.DeviceSearcher
 import org.ecjtu.channellibrary.wifiutil.NetworkUtil
 import org.ecjtu.easyserver.server.ConversionFactory
@@ -55,6 +59,7 @@ import org.ecjtu.easyserver.server.impl.service.EasyServerService
 import org.ecjtu.easyserver.server.util.cache.ServerInfoParcelableHelper
 import org.json.JSONObject
 import java.io.File
+import java.io.IOException
 import java.net.HttpURLConnection
 import kotlin.concurrent.thread
 
@@ -99,6 +104,8 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
     private val DELAY_TIME = 8000L
 
     private var mWifiImageStateMachine: StateMachine? = null
+
+    private lateinit var shareDatabase: ShareDatabase
 
     companion object {
         const val DEBUG = true
@@ -205,10 +212,13 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
 
         initDrawerLayout()
 
+        shareDatabase = RoomRepository(owner).shareDatabase
         doSearch()
 
         val filter = IntentFilter(ApDataDialog.ACTION_UPDATE_DEVICE)
         LocalBroadcastManager.getInstance(owner).registerReceiver(mUpdateDeviceInfoReceiver, filter)
+
+        reconnectHistory()
     }
 
     private fun initDrawerLayout() {
@@ -419,6 +429,12 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
                         owner.getHandler()?.post {
                             applyDeviceInfo(ip, devModel)
                         }
+                        val ipMsg = IpMessage(ip, devModel.port.toString())
+                        val dao = shareDatabase.ipMessageDao()
+                        val messageList = dao.allMessage
+                        if (messageList.indexOf(ipMsg) < 0) {
+                            shareDatabase.ipMessageDao().insert(ipMsg)
+                        }
                     }
                 } catch (ex: Exception) {
                     ex.printStackTrace()
@@ -589,10 +605,48 @@ class MainActivityDelegate(owner: MainActivity) : Delegate<MainActivity>(owner),
         mPhotoHelper?.clearCache()
         mImageHelper?.clearCache()
         LocalBroadcastManager.getInstance(owner).unregisterReceiver(mUpdateDeviceInfoReceiver)
+        shareDatabase.close()
     }
 
     fun getRecyclerView(): RecyclerView? {
         return mRecyclerView
     }
 
+    private fun reconnectHistory() {
+        thread {
+            val okHttpClient = OkHttpClient()
+            val listMsg = shareDatabase.ipMessageDao().allMessage
+            for (msg in listMsg) {
+                val request = Request.Builder()
+                        .url("http://${msg.ip}:${msg.port}/api/Info")
+                        .method("GET", null)
+                        .build()
+                val call = okHttpClient.newCall(request)
+                call.enqueue(object : Callback {
+                    override fun onResponse(call: Call, response: Response) {
+                        val res = response.body()?.string()
+                        if (!TextUtils.isEmpty(res)) {
+                            try {
+                                val jObj = JSONObject(res)
+                                val ip = jObj.optString("ip")
+                                val port = jObj.optString("port")
+                                val name = jObj.optString("name")
+                                val icon = jObj.optString("icon")
+                                val deviceModel = DeviceModel(name, port.toInt(), icon)
+                                owner.getHandler()?.post {
+                                    applyDeviceInfo(ip, deviceModel)
+                                }
+                            } catch (ex: Exception) {
+                                ex.printStackTrace()
+                            }
+                        }
+                    }
+
+                    override fun onFailure(call: Call, e: IOException) {
+                    }
+                })
+
+            }
+        }
+    }
 }

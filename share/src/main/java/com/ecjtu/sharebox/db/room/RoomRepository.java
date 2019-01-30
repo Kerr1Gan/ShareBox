@@ -8,7 +8,10 @@ public class RoomRepository {
     private ShareDatabase shareDatabase;
 
     public RoomRepository(Context context) {
-        shareDatabase = Room.databaseBuilder(context.getApplicationContext(), ShareDatabase.class, "share.db").build();
+        shareDatabase = Room.databaseBuilder(context.getApplicationContext(), ShareDatabase.class, "share.db")
+                .fallbackToDestructiveMigration()
+                .allowMainThreadQueries()
+                .build();
     }
 
     public ShareDatabase getShareDatabase() {
