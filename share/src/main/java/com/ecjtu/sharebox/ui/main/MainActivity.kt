@@ -46,7 +46,7 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
         private const val MSG_LOADING_SERVER = 0x12
         const val MSG_CLOSE_APP = -1
         const val DEBUG = true
-        const val MSG_RELEASE_APPLICATION = 0x13
+        private const val CLOSE_TIME = 3 * 1000
     }
 
     private var mDelegate: MainActivityDelegate? = null
@@ -64,6 +64,8 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
     private var mMainService: MainService? = null
 
     private lateinit var presenter: MainContract.Presenter
+
+    private var lastBackPressTime = -1L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -281,7 +283,7 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
                 var info = intent.getParcelableExtra<NetworkInfo>(EXTRA_NETWORK_INFO)
                 Log.i("WifiApReceiver", "NetworkInfo " + info?.toString() ?: "null")
                 if (info != null && info.type == TYPE_MOBILE && (info.state == NetworkInfo.State.CONNECTED ||
-                        info.state == NetworkInfo.State.DISCONNECTED)) {
+                                info.state == NetworkInfo.State.DISCONNECTED)) {
                     mDelegate?.checkCurrentNetwork(null)
                 } else if (info != null && (info.state == NetworkInfo.State.CONNECTED)) {
                     if (mDelegate?.checkCurrentNetwork(null) == true) {
@@ -408,20 +410,13 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
     }
 
     override fun onBackPressed() {
-        val handler = getHandler()
-        if (handler?.hasMessages(MSG_RELEASE_APPLICATION) == true) {
-            handler.removeMessages(MSG_RELEASE_APPLICATION)
+        if (lastBackPressTime < 0) {
+            lastBackPressTime = System.currentTimeMillis()
+            return
+        }
+
+        if (System.currentTimeMillis() - lastBackPressTime < CLOSE_TIME) {
             super.onBackPressed()
-        } else {
-            handler?.sendEmptyMessageDelayed(MSG_RELEASE_APPLICATION, Int.MAX_VALUE.toLong())
-            Toast.makeText(this, R.string.click_to_exit_app, Toast.LENGTH_SHORT).show()
-            thread {
-                try {
-                    Thread.sleep(3 * 1000)
-                    handler?.removeMessages(MSG_RELEASE_APPLICATION)
-                } catch (ignore: Exception) {
-                }
-            }
         }
     }
 
