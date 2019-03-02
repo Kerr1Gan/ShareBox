@@ -103,6 +103,11 @@
     native <methods>;
 }
 
+# OkHttp3
+-dontwarn okhttp3.**
+-keep class okhttp3.internal.**{*;}
+-dontwarn okio.**
+
 #-keep public class * implements org.ecjtu.easyserver.servlet.BaseServlet{*;}
 #-keep public class org.ecjtu.easyserver.server.ServerManager{*;}
 #-keep public class org.ecjtu.easyserver.server.util.AssetsUtil{*;}

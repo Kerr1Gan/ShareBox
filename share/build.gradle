@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
@@ -60,14 +62,7 @@ android {
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         ndk {
-            abiFilters 'armeabi-v7a' , 'x86'
-        }
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            abiFilters 'armeabi-v7a', 'x86'
         }
     }
 
@@ -75,6 +70,56 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    signingConfigs {
+        release {
+            keyAlias "${signing_keyAlias}"
+            keyPassword "${signging_certificatePassword}"
+            storeFile file("../keystore/${signing_certificate}")
+            storePassword "${signging_storePassword}"
+
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+
+            //Zipalign优化
+            zipAlignEnabled true
+            shrinkResources true
+
+            debuggable false
+
+            applicationVariants.all { variant ->
+                variant.outputs.all { output ->
+                    def path = "../../../"
+                    def outputFile = output.outputFile
+                    def fileName = outputFile.name.replace("-", "_")
+//                        .replace("app", "app_${variant.name}")
+                            .replace("release.apk", "_v${variant.versionName}_${new SimpleDateFormat("yyyy-MM-dd").format(new Date())}_${variant.versionCode}_release.apk")
+                    output.outputFileName = fileName
+                }
+            }
+        }
+    }
+
+    // can't config the resValue using "buildTypes inside of flavor"!
+    // only buildConfigField seems supported!
+    // therefore, resolve the problem using code below
+    applicationVariants.all { variant ->
+        if (variant.buildType.name == 'debug') {
+            if (variant.mergedFlavor.resValues.get("app_name") != null) {
+                def appName = variant.mergedFlavor.resValues.get("app_name").value
+                variant.resValue('string', 'app_name', appName + ' Debug')
+            }
+        }
+    }
+
 }
 
 dependencies {
