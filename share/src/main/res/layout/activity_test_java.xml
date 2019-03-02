@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.ecjtu.sharebox.ui.activity.TestActivityJava">
+    tools:context="com.ethan.and.ui.activity.TestActivityJava">
 
     <com.dd.CircularProgressButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/circularButton1"/>
 
-    <com.ecjtu.sharebox.ui.widget.CircleImageView
+    <com.ethan.and.ui.widget.CircleImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:src="@android:color/black"/>

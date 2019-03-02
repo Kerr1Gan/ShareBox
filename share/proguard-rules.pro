@@ -122,7 +122,7 @@
 -keep public class com.tencent.bugly.**{*;}
 
 # Js 桥
--keepnames class com.ecjtu.sharebox.ui.fragment.WebViewFragment$* {*;}
+-keepnames class com.ethan.and.ui.fragment.WebViewFragment$* {*;}
 
 # Admob
 -keep public class com.google.**{*;}

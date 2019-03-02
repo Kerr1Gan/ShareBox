@@ -4,7 +4,7 @@ package com.ecjtu.sharebox.parcel;
 import android.os.Parcel;
 
 import com.ecjtu.parcel.base.ParcelableFileCacheHelper;
-import com.ecjtu.sharebox.ui.holder.FileExpandableInfo;
+import com.ethan.and.ui.holder.FileExpandableInfo;
 
 import java.util.ArrayList;
 import java.util.List;

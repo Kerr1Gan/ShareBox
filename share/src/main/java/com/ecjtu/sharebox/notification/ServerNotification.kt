@@ -4,7 +4,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import com.ecjtu.sharebox.R
-import com.ecjtu.sharebox.ui.main.MainActivity
+import com.ethan.and.ui.main.MainActivity
 
 /**
  * Created by Ethan_Xiang on 2017/9/5.
