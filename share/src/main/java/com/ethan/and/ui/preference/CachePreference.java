@@ -10,7 +10,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
-import com.ecjtu.sharebox.R;
+import com.flybd.sharebox.R;
 
 /**
  * Created by Ethan_Xiang on 2017/8/11.

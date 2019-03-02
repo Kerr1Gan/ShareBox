@@ -10,18 +10,18 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
-import com.ecjtu.componentes.activity.ActionBarFragmentActivity
-import com.ecjtu.componentes.activity.RotateNoCreateActivity
-import com.ecjtu.sharebox.R
+import com.common.componentes.activity.ActionBarFragmentActivity
+import com.common.componentes.activity.RotateNoCreateActivity
+import com.flybd.sharebox.R
 import com.ethan.and.ui.dialog.TextItemDialog
 import com.ethan.and.ui.fragment.IjkVideoFragment
 import com.ethan.and.ui.fragment.WebViewFragment
 import com.ethan.and.ui.holder.FileExpandableInfo
 import com.ethan.and.ui.holder.TabItemInfo
 import com.ethan.and.ui.widget.FileExpandableListView
-import com.ecjtu.sharebox.util.cache.CacheUtil
-import com.ecjtu.sharebox.util.file.FileUtil
-import com.ecjtu.sharebox.util.hash.HashUtil
+import com.flybd.sharebox.util.cache.CacheUtil
+import com.flybd.sharebox.util.file.FileUtil
+import com.flybd.sharebox.util.hash.HashUtil
 import org.ecjtu.easyserver.server.DeviceInfo
 
 /**

@@ -14,10 +14,10 @@ import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory
 import com.bumptech.glide.load.engine.cache.LruResourceCache
 import com.bumptech.glide.module.AppGlideModule
-import com.ecjtu.sharebox.BuildConfig
-import com.ecjtu.sharebox.Constants
-import com.ecjtu.sharebox.R
-import com.ecjtu.sharebox.parcel.FileExpandablePropertyCache
+import com.flybd.sharebox.BuildConfig
+import com.flybd.sharebox.Constants
+import com.flybd.sharebox.R
+import com.flybd.sharebox.parcel.FileExpandablePropertyCache
 import com.ethan.and.ui.main.MainActivity
 import com.ethan.and.ui.dialog.FilePickDialog
 import com.google.android.gms.ads.MobileAds

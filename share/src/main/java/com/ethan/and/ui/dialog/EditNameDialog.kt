@@ -11,8 +11,8 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.RelativeLayout.CENTER_IN_PARENT
-import com.ecjtu.sharebox.PreferenceInfo
-import com.ecjtu.sharebox.R
+import com.flybd.sharebox.PreferenceInfo
+import com.flybd.sharebox.R
 
 /**
  * Created by KerriGan on 2017/6/11.

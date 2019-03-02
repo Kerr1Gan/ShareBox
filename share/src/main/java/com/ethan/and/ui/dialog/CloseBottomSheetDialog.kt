@@ -6,7 +6,7 @@ import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.ecjtu.sharebox.R
+import com.flybd.sharebox.R
 
 /**
  * Created by KerriGan on 2017/6/5.

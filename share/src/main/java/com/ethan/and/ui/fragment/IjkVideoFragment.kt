@@ -10,8 +10,8 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.TextUtils
 import android.view.*
-import com.ecjtu.componentes.activity.BaseActionActivity
-import com.ecjtu.sharebox.R
+import com.common.componentes.activity.BaseActionActivity
+import com.flybd.sharebox.R
 import tv.danmaku.ijk.media.exo.video.AndroidMediaController
 import tv.danmaku.ijk.media.exo.video.IjkVideoView
 import tv.danmaku.ijk.media.exo.video.SimpleMediaController

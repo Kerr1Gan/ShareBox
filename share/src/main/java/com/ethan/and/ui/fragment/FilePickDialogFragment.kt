@@ -12,12 +12,12 @@ import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
-import com.ecjtu.sharebox.R
+import com.flybd.sharebox.R
 import com.ethan.and.async.FindAllFilesHelper
 import com.ethan.and.getMainApplication
 import com.ethan.and.ui.dialog.FilePickDialog
 import com.ethan.and.ui.holder.FileExpandableInfo
-import com.ecjtu.sharebox.util.file.FileUtil
+import com.flybd.sharebox.util.file.FileUtil
 import java.util.*
 
 /**

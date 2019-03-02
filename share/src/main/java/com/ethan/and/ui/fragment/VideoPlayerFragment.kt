@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.MediaController
 import android.widget.VideoView
-import com.ecjtu.sharebox.R
+import com.flybd.sharebox.R
 
 
 /**

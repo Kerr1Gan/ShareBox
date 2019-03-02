@@ -5,7 +5,7 @@ import android.content.Context
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.view.ViewGroup
-import com.ecjtu.sharebox.R
+import com.flybd.sharebox.R
 import com.ethan.and.ui.adapter.FileExpandableAdapter
 import com.ethan.and.ui.adapter.InternetFileExpandableAdapter
 import com.ethan.and.ui.holder.TabItemInfo

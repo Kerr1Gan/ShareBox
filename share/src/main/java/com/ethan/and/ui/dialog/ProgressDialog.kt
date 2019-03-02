@@ -5,7 +5,7 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
-import com.ecjtu.sharebox.R
+import com.flybd.sharebox.R
 
 /**
  * Created by KerriGan on 2017/7/22.

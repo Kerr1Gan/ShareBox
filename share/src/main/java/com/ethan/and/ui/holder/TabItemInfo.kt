@@ -1,7 +1,7 @@
 package com.ethan.and.ui.holder
 
 import com.ethan.and.ui.dialog.FilePickDialog
-import com.ecjtu.sharebox.util.file.FileUtil
+import com.flybd.sharebox.util.file.FileUtil
 
 /**
  * Created by Ethan_Xiang on 2017/10/27.

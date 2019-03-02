@@ -8,7 +8,7 @@ import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
-import com.ecjtu.sharebox.R
+import com.flybd.sharebox.R
 import com.ethan.and.ui.fragment.PageFragment
 import org.json.JSONObject
 

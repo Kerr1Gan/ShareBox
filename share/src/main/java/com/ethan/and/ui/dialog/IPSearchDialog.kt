@@ -5,9 +5,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
-import com.ecjtu.netcore.network.AsyncNetwork
-import com.ecjtu.netcore.network.IRequestCallbackV2
-import com.ecjtu.sharebox.R
+import com.common.netcore.network.AsyncNetwork
+import com.common.netcore.network.IRequestCallbackV2
+import com.flybd.sharebox.R
 import java.lang.Exception
 import java.net.HttpURLConnection
 

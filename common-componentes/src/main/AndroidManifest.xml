@@ -1,27 +1,27 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ecjtu.componentes">
+    package="com.common.componentes">
 
     <application
         android:allowBackup="true"
         android:label="@string/app_name"
         android:supportsRtl="true">
         <activity
-            android:name=".activity.ImmersiveFragmentActivity"
+            android:name="com.common.componentes.activity.ImmersiveFragmentActivity"
             android:theme="@style/CCImageStatusBarStyle" />
 
         <activity
-            android:name=".activity.ActionBarFragmentActivity"
+            android:name="com.common.componentes.activity.ActionBarFragmentActivity"
             android:exported="true"
             android:theme="@style/CCAppPreferenceTheme" />
 
         <activity
-            android:name=".activity.RotateNoCreateActivity"
+            android:name="com.common.componentes.activity.RotateNoCreateActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|mcc|mnc"
             android:theme="@style/CCImageStatusBarStyle" />
 
-        <activity android:name=".activity.AppThemeActivity" />
+        <activity android:name="com.common.componentes.activity.AppThemeActivity" />
 
-        <activity android:name=".activity.RotateByOrientationActivity" />
+        <activity android:name="com.common.componentes.activity.RotateByOrientationActivity" />
 
     </application>
 

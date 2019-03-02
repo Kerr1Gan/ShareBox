@@ -25,8 +25,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
-import com.ecjtu.sharebox.Constants
-import com.ecjtu.sharebox.R
+import com.flybd.sharebox.Constants
+import com.flybd.sharebox.R
 import com.ethan.and.async.FindAllFilesHelper
 import com.ethan.and.async.WeakHandler
 import com.ethan.and.getMainApplication
@@ -35,8 +35,8 @@ import com.ethan.and.ui.holder.FileExpandableInfo
 import com.ethan.and.ui.holder.TabItemInfo
 import com.ethan.and.ui.state.StateMachine
 import com.ethan.and.ui.widget.FileExpandableListView
-import com.ecjtu.sharebox.util.ObjectUtil
-import com.ecjtu.sharebox.util.file.FileUtil
+import com.flybd.sharebox.util.ObjectUtil
+import com.flybd.sharebox.util.file.FileUtil
 import org.ecjtu.easyserver.server.DeviceInfo
 import org.ecjtu.easyserver.server.impl.service.EasyServerService
 import org.ecjtu.easyserver.server.util.cache.ServerInfoParcelableHelper

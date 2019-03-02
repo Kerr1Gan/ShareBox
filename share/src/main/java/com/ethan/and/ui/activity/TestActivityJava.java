@@ -5,7 +5,7 @@ import android.os.Parcel;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.ecjtu.sharebox.R;
+import com.flybd.sharebox.R;
 
 import org.ecjtu.channellibrary.udphelper.FindDeviceManager;
 

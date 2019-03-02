@@ -14,8 +14,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.dd.CircularProgressButton
-import com.ecjtu.sharebox.R
-import com.ecjtu.sharebox.util.activity.ActivityUtil
+import com.flybd.sharebox.R
+import com.flybd.sharebox.util.activity.ActivityUtil
 import org.ecjtu.channellibrary.wifiutil.NetworkUtil
 import org.ecjtu.channellibrary.wifiutil.WifiUtil
 

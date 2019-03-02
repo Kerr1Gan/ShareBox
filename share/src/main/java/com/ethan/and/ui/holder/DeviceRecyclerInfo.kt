@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import com.ecjtu.sharebox.R
+import com.flybd.sharebox.R
 
 /**
  * Created by Ethan_Xiang on 2017/10/27.

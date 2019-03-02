@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.ecjtu.sharebox.R
+import com.flybd.sharebox.R
 
 /**
  * Created by KerriGan on 2017/6/11.

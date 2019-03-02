@@ -11,7 +11,7 @@ import android.util.DisplayMetrics
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import com.ecjtu.sharebox.R
+import com.flybd.sharebox.R
 import com.ethan.and.ui.fragment.SimpleDialogFragment
 
 

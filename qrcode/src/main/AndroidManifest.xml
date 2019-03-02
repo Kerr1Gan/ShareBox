@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ecjtu.qrcode">
+    package="com.common.qrcode">
 
     <uses-permission android:name="android.permission.CAMERA" />
     <application>
         <activity
-            android:name=".QRCodeScannerActivity"
+            android:name="com.common.qrcode.QRCodeScannerActivity"
             android:label="扫描二维码"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
