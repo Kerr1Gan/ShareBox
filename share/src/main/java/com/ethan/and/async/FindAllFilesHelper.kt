@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Message
-import com.flybd.sharebox.util.file.FileUtil
+import com.common.utils.file.FileUtil
 import java.io.File
 
 /**

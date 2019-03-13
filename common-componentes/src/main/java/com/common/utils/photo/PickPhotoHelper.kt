@@ -1,11 +1,11 @@
-package com.flybd.sharebox.util.photo
+package com.common.utils.photo
 
 import android.app.Activity
 import android.content.Intent
 import android.os.Environment
 import android.provider.MediaStore
 import android.support.v4.app.FragmentActivity
-import com.flybd.sharebox.util.file.FileUtil
+import com.common.utils.file.FileUtil
 import java.io.File
 
 /**

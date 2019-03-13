@@ -20,7 +20,7 @@ import com.ethan.and.ui.dialog.TextItemDialog
 import com.ethan.and.ui.fragment.SimpleDialogFragment
 import com.ethan.and.ui.holder.DeviceRecyclerInfo
 import com.ethan.and.ui.holder.TabItemInfo
-import com.flybd.sharebox.util.file.FileUtil
+import com.common.utils.file.FileUtil
 import org.ecjtu.easyserver.server.ConversionFactory
 import org.ecjtu.easyserver.server.DeviceInfo
 import org.json.JSONObject

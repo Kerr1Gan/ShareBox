@@ -1,4 +1,4 @@
-package com.flybd.sharebox.util;
+package com.common.utils;
 
 import android.content.Context;
 import android.os.Build;

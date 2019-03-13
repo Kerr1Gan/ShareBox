@@ -14,8 +14,8 @@ import android.webkit.WebView
 import com.flybd.sharebox.R
 import com.ethan.and.ui.web.SimpleWebChromeClient
 import com.ethan.and.ui.web.SimpleWebViewClient
-import com.flybd.sharebox.util.activity.ActivityUtil
-import com.flybd.sharebox.util.file.FileUtil
+import com.common.utils.activity.ActivityUtil
+import com.common.utils.file.FileUtil
 import java.io.File
 
 

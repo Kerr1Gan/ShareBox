@@ -1,4 +1,4 @@
-package com.flybd.sharebox.util;
+package com.common.utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

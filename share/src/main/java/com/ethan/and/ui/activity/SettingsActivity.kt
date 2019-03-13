@@ -15,9 +15,9 @@ import android.view.MenuItem
 import com.flybd.sharebox.PreferenceInfo
 import com.flybd.sharebox.R
 import com.ethan.and.ui.preference.CachePreference
-import com.flybd.sharebox.util.activity.ActivityUtil
-import com.flybd.sharebox.util.cache.CacheUtil
-import com.flybd.sharebox.util.file.FileUtil
+import com.common.utils.activity.ActivityUtil
+import com.common.utils.cache.CacheUtil
+import com.common.utils.file.FileUtil
 import java.io.File
 
 /**

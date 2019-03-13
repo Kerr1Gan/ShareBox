@@ -1,4 +1,4 @@
-package com.flybd.sharebox.util.hash
+package com.common.utils.hash
 
 /**
  * Created by Ethan_Xiang on 2017/8/14.

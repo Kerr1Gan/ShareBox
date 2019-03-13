@@ -1,4 +1,4 @@
-package com.flybd.sharebox.util.activity
+package com.common.utils.activity
 
 import android.content.Context
 import android.content.Intent

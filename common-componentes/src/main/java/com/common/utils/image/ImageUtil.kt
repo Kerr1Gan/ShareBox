@@ -1,4 +1,4 @@
-package com.flybd.sharebox.util.image
+package com.common.utils.image
 
 import android.graphics.Bitmap
 import android.graphics.Canvas

@@ -47,9 +47,9 @@ import com.ethan.and.ui.fragment.SimpleDialogFragment
 import com.ethan.and.ui.fragment.WebViewFragment
 import com.ethan.and.ui.main.MainActivity
 import com.ethan.and.ui.state.StateMachine
-import com.flybd.sharebox.util.activity.ActivityUtil
-import com.flybd.sharebox.util.photo.CapturePhotoHelper
-import com.flybd.sharebox.util.photo.PickPhotoHelper
+import com.common.utils.activity.ActivityUtil
+import com.common.utils.photo.CapturePhotoHelper
+import com.common.utils.photo.PickPhotoHelper
 import okhttp3.*
 import org.ecjtu.channellibrary.devicesearch.DeviceSearcher
 import org.ecjtu.channellibrary.wifiutil.NetworkUtil

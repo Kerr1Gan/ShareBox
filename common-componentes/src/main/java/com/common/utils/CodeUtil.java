@@ -1,4 +1,4 @@
-package com.flybd.sharebox.util;
+package com.common.utils;
 
 /**
  * Created by Ethan_Xiang on 2017/12/7.

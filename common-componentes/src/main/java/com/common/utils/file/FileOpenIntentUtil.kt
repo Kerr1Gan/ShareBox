@@ -1,4 +1,4 @@
-package com.flybd.sharebox.util.file
+package com.common.utils.file
 
 import android.content.Intent
 import android.net.Uri

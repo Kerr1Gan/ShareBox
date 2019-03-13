@@ -1,4 +1,4 @@
-package com.flybd.sharebox.util.cache;
+package com.common.utils.cache;
 
 import android.content.Context;
 import android.graphics.Bitmap;
