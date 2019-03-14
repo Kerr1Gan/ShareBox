@@ -39,6 +39,7 @@ import com.ethan.and.ui.state.StateMachine
 import com.flybd.sharebox.Constants
 import com.flybd.sharebox.PreferenceInfo
 import com.flybd.sharebox.R
+import com.google.firebase.analytics.FirebaseAnalytics
 import org.ecjtu.easyserver.IAidlInterface
 import org.ecjtu.easyserver.server.DeviceInfo
 import org.ecjtu.easyserver.server.impl.service.EasyServerService
@@ -93,6 +94,10 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
 
     private var mWifiImageStateMachine: StateMachine? = null
 
+    private var mFirebaseAnalytics: FirebaseAnalytics? = null
+    // ...
+    // Obtain the FirebaseAnalytics instance.
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        loadSplash()
@@ -105,6 +110,9 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
         presenter = MainPresenter()
         presenter.onCreate(this, getHandler()!!)
         presenter.registerWifiApReceiver(this)
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
+        mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.APP_OPEN, null)
     }
 
     private fun initialize() {
