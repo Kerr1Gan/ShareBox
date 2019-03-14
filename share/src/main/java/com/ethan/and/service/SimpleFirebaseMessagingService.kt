@@ -45,8 +45,8 @@ class SimpleFirebaseMessagingService : FirebaseMessagingService() {
         super.onMessageReceived(remoteMessage)
         Log.i(TAG, "receive msg " + remoteMessage?.data.toString())
         if (remoteMessage != null && remoteMessage.notification != null) {
-            Log.i(TAG, "receive notification " + remoteMessage.notification!!.title)
-            Log.i(TAG, "receive notification " + remoteMessage.notification!!.body)
+            Log.i(TAG, "receive notification title " + remoteMessage.notification!!.title)
+            Log.i(TAG, "receive notification body " + remoteMessage.notification!!.body)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val channel = NotificationChannel(BuildConfig.APPLICATION_ID, getString(R.string.app_name), NotificationManager.IMPORTANCE_HIGH)
                 val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
