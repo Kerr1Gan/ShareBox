@@ -62,10 +62,6 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
 
     private var refreshing = true
 
-    private var mService: IAidlInterface? = null
-
-    private var mMainService: MainService? = null
-
     private lateinit var presenter: MainContract.Presenter
 
     private var lastBackPressTime = -1L
@@ -94,8 +90,6 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
     private var mPhotoHelper: CapturePhotoHelper? = null
 
     private var mImageHelper: PickPhotoHelper? = null
-
-    private val DELAY_TIME = 8000L
 
     private var mWifiImageStateMachine: StateMachine? = null
 
@@ -154,16 +148,7 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
 
 
         mWifiButton.setOnClickListener {
-            val intent = Intent()
-            val action = arrayOf(WifiManager.ACTION_PICK_WIFI_NETWORK, Settings.ACTION_WIFI_SETTINGS)
-            for (str in action) {
-                try {
-                    intent.action = Settings.ACTION_WIFI_SETTINGS
-                    this.startActivity(intent)
-                    break
-                } catch (ex: Exception) {
-                }
-            }
+            presenter.go2Setting()
         }
         mHotspotButton.setOnClickListener {
             for (index in 0 until mRequestPermission.size) {
@@ -369,9 +354,9 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
                 }
                 R.id.refresh -> {
                     if (this.refreshing) {
-                        this.getMainService()?.startSearch()
+                        presenter.getMainService()?.startSearch()
                     } else {
-                        this.getMainService()?.stopSearch()
+                        presenter.getMainService()?.stopSearch()
                     }
                     true
                 }
@@ -460,15 +445,6 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
         val intent = ImmersiveFragmentActivity.newInstance(this, SplashFragment::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
         startActivity(intent)
-    }
-
-
-    fun getMainService(): MainService? {
-        return mMainService
-    }
-
-    fun getServerService(): IAidlInterface? {
-        return mService
     }
 
     override fun permissionRejected() {

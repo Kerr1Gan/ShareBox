@@ -4,8 +4,10 @@ import android.app.Activity
 import android.content.Context
 import android.os.Handler
 import android.os.Message
+import com.ethan.and.service.MainService
 import com.starwin.ethan.mvp_dagger.mvp.IPresenter
 import com.starwin.ethan.mvp_dagger.mvp.IView
+import org.ecjtu.easyserver.IAidlInterface
 import org.ecjtu.easyserver.server.DeviceInfo
 
 /**
@@ -28,5 +30,8 @@ class MainContract {
         fun startServerService()
         fun handleMessage(msg: Message)
         fun doSearch()
+        fun getMainService(): MainService?
+        fun getServerService(): IAidlInterface?
+        fun go2Setting()
     }
 }

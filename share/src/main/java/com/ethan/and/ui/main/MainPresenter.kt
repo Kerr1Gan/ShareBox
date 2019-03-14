@@ -6,11 +6,13 @@ import android.content.*
 import android.content.pm.PackageManager
 import android.net.NetworkInfo
 import android.net.wifi.WifiInfo
+import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Message
 import android.preference.PreferenceManager
+import android.provider.Settings
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.text.TextUtils
@@ -179,6 +181,19 @@ class MainPresenter : MainContract.Presenter {
         })
     }
 
+    override fun go2Setting() {
+        val intent = Intent()
+        val action = arrayOf(WifiManager.ACTION_PICK_WIFI_NETWORK, Settings.ACTION_WIFI_SETTINGS)
+        for (str in action) {
+            try {
+                intent.action = Settings.ACTION_WIFI_SETTINGS
+                activity.startActivity(intent)
+                break
+            } catch (ex: Exception) {
+            }
+        }
+    }
+
     fun checkCurrentNetwork(info: WifiInfo?): Boolean {
         var hasAccess = false
 
@@ -316,11 +331,11 @@ class MainPresenter : MainContract.Presenter {
         }
     }
 
-    fun getMainService(): MainService? {
+    override fun getMainService(): MainService? {
         return mMainService
     }
 
-    fun getServerService(): IAidlInterface? {
+    override fun getServerService(): IAidlInterface? {
         return mService
     }
 
