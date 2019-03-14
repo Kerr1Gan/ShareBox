@@ -83,7 +83,6 @@ class MainPresenter : MainContract.Presenter {
         this.activity = activity
         this.handler = handler
         initAd()
-        reconnectHistory()
         doSearch()
         checkCurrentNetwork(null)
 
@@ -91,6 +90,7 @@ class MainPresenter : MainContract.Presenter {
 
         val filter = IntentFilter(ApDataDialog.ACTION_UPDATE_DEVICE)
         LocalBroadcastManager.getInstance(activity).registerReceiver(mUpdateDeviceInfoReceiver, filter)
+        reconnectHistory()
     }
 
     override fun onDestroy(context: Context) {
