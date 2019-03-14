@@ -66,9 +66,9 @@ open class AdmobManager(context: Context) : RewardedVideoAdListener, AdListener(
         }
     }
 
-    fun getLatestInterstitialAd():InterstitialAd? = mInterstitialAd
+    fun getLatestInterstitialAd(): InterstitialAd? = mInterstitialAd
 
-    fun getLatestRewardAd():RewardedVideoAd? = mRewardedAds
+    fun getLatestRewardAd(): RewardedVideoAd? = mRewardedAds
 
     open fun onResume() {
         mWeak.get()?.let {
@@ -89,36 +89,36 @@ open class AdmobManager(context: Context) : RewardedVideoAdListener, AdListener(
     }
 
     override fun onRewardedVideoAdClosed() {
-        Log.d("AdMob", "onRewardedVideoAdClosed")
+        Log.i("AdMob", "onRewardedVideoAdClosed")
         mRewardAdCallback?.onClosed()
     }
 
     override fun onRewardedVideoAdLeftApplication() {
-        Log.d("AdMob", "onRewardedVideoAdLeftApplication")
+        Log.i("AdMob", "onRewardedVideoAdLeftApplication")
     }
 
     override fun onRewardedVideoAdLoaded() {
-        Log.d("AdMob", "onRewardedVideoAdLoaded")
+        Log.i("AdMob", "onRewardedVideoAdLoaded")
         mRewardAdCallback?.onLoaded()
     }
 
     override fun onRewardedVideoAdOpened() {
-        Log.d("AdMob", "onRewardedVideoAdOpened")
+        Log.i("AdMob", "onRewardedVideoAdOpened")
         mRewardAdCallback?.onOpened()
     }
 
     override fun onRewarded(p0: RewardItem?) {
-        Log.d("AdMob", "onRewarded rewardItem " + p0.toString())
+        Log.i("AdMob", "onRewarded rewardItem " + p0.toString())
         mRewardAdCallback?.onReward(p0)
     }
 
     override fun onRewardedVideoStarted() {
-        Log.d("AdMob", "onRewardedVideoStarted")
+        Log.i("AdMob", "onRewardedVideoStarted")
         mRewardAdCallback?.onOpened()
     }
 
     override fun onRewardedVideoAdFailedToLoad(p0: Int) {
-        Log.d("AdMob", "onRewardedVideoAdFailedToLoad code " + p0)
+        Log.i("AdMob", "onRewardedVideoAdFailedToLoad code $p0")
         mRewardAdCallback?.onError()
     }
 
@@ -132,18 +132,22 @@ open class AdmobManager(context: Context) : RewardedVideoAdListener, AdListener(
     }
 
     override fun onAdFailedToLoad(p0: Int) {
+        Log.i("AdMob", "onAdFailedToLoad code $p0")
         mInterstitialAdCallback?.onError()
     }
 
     override fun onAdClosed() {
+        Log.i("AdMob", "onAdClosed")
         mInterstitialAdCallback?.onClosed()
     }
 
     override fun onAdOpened() {
+        Log.i("AdMob", "onAdOpened")
         mInterstitialAdCallback?.onOpened()
     }
 
     override fun onAdLoaded() {
+        Log.i("AdMob", "onAdLoaded")
         mInterstitialAdCallback?.onLoaded()
     }
 }
