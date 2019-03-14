@@ -33,5 +33,7 @@ class MainContract {
         fun getMainService(): MainService?
         fun getServerService(): IAidlInterface?
         fun go2Setting()
+        fun startSearch()
+        fun stopSearch()
     }
 }

@@ -202,6 +202,14 @@ class MainPresenter : MainContract.Presenter {
         })
     }
 
+    override fun startSearch() {
+        getMainService()?.startSearch()
+    }
+
+    override fun stopSearch() {
+        getMainService()?.stopSearch()
+    }
+
     override fun go2Setting() {
         val intent = Intent()
         val action = arrayOf(WifiManager.ACTION_PICK_WIFI_NETWORK, Settings.ACTION_WIFI_SETTINGS)

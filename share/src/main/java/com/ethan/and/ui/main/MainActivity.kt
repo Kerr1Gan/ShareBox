@@ -354,9 +354,9 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
                 }
                 R.id.refresh -> {
                     if (this.refreshing) {
-                        presenter.getMainService()?.startSearch()
+                        presenter.startSearch()
                     } else {
-                        presenter.getMainService()?.stopSearch()
+                        presenter.stopSearch()
                     }
                     true
                 }
