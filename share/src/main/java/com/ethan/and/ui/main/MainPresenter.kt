@@ -165,12 +165,16 @@ class MainPresenter : MainContract.Presenter {
     private fun initAd() {
         adManager = AdmobManager(activity)
         adManager?.loadRewardAd(activity.getString(R.string.admob_ad_03), object : AdmobCallbackV2 {
+            override fun onCompleted() {
+            }
+
             override fun onLoaded() {
                 adManager?.getLatestRewardAd()?.show()
             }
 
             override fun onError() {
                 adManager?.loadInterstitialAd(activity.getString(R.string.admob_ad_04), object : AdmobCallback {
+
                     override fun onLoaded() {
                         adManager?.getLatestInterstitialAd()?.show()
                     }

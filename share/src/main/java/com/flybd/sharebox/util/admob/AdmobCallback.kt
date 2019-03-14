@@ -14,4 +14,5 @@ interface AdmobCallback {
 
 interface AdmobCallbackV2 : AdmobCallback {
     fun onReward(item: RewardItem?)
+    fun onCompleted()
 }

@@ -17,7 +17,6 @@ import java.lang.ref.WeakReference
  * Created by Ethan_Xiang on 2017/9/1.
  */
 open class AdmobManager(context: Context) : RewardedVideoAdListener, AdListener() {
-
     companion object {
         private const val DEBUG = false
     }
@@ -121,6 +120,11 @@ open class AdmobManager(context: Context) : RewardedVideoAdListener, AdListener(
     override fun onRewardedVideoAdFailedToLoad(p0: Int) {
         Log.i("AdMob", "onRewardedVideoAdFailedToLoad code $p0")
         mRewardAdCallback?.onError()
+    }
+
+    override fun onRewardedVideoCompleted() {
+        Log.i("AdMob", "onRewardedVideoCompleted")
+        mRewardAdCallback?.onCompleted()
     }
 
     override fun onAdImpression() {
