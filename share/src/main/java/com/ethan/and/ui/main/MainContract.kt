@@ -1,9 +1,12 @@
 package com.ethan.and.ui.main
 
+import android.app.Activity
 import android.content.Context
 import android.os.Handler
+import android.os.Message
 import com.starwin.ethan.mvp_dagger.mvp.IPresenter
 import com.starwin.ethan.mvp_dagger.mvp.IView
+import org.ecjtu.easyserver.server.DeviceInfo
 
 /**
  * Created by hong on 2018/12/15.
@@ -11,12 +14,19 @@ import com.starwin.ethan.mvp_dagger.mvp.IView
 class MainContract {
     interface View : IView<Presenter> {
         fun permissionRejected()
+        fun updateDeviceInfo(update: Boolean, deviceInfo: MutableList<DeviceInfo>)
+        fun updateNetworkInfo(apName: String, isWifi: Boolean, isHotspot: Boolean, state: Int)
     }
 
     interface Presenter : IPresenter<View> {
         fun registerWifiApReceiver(context: Context)
-        fun onCreate(context: Context, handler: Handler)
+        fun onCreate(activity: Activity, handler: Handler)
         fun onDestroy(context: Context)
         fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray)
+        fun closeApp()
+        fun stopServerService()
+        fun startServerService()
+        fun handleMessage(msg: Message)
+        fun doSearch()
     }
 }
