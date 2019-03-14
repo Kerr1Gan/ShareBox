@@ -166,6 +166,7 @@ class MainPresenter : MainContract.Presenter {
         adManager = AdmobManager(activity)
         adManager?.loadRewardAd(activity.getString(R.string.admob_ad_03), object : AdmobCallbackV2 {
             override fun onLoaded() {
+                adManager?.getLatestRewardAd()?.show()
             }
 
             override fun onError() {
@@ -195,6 +196,7 @@ class MainPresenter : MainContract.Presenter {
             }
 
             override fun onReward(item: RewardItem?) {
+
             }
 
         })

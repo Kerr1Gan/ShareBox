@@ -10,6 +10,7 @@ import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.reward.RewardItem
 import com.google.android.gms.ads.reward.RewardedVideoAd
 import com.google.android.gms.ads.reward.RewardedVideoAdListener
+import com.google.gson.Gson
 import java.lang.ref.WeakReference
 
 /**
@@ -108,7 +109,7 @@ open class AdmobManager(context: Context) : RewardedVideoAdListener, AdListener(
     }
 
     override fun onRewarded(p0: RewardItem?) {
-        Log.i("AdMob", "onRewarded rewardItem " + p0.toString())
+        Log.i("AdMob", "onRewarded rewardItem " + Gson().toJson(p0))
         mRewardAdCallback?.onReward(p0)
     }
 
