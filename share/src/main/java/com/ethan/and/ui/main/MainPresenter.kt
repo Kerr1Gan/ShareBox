@@ -30,7 +30,9 @@ import com.flybd.sharebox.R
 import com.flybd.sharebox.model.DeviceModel
 import com.flybd.sharebox.notification.ServerNotification
 import com.flybd.sharebox.util.admob.AdmobCallback
+import com.flybd.sharebox.util.admob.AdmobCallbackV2
 import com.flybd.sharebox.util.admob.AdmobManager
+import com.google.android.gms.ads.reward.RewardItem
 import okhttp3.*
 import org.ecjtu.channellibrary.wifiutil.NetworkUtil
 import org.ecjtu.easyserver.IAidlInterface
@@ -162,20 +164,37 @@ class MainPresenter : MainContract.Presenter {
 
     private fun initAd() {
         adManager = AdmobManager(activity)
-        adManager?.loadInterstitialAd(activity.getString(R.string.admob_ad_02), object : AdmobCallback {
+        adManager?.loadRewardAd(activity.getString(R.string.admob_ad_03), object : AdmobCallbackV2 {
             override fun onLoaded() {
-                adManager?.getLatestInterstitialAd()?.show()
             }
 
             override fun onError() {
-                adManager?.loadInterstitialAd(activity.getString(R.string.admob_ad_02), this)
+                adManager?.loadInterstitialAd(activity.getString(R.string.admob_ad_04), object : AdmobCallback {
+                    override fun onLoaded() {
+                        adManager?.getLatestInterstitialAd()?.show()
+                    }
+
+                    override fun onError() {
+                        adManager?.loadInterstitialAd(activity.getString(R.string.admob_ad_04), this)
+                    }
+
+                    override fun onOpened() {
+                    }
+
+                    override fun onClosed() {
+                        adManager = null
+                    }
+
+                })
             }
 
             override fun onOpened() {
             }
 
             override fun onClosed() {
-                adManager = null
+            }
+
+            override fun onReward(item: RewardItem?) {
             }
 
         })
