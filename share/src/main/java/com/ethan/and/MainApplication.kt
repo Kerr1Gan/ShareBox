@@ -52,6 +52,7 @@ class MainApplication : MultiDexApplication() {
         } else {
             //child process
         }
+        FirebaseManager.init(this)
     }
 
     private fun initMainProcess() {
@@ -167,7 +168,6 @@ class MainApplication : MultiDexApplication() {
     private fun initSDK() {
         CrashReport.initCrashReport(getApplicationContext(), getString(R.string.bugly_id), true)
         MobileAds.initialize(this, getString(R.string.admob_app_id))
-        FirebaseManager.init(this)
     }
 
     private fun initError() {

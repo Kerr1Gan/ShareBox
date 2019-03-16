@@ -24,6 +24,7 @@ import com.ethan.and.db.room.entity.IpMessage
 import com.ethan.and.getMainApplication
 import com.ethan.and.service.MainService
 import com.ethan.and.ui.dialog.ApDataDialog
+import com.flybd.sharebox.AppExecutorManager
 import com.flybd.sharebox.Constants
 import com.flybd.sharebox.PreferenceInfo
 import com.flybd.sharebox.R
@@ -500,7 +501,7 @@ class MainPresenter : MainContract.Presenter {
     }
 
     private fun reconnectHistory() {
-        thread {
+        AppExecutorManager.getInstance().diskIO().execute {
             val okHttpClient = OkHttpClient()
             val listMsg = shareDatabase.ipMessageDao().allMessage
             for (msg in listMsg) {

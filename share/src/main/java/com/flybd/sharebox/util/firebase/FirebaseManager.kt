@@ -23,5 +23,6 @@ object FirebaseManager {
 
     object Event {
         const val APP_RESUME = "app_resume" // (打开应用)
+        const val OPEN_VIEDEO_ACTIVITY = "open_video_activity" // (打开视频页面)
     }
 }
