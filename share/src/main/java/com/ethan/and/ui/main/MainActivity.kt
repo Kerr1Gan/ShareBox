@@ -37,8 +37,6 @@ import com.flybd.sharebox.BuildConfig
 import com.flybd.sharebox.Constants
 import com.flybd.sharebox.PreferenceInfo
 import com.flybd.sharebox.R
-import com.flybd.sharebox.util.firebase.FirebaseManager
-import com.google.firebase.analytics.FirebaseAnalytics
 import org.ecjtu.easyserver.server.DeviceInfo
 import org.ecjtu.easyserver.server.impl.service.EasyServerService
 import org.ecjtu.easyserver.server.util.cache.ServerInfoParcelableHelper
@@ -77,8 +75,7 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
     private val mRequestPermission = arrayOf(Manifest.permission.ACCESS_NETWORK_STATE,
             Manifest.permission.CHANGE_NETWORK_STATE,
             Manifest.permission.ACCESS_NETWORK_STATE,
-            Manifest.permission.CHANGE_WIFI_STATE,
-            Manifest.permission.WRITE_SETTINGS)
+            Manifest.permission.CHANGE_WIFI_STATE)
 
     private var mRecyclerView: RecyclerView? = null
 
@@ -99,6 +96,9 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
         setContentView(R.layout.activity_main)
         var toolbar = findViewById<View>(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
+
+        val bgStatusBar = findViewById<FrameLayout>(R.id.bg_status_bar)
+        bgStatusBar.layoutParams.height = getStatusBarHeight()
 
         initialize()
 
@@ -394,6 +394,8 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        presenter.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
         if (requestCode != REQUEST_CODE) return
         var hasPermission = true
 
@@ -412,7 +414,6 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
             var dialog = ApDataDialog(this)
             SimpleDialogFragment(dialog).show(this.supportFragmentManager, "ap_data_dialog")
         }
-        presenter.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

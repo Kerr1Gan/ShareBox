@@ -111,7 +111,7 @@ public class NetworkUtil {
 
     public static boolean isHotSpot(Context context) {
         try {
-            WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             Method method = wifiManager.getClass().getDeclaredMethod("isWifiApEnabled");
             method.setAccessible(true);
             return (Boolean) method.invoke(wifiManager);
@@ -125,15 +125,35 @@ public class NetworkUtil {
     }
 
     public static WifiInfo getConnectWifiInfo(Context context) {
-        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         return wifiManager.getConnectionInfo();
     }
+
+    public static String getConnectWifiNameV2(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager == null) {
+            return "";
+        }
+        NetworkInfo wifiInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        String wifiName = wifiInfo.getExtraInfo();
+        if (wifiName == null) {
+            return "";
+        }
+        if (wifiName.startsWith("\"")) {
+            wifiName = wifiName.substring(1, wifiName.length());
+        }
+        if (wifiName.endsWith("\"")) {
+            wifiName = wifiName.substring(0, wifiName.length() - 1);
+        }
+        return wifiName;
+    }
+
 
     /**
      * result[0] is self ip,result[1] is host ip,result[2] is isWifiEnable,true or false.
      */
     public static ArrayList<String> getWifiHostAndSelfIP(Context context) {
-        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         String isWifiEnable;
         if (!wifiManager.isWifiEnabled()) {
             isWifiEnable = "false";

@@ -63,7 +63,12 @@ class MainPresenter : MainContract.Presenter {
 
     private val requestPermission = arrayOf(Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_EXTERNAL_STORAGE)
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_NETWORK_STATE,
+            Manifest.permission.CHANGE_NETWORK_STATE,
+            Manifest.permission.ACCESS_NETWORK_STATE,
+            Manifest.permission.CHANGE_WIFI_STATE)
 
     private lateinit var activity: Activity
     private var adManager: AdmobManager? = null
@@ -165,6 +170,10 @@ class MainPresenter : MainContract.Presenter {
             }
             if (!isGranted) {
                 view?.permissionRejected()
+            } else {
+                getHandler()?.post {
+                    checkCurrentNetwork(null)
+                }
             }
         }
     }
@@ -239,12 +248,14 @@ class MainPresenter : MainContract.Presenter {
 
         if (NetworkUtil.isWifi(activity) || info != null) {
             var wifiInfo: WifiInfo? = null
-            if (info != null)
-                wifiInfo = info
-            else
-                wifiInfo = NetworkUtil.getConnectWifiInfo(activity)
+            wifiInfo = info ?: NetworkUtil.getConnectWifiInfo(activity)
 
-            view?.updateNetworkInfo(getRealName(wifiInfo!!.ssid), true, false, 0)
+            val name = if ("<unknown ssid>".equals(wifiInfo!!.ssid)) {
+                NetworkUtil.getConnectWifiNameV2(activity)
+            } else {
+                getRealName(wifiInfo.ssid)
+            }
+            view?.updateNetworkInfo(name, true, false, 0)
             hasAccess = true
             activity.getMainApplication().getSavedInstance().put(Constants.AP_STATE, Constants.NetWorkState.WIFI)
 

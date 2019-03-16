@@ -19,6 +19,7 @@
             android:layout_height="match_parent">
 
             <FrameLayout
+                android:id="@+id/bg_status_bar"
                 android:layout_width="match_parent"
                 android:layout_height="25dp"
                 android:background="@color/colorPrimary" /><!--fix bug in google device-->
