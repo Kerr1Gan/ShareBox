@@ -73,7 +73,7 @@ class MainPresenter : MainContract.Presenter {
 
     private var mDeviceInfoList: MutableList<DeviceInfo> = mutableListOf<DeviceInfo>()
 
-    var refreshing = true
+    private var refreshing = true
 
     private lateinit var shareDatabase: ShareDatabase
 
@@ -529,6 +529,14 @@ class MainPresenter : MainContract.Presenter {
 
             }
         }
+    }
+
+    override fun refresh(isRefresh: Boolean) {
+        this.refreshing = isRefresh
+    }
+
+    override fun isRefreshing(): Boolean {
+        return refreshing
     }
 
     private val mUpdateDeviceInfoReceiver: BroadcastReceiver = object : BroadcastReceiver() {

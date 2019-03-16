@@ -125,7 +125,7 @@ public class FindDeviceManager {
                         Thread.currentThread().interrupt();
                     } catch (IOException e) {
                         e.printStackTrace();
-                        if (Thread.interrupted()) { // 该方法调用后将会清楚interrupt标志位，而Thread.currentThread.interrupted()不会清除标志位
+                        if (Thread.interrupted()) { // 该方法调用后将会清除interrupt标志位，而Thread.currentThread.interrupted()不会清除标志位
                             Thread.currentThread().interrupt();
                         }
                     }

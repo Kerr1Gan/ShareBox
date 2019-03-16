@@ -6,12 +6,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.graphics.drawable.RotateDrawable
-import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Message
 import android.preference.PreferenceManager
-import android.provider.Settings
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.LocalBroadcastManager
@@ -30,7 +28,6 @@ import com.common.utils.activity.ActivityUtil
 import com.common.utils.photo.CapturePhotoHelper
 import com.common.utils.photo.PickPhotoHelper
 import com.ethan.and.getMainApplication
-import com.ethan.and.service.MainService
 import com.ethan.and.ui.activity.SettingsActivity
 import com.ethan.and.ui.adapter.DeviceRecyclerViewAdapter
 import com.ethan.and.ui.dialog.*
@@ -40,7 +37,6 @@ import com.flybd.sharebox.Constants
 import com.flybd.sharebox.PreferenceInfo
 import com.flybd.sharebox.R
 import com.google.firebase.analytics.FirebaseAnalytics
-import org.ecjtu.easyserver.IAidlInterface
 import org.ecjtu.easyserver.server.DeviceInfo
 import org.ecjtu.easyserver.server.impl.service.EasyServerService
 import org.ecjtu.easyserver.server.util.cache.ServerInfoParcelableHelper
@@ -60,8 +56,6 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
     }
 
     private var mAnimator: ObjectAnimator? = null
-
-    private var refreshing = true
 
     private lateinit var presenter: MainContract.Presenter
 
@@ -308,7 +302,7 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
     }
 
     override fun onDestroy() {
-        refreshing = false
+        presenter.refresh(false)
         // destroy
         mPhotoHelper?.clearCache()
         mImageHelper?.clearCache()
@@ -338,10 +332,10 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
         when (item?.itemId) {
             R.id.refresh -> {
                 if (mAnimator?.isRunning == true) {
-                    refreshing = false
+                    presenter.refresh(false)
                     mAnimator?.cancel()
                 } else {
-                    refreshing = true
+                    presenter.refresh(true)
                     mAnimator?.start()
                 }
             }
@@ -361,7 +355,7 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
                     true
                 }
                 R.id.refresh -> {
-                    if (this.refreshing) {
+                    if (presenter.isRefreshing()) {
                         presenter.startSearch()
                     } else {
                         presenter.stopSearch()

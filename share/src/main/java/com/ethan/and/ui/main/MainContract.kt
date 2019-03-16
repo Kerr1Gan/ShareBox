@@ -35,5 +35,7 @@ class MainContract {
         fun go2Setting()
         fun startSearch()
         fun stopSearch()
+        fun refresh(isRefresh: Boolean)
+        fun isRefreshing(): Boolean
     }
 }
