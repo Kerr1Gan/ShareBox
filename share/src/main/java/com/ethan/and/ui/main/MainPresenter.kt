@@ -32,7 +32,9 @@ import com.flybd.sharebox.notification.ServerNotification
 import com.flybd.sharebox.util.admob.AdmobCallback
 import com.flybd.sharebox.util.admob.AdmobCallbackV2
 import com.flybd.sharebox.util.admob.AdmobManager
+import com.flybd.sharebox.util.firebase.FirebaseManager
 import com.google.android.gms.ads.reward.RewardItem
+import com.google.firebase.analytics.FirebaseAnalytics
 import okhttp3.*
 import org.ecjtu.channellibrary.wifiutil.NetworkUtil
 import org.ecjtu.easyserver.IAidlInterface
@@ -91,6 +93,8 @@ class MainPresenter : MainContract.Presenter {
         val filter = IntentFilter(ApDataDialog.ACTION_UPDATE_DEVICE)
         LocalBroadcastManager.getInstance(activity).registerReceiver(mUpdateDeviceInfoReceiver, filter)
         reconnectHistory()
+
+        FirebaseManager.logEvent(FirebaseAnalytics.Event.APP_OPEN, null)
     }
 
     override fun onDestroy(context: Context) {
@@ -141,6 +145,8 @@ class MainPresenter : MainContract.Presenter {
         val intent = Intent(activity, MainService::class.java)
         activity.startService(intent)
         activity.bindService(intent, mMainServiceConnection, Context.BIND_AUTO_CREATE)
+
+        FirebaseManager.logEvent(FirebaseManager.Event.APP_RESUME, null)
     }
 
     override fun dropView() {

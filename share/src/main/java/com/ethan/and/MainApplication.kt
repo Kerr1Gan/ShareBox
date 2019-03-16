@@ -20,6 +20,7 @@ import com.flybd.sharebox.R
 import com.flybd.sharebox.parcel.FileExpandablePropertyCache
 import com.ethan.and.ui.main.MainActivity
 import com.ethan.and.ui.dialog.FilePickDialog
+import com.flybd.sharebox.util.firebase.FirebaseManager
 import com.google.android.gms.ads.MobileAds
 import com.tencent.bugly.crashreport.CrashReport
 import org.ecjtu.easyserver.server.DeviceInfo
@@ -166,6 +167,7 @@ class MainApplication : MultiDexApplication() {
     private fun initSDK() {
         CrashReport.initCrashReport(getApplicationContext(), getString(R.string.bugly_id), true)
         MobileAds.initialize(this, getString(R.string.admob_app_id))
+        FirebaseManager.init(this)
     }
 
     private fun initError() {

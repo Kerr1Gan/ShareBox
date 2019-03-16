@@ -36,6 +36,7 @@
     <string name="faq">FAQ</string>
     <string name="setting">设置</string>
     <string name="help">帮助</string>
+    <string name="feedback">反馈</string>
     <string name="name_with_colon">名字:</string>
     <string name="password_with_colon">密码:</string>
     <string name="ip_with_colon">Ip:</string>

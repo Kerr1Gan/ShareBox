@@ -33,9 +33,11 @@ import com.ethan.and.ui.adapter.DeviceRecyclerViewAdapter
 import com.ethan.and.ui.dialog.*
 import com.ethan.and.ui.fragment.*
 import com.ethan.and.ui.state.StateMachine
+import com.flybd.sharebox.BuildConfig
 import com.flybd.sharebox.Constants
 import com.flybd.sharebox.PreferenceInfo
 import com.flybd.sharebox.R
+import com.flybd.sharebox.util.firebase.FirebaseManager
 import com.google.firebase.analytics.FirebaseAnalytics
 import org.ecjtu.easyserver.server.DeviceInfo
 import org.ecjtu.easyserver.server.impl.service.EasyServerService
@@ -88,7 +90,6 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
 
     private var mWifiImageStateMachine: StateMachine? = null
 
-    private var mFirebaseAnalytics: FirebaseAnalytics? = null
     // ...
     // Obtain the FirebaseAnalytics instance.
 
@@ -104,9 +105,6 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
         presenter = MainPresenter()
         presenter.onCreate(this, getHandler()!!)
         presenter.registerWifiApReceiver(this)
-
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
-        mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.APP_OPEN, null)
     }
 
     private fun initialize() {
@@ -260,6 +258,14 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
             dlg.show()
             dlg.setOnDismissListener {
                 mTextName?.text = PreferenceManager.getDefaultSharedPreferences(this).getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
+            }
+        }
+
+        findViewById<View>(R.id.text_feedback)?.setOnClickListener {
+            try {
+                ActivityUtil.jumpToMarket(this, BuildConfig.APPLICATION_ID)
+            } catch (ex: Exception) {
+                ex.printStackTrace()
             }
         }
 
