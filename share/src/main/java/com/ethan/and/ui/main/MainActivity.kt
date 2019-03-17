@@ -30,7 +30,10 @@ import com.common.utils.photo.PickPhotoHelper
 import com.ethan.and.getMainApplication
 import com.ethan.and.ui.activity.SettingsActivity
 import com.ethan.and.ui.adapter.DeviceRecyclerViewAdapter
-import com.ethan.and.ui.dialog.*
+import com.ethan.and.ui.dialog.ApDataDialog
+import com.ethan.and.ui.dialog.EditNameDialog
+import com.ethan.and.ui.dialog.IPSearchDialog
+import com.ethan.and.ui.dialog.TextItemDialog
 import com.ethan.and.ui.fragment.*
 import com.ethan.and.ui.state.StateMachine
 import com.flybd.sharebox.*
@@ -39,7 +42,6 @@ import org.ecjtu.easyserver.server.impl.service.EasyServerService
 import org.ecjtu.easyserver.server.util.cache.ServerInfoParcelableHelper
 import java.io.File
 import java.net.HttpURLConnection
-import kotlin.concurrent.thread
 
 class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
 
