@@ -155,6 +155,13 @@ public class SimpleMediaController extends FrameLayout {
         return mRoot;
     }
 
+    public ViewGroup getBottomControllerView() {
+        if (mRoot != null) {
+            return mRoot.findViewById(R.id.sdk_media_bottom_controller);
+        }
+        return null;
+    }
+
     private void initControllerView(View v) {
         mPauseButton = (ImageButton) v.findViewById(R.id.pause);
         if (mPauseButton != null) {

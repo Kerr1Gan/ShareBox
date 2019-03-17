@@ -83,9 +83,15 @@ class IjkVideoFragment : Fragment(), GestureDetector.OnGestureListener, View.OnT
         initOrientationListener()
 
         if (isNavigationBarShow(activity!!)) {
-            val root = view.findViewById<View>(R.id.root)
-            if (root != null) {
-                root.setPadding(root.paddingLeft, root.paddingTop, view.paddingRight, view.paddingBottom + getNavigationBarHeight(activity!!))
+//            val root = view.findViewById<View>(R.id.root)
+//            if (root != null) {
+//                root.setPadding(root.paddingLeft, root.paddingTop, view.paddingRight, view.paddingBottom + getNavigationBarHeight(activity!!))
+//            }
+            mVideoView?.post {
+                val localObj = mMediaController?.bottomControllerView
+                if (localObj != null) {
+                    localObj.setPadding(localObj.paddingLeft, localObj.paddingTop, localObj.paddingRight, localObj.paddingBottom + getNavigationBarHeight(activity!!))
+                }
             }
         }
     }

@@ -36,6 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="vertical"
+        android:id="@+id/sdk_media_bottom_controller"
         android:paddingTop="4dp">
 
         <RelativeLayout
