@@ -87,6 +87,16 @@
                 <data
                     android:mimeType="video/*"
                     android:scheme="http" />
+
+                <data
+                    android:mimeType="video/*"
+                    android:scheme="http" />
+                <data
+                    android:mimeType="video/*"
+                    android:scheme="content" />
+                <data
+                    android:mimeType="video/*"
+                    android:scheme="asset" />
             </intent-filter>
         </activity>
 
