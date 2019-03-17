@@ -115,7 +115,10 @@ class FilePickDialogFragment : AppCompatDialogFragment {
                         for (packageInfo in installedApps) {
                             arrayList.add(packageInfo.applicationInfo.sourceDir)
                         }
-                        localMap.put(context!!.getString(R.string.installed), arrayList)
+                        val ctx = context
+                        if (ctx != null) {
+                            localMap.put(ctx.getString(R.string.installed), arrayList)
+                        }
                     }
 
                     if (fileList is MutableList<String>) {

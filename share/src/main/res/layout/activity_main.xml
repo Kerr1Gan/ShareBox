@@ -206,7 +206,6 @@
                         android:id="@+id/text_feedback"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/ripple_drawer_layout_item"
                         android:drawableLeft="@mipmap/ic_feedback"
                         android:drawablePadding="15dp"
                         android:gravity="center_vertical"

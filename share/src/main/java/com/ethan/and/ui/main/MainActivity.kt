@@ -79,8 +79,6 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
 
     private var mRecyclerView: RecyclerView? = null
 
-    private var mDeviceInfoList: MutableList<DeviceInfo> = mutableListOf<DeviceInfo>()
-
     private var mPhotoHelper: CapturePhotoHelper? = null
 
     private var mImageHelper: PickPhotoHelper? = null
@@ -165,7 +163,6 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
         mApName = findViewById<TextView>(R.id.ap_name)
 
         mRecyclerView = view1 as RecyclerView
-        mRecyclerView?.adapter = DeviceRecyclerViewAdapter(mDeviceInfoList, this)
 
         var manager: LinearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         mRecyclerView?.layoutManager = manager
@@ -193,11 +190,14 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
 
     override fun updateDeviceInfo(update: Boolean, deviceInfo: MutableList<DeviceInfo>) {
         if (update) {
+            if (mRecyclerView?.adapter == null) {
+                mRecyclerView?.adapter = DeviceRecyclerViewAdapter(deviceInfo, this)
+            }
             mRecyclerView?.adapter?.notifyDataSetChanged()
         }
         val index = mViewSwitcher?.indexOfChild(mRecyclerView)
         val nextIndex = mViewSwitcher?.indexOfChild(mViewSwitcher?.nextView)
-        if (mDeviceInfoList.size != 0) {
+        if (deviceInfo.size != 0) {
             if (index == nextIndex) {
                 mViewSwitcher?.showNext()
             }
@@ -227,7 +227,7 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
         }
 
         findViewById<View>(R.id.text_help)?.setOnClickListener {
-            val intent = ActionBarFragmentActivity.newInstance(this, HelpFragment::class.java, title = "Help")
+            val intent = ActionBarFragmentActivity.newInstance(this, HelpFragment::class.java, title = getString(R.string.help))
             this.startActivity(intent)
         }
 

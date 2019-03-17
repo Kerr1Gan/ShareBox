@@ -189,6 +189,9 @@ class MainPresenter : MainContract.Presenter {
             }
 
             override fun onError() {
+                if (view == null) {
+                    return
+                }
                 adManager?.loadInterstitialAd(activity.getString(R.string.admob_ad_04), object : AdmobCallback {
 
                     override fun onLoaded() {
@@ -196,6 +199,9 @@ class MainPresenter : MainContract.Presenter {
                     }
 
                     override fun onError() {
+                        if (view == null) {
+                            return
+                        }
                         adManager?.loadInterstitialAd(activity.getString(R.string.admob_ad_04), this)
                     }
 

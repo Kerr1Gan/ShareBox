@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Window
 import android.view.WindowManager
+import android.widget.Toast
 import com.flybd.sharebox.R
 import com.ethan.and.ui.fragment.IjkVideoFragment
 import com.flybd.sharebox.util.firebase.FirebaseManager
@@ -19,12 +20,12 @@ class IjkVideoActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         setContentView(R.layout.activity_ijk_video)
         FirebaseManager.logEvent(FirebaseManager.Event.OPEN_VIEDEO_ACTIVITY, null)
         if (supportFragmentManager.findFragmentByTag(TAG) == null) {
-            if (intent != null) {
+            if (intent != null && intent.extras != null) {
                 val fragment = IjkVideoFragment()
                 fragment.arguments = intent.extras
                 fragment.arguments?.putParcelable("data", intent.data)
@@ -32,6 +33,7 @@ class IjkVideoActivity : AppCompatActivity() {
                         .add(R.id.container, fragment, TAG)
                         .commit()
             } else {
+                Toast.makeText(this, "uri is invalid", Toast.LENGTH_SHORT).show()
                 finish()
             }
         }
