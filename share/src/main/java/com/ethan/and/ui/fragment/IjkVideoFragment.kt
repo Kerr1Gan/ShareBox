@@ -84,7 +84,7 @@ class IjkVideoFragment : Fragment(), GestureDetector.OnGestureListener, View.OnT
 
         if (isNavigationBarShow(activity!!)) {
             val root = view.findViewById<View>(R.id.root)
-            if(root!=null){
+            if (root != null) {
                 root.setPadding(root.paddingLeft, root.paddingTop, view.paddingRight, view.paddingBottom + getNavigationBarHeight(activity!!))
             }
         }
@@ -92,10 +92,11 @@ class IjkVideoFragment : Fragment(), GestureDetector.OnGestureListener, View.OnT
 
     private val mCallback = SimpleMediaController.MediaPlayerCallback {
         mIgnoreOrientation = !mIgnoreOrientation
-        if (activity!!.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) {
-            activity!!.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT)
+        val act = activity ?: return@MediaPlayerCallback
+        if (act.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) {
+            act.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT)
         } else {
-            activity!!.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
+            act.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
         }
     }
 
@@ -151,15 +152,16 @@ class IjkVideoFragment : Fragment(), GestureDetector.OnGestureListener, View.OnT
                 if (mIgnoreOrientation) {
                     return
                 }
+                val act = activity ?: return
                 // 设置竖屏
                 if (rotation >= 0 && rotation <= 45 || rotation >= 315 || rotation >= 135 && rotation <= 225) {
-                    activity!!.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+                    act.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
                 } else if (rotation > 45 && rotation < 135 || rotation > 225 && rotation < 315) {
                     // 设置横屏
                     if (rotation > 225 && rotation < 315) {
-                        activity!!.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+                        act.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
                     } else {
-                        activity!!.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE)
+                        act.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE)
                     }
                 }
             }
