@@ -13,11 +13,12 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.common.utils.activity.ActivityUtil
 import com.dd.CircularProgressButton
 import com.flybd.sharebox.R
-import com.common.utils.activity.ActivityUtil
 import org.ecjtu.channellibrary.wifiutil.NetworkUtil
 import org.ecjtu.channellibrary.wifiutil.WifiUtil
+
 
 /**
  * Created by KerriGan on 2017/6/2.
@@ -73,6 +74,15 @@ open class WifiBottomSheetDialog : CloseBottomSheetDialog {
 
         vg.findViewById<View>(R.id.text_use_last).setOnClickListener {
             usingLast()
+        }
+
+        vg.findViewById<View>(R.id.text_to_setting).setOnClickListener {
+            val intent = ActivityUtil.getHotspotSettingIntent(context)
+            try {
+                context.startActivity(intent)
+            } catch (ex: Exception) {
+                ex.printStackTrace()
+            }
         }
 
         if (NetworkUtil.isHotSpot(context)) {

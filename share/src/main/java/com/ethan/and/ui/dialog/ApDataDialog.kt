@@ -1,13 +1,18 @@
 package com.ethan.and.ui.dialog
 
+import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.Paint
 import android.net.Uri
 import android.preference.PreferenceManager
 import android.support.design.widget.BottomSheetBehavior
+import android.support.v4.app.ActivityCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.text.TextUtils
 import android.util.TypedValue
@@ -15,10 +20,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import com.common.netcore.RequestManager
 import com.common.netcore.network.IRequestCallback
 import com.common.qrcode.QRCodeScannerActivity
 import com.common.qrcode.QrUtils
+import com.common.utils.activity.ActivityUtil
+import com.ethan.and.ui.fragment.SimpleDialogFragment
+import com.ethan.and.ui.main.MainActivity
 import com.flybd.sharebox.Constants
 import com.flybd.sharebox.R
 import org.ecjtu.channellibrary.wifiutil.NetworkUtil
@@ -37,6 +46,7 @@ class ApDataDialog(activity: Activity) : BaseBottomSheetDialog(activity, activit
         const val ACTION_UPDATE_DEVICE = "update_device_action"
         const val EXTRA_IP = "extra_ip"
         const val EXTRA_JSON = "extra_json"
+        private const val REQUEST_CODE = 101
     }
 
 
@@ -154,7 +164,12 @@ class ApDataDialog(activity: Activity) : BaseBottomSheetDialog(activity, activit
         }
 
         vg.findViewById<View>(R.id.qr_code).setOnClickListener {
-            getFragmentHost()?.startActivityForResult(Intent(context, QRCodeScannerActivity::class.java), 100)
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(ownerActivity, arrayOf(Manifest.permission.CAMERA), REQUEST_CODE)
+                Toast.makeText(context, "Need to get camera permission", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+            getFragmentHost()?.startActivityForResult(Intent(context, QRCodeScannerActivity::class.java), REQUEST_CODE)
         }
     }
 
@@ -172,9 +187,26 @@ class ApDataDialog(activity: Activity) : BaseBottomSheetDialog(activity, activit
         mIp = ip
     }
 
+    fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if (requestCode == REQUEST_CODE) {
+            //AppOpsManager
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                getFragmentHost()?.startActivityForResult(Intent(context, QRCodeScannerActivity::class.java), REQUEST_CODE)
+            } else {
+                val builder = AlertDialog.Builder(context)
+                builder.setTitle("Warn")
+                        .setMessage("Need to get camera permission.")
+                        .setPositiveButton(android.R.string.ok) { dialog, which ->
+                            ownerActivity.startActivity(ActivityUtil.getAppDetailSettingIntent(ownerActivity))
+                        }
+                builder.show()
+            }
+        }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode != 100) {
+        if (requestCode != REQUEST_CODE) {
             return
         }
         if (resultCode == Activity.RESULT_OK) {

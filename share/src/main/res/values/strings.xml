@@ -55,6 +55,9 @@
     <string name="you_will_clear_cache">you will clear %s cache</string>
 
     <string name="installed">已安装</string>
+
+    <string name="use_last">Using last</string>
+    <string name="go_to_setting">Jump to settings</string>
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->

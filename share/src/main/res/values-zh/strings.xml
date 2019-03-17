@@ -55,6 +55,9 @@
     <string name="you_will_clear_cache">你将清除 %s 缓存</string>
 
     <string name="installed">已安装</string>
+
+    <string name="use_last">使用上一次的</string>
+    <string name="go_to_setting">跳转到设置</string>
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->

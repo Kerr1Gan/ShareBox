@@ -33,10 +33,7 @@ import com.ethan.and.ui.adapter.DeviceRecyclerViewAdapter
 import com.ethan.and.ui.dialog.*
 import com.ethan.and.ui.fragment.*
 import com.ethan.and.ui.state.StateMachine
-import com.flybd.sharebox.BuildConfig
-import com.flybd.sharebox.Constants
-import com.flybd.sharebox.PreferenceInfo
-import com.flybd.sharebox.R
+import com.flybd.sharebox.*
 import org.ecjtu.easyserver.server.DeviceInfo
 import org.ecjtu.easyserver.server.impl.service.EasyServerService
 import org.ecjtu.easyserver.server.util.cache.ServerInfoParcelableHelper
@@ -85,6 +82,8 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
 
     private var mWifiImageStateMachine: StateMachine? = null
 
+    private var apDataDlg: ApDataDialog? = null
+
     // ...
     // Obtain the FirebaseAnalytics instance.
 
@@ -103,6 +102,7 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
         presenter = MainPresenter()
         presenter.onCreate(this, getHandler()!!)
         presenter.registerWifiApReceiver(this)
+        requestNetworkPermission()
     }
 
     private fun initialize() {
@@ -149,15 +149,16 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
             presenter.go2Setting()
         }
         mHotspotButton.setOnClickListener {
-            for (index in 0 until mRequestPermission.size) {
-                if (ActivityCompat.checkSelfPermission(this@MainActivity, mRequestPermission[index]) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this@MainActivity, mRequestPermission, REQUEST_CODE)
-                    return@setOnClickListener
-                }
+            requestNetworkPermission()
+            //暂时通过系统打开热点
+//            val dlg = WifiBottomSheetDialog(this, this)
+//            dlg.show()
+            val intent = ActivityUtil.getHotspotSettingIntent(this)
+            try {
+                startActivity(intent)
+            } catch (ex: Exception) {
+                ex.printStackTrace()
             }
-
-            val dlg = WifiBottomSheetDialog(this, this)
-            dlg.show()
         }
 
         mApName = findViewById<TextView>(R.id.ap_name)
@@ -179,6 +180,14 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
         }
 
         initDrawerLayout()
+    }
+
+    private fun requestNetworkPermission() {
+        for (index in 0 until mRequestPermission.size) {
+            if (ActivityCompat.checkSelfPermission(this@MainActivity, mRequestPermission[index]) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this@MainActivity, mRequestPermission, REQUEST_CODE)
+            }
+        }
     }
 
     override fun updateNetworkInfo(apName: String, isWifi: Boolean, isHotspot: Boolean, state: Int) {
@@ -242,7 +251,7 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
                 if (index == 0) {
                     mImageHelper = null
                     mPhotoHelper = CapturePhotoHelper(this)
-                    mPhotoHelper?.takePhoto()
+                    mPhotoHelper?.takePhoto(BuildConfig.APPLICATION_ID + ".fileprovider")
                 } else if (index == 1) {
                     mPhotoHelper = null
                     mImageHelper = PickPhotoHelper(this)
@@ -278,7 +287,7 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
         if (iconFile.exists()) {
             val icon = findViewById<View>(R.id.drawer_view)?.findViewById<View>(R.id.icon) as ImageView //有相同id 找到错误的view
             icon.setImageBitmap(BitmapFactory.decodeFile(iconFile.absolutePath))
-            thread {
+            AppExecutorManager.getInstance().diskIO().execute {
                 var deviceInfo = this.getMainApplication().getSavedInstance().get(Constants.KEY_INFO_OBJECT) as DeviceInfo?
                 deviceInfo?.iconPath = this.filesDir.absolutePath + "/" + Constants.ICON_HEAD
                 val helper = ServerInfoParcelableHelper(this.filesDir.absolutePath)
@@ -355,8 +364,8 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
                     if (state == Constants.NetWorkState.MOBILE || state == Constants.NetWorkState.NONE) {
                         Toast.makeText(this, R.string.need_wifi_or_hotspot, Toast.LENGTH_SHORT).show()
                     } else {
-                        val dialog = ApDataDialog(this)
-                        SimpleDialogFragment(dialog).show(this.supportFragmentManager, "ap_data_dialog")
+                        apDataDlg = ApDataDialog(this)
+                        SimpleDialogFragment(apDataDlg!!).show(this.supportFragmentManager, "ap_data_dialog")
                     }
                     true
                 }
@@ -396,24 +405,27 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         presenter.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        if (requestCode != REQUEST_CODE) return
-        var hasPermission = true
+        if (requestCode == REQUEST_CODE) {
+            var hasPermission = true
 
-        for (index in 0 until mRequestPermission.size) {
-            if (grantResults[index] != PackageManager.PERMISSION_GRANTED) {
-                hasPermission = false
+            for (index in 0 until mRequestPermission.size) {
+                if (grantResults[index] != PackageManager.PERMISSION_GRANTED) {
+                    hasPermission = false
+                }
+
+//                if (!ActivityCompat.shouldShowRequestPermissionRationale(this, mRequestPermission[index])) {
+//                    this.startActivity(ActivityUtil.getAppDetailSettingIntent(this))
+//                    return
+//                }
             }
 
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(this, mRequestPermission[index])) {
-                this.startActivity(ActivityUtil.getAppDetailSettingIntent(this))
-                return
+            if (hasPermission) {
+                apDataDlg = ApDataDialog(this)
+                SimpleDialogFragment(apDataDlg!!).show(this.supportFragmentManager, "ap_data_dialog")
             }
         }
-
-        if (hasPermission) {
-            var dialog = ApDataDialog(this)
-            SimpleDialogFragment(dialog).show(this.supportFragmentManager, "ap_data_dialog")
-        }
+        apDataDlg?.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        mPhotoHelper?.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

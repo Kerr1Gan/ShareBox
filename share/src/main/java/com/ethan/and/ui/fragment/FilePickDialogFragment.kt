@@ -96,8 +96,8 @@ class FilePickDialogFragment : AppCompatDialogFragment {
                     val localMap = LinkedHashMap<String, MutableList<String>>()
                     if (title.equals("Apk", true)) {
                         val arrayList = ArrayList<String>()
-                        if (context == null) return@run
-                        val installedApps = FileUtil.getInstalledApps(context!!, false)
+                        val ctx = context ?: return@run
+                        val installedApps = FileUtil.getInstalledApps(ctx, false)
                         Collections.sort(installedApps, object : Comparator<PackageInfo> {
                             override fun compare(lhs: PackageInfo?, rhs: PackageInfo?): Int {
                                 if (lhs == null || rhs == null) {
@@ -115,10 +115,7 @@ class FilePickDialogFragment : AppCompatDialogFragment {
                         for (packageInfo in installedApps) {
                             arrayList.add(packageInfo.applicationInfo.sourceDir)
                         }
-                        val ctx = context
-                        if (ctx != null) {
-                            localMap.put(ctx.getString(R.string.installed), arrayList)
-                        }
+                        localMap.put(ctx.getString(R.string.installed), arrayList)
                     }
 
                     if (fileList is MutableList<String>) {
