@@ -1,76 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="80dp"
-    android:background="#EFEFEF"
-    android:orientation="horizontal">
+    android:background="@drawable/ripple_file_group_item">
 
     <RelativeLayout
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:background="@mipmap/folder"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="10dp"
-        android:background="@mipmap/folder">
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
 
         <ImageView
-            android:id="@+id/icon"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
+            android:id="@+id/icon"
+            android:scaleType="fitXY"
             android:layout_marginLeft="5dp"
-            android:layout_marginTop="15dp"
             android:layout_marginRight="5dp"
             android:layout_marginBottom="10dp"
-            android:scaleType="fitXY" />
+            android:layout_marginTop="15dp"
+            android:layout_centerHorizontal="true"/>
 
         <TextView
-            android:id="@+id/text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
+            android:id="@+id/text"
             android:layout_marginLeft="5dp"
-            android:layout_marginTop="15dp"
             android:layout_marginRight="5dp"
             android:layout_marginBottom="10dp"
+            android:layout_marginTop="15dp"
+            android:singleLine="true"
             android:gravity="center"
-            android:singleLine="true" />
+            android:layout_centerHorizontal="true"/>
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/text_name"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
-        android:layout_margin="5dp"
         android:layout_weight="1"
+        android:id="@+id/text_name"
+        android:layout_margin="5dp"
         android:gravity="center_vertical"
-        android:singleLine="true" />
+        android:singleLine="true"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_margin="5dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_margin="5dp">
 
         <TextView
-            android:id="@+id/file_count"
             android:layout_width="60dp"
             android:layout_height="40dp"
-            android:layout_gravity="center_vertical"
+            android:textSize="15sp"
             android:gravity="center"
+            android:id="@+id/file_count"
             android:singleLine="true"
-            android:textSize="15sp" />
+            android:layout_gravity="center_vertical"/>
 
         <TextView
-            android:id="@+id/select_all"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_gravity="center_vertical"
+            android:textSize="20sp"
             android:background="@drawable/selector_file_group_item"
-            android:gravity="center"
             android:textColor="@android:color/white"
-            android:textSize="20sp" />
+            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/select_all"/>
     </LinearLayout>
 </LinearLayout>
