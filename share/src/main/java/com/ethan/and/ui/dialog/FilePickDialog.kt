@@ -126,7 +126,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         item = TabItemInfo(context.getString(R.string.apk), FileUtil.string2MediaFileType("Apk"))
         mTabItemHolders?.put("Apk", item)
 
-        item = TabItemInfo(context.getString(R.string.rar), FileUtil.string2MediaFileType("Rar"))
+        item = TabItemInfo(context.getString(R.string.archive), FileUtil.string2MediaFileType("Rar"))
         mTabItemHolders?.put("Rar", item)
 
     }

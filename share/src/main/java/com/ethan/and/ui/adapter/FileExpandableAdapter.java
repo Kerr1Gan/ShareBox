@@ -340,7 +340,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
         } else if (type == FileUtil.MediaFileType.DOC) {
             text.setText(R.string.doc);
         } else if (type == FileUtil.MediaFileType.RAR) {
-            text.setText(R.string.rar);
+            text.setText(R.string.archive);
         }
     }
 

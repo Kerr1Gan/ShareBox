@@ -6,7 +6,7 @@
     <string name="photo">照片</string>
     <string name="doc">文档</string>
     <string name="apk">安装包</string>
-    <string name="rar">压缩包</string>
+    <string name="archive">压缩包</string>
 
     <string name="wifi">WIFI</string>
     <string name="hotspot">Hotspot</string>
