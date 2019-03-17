@@ -33,8 +33,17 @@ class IjkVideoActivity : AppCompatActivity() {
                         .add(R.id.container, fragment, TAG)
                         .commit()
             } else {
-                Toast.makeText(this, "uri is invalid", Toast.LENGTH_SHORT).show()
-                finish()
+                if (intent != null && intent.data != null) {
+                    val fragment = IjkVideoFragment()
+                    fragment.arguments = Bundle()
+                    fragment.arguments?.putParcelable("data", intent.data)
+                    supportFragmentManager.beginTransaction()
+                            .add(R.id.container, fragment, TAG)
+                            .commit()
+                } else {
+                    Toast.makeText(this, "uri is invalid", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
             }
         }
     }
