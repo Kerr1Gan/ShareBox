@@ -5,6 +5,7 @@ import android.content.IntentFilter;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -26,7 +27,8 @@ import java.util.ArrayList;
  */
 public class WifiUtil {
 
-    private static final String TAG="WifiUtil";
+    private static final String TAG = "WifiUtil";
+
     public static ArrayList<String> getConnectedIP() {
         ArrayList<String> connectedIP = new ArrayList<String>();
         try {
@@ -50,8 +52,8 @@ public class WifiUtil {
         return connectedIP;
     }
 
-    public static final String DEVICE_P2P="p2p";
-    public static final String DEVICE_WLAN="wlan";
+    public static final String DEVICE_P2P = "p2p";
+    public static final String DEVICE_WLAN = "wlan";
 
     public static ArrayList<String> nativeGetConnectedIP() {
         return nativeGetConnectedIP(DEVICE_WLAN);
@@ -60,23 +62,23 @@ public class WifiUtil {
     public static ArrayList<String> nativeGetConnectedIP(String deviceName) {
         ArrayList<String> connectedIP = new ArrayList<String>();
         try {
-            Process local=Runtime.getRuntime().exec("cat /proc/net/arp");
+            Process local = Runtime.getRuntime().exec("cat /proc/net/arp");
 
-            DataInputStream os=new DataInputStream(local.getInputStream());
+            DataInputStream os = new DataInputStream(local.getInputStream());
 
             String line;
-            Log.i(TAG,"arp begin");
+            Log.i(TAG, "arp begin");
             while ((line = os.readLine()) != null) {
                 Log.i(TAG, line);
                 String[] splited = line.split("\\s+");
                 if (splited != null && splited.length > 5) {
-                    if(!splited[3].equals("00:00:00:00:00:00")&&splited[5].contains(deviceName)){
+                    if (!splited[3].equals("00:00:00:00:00:00") && splited[5].contains(deviceName)) {
                         String ip = splited[0];
                         connectedIP.add(ip);
                     }
                 }
             }
-            Log.i(TAG,"arp end");
+            Log.i(TAG, "arp end");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -108,28 +110,24 @@ public class WifiUtil {
 //    }
 
 
-
     /**
-     *  must not be used in org.ecjtu.share.ui thread.
+     * must not be used in org.ecjtu.share.ui thread.
      */
-    public static boolean nativeIsApAlive(String ip)
-    {
+    public static boolean nativeIsApAlive(String ip) {
         try {
-            Process local=Runtime.getRuntime().exec(("/system/bin/ping "+ip));
+            Process local = Runtime.getRuntime().exec(("/system/bin/ping " + ip));
 
-            DataInputStream os=new DataInputStream(local.getInputStream());
+            DataInputStream os = new DataInputStream(local.getInputStream());
 
-            int index=0;
+            int index = 0;
             String line;
             while ((line = os.readLine()) != null) {
                 System.out.println(line);
-                if(line.contains("Unreachable"))
-                {
+                if (line.contains("Unreachable")) {
                     os.close();
                     return false;
                 }
-                if(index>=2)
-                {
+                if (index >= 2) {
                     os.close();
                     return true;
                 }
@@ -148,8 +146,7 @@ public class WifiUtil {
         } catch (IOException e) {
             e.printStackTrace();
             return false;
-        } catch (IllegalArgumentException e)
-        {
+        } catch (IllegalArgumentException e) {
             e.printStackTrace();
             return false;
         }
@@ -157,41 +154,37 @@ public class WifiUtil {
     }
 
 
-
-
-    public static boolean openHotSpot(WifiManager wifiManager, boolean isOpen, String hotName, String password)
-    {
-        if(wifiManager.isWifiEnabled()&&isOpen)
+    public static boolean openHotSpot(WifiManager wifiManager, boolean isOpen, String hotName, String password) {
+        if (wifiManager.isWifiEnabled() && isOpen)
             wifiManager.setWifiEnabled(false);
 
-        if(hotName.length()<=0 || password.length()<=0)
-        {
-            hotName=WifiAutoConnect.BaseSSID;
-            password=WifiAutoConnect.BaseCode;
+        if (hotName.length() <= 0 || password.length() <= 0) {
+            hotName = WifiAutoConnect.BaseSSID;
+            password = WifiAutoConnect.BaseCode;
         }
 
 
         try {
-            WifiConfiguration apConfig=new WifiConfiguration();
+            WifiConfiguration apConfig = new WifiConfiguration();
 
 //            WifiConfiguration apConfig=getWifiApConfiguration(wifiManager);
 
             //wifi name
 //            apConfig.SSID="\""+hotName+"\"";
-            apConfig.SSID=hotName;
+            apConfig.SSID = hotName;
 
             //password
 //            apConfig.preSharedKey="\""+password+"\"";
-            apConfig.preSharedKey=password;
+            apConfig.preSharedKey = password;
 
             //allowed password
             apConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
 
-            Class c=Class.forName("android.net.wifi.WifiConfiguration$KeyMgmt");
+            Class c = Class.forName("android.net.wifi.WifiConfiguration$KeyMgmt");
 
-            Field f=c.getDeclaredField("WPA2_PSK");
+            Field f = c.getDeclaredField("WPA2_PSK");
 
-            int n=f.getInt(f);
+            int n = f.getInt(f);
 
             apConfig.allowedAuthAlgorithms.clear();
             apConfig.allowedGroupCiphers.clear();
@@ -206,10 +199,10 @@ public class WifiUtil {
             apConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
 
 
-            Method method=wifiManager.getClass().getMethod("setWifiApEnabled",
-                    WifiConfiguration.class,Boolean.TYPE);
+            Method method = wifiManager.getClass().getMethod("setWifiApEnabled",
+                    WifiConfiguration.class, Boolean.TYPE);
 
-            return (Boolean)method.invoke(wifiManager,apConfig,isOpen);
+            return (Boolean) method.invoke(wifiManager, apConfig, isOpen);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
@@ -224,38 +217,34 @@ public class WifiUtil {
         return false;
     }
 
-    public static boolean openHotSpot(Context context, boolean isOpen, String hotName, String password)
-    {
-        WifiManager wifiManager= (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-        return openHotSpot(wifiManager,isOpen,hotName,password);
+    public static boolean openHotSpot(Context context, boolean isOpen, String hotName, String password) {
+        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        return openHotSpot(wifiManager, isOpen, hotName, password);
     }
 
 
-    public static void disConnectWifi(Context context)
-    {
-        WifiManager manager= (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+    public static void disConnectWifi(Context context) {
+        WifiManager manager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         manager.setWifiEnabled(false);
     }
 
 
-    private static ServerSocket _aliveServerSocket=null;
+    private static ServerSocket _aliveServerSocket = null;
 
     @Deprecated
-    public static synchronized void startAliveServer(String ip)
-    {
-        if(_aliveServerSocket!=null)
+    public static synchronized void startAliveServer(String ip) {
+        if (_aliveServerSocket != null)
             return;
-        final String fIp=ip;
+        final String fIp = ip;
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while(true)
-                {
+                while (true) {
                     try {
-                        _aliveServerSocket=new ServerSocket();
-                        SocketAddress addr=new InetSocketAddress(fIp,12500);
+                        _aliveServerSocket = new ServerSocket();
+                        SocketAddress addr = new InetSocketAddress(fIp, 12500);
                         _aliveServerSocket.bind(addr, 5);
-                        Socket socket=_aliveServerSocket.accept();
+                        Socket socket = _aliveServerSocket.accept();
 
                         socket.close();
 
@@ -268,10 +257,8 @@ public class WifiUtil {
     }
 
     @Deprecated
-    public static synchronized void stopAliveServer()
-    {
-        if(_aliveServerSocket!=null)
-        {
+    public static synchronized void stopAliveServer() {
+        if (_aliveServerSocket != null) {
             try {
                 _aliveServerSocket.close();
             } catch (IOException e) {
@@ -281,25 +268,23 @@ public class WifiUtil {
     }
 
 
-
-
     /**
      * Return whether Wi-Fi AP is enabled or disabled.
-     * @return {@code true} if Wi-Fi AP is enabled
      *
+     * @return {@code true} if Wi-Fi AP is enabled
      * @hide Dont open yet
      */
     public static boolean isWifiApEnabled(Context context) {
         Method method = null;
-        WifiManager manager= (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiManager manager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         try {
             method = manager.getClass().getMethod("getWifiApState");
 
             int tmp = ((Integer) method.invoke(manager));
 
-            int res=manager.getClass().getDeclaredField("WIFI_AP_STATE_ENABLED").getInt(manager);
+            int res = manager.getClass().getDeclaredField("WIFI_AP_STATE_ENABLED").getInt(manager);
 
-            return tmp==res;
+            return tmp == res;
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
@@ -313,11 +298,10 @@ public class WifiUtil {
         return false;
     }
 
-    public static String getWifiSSID(Context context)
-    {
-        WifiManager manager= (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+    public static String getWifiSSID(Context context) {
+        WifiManager manager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
-        if(!manager.isWifiEnabled())
+        if (!manager.isWifiEnabled())
             return null;
 
         return manager.getConnectionInfo().getSSID();
@@ -325,6 +309,7 @@ public class WifiUtil {
 
     /**
      * Gets the Wi-Fi AP Configuration.
+     *
      * @return AP details in {@link WifiConfiguration}
      */
     public static WifiConfiguration getWifiApConfiguration(WifiManager wifiManager) {
@@ -339,14 +324,16 @@ public class WifiUtil {
     }
 
     public static WifiConfiguration getWifiApConfiguration(Context context) {
-        WifiManager manager= (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiManager manager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         return getWifiApConfiguration(manager);
     }
+
     /**
      * Sets the Wi-Fi AP Configuration.
+     *
      * @return {@code true} if the operation succeeded, {@code false} otherwise
      */
-    public static boolean setWifiApConfiguration(WifiManager wifiManager,WifiConfiguration wifiConfig) {
+    public static boolean setWifiApConfiguration(WifiManager wifiManager, WifiConfiguration wifiConfig) {
         try {
             Method method = wifiManager.getClass().getMethod("setWifiApConfiguration", WifiConfiguration.class);
             return (Boolean) method.invoke(wifiManager, wifiConfig);
@@ -356,29 +343,25 @@ public class WifiUtil {
         }
     }
 
-    public static void getNearWifiList(final Context context, final WifiReceiver.IReceiveNewNetWorks listener)
-    {
-        WifiManager manager= (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+    public static void getNearWifiList(final Context context, final WifiReceiver.IReceiveNewNetWorks listener) {
+        WifiManager manager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
-        final WifiReceiver receiver=new WifiReceiver(manager);
+        final WifiReceiver receiver = new WifiReceiver(manager);
 
-        WifiReceiver.IReceiveNewNetWorks wListener=new WifiReceiver.IReceiveNewNetWorks() {
+        WifiReceiver.IReceiveNewNetWorks wListener = new WifiReceiver.IReceiveNewNetWorks() {
 
-            WifiReceiver _receiver=receiver;
+            WifiReceiver _receiver = receiver;
 
             @Override
             public void onReceive(ArrayList<ScanResult> list) {
 
                 listener.onReceive(list);
 
-                if(_receiver!=null)
-                {
-                    try
-                    {
+                if (_receiver != null) {
+                    try {
                         context.unregisterReceiver(_receiver);
-                        _receiver=null;
-                    }catch (Exception e)
-                    {
+                        _receiver = null;
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -390,25 +373,24 @@ public class WifiUtil {
 
         manager.disconnect();
 
-        if(!manager.isWifiEnabled())
-          manager.setWifiEnabled(true);
+        if (!manager.isWifiEnabled())
+            manager.setWifiEnabled(true);
 
-        IntentFilter filter=new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        IntentFilter filter = new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION);
 
         filter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
-        context.registerReceiver(receiver,filter);
+        context.registerReceiver(receiver, filter);
     }
 
-    public static boolean connectWifi(Context context,String ssid,String pwd)
-    {
-        WifiManager manager= (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+    public static boolean connectWifi(Context context, String ssid, String pwd) {
+        WifiManager manager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
-        WifiConfiguration wifiConfiguration=new WifiConfiguration();
-        wifiConfiguration.SSID="\""+ssid+"\"";
-        wifiConfiguration.preSharedKey="\""+pwd+"\"";
+        WifiConfiguration wifiConfiguration = new WifiConfiguration();
+        wifiConfiguration.SSID = "\"" + ssid + "\"";
+        wifiConfiguration.preSharedKey = "\"" + pwd + "\"";
 
-        wifiConfiguration.hiddenSSID=true;
-        wifiConfiguration.status=WifiConfiguration.Status.ENABLED;
+        wifiConfiguration.hiddenSSID = true;
+        wifiConfiguration.status = WifiConfiguration.Status.ENABLED;
 
         wifiConfiguration.allowedAuthAlgorithms.clear();
         wifiConfiguration.allowedGroupCiphers.clear();
@@ -417,9 +399,9 @@ public class WifiUtil {
         wifiConfiguration.allowedProtocols.clear();
 
         try {
-            Class c= null;
+            Class c = null;
             c = Class.forName("android.net.wifi.WifiConfiguration$KeyMgmt");
-            Field f=c.getDeclaredField("WPA2_PSK");
+            Field f = c.getDeclaredField("WPA2_PSK");
 
             wifiConfiguration.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
             wifiConfiguration.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
@@ -431,7 +413,7 @@ public class WifiUtil {
             wifiConfiguration.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
             wifiConfiguration.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
 
-            int wcgId=manager.addNetwork(wifiConfiguration);
+            int wcgId = manager.addNetwork(wifiConfiguration);
 
             return manager.enableNetwork(wcgId, true);
         } catch (ClassNotFoundException e) {
@@ -443,7 +425,52 @@ public class WifiUtil {
         return false;
     }
 
-    public static String setupWifiDataProtocol(String apName,String pwd){
-        return String.format("WIFI:T:WPA;P:\"%s\";S:%s;",pwd,apName);
+    public static String setupWifiDataProtocol(String apName, String pwd) {
+        return String.format("WIFI:T:WPA;P:\"%s\";S:%s;", pwd, apName);
+    }
+
+
+    /**
+     *  此种方式不能连接到internet
+     *  而且app推入后台后，热点将会关闭
+     * */
+    public static boolean turnOnHotspot(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            WifiManager manager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            if (manager == null) {
+                return false;
+            }
+            manager.startLocalOnlyHotspot(new WifiManager.LocalOnlyHotspotCallback() {
+
+                @Override
+                public void onStarted(WifiManager.LocalOnlyHotspotReservation reservation) {
+                    super.onStarted(reservation);
+                    Log.i(TAG, "Wifi Hotspot is on now");
+
+                }
+
+                @Override
+                public void onStopped() {
+                    super.onStopped();
+                    Log.i(TAG, "onStopped: ");
+                }
+
+                @Override
+                public void onFailed(int reason) {
+                    super.onFailed(reason);
+                    Log.i(TAG, "onFailed: ");
+                }
+            }, null);
+            return true;
+        }
+        return false;
+    }
+
+    public static void turnOffHotspot(WifiManager.LocalOnlyHotspotReservation reservation) {
+        if (reservation != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                reservation.close();
+            }
+        }
     }
 }

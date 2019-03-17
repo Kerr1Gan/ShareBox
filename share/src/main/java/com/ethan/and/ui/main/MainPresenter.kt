@@ -153,6 +153,8 @@ class MainPresenter : MainContract.Presenter {
         activity.bindService(intent, mMainServiceConnection, Context.BIND_AUTO_CREATE)
 
         FirebaseManager.logEvent(FirebaseManager.Event.APP_RESUME, null)
+        //从设置关闭wifi回到app再检查一次，xiaomi会收不到回调
+        checkCurrentNetwork(null)
     }
 
     override fun dropView() {
@@ -268,13 +270,15 @@ class MainPresenter : MainContract.Presenter {
             this.getHandler()?.obtainMessage(MSG_START_SERVER)?.sendToTarget()
         } else if (NetworkUtil.isHotSpot(activity)) {
             var config = NetworkUtil.getHotSpotConfiguration(activity)
-
-            view?.updateNetworkInfo(getRealName(config.SSID), false, true, 1)
+            if (config != null) {
+                view?.updateNetworkInfo(getRealName(config.SSID), false, true, 1)
+            } else {
+                view?.updateNetworkInfo(activity.getString(R.string.hotspot), false, true, 1)
+            }
 
             hasAccess = true
-            activity.getMainApplication().getSavedInstance().put(Constants.AP_STATE, Constants.NetWorkState.AP)
-
             this.getHandler()?.obtainMessage(MSG_START_SERVER)?.sendToTarget()
+            activity.getMainApplication().getSavedInstance().put(Constants.AP_STATE, Constants.NetWorkState.AP)
         } else if (NetworkUtil.isMobile(activity)) {
             view?.updateNetworkInfo(activity.getString(R.string.cellular), false, false, 2)
 
@@ -484,7 +488,12 @@ class MainPresenter : MainContract.Presenter {
                 }
             }
             MSG_START_SERVER -> {
-                if (mService == null) return
+                if (mService == null) {
+                    getHandler()?.post {
+                        startServerService()
+                    }
+                    return
+                }
                 var flag = false
                 if (mService?.isServerAlive() == false && getHandler()?.hasMessages(MSG_LOADING_SERVER) == false) {
                     flag = true
@@ -505,11 +514,16 @@ class MainPresenter : MainContract.Presenter {
                                     deviceInfo.fileMap)
                         }
                     }
-                    activity.runOnUiThread { doSearch() }
+                    getHandler()?.post {
+                        doSearch()
+                    }
                 }
             }
             MSG_STOP_SERVER -> {
                 stopServerService()
+                getHandler()?.post {
+                    checkCurrentNetwork(null)
+                }
             }
             MSG_CLOSE_APP -> {
                 closeApp()

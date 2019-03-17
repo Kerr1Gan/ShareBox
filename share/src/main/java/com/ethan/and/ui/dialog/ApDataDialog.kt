@@ -28,6 +28,7 @@ import com.common.qrcode.QrUtils
 import com.common.utils.activity.ActivityUtil
 import com.ethan.and.ui.fragment.SimpleDialogFragment
 import com.ethan.and.ui.main.MainActivity
+import com.flybd.sharebox.AppExecutorManager
 import com.flybd.sharebox.Constants
 import com.flybd.sharebox.R
 import org.ecjtu.channellibrary.wifiutil.NetworkUtil
@@ -112,17 +113,22 @@ class ApDataDialog(activity: Activity) : BaseBottomSheetDialog(activity, activit
             textIp.text = String.format(mFormat, textIp.text.toString(), "$ip:$port")
             ap.text = context.getString(R.string.hotspot)
             var config = NetworkUtil.getHotSpotConfiguration(context)
-            var ssid = config.SSID
-            var preSharedKey = config.preSharedKey
-            name.setText(String.format(mFormat, name.text.toString(), ssid))
-            pwd.setText(String.format(mFormat, pwd.text.toString(), preSharedKey))
-            thread {
-                var px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 250f, context.resources.displayMetrics)
-                val qr = QrUtils.createQRImage(WifiUtil.setupWifiDataProtocol(ssid, preSharedKey), px.toInt(), px.toInt())
-                ownerActivity.runOnUiThread {
-                    darkImageView(vg.findViewById<View>(R.id.image_qr) as ImageView)
-                            .setImageBitmap(qr)
+            if (config != null) {
+                var ssid = config.SSID
+                var preSharedKey = config.preSharedKey
+                name.setText(String.format(mFormat, name.text.toString(), ssid))
+                pwd.setText(String.format(mFormat, pwd.text.toString(), preSharedKey))
+                AppExecutorManager.getInstance().diskIO().execute {
+                    var px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 250f, context.resources.displayMetrics)
+                    val qr = QrUtils.createQRImage(WifiUtil.setupWifiDataProtocol(ssid, preSharedKey), px.toInt(), px.toInt())
+                    ownerActivity.runOnUiThread {
+                        darkImageView(vg.findViewById<View>(R.id.image_qr) as ImageView)
+                                .setImageBitmap(qr)
+                    }
                 }
+            } else {
+                name.text = String.format(mFormat, name.text.toString(), context.getString(R.string.hotspot))
+                pwd.visibility = View.GONE
             }
         }
 

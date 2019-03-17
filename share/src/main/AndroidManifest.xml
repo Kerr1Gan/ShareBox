@@ -16,6 +16,7 @@
 
     <!--Android 9.0需要定位权限才能获取Wifi名称-->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.Manifest.permission.OVERRIDE_WIFI_CONFIG" />
 
     <application
         android:name="com.ethan.and.MainApplication"
