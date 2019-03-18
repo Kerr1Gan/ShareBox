@@ -2,6 +2,8 @@
 
     <style name="SplashTheme" parent="CCImageStatusBarStyle">
         <item name="android:windowBackground">@drawable/bg_splash</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowFullscreen">true</item>
     </style>
 
     <!-- Base application theme. -->
