@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Message
 import android.preference.PreferenceManager
+import android.provider.Settings
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.LocalBroadcastManager
@@ -160,6 +161,9 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
                 startActivity(intent)
             } catch (ex: Exception) {
                 ex.printStackTrace()
+                Toast.makeText(this@MainActivity, R.string.go_to_setting, Toast.LENGTH_SHORT).show()
+                val settingIntent = Intent(Settings.ACTION_SETTINGS)
+                startActivity(settingIntent)
             }
         }
 
