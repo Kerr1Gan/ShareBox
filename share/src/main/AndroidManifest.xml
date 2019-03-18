@@ -47,10 +47,8 @@
 
         <activity
             android:name="com.ethan.and.ui.activity.SplashActivity"
-            android:autoRemoveFromRecents="true"
             android:launchMode="singleTask"
-            android:theme="@style/SplashTheme"
-            tools:targetApi="lollipop">
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

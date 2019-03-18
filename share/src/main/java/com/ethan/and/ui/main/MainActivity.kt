@@ -304,7 +304,7 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
         super.onResume()
         presenter.takeView(this)
 
-        getMainApplication().closeActivitiesByIndex(1)
+//        getMainApplication().closeActivitiesByIndex(1)
         var name = PreferenceManager.getDefaultSharedPreferences(this).getString(PreferenceInfo.PREF_DEVICE_NAME, Build.MODEL)
         (findViewById<View>(R.id.text_name) as TextView).setText(name)
     }

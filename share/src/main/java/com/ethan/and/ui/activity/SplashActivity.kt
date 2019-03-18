@@ -20,7 +20,6 @@ class SplashActivity : AppCompatActivity() {
         super.onResume()
         handler?.postDelayed({
             val intent = Intent(this, MainActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
             finish()
         }, 1500)
