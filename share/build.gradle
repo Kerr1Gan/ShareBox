@@ -56,14 +56,14 @@ android {
         applicationId "com.ecjtu.sharebox"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 5
-        versionName "1.1.5"
+        versionCode 6
+        versionName "1.1.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         ndk {
-//            abiFilters 'armeabi-v7a'
-            abiFilters 'armeabi-v7a', 'x86'
+            abiFilters 'armeabi-v7a'
+//            abiFilters 'armeabi-v7a', 'x86'
         }
     }
 
