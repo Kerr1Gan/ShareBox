@@ -18,6 +18,7 @@ class MainContract {
         fun permissionRejected()
         fun updateDeviceInfo(update: Boolean, deviceInfo: MutableList<DeviceInfo>)
         fun updateNetworkInfo(apName: String, isWifi: Boolean, isHotspot: Boolean, state: Int)
+        fun onFirstOpen()
     }
 
     interface Presenter : IPresenter<View> {

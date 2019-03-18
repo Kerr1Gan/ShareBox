@@ -155,6 +155,11 @@ class MainPresenter : MainContract.Presenter {
         FirebaseManager.logEvent(FirebaseManager.Event.APP_RESUME, null)
         //从设置关闭wifi回到app再检查一次，xiaomi会收不到回调
         checkCurrentNetwork(null)
+
+        if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean(Constants.PREF_IS_FIRST_OPEN, true)) {
+            view?.onFirstOpen()
+            PreferenceManager.getDefaultSharedPreferences(activity).edit().putBoolean(Constants.PREF_IS_FIRST_OPEN, false).apply()
+        }
     }
 
     override fun dropView() {

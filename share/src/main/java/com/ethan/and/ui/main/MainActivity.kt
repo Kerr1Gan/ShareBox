@@ -184,6 +184,11 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
         initDrawerLayout()
     }
 
+    override fun onFirstOpen() {
+        val intent = ActionBarFragmentActivity.newInstance(this, HelpFragment::class.java, title = getString(R.string.help))
+        this.startActivity(intent)
+    }
+
     private fun requestNetworkPermission() {
         for (index in 0 until mRequestPermission.size) {
             if (ActivityCompat.checkSelfPermission(this@MainActivity, mRequestPermission[index]) != PackageManager.PERMISSION_GRANTED) {
