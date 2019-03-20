@@ -22,6 +22,7 @@ import com.ethan.and.ui.main.MainActivity
 import com.ethan.and.ui.dialog.FilePickDialog
 import com.flybd.sharebox.util.firebase.FirebaseManager
 import com.google.android.gms.ads.MobileAds
+import com.squareup.leakcanary.LeakCanary
 import com.tencent.bugly.crashreport.CrashReport
 import org.ecjtu.easyserver.server.DeviceInfo
 import java.io.*
@@ -47,6 +48,12 @@ class MainApplication : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return
+        }
+        LeakCanary.install(this)
         if (isAppMainProcess(BuildConfig.APPLICATION_ID)) {
             initMainProcess()
         } else {
