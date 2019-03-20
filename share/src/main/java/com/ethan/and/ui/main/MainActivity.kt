@@ -459,6 +459,7 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
     override fun onBackPressed() {
         if (lastBackPressTime < 0) {
             lastBackPressTime = System.currentTimeMillis()
+            Toast.makeText(this, R.string.click_to_exit_app, Toast.LENGTH_SHORT).show()
             return
         }
 

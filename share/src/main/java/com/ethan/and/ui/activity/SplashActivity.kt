@@ -9,7 +9,11 @@ import com.ethan.and.ui.main.MainActivity
 
 class SplashActivity : AppCompatActivity() {
 
-    var handler: Handler? = null
+    companion object {
+        private var sIsShow = false
+    }
+
+    private var handler: Handler? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,9 +22,18 @@ class SplashActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        finish()
+        if (!sIsShow) {
+            handler?.postDelayed({
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+            }, 500)
+        } else {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+        sIsShow = true
     }
 
     override fun onStop() {
