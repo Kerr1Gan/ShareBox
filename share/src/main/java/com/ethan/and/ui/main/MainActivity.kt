@@ -92,7 +92,6 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        loadSplash()
         setContentView(R.layout.activity_main)
         var toolbar = findViewById<View>(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
@@ -174,14 +173,14 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
             }
         }
 
-        mApName = findViewById<TextView>(R.id.ap_name)
+        mApName = findViewById(R.id.ap_name)
 
         mRecyclerView = view1 as RecyclerView
 
-        var manager: LinearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        var manager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         mRecyclerView?.layoutManager = manager
 
-        mWifiImage = findViewById<ImageView>(R.id.image_wifi)
+        mWifiImage = findViewById(R.id.image_wifi)
 
         mWifiImageStateMachine = object : StateMachine(this, R.array.main_activity_delegate_array, mWifiImage) {
             override fun updateView(index: Int) {
