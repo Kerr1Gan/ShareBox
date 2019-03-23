@@ -1,1 +1,1 @@
-include ':share', ':channellibrary', ':circularprogresslibrary', ':materialstepper', ':ijkplayer-java', ':ijkplayer-exo', ':netcore', ':parcel', ':common-componentes', ':qrcode', ':mvp-dagger'
+include ':share', ':channellibrary', ':circularprogresslibrary', ':materialstepper', ':ijkplayer-java', ':ijkplayer-exo', ':netcore', ':parcel', ':common-components.iml', ':qrcode', ':mvp-dagger', ':common-componentes.iml'

@@ -149,7 +149,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-ads:17.1.3'
     //    compile project(':easyserver')
     implementation project(':netcore')
-    implementation project(':common-componentes')
+    implementation project(':common-components')
     implementation project(':parcel')
     implementation project(':qrcode')
     implementation 'com.android.support:multidex:1.0.1'
