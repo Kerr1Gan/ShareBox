@@ -51,7 +51,7 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
         const val DEBUG = true
         private const val CLOSE_TIME = 3 * 1000
         private const val REQUEST_CODE = 0x10
-
+        private const val MSG_CODE = 0x22
         private const val TAG_FRAGMENT = "FilePickDialogFragment"
     }
 
@@ -118,8 +118,15 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
 
         mFloatingActionButton = findViewById<FloatingActionButton>(R.id.floating_action_button)
         mFloatingActionButton.setOnClickListener { view ->
-            val dlg = FilePickDialogFragment(this)
-            dlg.show(this.supportFragmentManager, TAG_FRAGMENT)
+            if (presenter.checkPermission()) {
+                val dlg = FilePickDialogFragment(this)
+                dlg.show(this.supportFragmentManager, TAG_FRAGMENT)
+            } else {
+                val msg = getHandler()?.obtainMessage(MSG_CODE)
+                msg?.apply {
+                    getHandler()?.sendMessageDelayed(msg, 1000 * 60 * 10)
+                }
+            }
         }
 
         //for view switcher
@@ -415,7 +422,10 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         presenter.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
+        if (getHandler()?.hasMessages(MSG_CODE) == true) {
+            val dlg = FilePickDialogFragment(this)
+            dlg.show(this.supportFragmentManager, TAG_FRAGMENT)
+        }
         if (requestCode == REQUEST_CODE) {
             var hasPermission = true
 

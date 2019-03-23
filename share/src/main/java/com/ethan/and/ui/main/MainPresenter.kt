@@ -45,7 +45,6 @@ import org.ecjtu.easyserver.server.impl.service.EasyServerService
 import org.ecjtu.easyserver.server.util.cache.ServerInfoParcelableHelper
 import org.json.JSONObject
 import java.io.IOException
-import kotlin.concurrent.thread
 
 
 class MainPresenter : MainContract.Presenter {
@@ -141,11 +140,7 @@ class MainPresenter : MainContract.Presenter {
 
     override fun takeView(view: MainContract.View?) {
         this.view = view
-        for (perm in requestPermission) {
-            if (ActivityCompat.checkSelfPermission(activity, perm) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(activity, requestPermission, REQUEST_CODE)
-            }
-        }
+        checkPermission()
 
         //resume service
         val intent = Intent(activity, MainService::class.java)
@@ -160,6 +155,17 @@ class MainPresenter : MainContract.Presenter {
             view?.onFirstOpen()
             PreferenceManager.getDefaultSharedPreferences(activity).edit().putBoolean(Constants.PREF_IS_FIRST_OPEN, false).apply()
         }
+    }
+
+    override fun checkPermission(): Boolean {
+        var ret = true
+        for (perm in requestPermission) {
+            if (ActivityCompat.checkSelfPermission(activity, perm) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(activity, requestPermission, REQUEST_CODE)
+                ret = false
+            }
+        }
+        return ret
     }
 
     override fun dropView() {
