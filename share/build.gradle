@@ -61,10 +61,10 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
-        ndk {
-            abiFilters 'armeabi-v7a'
-//            abiFilters 'armeabi-v7a', 'x86'
-        }
+//        ndk {
+//            abiFilters 'armeabi-v7a'
+////            abiFilters 'armeabi-v7a', 'x86'
+//        }
     }
 
     compileOptions {
@@ -85,6 +85,13 @@ android {
     }
 
     buildTypes {
+        debug {
+            ndk {
+//                abiFilters 'armeabi-v7a'
+                abiFilters 'armeabi-v7a', 'x86'
+            }
+        }
+
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -105,6 +112,11 @@ android {
                             .replace("release.apk", "_v${variant.versionName}_${new SimpleDateFormat("yyyy-MM-dd").format(new Date())}_${variant.versionCode}_release.apk")
                     output.outputFileName = fileName
                 }
+            }
+
+            ndk {
+                abiFilters 'armeabi-v7a'
+//            abiFilters 'armeabi-v7a', 'x86'
             }
         }
     }
