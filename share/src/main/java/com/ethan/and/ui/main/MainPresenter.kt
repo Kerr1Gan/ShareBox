@@ -2,6 +2,7 @@ package com.ethan.and.ui.main
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.*
 import android.content.pm.PackageManager
 import android.net.NetworkInfo
@@ -17,7 +18,9 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.text.TextUtils
 import android.util.Log
+import android.view.View
 import com.bumptech.glide.Glide
+import com.common.utils.activity.ActivityUtil
 import com.ethan.and.db.room.RoomRepository
 import com.ethan.and.db.room.ShareDatabase
 import com.ethan.and.db.room.entity.IpMessage
@@ -66,7 +69,6 @@ class MainPresenter : MainContract.Presenter {
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_NETWORK_STATE,
             Manifest.permission.CHANGE_NETWORK_STATE,
-            Manifest.permission.ACCESS_NETWORK_STATE,
             Manifest.permission.CHANGE_WIFI_STATE)
 
     private lateinit var activity: Activity
@@ -140,7 +142,7 @@ class MainPresenter : MainContract.Presenter {
 
     override fun takeView(view: MainContract.View?) {
         this.view = view
-        checkPermission()
+        checkPermission(REQUEST_CODE)
 
         //resume service
         val intent = Intent(activity, MainService::class.java)
@@ -157,7 +159,7 @@ class MainPresenter : MainContract.Presenter {
         }
     }
 
-    override fun checkPermission(): Boolean {
+    override fun checkPermission(requestCode: Int): Boolean {
         var ret = true
         for (perm in requestPermission) {
             if (ActivityCompat.checkSelfPermission(activity, perm) != PackageManager.PERMISSION_GRANTED) {
@@ -173,14 +175,14 @@ class MainPresenter : MainContract.Presenter {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if (requestCode == REQUEST_CODE) {
-            var isGranted = true
-            for (grant in grantResults) {
-                if (grant != PackageManager.PERMISSION_GRANTED) {
-                    isGranted = false
-                    break
-                }
+        var isGranted = true
+        for (grant in grantResults) {
+            if (grant != PackageManager.PERMISSION_GRANTED) {
+                isGranted = false
+                break
             }
+        }
+        if (requestCode == REQUEST_CODE) {
             if (!isGranted) {
                 view?.permissionRejected()
             } else {
@@ -188,6 +190,20 @@ class MainPresenter : MainContract.Presenter {
                     checkCurrentNetwork(null)
                 }
             }
+        }
+
+        if (!isGranted) {
+            val builder = AlertDialog.Builder(activity)
+            builder.setTitle(R.string.warning)
+                    .setMessage(R.string.authorization_is_required)
+                    .setPositiveButton(android.R.string.ok) { dialog, which ->
+                        val intent = ActivityUtil.getAppDetailSettingIntent(activity)
+                        try {
+                            activity.startActivity(intent)
+                        } catch (ex: Exception) {
+                            ex.printStackTrace()
+                        }
+                    }.create().show()
         }
     }
 

@@ -38,6 +38,6 @@ class MainContract {
         fun stopSearch()
         fun refresh(isRefresh: Boolean)
         fun isRefreshing(): Boolean
-        fun checkPermission(): Boolean
+        fun checkPermission(requestCode: Int): Boolean
     }
 }

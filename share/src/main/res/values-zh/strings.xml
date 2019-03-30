@@ -58,6 +58,9 @@
 
     <string name="use_last">使用上一次的</string>
     <string name="go_to_setting">跳转到设置</string>
+
+    <string name="warning">警告</string>
+    <string name="authorization_is_required">需要授权才能正常使用</string>
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->

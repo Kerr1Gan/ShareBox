@@ -54,10 +54,14 @@
     <string name="do_you_want_to_clear_the_cache">Do you want to clear the cache?</string>
     <string name="you_will_clear_cache">you will clear %s cache</string>
 
-    <string name="installed">已安装</string>
+    <string name="installed">Installed</string>
 
     <string name="use_last">Using last</string>
     <string name="go_to_setting">Jump to settings</string>
+
+    <string name="warning">Warning</string>
+    <string name="authorization_is_required">Authorization is required for normal use</string>
+
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->
