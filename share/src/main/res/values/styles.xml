@@ -1,11 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    
-    <style name="SplashTheme">
+
+    <style name="SplashTheme" parent="AppTheme">
         <item name="android:windowBackground">@drawable/bg_splash</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowFullscreen">true</item>
     </style>
-    
+
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
@@ -35,7 +35,8 @@
         <item name="android:windowTranslucentNavigation" tools:targetApi="kitkat">true</item>
         <item name="android:statusBarColor" tools:targetApi="lollipop">@android:color/transparent
         </item>
-        <item name="android:colorControlHighlight" tools:targetApi="lollipop">@color/colorDark</item>
+        <item name="android:colorControlHighlight" tools:targetApi="lollipop">@color/colorDark
+        </item>
         <item name="android:colorAccent" tools:targetApi="lollipop">@color/colorPrimary</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -120,7 +121,8 @@
 
     <style name="WhiteProgressDialogStyle" parent="Theme.Design.BottomSheetDialog">
         <item name="android:indeterminateTint" tools:targetApi="lollipop">@color/colorPrimary</item>
-        <item name="android:colorControlHighlight" tools:targetApi="lollipop">@color/colorDark</item>
+        <item name="android:colorControlHighlight" tools:targetApi="lollipop">@color/colorDark
+        </item>
         <item name="android:colorAccent" tools:targetApi="lollipop">@color/colorPrimary</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -135,7 +137,8 @@
 
     <style name="CheckBoxStyle" parent="Widget.AppCompat.CompoundButton.CheckBox">
         <!--波纹的颜色-->
-        <item name="android:colorControlHighlight" tools:targetApi="lollipop">@color/colorPrimary</item>
+        <item name="android:colorControlHighlight" tools:targetApi="lollipop">@color/colorPrimary
+        </item>
         <!--选中的颜色-->
         <item name="colorAccent">@color/colorPrimary</item>
         <item name="colorControlHighlight">@color/colorPrimary</item>
