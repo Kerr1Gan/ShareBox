@@ -3,6 +3,7 @@ package com.ethan.and.ui.activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.support.v7.app.AppCompatActivity
 import com.ethan.and.ui.main.MainActivity
 
@@ -17,7 +18,13 @@ class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        handler = Handler(mainLooper)
+        try {
+            handler = Handler(mainLooper)
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            // NoSuchMethodError 部分机型这里会报异常？？？
+            handler = Handler(Looper.getMainLooper())
+        }
     }
 
     override fun onResume() {
