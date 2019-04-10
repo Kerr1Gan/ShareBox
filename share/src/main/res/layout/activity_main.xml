@@ -10,8 +10,8 @@
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true">
 
         <RelativeLayout
@@ -19,6 +19,7 @@
             android:layout_height="match_parent">
 
             <FrameLayout
+                android:id="@+id/bg_status_bar"
                 android:layout_width="match_parent"
                 android:layout_height="25dp"
                 android:background="@color/colorPrimary" /><!--fix bug in google device-->
@@ -40,7 +41,7 @@
                     app:contentInsetStart="0dp"
                     app:contentInsetStartWithNavigation="0dp"
                     app:title="@string/app_name"
-                    app:titleTextColor="@android:color/white"/>
+                    app:titleTextColor="@android:color/white" />
 
                 <android.support.design.widget.CoordinatorLayout
                     android:layout_width="match_parent"
@@ -91,10 +92,10 @@
                                 android:layout_width="80dp"
                                 android:layout_height="35dp"
                                 android:layout_gravity="center_vertical"
-                                android:layout_marginBottom="10dp"
                                 android:layout_marginLeft="10dp"
-                                android:layout_marginRight="5dp"
                                 android:layout_marginTop="10dp"
+                                android:layout_marginRight="5dp"
+                                android:layout_marginBottom="10dp"
                                 android:background="@drawable/selector_wifi_button"
                                 android:text="@string/wifi"
                                 android:textColor="@android:color/white" />
@@ -104,10 +105,10 @@
                                 android:layout_width="80dp"
                                 android:layout_height="35dp"
                                 android:layout_gravity="center_vertical"
-                                android:layout_marginBottom="10dp"
                                 android:layout_marginLeft="5dp"
-                                android:layout_marginRight="10dp"
                                 android:layout_marginTop="10dp"
+                                android:layout_marginRight="10dp"
+                                android:layout_marginBottom="10dp"
                                 android:background="@drawable/selector_wifi_button"
                                 android:text="@string/hotspot"
                                 android:textColor="@android:color/white" />
@@ -235,10 +236,10 @@
         android:id="@+id/floating_action_button"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="75dp"
+        android:layout_alignParentBottom="true"
         android:layout_marginRight="35dp"
+        android:layout_marginBottom="75dp"
         android:src="@mipmap/share"
         app:fabSize="normal" />
 </RelativeLayout>
