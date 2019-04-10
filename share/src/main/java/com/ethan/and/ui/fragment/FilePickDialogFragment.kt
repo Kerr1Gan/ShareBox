@@ -38,6 +38,8 @@ class FilePickDialogFragment : AppCompatDialogFragment {
 
     private var mFindFilesHelper: FindAllFilesHelper? = null
 
+    private var isPaused = false
+
     constructor() : super()
 
     constructor(activity: FragmentActivity) : super() {
@@ -73,6 +75,16 @@ class FilePickDialogFragment : AppCompatDialogFragment {
         } else {
             FilePickDialog(context!!, mActivity)
         }
+    }
+
+    override fun onStart() {
+        isPaused = false
+        super.onStart()
+    }
+
+    override fun onPause() {
+        isPaused = true
+        super.onPause()
     }
 
     private fun onShowDialog(dialog: DialogInterface) {
@@ -130,8 +142,9 @@ class FilePickDialogFragment : AppCompatDialogFragment {
                         saveInstance.put(FilePickDialog.EXTRA_PROPERTY_LIST + title, newArr)
                     }
                 }
-                mActivity?.let {
-                    FilePickDialogFragment(mActivity!!).show(mActivity?.supportFragmentManager, "show_file_pick_dialog")
+                val act = mActivity
+                if (act != null && !act.isFinishing && !isPaused) {
+                    FilePickDialogFragment(act).show(act.supportFragmentManager, "show_file_pick_dialog")
                 }
             }
             dialog.cancel()
