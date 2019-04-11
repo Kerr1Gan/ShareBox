@@ -88,6 +88,8 @@ class MainPresenter : MainContract.Presenter {
 
     private var mReceiver: WifiApReceiver? = null
 
+    private val okHttpClient = OkHttpClient()
+
     override fun onCreate(activity: Activity, handler: Handler) {
         this.activity = activity
         this.handler = handler
@@ -306,6 +308,19 @@ class MainPresenter : MainContract.Presenter {
             hasAccess = true
             this.getHandler()?.obtainMessage(MSG_START_SERVER)?.sendToTarget()
             activity.getMainApplication().getSavedInstance().put(Constants.AP_STATE, Constants.NetWorkState.AP)
+
+            // for self test
+            var ips = NetworkUtil.getLocalApIps()
+            var ip = "192.168.43.1"
+            if (TextUtils.isEmpty(ip) && ips.isNotEmpty())
+                ip = ips[0]
+            else {
+                ips = NetworkUtil.getLocalWLANIps()
+                if (ips.isNotEmpty()) {
+                    ip = ips[0]
+                }
+            }
+            getInfo(ip, "8000")
         } else if (NetworkUtil.isMobile(activity)) {
             view?.updateNetworkInfo(activity.getString(R.string.cellular), false, false, 2)
 
@@ -560,40 +575,42 @@ class MainPresenter : MainContract.Presenter {
 
     private fun reconnectHistory() {
         AppExecutorManager.getInstance().diskIO().execute {
-            val okHttpClient = OkHttpClient()
             val listMsg = shareDatabase.ipMessageDao().allMessage
             for (msg in listMsg) {
-                val request = Request.Builder()
-                        .url("http://${msg.ip}:${msg.port}/api/Info")
-                        .method("GET", null)
-                        .build()
-                val call = okHttpClient.newCall(request)
-                call.enqueue(object : Callback {
-                    override fun onResponse(call: Call, response: Response) {
-                        val res = response.body()?.string()
-                        if (!TextUtils.isEmpty(res)) {
-                            try {
-                                val jObj = JSONObject(res)
-                                val ip = jObj.optString("ip")
-                                val port = jObj.optString("port")
-                                val name = jObj.optString("name")
-                                val icon = jObj.optString("icon")
-                                val deviceModel = DeviceModel(name, port.toInt(), icon)
-                                getHandler()?.post {
-                                    applyDeviceInfo(ip, deviceModel)
-                                }
-                            } catch (ex: Exception) {
-                                ex.printStackTrace()
-                            }
-                        }
-                    }
-
-                    override fun onFailure(call: Call, e: IOException) {
-                    }
-                })
-
+                getInfo(msg.ip, msg.port)
             }
         }
+    }
+
+    private fun getInfo(ip: String, port: String) {
+        val request = Request.Builder()
+                .url("http://${ip}:${port}/api/Info")
+                .method("GET", null)
+                .build()
+        val call = okHttpClient.newCall(request)
+        call.enqueue(object : Callback {
+            override fun onResponse(call: Call, response: Response) {
+                val res = response.body()?.string()
+                if (!TextUtils.isEmpty(res)) {
+                    try {
+                        val jObj = JSONObject(res)
+                        val ip = jObj.optString("ip")
+                        val port = jObj.optString("port")
+                        val name = jObj.optString("name")
+                        val icon = jObj.optString("icon")
+                        val deviceModel = DeviceModel(name, port.toInt(), icon)
+                        getHandler()?.post {
+                            applyDeviceInfo(ip, deviceModel)
+                        }
+                    } catch (ex: Exception) {
+                        ex.printStackTrace()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call, e: IOException) {
+            }
+        })
     }
 
     override fun refresh(isRefresh: Boolean) {
