@@ -311,7 +311,7 @@ class MainPresenter : MainContract.Presenter {
 
             // for self test
             var ips = NetworkUtil.getLocalApIps()
-            var ip = "192.168.43.1"
+            var ip = Constants.ANDROID_HOTSPOT_IP
             if (TextUtils.isEmpty(ip) && ips.isNotEmpty())
                 ip = ips[0]
             else {
@@ -320,7 +320,7 @@ class MainPresenter : MainContract.Presenter {
                     ip = ips[0]
                 }
             }
-            getInfo(ip, "8000")
+            getInfo(ip, Constants.DEFAULT_SERVER_PORT)
         } else if (NetworkUtil.isMobile(activity)) {
             view?.updateNetworkInfo(activity.getString(R.string.cellular), false, false, 2)
 

@@ -17,6 +17,10 @@ object Constants {
     // Boolean
     const val PREF_IS_FIRST_OPEN = "pref_is_first_open"
 
+    const val ANDROID_HOTSPOT_IP = "192.168.43.1"
+
+    const val DEFAULT_SERVER_PORT = "8000"
+
     enum class NetWorkState {
         NONE,
         WIFI,
