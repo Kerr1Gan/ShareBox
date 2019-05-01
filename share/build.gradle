@@ -56,8 +56,8 @@ android {
         applicationId "com.ecjtu.sharebox"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 12
-        versionName "1.1.12"
+        versionCode 13
+        versionName "1.1.13"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
