@@ -1,17 +1,22 @@
 package com.ethan.and.ui.fragment
 
+import android.Manifest
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Paint
 import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.provider.Settings
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import com.common.utils.activity.ActivityUtil
 import com.flybd.sharebox.R
 import com.ethan.and.ui.dialog.EditNameDialog
 import com.ethan.and.ui.dialog.WifiBottomSheetDialog
@@ -30,6 +35,14 @@ class HelpFragment : Fragment(), IStepperAdapter {
     private var mTitles: Array<String>? = null
 
     private var mSummaries: Array<String>? = null
+
+    private val mRequestPermission = arrayOf(Manifest.permission.ACCESS_NETWORK_STATE,
+            Manifest.permission.CHANGE_NETWORK_STATE,
+            Manifest.permission.ACCESS_NETWORK_STATE,
+            Manifest.permission.CHANGE_WIFI_STATE,
+            Manifest.permission.READ_EXTERNAL_STORAGE)
+
+    private val PERMISSION_REQUEST_CODE = 101
 
     override fun onCreateView(inflater: LayoutInflater, parent: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_vertical_stepper_adapter, parent, false)
@@ -80,6 +93,43 @@ class HelpFragment : Fragment(), IStepperAdapter {
     }
 
     override fun onHide(index: Int) {
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val act = activity
+        if (act != null) {
+            for (permission in mRequestPermission) {
+                if (ActivityCompat.checkSelfPermission(act, permission) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(act, mRequestPermission, PERMISSION_REQUEST_CODE)
+                    break
+                }
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        for (grant in grantResults) {
+            if (grant != PackageManager.PERMISSION_GRANTED) {
+                val builder = AlertDialog.Builder(activity)
+                val act = activity
+                if (act != null) {
+                    builder.setTitle(R.string.warning)
+                            .setMessage(R.string.authorization_is_required)
+                            .setPositiveButton(android.R.string.ok) { dialog, which ->
+                                val intent = ActivityUtil.getAppDetailSettingIntent(act)
+                                try {
+                                    act.startActivity(intent)
+                                } catch (ex: Exception) {
+                                    ex.printStackTrace()
+                                }
+                            }.create().show()
+                }
+                return
+            }
+        }
 
     }
 
