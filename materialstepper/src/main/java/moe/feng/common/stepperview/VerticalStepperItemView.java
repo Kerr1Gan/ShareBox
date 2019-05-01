@@ -178,20 +178,24 @@ public class VerticalStepperItemView extends FrameLayout {
      */
     @SuppressLint("NewApi")
     public synchronized void setState(int state) {
-        // Change point background
-        if (mPointColorAnimator != null) mPointColorAnimator.cancel();
-        if (state != STATE_NORMAL && mState == STATE_NORMAL) {
-            mPointColorAnimator = ObjectAnimator
-                    .ofArgb(mPointBackground, "backgroundColor", mNormalColor, mActivatedColor);
-            mPointColorAnimator.setDuration(mAnimationDuration);
-            mPointColorAnimator.start();
-        } else if (state == STATE_NORMAL && mState != STATE_NORMAL) {
-            mPointColorAnimator = ObjectAnimator
-                    .ofArgb(mPointBackground, "backgroundColor", mActivatedColor, mNormalColor);
-            mPointColorAnimator.setDuration(mAnimationDuration);
-            mPointColorAnimator.start();
-        } else {
-            mPointBackground.setBackgroundColor(state == STATE_NORMAL ? mNormalColor : mActivatedColor);
+        try {
+            // Change point background
+            if (mPointColorAnimator != null) mPointColorAnimator.cancel();
+            if (state != STATE_NORMAL && mState == STATE_NORMAL) {
+                mPointColorAnimator = ObjectAnimator
+                        .ofArgb(mPointBackground, "backgroundColor", mNormalColor, mActivatedColor);
+                mPointColorAnimator.setDuration(mAnimationDuration);
+                mPointColorAnimator.start();
+            } else if (state == STATE_NORMAL && mState != STATE_NORMAL) {
+                mPointColorAnimator = ObjectAnimator
+                        .ofArgb(mPointBackground, "backgroundColor", mActivatedColor, mNormalColor);
+                mPointColorAnimator.setDuration(mAnimationDuration);
+                mPointColorAnimator.start();
+            } else {
+                mPointBackground.setBackgroundColor(state == STATE_NORMAL ? mNormalColor : mActivatedColor);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         // Change point state
