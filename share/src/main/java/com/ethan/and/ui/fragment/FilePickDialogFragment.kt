@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.content.pm.PackageInfo
 import android.os.Bundle
+import android.support.v4.app.DialogFragment
 import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatDialogFragment
@@ -144,6 +145,10 @@ class FilePickDialogFragment : AppCompatDialogFragment {
                 }
                 val act = mActivity
                 if (act != null && !act.isFinishing && !isPaused) {
+                    var dlgFragment = act.supportFragmentManager.findFragmentByTag("show_file_pick_dialog") as DialogFragment?
+                    dlgFragment?.apply {
+                        act.supportFragmentManager.beginTransaction().remove(this).commitAllowingStateLoss()
+                    }
                     FilePickDialogFragment(act).show(act.supportFragmentManager, "show_file_pick_dialog")
                 }
             }

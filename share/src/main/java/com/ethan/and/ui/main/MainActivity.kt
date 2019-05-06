@@ -13,6 +13,7 @@ import android.preference.PreferenceManager
 import android.provider.Settings
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.ActivityCompat
+import android.support.v4.app.DialogFragment
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
@@ -426,8 +427,12 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
                 }
             }
             if (grant) {
-                val dlg = FilePickDialogFragment(this)
-                dlg.show(this.supportFragmentManager, TAG_FRAGMENT)
+                var dlgFragment = supportFragmentManager.findFragmentByTag(TAG_FRAGMENT) as DialogFragment?
+                dlgFragment?.apply {
+                    supportFragmentManager.beginTransaction().remove(this).commitAllowingStateLoss()
+                }
+                dlgFragment = FilePickDialogFragment(this)
+                dlgFragment.show(this.supportFragmentManager, TAG_FRAGMENT)
             }
         }
         if (requestCode == REQUEST_CODE) {
@@ -443,6 +448,10 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
 //                }
             }
             if (hasPermission) {
+                var dlgFragment = supportFragmentManager.findFragmentByTag("ap_data_dialog") as DialogFragment?
+                dlgFragment?.apply {
+                    supportFragmentManager.beginTransaction().remove(this).commitAllowingStateLoss()
+                }
                 apDataDlg = ApDataDialog(this)
                 SimpleDialogFragment(apDataDlg!!).show(this.supportFragmentManager, "ap_data_dialog")
             }
