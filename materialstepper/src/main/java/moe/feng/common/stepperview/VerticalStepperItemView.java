@@ -182,13 +182,25 @@ public class VerticalStepperItemView extends FrameLayout {
             // Change point background
             if (mPointColorAnimator != null) mPointColorAnimator.cancel();
             if (state != STATE_NORMAL && mState == STATE_NORMAL) {
-                mPointColorAnimator = ObjectAnimator
-                        .ofArgb(mPointBackground, "backgroundColor", mNormalColor, mActivatedColor);
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                    mPointColorAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), "backgroundColor", mNormalColor, mActivatedColor);
+                    mPointColorAnimator.setTarget(mPointBackground);
+                } else {
+                    mPointColorAnimator = ObjectAnimator.ofArgb(mPointBackground, "backgroundColor", mNormalColor, mActivatedColor);
+                }
+//                mPointColorAnimator = ObjectAnimator
+//                        .ofArgb(mPointBackground, "backgroundColor", mNormalColor, mActivatedColor);
                 mPointColorAnimator.setDuration(mAnimationDuration);
                 mPointColorAnimator.start();
             } else if (state == STATE_NORMAL && mState != STATE_NORMAL) {
-                mPointColorAnimator = ObjectAnimator
-                        .ofArgb(mPointBackground, "backgroundColor", mActivatedColor, mNormalColor);
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                    mPointColorAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), "backgroundColor", mActivatedColor, mNormalColor);
+                    mPointColorAnimator.setTarget(mPointBackground);
+                } else {
+                    mPointColorAnimator = ObjectAnimator.ofArgb(mPointBackground, "backgroundColor", mActivatedColor, mNormalColor);
+                }
+//                mPointColorAnimator = ObjectAnimator
+//                        .ofArgb(mPointBackground, "backgroundColor", mActivatedColor, mNormalColor);
                 mPointColorAnimator.setDuration(mAnimationDuration);
                 mPointColorAnimator.start();
             } else {
@@ -223,15 +235,27 @@ public class VerticalStepperItemView extends FrameLayout {
 
             // Update error state
             if (mErrorText != null) {
-                mTitleColorAnimator = ObjectAnimator
-                        .ofArgb(mTitleText, "textColor",
-                                lastTitleTextColor, mErrorColor);
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                    mTitleColorAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), "textColor", lastTitleTextColor, mErrorColor);
+                    mTitleColorAnimator.setTarget(mTitleText);
+                } else {
+                    mTitleColorAnimator = ObjectAnimator.ofArgb(mTitleText, "textColor", lastTitleTextColor, mErrorColor);
+                }
+//                mTitleColorAnimator = ObjectAnimator
+//                        .ofArgb(mTitleText, "textColor",
+//                                lastTitleTextColor, mErrorColor);
                 mTitleColorAnimator.setDuration(mAnimationDuration);
                 mTitleColorAnimator.start();
                 if (mSummaryColorAnimator != null) mSummaryColorAnimator.cancel();
-                mSummaryColorAnimator = ObjectAnimator
-                        .ofArgb(mSummaryText, "textColor",
-                                mSummaryText.getCurrentTextColor(), mErrorColor);
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                    mSummaryColorAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), "textColor", mSummaryText.getCurrentTextColor(), mErrorColor);
+                    mSummaryColorAnimator.setTarget(mSummaryText);
+                } else {
+                    mSummaryColorAnimator = ObjectAnimator.ofArgb(mSummaryText, "textColor", mSummaryText.getCurrentTextColor(), mErrorColor);
+                }
+//                mSummaryColorAnimator = ObjectAnimator
+//                        .ofArgb(mSummaryText, "textColor",
+//                                mSummaryText.getCurrentTextColor(), mErrorColor);
                 mSummaryColorAnimator.setDuration(mAnimationDuration);
                 mSummaryColorAnimator.start();
 
@@ -248,9 +272,15 @@ public class VerticalStepperItemView extends FrameLayout {
                 }
             } else {
                 if (mSummaryColorAnimator != null) mSummaryColorAnimator.cancel();
-                mSummaryColorAnimator = ObjectAnimator
-                        .ofArgb(mSummaryText, "textColor",
-                                mSummaryText.getCurrentTextColor(), mLineColor);
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                    mSummaryColorAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), "textColor", mSummaryText.getCurrentTextColor(), mLineColor);
+                    mSummaryColorAnimator.setTarget(mSummaryText);
+                } else {
+                    mSummaryColorAnimator = ObjectAnimator.ofArgb(mSummaryText, "textColor", mSummaryText.getCurrentTextColor(), mLineColor);
+                }
+//                mSummaryColorAnimator = ObjectAnimator
+//                        .ofArgb(mSummaryText, "textColor",
+//                                mSummaryText.getCurrentTextColor(), mLineColor);
                 mSummaryColorAnimator.setDuration(mAnimationDuration);
                 mSummaryColorAnimator.start();
 
