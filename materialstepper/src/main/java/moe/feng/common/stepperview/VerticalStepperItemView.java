@@ -182,9 +182,10 @@ public class VerticalStepperItemView extends FrameLayout {
             // Change point background
             if (mPointColorAnimator != null) mPointColorAnimator.cancel();
             if (state != STATE_NORMAL && mState == STATE_NORMAL) {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                    mPointColorAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), "backgroundColor", mNormalColor, mActivatedColor);
-                    mPointColorAnimator.setTarget(mPointBackground);
+                if (isPreLollipop()) {
+                    ObjectAnimator animator = ObjectAnimator.ofInt(mPointBackground, "backgroundColor", mNormalColor, mActivatedColor);
+                    animator.setEvaluator(new ArgbEvaluator());
+                    mPointColorAnimator = animator;
                 } else {
                     mPointColorAnimator = ObjectAnimator.ofArgb(mPointBackground, "backgroundColor", mNormalColor, mActivatedColor);
                 }
@@ -193,9 +194,10 @@ public class VerticalStepperItemView extends FrameLayout {
                 mPointColorAnimator.setDuration(mAnimationDuration);
                 mPointColorAnimator.start();
             } else if (state == STATE_NORMAL && mState != STATE_NORMAL) {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                    mPointColorAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), "backgroundColor", mActivatedColor, mNormalColor);
-                    mPointColorAnimator.setTarget(mPointBackground);
+                if (isPreLollipop()) {
+                    ObjectAnimator animator = ObjectAnimator.ofInt(mPointBackground, "backgroundColor", mActivatedColor, mNormalColor);
+                    animator.setEvaluator(new ArgbEvaluator());
+                    mPointColorAnimator = animator;
                 } else {
                     mPointColorAnimator = ObjectAnimator.ofArgb(mPointBackground, "backgroundColor", mActivatedColor, mNormalColor);
                 }
@@ -235,9 +237,10 @@ public class VerticalStepperItemView extends FrameLayout {
 
             // Update error state
             if (mErrorText != null) {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                    mTitleColorAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), "textColor", lastTitleTextColor, mErrorColor);
-                    mTitleColorAnimator.setTarget(mTitleText);
+                if (isPreLollipop()) {
+                    ObjectAnimator animator = ObjectAnimator.ofInt(mTitleText, "textColor", lastTitleTextColor, mErrorColor);
+                    animator.setEvaluator(new ArgbEvaluator());
+                    mTitleColorAnimator = animator;
                 } else {
                     mTitleColorAnimator = ObjectAnimator.ofArgb(mTitleText, "textColor", lastTitleTextColor, mErrorColor);
                 }
@@ -247,9 +250,10 @@ public class VerticalStepperItemView extends FrameLayout {
                 mTitleColorAnimator.setDuration(mAnimationDuration);
                 mTitleColorAnimator.start();
                 if (mSummaryColorAnimator != null) mSummaryColorAnimator.cancel();
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                    mSummaryColorAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), "textColor", mSummaryText.getCurrentTextColor(), mErrorColor);
-                    mSummaryColorAnimator.setTarget(mSummaryText);
+                if (isPreLollipop()) {
+                    ObjectAnimator animator = ObjectAnimator.ofInt(mSummaryText, "textColor", mSummaryText.getCurrentTextColor(), mErrorColor);
+                    animator.setEvaluator(new ArgbEvaluator());
+                    mSummaryColorAnimator = animator;
                 } else {
                     mSummaryColorAnimator = ObjectAnimator.ofArgb(mSummaryText, "textColor", mSummaryText.getCurrentTextColor(), mErrorColor);
                 }
@@ -273,8 +277,9 @@ public class VerticalStepperItemView extends FrameLayout {
             } else {
                 if (mSummaryColorAnimator != null) mSummaryColorAnimator.cancel();
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                    mSummaryColorAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), "textColor", mSummaryText.getCurrentTextColor(), mLineColor);
-                    mSummaryColorAnimator.setTarget(mSummaryText);
+                    ObjectAnimator animator = ObjectAnimator.ofInt(mSummaryText, "textColor", mSummaryText.getCurrentTextColor(), mLineColor);
+                    animator.setEvaluator(new ArgbEvaluator());
+                    mSummaryColorAnimator = animator;
                 } else {
                     mSummaryColorAnimator = ObjectAnimator.ofArgb(mSummaryText, "textColor", mSummaryText.getCurrentTextColor(), mLineColor);
                 }
