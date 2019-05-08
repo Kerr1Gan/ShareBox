@@ -195,7 +195,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                 container?.addView(vg)
                 mViewPagerViews.put(position, vg)
                 if (mExpandableListView == null)
-                    mExpandableListView = getListView(0) as FileExpandableListView
+                    mExpandableListView = getListView(0)
 
                 var title = mTabItemHolders?.keys?.elementAt(position) as String
 
@@ -617,7 +617,8 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
                     var title = entry.key
                     var fileList = entry.value
                     if (fileList != null) {
-                        var newArr: List<FileExpandableInfo>? = makePropertyList(fileList, res, title, true) ?: continue
+                        var newArr: List<FileExpandableInfo>? = makePropertyList(fileList, res, title, true)
+                                ?: continue
                         if (mSavedState != null) {
                             mSavedState.put(EXTRA_PROPERTY_LIST + title, newArr!!)
                         }
