@@ -181,6 +181,8 @@ dependencies {
 
     // firebase analytics
     implementation 'com.google.firebase:firebase-core:16.0.7'
+    // gms analytics
+    compile 'com.google.android.gms:play-services-analytics:16.0.0'
     // FCM: firebase msg
     implementation 'com.google.firebase:firebase-core:16.0.7'
     implementation 'com.google.firebase:firebase-messaging:17.4.0'

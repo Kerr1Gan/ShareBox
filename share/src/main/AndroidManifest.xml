@@ -36,15 +36,15 @@
             android:value="@string/admob_app_id" />
 
         <!--<provider-->
-            <!--android:name="android.support.v4.content.FileProvider"-->
-            <!--android:authorities="${applicationId}.fileprovider"-->
-            <!--android:exported="false"-->
-            <!--android:grantUriPermissions="true"-->
-            <!--tools:replace="android:authorities">-->
-            <!--<meta-data-->
-                <!--android:name="android.support.FILE_PROVIDER_PATHS"-->
-                <!--android:resource="@xml/provider_paths"-->
-                <!--tools:replace="android:resource"/>-->
+        <!--android:name="android.support.v4.content.FileProvider"-->
+        <!--android:authorities="${applicationId}.fileprovider"-->
+        <!--android:exported="false"-->
+        <!--android:grantUriPermissions="true"-->
+        <!--tools:replace="android:authorities">-->
+        <!--<meta-data-->
+        <!--android:name="android.support.FILE_PROVIDER_PATHS"-->
+        <!--android:resource="@xml/provider_paths"-->
+        <!--tools:replace="android:resource"/>-->
         <!--</provider>-->
 
         <activity
@@ -130,6 +130,30 @@
         <meta-data
             android:name="firebase_analytics_collection_enabled"
             android:value="true" />
+
+        <receiver
+            android:name="com.ethan.and.broadcast.InstallReferrerReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.INSTALL_PACKAGES">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name="com.google.android.gms.analytics.AnalyticsReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="com.google.android.gms.analytics.AnalyticsService"
+            android:enabled="true"
+            android:exported="false" />
+
     </application>
 
 </manifest>
