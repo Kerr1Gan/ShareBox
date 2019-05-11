@@ -27,7 +27,7 @@ class IjkVideoActivity : AppCompatActivity() {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         setContentView(R.layout.activity_ijk_video)
-        FirebaseManager.logEvent(FirebaseManager.Event.OPEN_VIEDEO_ACTIVITY, null)
+        FirebaseManager.logEvent(FirebaseManager.Event.OPEN_VIDEO_ACTIVITY, null)
         if (supportFragmentManager.findFragmentByTag(TAG) == null) {
             if (intent != null && intent.extras != null) {
                 val fragment = IjkVideoFragment()

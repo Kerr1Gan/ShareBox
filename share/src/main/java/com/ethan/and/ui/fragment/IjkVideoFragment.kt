@@ -12,6 +12,7 @@ import android.text.TextUtils
 import android.view.*
 import com.common.componentes.activity.BaseActionActivity
 import com.flybd.sharebox.R
+import com.flybd.sharebox.util.firebase.FirebaseManager
 import tv.danmaku.ijk.media.exo.video.AndroidMediaController
 import tv.danmaku.ijk.media.exo.video.IjkVideoView
 import tv.danmaku.ijk.media.exo.video.SimpleMediaController
@@ -49,6 +50,11 @@ class IjkVideoFragment : Fragment(), GestureDetector.OnGestureListener, View.OnT
     }
 
     private fun init(view: View?) {
+        try {
+            FirebaseManager.logEvent(FirebaseManager.Event.OPEN_VIDEO_FRAGMENT, arguments)
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
 
         if (mMediaController == null)
             mMediaController = AndroidMediaController(context)
