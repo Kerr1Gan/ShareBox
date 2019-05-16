@@ -203,7 +203,12 @@ class ApDataDialog(activity: Activity) : BaseBottomSheetDialog(activity, activit
                 builder.setTitle("Warn")
                         .setMessage("Need to get camera permission.")
                         .setPositiveButton(android.R.string.ok) { dialog, which ->
-                            ownerActivity.startActivity(ActivityUtil.getAppDetailSettingIntent(ownerActivity))
+                            try {
+                                context.startActivity(ActivityUtil.getAppDetailSettingIntent(context))
+                            } catch (ex: Exception) {
+                                ex.printStackTrace()
+                                Toast.makeText(context, "Need to uninstall and reinstall and give permission to use properly", Toast.LENGTH_LONG).show()
+                            }
                         }
                 builder.show()
             }
