@@ -388,8 +388,9 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
             }
         }
 
+        val act = ownerActivity
         thread {
-            ownerActivity.getMainApplication().saveCache()
+            act?.getMainApplication()?.saveCache()
         }
     }
 
@@ -516,7 +517,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
 
         if (title.equals("Apk", true)) {
             val arrayList = ArrayList<String>()
-            val installedApps = FileUtil.getInstalledApps(ownerActivity, false)
+            val installedApps = FileUtil.getInstalledApps(context, false)
             Collections.sort(installedApps, object : Comparator<PackageInfo> {
                 override fun compare(lhs: PackageInfo?, rhs: PackageInfo?): Int {
                     if (lhs == null || rhs == null) {
@@ -601,7 +602,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
             val progressDialog = ProgressDialog(context, ownerActivity).apply {
                 setOnDismissListener {
                     findAllTask.release()
-                    ownerActivity.runOnUiThread {
+                    ownerActivity?.runOnUiThread {
                         if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREF_SELECT_ALL, false)) {
                             mToolbarMachine?.updateView(1)
                         }

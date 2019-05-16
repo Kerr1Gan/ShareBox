@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Handler
+import android.os.Looper
 import android.support.design.widget.TextInputEditText
 import android.support.design.widget.TextInputLayout
 import android.text.Editable
@@ -39,7 +40,7 @@ open class WifiBottomSheetDialog : CloseBottomSheetDialog {
 
     private var mReceiver: BroadcastReceiver? = null
 
-    private var mHandler: Handler = Handler(ownerActivity.mainLooper)
+    private var mHandler: Handler = Handler(Looper.getMainLooper())
 
     private val DELAY_TIME = 5 * 1000L
 
