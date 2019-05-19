@@ -94,6 +94,9 @@ abstract class BaseBottomSheetDialog : BottomSheetDialog, SimpleDialogFragment.I
     }
 
     public fun fullScreenLayout(view: View?): View? {
+        if (ownerActivity == null) {
+            return view
+        }
         val display = ownerActivity.getWindowManager().getDefaultDisplay()
         val width = display.getWidth()
         val height = display.height/*getScreenHeight(ownerActivity)+getStatusBarHeight(context)*/
