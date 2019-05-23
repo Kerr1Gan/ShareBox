@@ -186,6 +186,13 @@ dependencies {
     // FCM: firebase msg
     implementation 'com.google.firebase:firebase-core:16.0.7'
     implementation 'com.google.firebase:firebase-messaging:17.4.0'
+
+    // kochava analytics
+    implementation 'com.kochava.base:tracker:3.6.0'
+    //Required: Google Play Services Ads Identifier (If publishing to Google Play)
+    implementation 'com.google.android.gms:play-services-ads-identifier:16.0.0'
+    //Required: Install Referrer (If publishing to Google Play)
+    implementation 'com.android.installreferrer:installreferrer:1.0'
 }
 
 repositories {

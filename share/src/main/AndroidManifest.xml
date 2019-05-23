@@ -142,6 +142,11 @@
         </receiver>
 
         <receiver
+            tools:node="remove"
+            android:name="com.kochava.base.ReferralReceiver">
+        </receiver>
+
+        <receiver
             android:name="com.google.android.gms.analytics.AnalyticsReceiver"
             android:enabled="true">
             <intent-filter>
