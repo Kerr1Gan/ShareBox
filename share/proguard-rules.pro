@@ -133,5 +133,5 @@
 # ijk --
 
 # 不混淆 kochava ++
--keep class com.kochava.**{*;}
+#-keep class com.kochava.**{*;}
 # kochava --
