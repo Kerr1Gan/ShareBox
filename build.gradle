@@ -30,6 +30,8 @@ allprojects {
             url "https://maven.google.com"
         }
         google()
+        maven {url "http://kochava.bintray.com/maven"}
+
     }
 }
 

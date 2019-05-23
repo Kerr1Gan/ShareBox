@@ -22,6 +22,7 @@ import com.ethan.and.ui.main.MainActivity
 import com.ethan.and.ui.dialog.FilePickDialog
 import com.flybd.sharebox.util.firebase.FirebaseManager
 import com.google.android.gms.ads.MobileAds
+import com.kochava.base.Tracker
 import com.squareup.leakcanary.LeakCanary
 import com.tencent.bugly.crashreport.CrashReport
 import org.ecjtu.easyserver.server.DeviceInfo
@@ -118,6 +119,10 @@ class MainApplication : MultiDexApplication() {
                 mActivityList.add(WeakReference(activity))
             }
         })
+
+        // Start the Kochava Tracker
+        Tracker.configure( Tracker.Configuration(applicationContext)
+                .setAppGuid("kovideo-sharing-1gcj"))
     }
 
     fun closeApp() {

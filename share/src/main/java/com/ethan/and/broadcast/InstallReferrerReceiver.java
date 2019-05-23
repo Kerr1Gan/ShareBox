@@ -31,6 +31,8 @@ public class InstallReferrerReceiver extends CampaignTrackingReceiver {
 
     public void onReceive(Context context, Intent data) {
         super.onReceive(context, data);
+        // Pass the intent to the Kochava receiver.
+        new com.kochava.base.ReferralReceiver().onReceive(context, data);
 
         String referrerValue = getReferrerValue(data.getExtras());
 
