@@ -131,3 +131,7 @@
 # 不混淆 ijk ++
 -keep class tv.danmaku.**{*;}
 # ijk --
+
+# 不混淆 kochava ++
+-keep class com.kochava.**{*;}
+# kochava --
