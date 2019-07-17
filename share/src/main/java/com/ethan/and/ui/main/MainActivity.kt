@@ -438,7 +438,7 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
         if (requestCode == REQUEST_CODE) {
             var hasPermission = true
 
-            for (index in 0 until mRequestPermission.size) {
+            for (index in 0 until grantResults.size) {
                 if (grantResults[index] != PackageManager.PERMISSION_GRANTED) {
                     hasPermission = false
                 }
