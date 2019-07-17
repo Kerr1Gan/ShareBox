@@ -537,7 +537,13 @@ class MainPresenter : MainContract.Presenter {
                     return
                 }
                 var flag = false
-                if (mService?.isServerAlive() == false && getHandler()?.hasMessages(MSG_LOADING_SERVER) == false) {
+                var isServerAlive = try {
+                    mService?.isServerAlive
+                } catch (ex: Exception) {
+                    ex.printStackTrace()
+                    false
+                }
+                if (isServerAlive == false && getHandler()?.hasMessages(MSG_LOADING_SERVER) == false) {
                     flag = true
                     Log.e(TAG, "isServerAlive false,start server")
                     var intent = EasyServerService.getApIntent(activity)
