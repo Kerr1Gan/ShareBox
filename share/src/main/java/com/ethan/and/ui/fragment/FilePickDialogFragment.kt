@@ -92,6 +92,9 @@ class FilePickDialogFragment : AppCompatDialogFragment {
         val saveInstance = activity!!.getMainApplication().getSavedInstance()
         mFindFilesHelper = FindAllFilesHelper(context!!)
         mFindFilesHelper?.setProgressCallback { taskIndex, taskSize ->
+            if (isPaused) {
+                return@setProgressCallback
+            }
             mActivity?.runOnUiThread {
                 val pert = taskIndex * 1f / (taskSize * 1f) * 100
                 val bar = (dialog as AlertDialog).findViewById<View>(R.id.progress_bar) as ProgressBar
