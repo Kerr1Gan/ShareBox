@@ -2,7 +2,7 @@ package com.ethan.and.ui.activity;
 
 import android.os.Bundle;
 import android.os.Parcel;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 
 import com.flybd.sharebox.R;

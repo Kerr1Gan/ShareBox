@@ -5,8 +5,8 @@ import android.app.ActivityManager
 import android.content.Context
 import android.os.Bundle
 import android.os.Environment
-import android.support.multidex.MultiDexApplication
-import android.support.v4.content.LocalBroadcastManager
+import androidx.multidex.MultiDexApplication
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.util.Log
 import com.bumptech.glide.Glide
 import com.bumptech.glide.GlideBuilder
@@ -75,7 +75,7 @@ class MainApplication : MultiDexApplication() {
 
 //        WifiDirectManager.getInstance(this)
 
-        LocalBroadcastManager.getInstance(this)
+        androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(this)
 
         initSavedState()
 

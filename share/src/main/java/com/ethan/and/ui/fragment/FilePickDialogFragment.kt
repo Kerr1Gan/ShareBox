@@ -5,10 +5,10 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.content.pm.PackageInfo
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.FragmentActivity
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatDialogFragment
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentActivity
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDialogFragment
 import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
@@ -31,7 +31,7 @@ class FilePickDialogFragment : AppCompatDialogFragment {
         private const val TAG = "FilePickDialogFragment"
     }
 
-    private var mActivity: FragmentActivity? = null
+    private var mActivity: androidx.fragment.app.FragmentActivity? = null
 
     private val array = arrayOf("Movie", "Music", "Photo", "Doc", "Apk", "Rar")
 
@@ -43,7 +43,7 @@ class FilePickDialogFragment : AppCompatDialogFragment {
 
     constructor() : super()
 
-    constructor(activity: FragmentActivity) : super() {
+    constructor(activity: androidx.fragment.app.FragmentActivity) : super() {
         mActivity = activity
     }
 
@@ -148,7 +148,7 @@ class FilePickDialogFragment : AppCompatDialogFragment {
                 }
                 val act = mActivity
                 if (act != null && !act.isFinishing && !isPaused) {
-                    var dlgFragment = act.supportFragmentManager.findFragmentByTag("show_file_pick_dialog") as DialogFragment?
+                    var dlgFragment = act.supportFragmentManager.findFragmentByTag("show_file_pick_dialog") as androidx.fragment.app.DialogFragment?
                     dlgFragment?.apply {
                         act.supportFragmentManager.beginTransaction().remove(this).commitAllowingStateLoss()
                     }

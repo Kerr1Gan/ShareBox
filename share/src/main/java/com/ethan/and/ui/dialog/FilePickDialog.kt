@@ -12,12 +12,12 @@ import android.os.AsyncTask
 import android.os.Build
 import android.os.Message
 import android.preference.PreferenceManager
-import android.support.annotation.RequiresApi
-import android.support.design.widget.BottomSheetBehavior
-import android.support.design.widget.TabLayout
-import android.support.v4.view.PagerAdapter
-import android.support.v4.view.ViewPager
-import android.support.v7.widget.Toolbar
+import androidx.annotation.RequiresApi
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.tabs.TabLayout
+import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
+import androidx.appcompat.widget.Toolbar
 import android.util.Log
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -98,7 +98,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
 
     override fun onViewCreated(view: View?): Boolean {
         super.onViewCreated(view)
-        mBehavior = BottomSheetBehavior.from(findViewById(android.support.design.R.id.design_bottom_sheet))
+        mBehavior = BottomSheetBehavior.from(findViewById(com.google.android.material.R.id.design_bottom_sheet))
         mBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
 
         val display = ownerActivity.getWindowManager().getDefaultDisplay()
@@ -171,7 +171,7 @@ open class FilePickDialog : BaseBottomSheetDialog, Toolbar.OnMenuItemClickListen
         mTabLayout?.setupWithViewPager(mViewPager)
     }
 
-    open fun getViewPagerAdapter(): PagerAdapter {
+    open fun getViewPagerAdapter(): androidx.viewpager.widget.PagerAdapter {
         return object : PagerAdapter() {
 
             override fun isViewFromObject(view: View, `object`: Any): Boolean = view == `object`

@@ -1,11 +1,11 @@
 package com.ethan.and.ui.activity
 
 import android.os.Bundle
-import android.support.design.widget.TabLayout
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
+import com.google.android.material.tabs.TabLayout
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.viewpager.widget.ViewPager
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import com.flybd.sharebox.R
@@ -22,7 +22,7 @@ class TestActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_file_pick)
         var mTabLayout = findViewById<View>(R.id.tab_layout) as TabLayout
-        var mViewPager = findViewById<View>(R.id.view_pager) as ViewPager
+        var mViewPager = findViewById<View>(R.id.view_pager) as androidx.viewpager.widget.ViewPager
 
 //        mViewPager?.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(mTabLayout))
 
@@ -30,7 +30,7 @@ class TestActivity : AppCompatActivity() {
 
         mViewPager?.adapter = object : FragmentPagerAdapter(supportFragmentManager) {
 
-            override fun getItem(position: Int): Fragment {
+            override fun getItem(position: Int): androidx.fragment.app.Fragment {
                 return PageFragment()
             }
 

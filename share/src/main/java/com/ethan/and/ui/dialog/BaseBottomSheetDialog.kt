@@ -4,9 +4,9 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.BottomSheetBehavior
-import android.support.design.widget.BottomSheetDialog
-import android.support.v4.app.Fragment
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import androidx.fragment.app.Fragment
 import android.util.DisplayMetrics
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +21,7 @@ import com.ethan.and.ui.fragment.SimpleDialogFragment
 
 abstract class BaseBottomSheetDialog : BottomSheetDialog, SimpleDialogFragment.IActivityResult {
 
-    private var mFragmentHost: Fragment? = null
+    private var mFragmentHost: androidx.fragment.app.Fragment? = null
 
     constructor(context: Context, activity: Activity? = null, theme: Int = 0) : super(context, theme) {
         //do nothing
@@ -54,7 +54,7 @@ abstract class BaseBottomSheetDialog : BottomSheetDialog, SimpleDialogFragment.I
     }
 
     protected open fun onCreateView(): View? {
-        var behavior = BottomSheetBehavior.from(findViewById<View>(android.support.design.R.id.design_bottom_sheet))
+        var behavior = BottomSheetBehavior.from(findViewById<View>(com.google.android.material.R.id.design_bottom_sheet))
         return null
     }
 
@@ -87,7 +87,7 @@ abstract class BaseBottomSheetDialog : BottomSheetDialog, SimpleDialogFragment.I
     }
 
     public fun fullScreenBehavior(): Boolean {
-        var behavior = BottomSheetBehavior.from(findViewById<View>(android.support.design.R.id.design_bottom_sheet))
+        var behavior = BottomSheetBehavior.from(findViewById<View>(com.google.android.material.R.id.design_bottom_sheet))
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
         behavior.skipCollapsed = true
         return true
@@ -112,11 +112,11 @@ abstract class BaseBottomSheetDialog : BottomSheetDialog, SimpleDialogFragment.I
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     }
 
-    override fun setFragmentHost(fragment: Fragment?) {
+    override fun setFragmentHost(fragment: androidx.fragment.app.Fragment?) {
         mFragmentHost = fragment
     }
 
-    override fun getFragmentHost(): Fragment? {
+    override fun getFragmentHost(): androidx.fragment.app.Fragment? {
         return mFragmentHost
     }
 

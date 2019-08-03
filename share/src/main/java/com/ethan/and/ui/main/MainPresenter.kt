@@ -14,8 +14,8 @@ import android.os.IBinder
 import android.os.Message
 import android.preference.PreferenceManager
 import android.provider.Settings
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.LocalBroadcastManager
+import androidx.core.app.ActivityCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
@@ -100,7 +100,7 @@ class MainPresenter : MainContract.Presenter {
         shareDatabase = RoomRepository(activity).shareDatabase
 
         val filter = IntentFilter(ApDataDialog.ACTION_UPDATE_DEVICE)
-        LocalBroadcastManager.getInstance(activity).registerReceiver(mUpdateDeviceInfoReceiver, filter)
+        androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(activity).registerReceiver(mUpdateDeviceInfoReceiver, filter)
         reconnectHistory()
 
         FirebaseManager.logEvent(FirebaseAnalytics.Event.APP_OPEN, null)
@@ -121,7 +121,7 @@ class MainPresenter : MainContract.Presenter {
 
         getHandler()?.removeMessages(MSG_LOADING_SERVER)
 
-        LocalBroadcastManager.getInstance(context).unregisterReceiver(mUpdateDeviceInfoReceiver)
+        androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(context).unregisterReceiver(mUpdateDeviceInfoReceiver)
 
         // destroy
         getMainService()?.stopSearch()

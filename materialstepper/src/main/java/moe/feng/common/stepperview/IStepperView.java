@@ -1,7 +1,7 @@
 package moe.feng.common.stepperview;
 
 import android.graphics.drawable.Drawable;
-import android.support.annotation.ColorInt;
+import androidx.annotation.ColorInt;
 
 /**
  * Base interface providing a view base of stepper component.

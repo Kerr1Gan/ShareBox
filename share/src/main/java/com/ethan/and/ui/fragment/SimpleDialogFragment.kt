@@ -4,9 +4,9 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatDialogFragment
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,7 +56,7 @@ class SimpleDialogFragment : AppCompatDialogFragment {
 
     interface IActivityResult {
         fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
-        fun setFragmentHost(fragment: Fragment?)
-        fun getFragmentHost(): Fragment?
+        fun setFragmentHost(fragment: androidx.fragment.app.Fragment?)
+        fun getFragmentHost(): androidx.fragment.app.Fragment?
     }
 }

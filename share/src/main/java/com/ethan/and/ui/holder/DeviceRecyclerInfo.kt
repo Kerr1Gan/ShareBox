@@ -1,6 +1,6 @@
 package com.ethan.and.ui.holder
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -9,7 +9,7 @@ import com.flybd.sharebox.R
 /**
  * Created by Ethan_Xiang on 2017/10/27.
  */
-class DeviceRecyclerInfo(item: View) : RecyclerView.ViewHolder(item) {
+class DeviceRecyclerInfo(item: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(item) {
     var icon: ImageView? = null
     var name: TextView? = null
     var thumb: ImageView? = null

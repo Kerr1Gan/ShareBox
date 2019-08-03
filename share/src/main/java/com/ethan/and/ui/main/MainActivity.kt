@@ -11,15 +11,15 @@ import android.os.Bundle
 import android.os.Message
 import android.preference.PreferenceManager
 import android.provider.Settings
-import android.support.design.widget.FloatingActionButton
-import android.support.v4.app.ActivityCompat
-import android.support.v4.app.DialogFragment
-import android.support.v4.content.LocalBroadcastManager
-import android.support.v4.widget.DrawerLayout
-import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import androidx.core.app.ActivityCompat
+import androidx.fragment.app.DialogFragment
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.widget.Toolbar
 import android.view.*
 import android.widget.*
 import com.common.componentes.activity.ActionBarFragmentActivity
@@ -63,7 +63,7 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
     private var lastBackPressTime = -1L
 
     private lateinit var mToolbar: Toolbar
-    private lateinit var mDrawerLayout: DrawerLayout
+    private lateinit var mDrawerLayout: androidx.drawerlayout.widget.DrawerLayout
     private lateinit var mDrawerToggle: ActionBarDrawerToggle
     private lateinit var mFloatingActionButton: FloatingActionButton
     private var mViewSwitcher: ViewSwitcher? = null
@@ -78,7 +78,7 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
             Manifest.permission.ACCESS_NETWORK_STATE,
             Manifest.permission.CHANGE_WIFI_STATE)
 
-    private var mRecyclerView: RecyclerView? = null
+    private var mRecyclerView: androidx.recyclerview.widget.RecyclerView? = null
 
     private var mPhotoHelper: CapturePhotoHelper? = null
 
@@ -172,9 +172,9 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
 
         mApName = findViewById(R.id.ap_name)
 
-        mRecyclerView = view1 as RecyclerView
+        mRecyclerView = view1 as androidx.recyclerview.widget.RecyclerView
 
-        var manager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        var manager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
         mRecyclerView?.layoutManager = manager
 
         mWifiImage = findViewById(R.id.image_wifi)
@@ -396,7 +396,7 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
                     dlg.setCallback { ip ->
                         RequestManager.requestDeviceInfo(ip, object : IRequestCallback {
                             override fun onSuccess(httpURLConnection: HttpURLConnection?, response: String) {
-                                LocalBroadcastManager.getInstance(this@MainActivity).sendBroadcast(Intent().apply {
+                                androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(this@MainActivity).sendBroadcast(Intent().apply {
                                     setAction(ApDataDialog.ACTION_UPDATE_DEVICE).putExtra(ApDataDialog.EXTRA_IP, ip)
                                     putExtra(ApDataDialog.EXTRA_JSON, response)
                                 })
@@ -427,7 +427,7 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
                 }
             }
             if (grant) {
-                var dlgFragment = supportFragmentManager.findFragmentByTag(TAG_FRAGMENT) as DialogFragment?
+                var dlgFragment = supportFragmentManager.findFragmentByTag(TAG_FRAGMENT) as androidx.fragment.app.DialogFragment?
                 dlgFragment?.apply {
                     supportFragmentManager.beginTransaction().remove(this).commitAllowingStateLoss()
                 }
@@ -448,7 +448,7 @@ class MainActivity : ImmersiveFragmentActivity(), MainContract.View {
 //                }
             }
             if (hasPermission) {
-                var dlgFragment = supportFragmentManager.findFragmentByTag("ap_data_dialog") as DialogFragment?
+                var dlgFragment = supportFragmentManager.findFragmentByTag("ap_data_dialog") as androidx.fragment.app.DialogFragment?
                 dlgFragment?.apply {
                     supportFragmentManager.beginTransaction().remove(this).commitAllowingStateLoss()
                 }

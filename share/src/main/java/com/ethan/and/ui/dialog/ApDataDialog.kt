@@ -11,9 +11,9 @@ import android.graphics.ColorMatrixColorFilter
 import android.graphics.Paint
 import android.net.Uri
 import android.preference.PreferenceManager
-import android.support.design.widget.BottomSheetBehavior
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.LocalBroadcastManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import androidx.core.app.ActivityCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.text.TextUtils
 import android.util.TypedValue
 import android.view.View
@@ -69,7 +69,8 @@ class ApDataDialog(activity: Activity) : BaseBottomSheetDialog(activity, activit
     }
 
     override fun onViewCreated(view: View?): Boolean {
-        var behavior = BottomSheetBehavior.from(findViewById<View>(android.support.design.R.id.design_bottom_sheet))
+
+        var behavior = BottomSheetBehavior.from(findViewById<View>(com.google.android.material.R.id.design_bottom_sheet))
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
         behavior.skipCollapsed = true
         return true
@@ -159,7 +160,7 @@ class ApDataDialog(activity: Activity) : BaseBottomSheetDialog(activity, activit
             dlg.setCallback { ip ->
                 RequestManager.requestDeviceInfo(ip, object : IRequestCallback {
                     override fun onSuccess(httpURLConnection: HttpURLConnection?, response: String) {
-                        LocalBroadcastManager.getInstance(context).sendBroadcast(Intent().apply {
+                        androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(context).sendBroadcast(Intent().apply {
                             setAction(ACTION_UPDATE_DEVICE).putExtra(EXTRA_IP, ip)
                             putExtra(EXTRA_JSON, response)
                         })
@@ -225,7 +226,7 @@ class ApDataDialog(activity: Activity) : BaseBottomSheetDialog(activity, activit
                 val text = data.getStringExtra(QRCodeScannerActivity.EXTRA)
                 RequestManager.requestDeviceInfo(text, object : IRequestCallback {
                     override fun onSuccess(httpURLConnection: HttpURLConnection?, response: String) {
-                        LocalBroadcastManager.getInstance(context).sendBroadcast(Intent().apply {
+                        androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(context).sendBroadcast(Intent().apply {
                             setAction(ACTION_UPDATE_DEVICE).putExtra(EXTRA_IP, text)
                             putExtra(EXTRA_JSON, response)
                         })

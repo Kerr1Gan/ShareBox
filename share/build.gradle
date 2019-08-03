@@ -50,15 +50,15 @@ andResGuard {
 }
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '27.0.2'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.2'
     defaultConfig {
         applicationId "com.ecjtu.sharebox"
         minSdkVersion 16
-        targetSdkVersion 26
+        targetSdkVersion 28
         versionCode 20
         versionName "1.1.20"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
 //        ndk {
@@ -137,7 +137,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestCompile('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     //compile 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -149,12 +149,12 @@ dependencies {
     implementation project(':materialstepper')
     implementation project(':ijkplayer-exo')
     implementation 'com.github.bumptech.glide:glide:4.0.0'
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support:recyclerview-v7:26.1.0'
-    implementation 'com.android.support:design:26.1.0'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
     implementation 'de.hdodenhof:circleimageview:2.1.0'
-    implementation 'com.android.support:support-v4:26.1.0'
-    implementation 'com.android.support:support-vector-drawable:26.1.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.vectordrawable:vectordrawable:1.0.0'
     implementation 'com.tencent.bugly:crashreport:2.8.6.0'
     testCompile 'junit:junit:4.12'
     implementation(name: 'easyserver-release', ext: 'aar')
@@ -164,7 +164,7 @@ dependencies {
     implementation project(':common-components')
     implementation project(':parcel')
     implementation project(':qrcode')
-    implementation 'com.android.support:multidex:1.0.1'
+    implementation 'androidx.multidex:multidex:2.0.0'
     implementation project(':mvp-dagger')
 
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
@@ -176,8 +176,8 @@ dependencies {
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
 
     //room
-    implementation 'android.arch.persistence.room:runtime:1.1.1'
-    kapt 'android.arch.persistence.room:compiler:1.1.1'
+    implementation 'androidx.room:room-runtime:2.0.0'
+    kapt 'androidx.room:room-compiler:2.0.0'
 
     // firebase analytics
     implementation 'com.google.firebase:firebase-core:16.0.7'

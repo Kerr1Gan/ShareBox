@@ -1,8 +1,8 @@
 package com.ethan.and.ui.adapter
 
 import android.app.Activity
-import android.support.v4.app.FragmentActivity
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,21 +47,19 @@ class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerInfo>, View
         return mDeviceList?.size ?: 0
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): DeviceRecyclerInfo? {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeviceRecyclerInfo {
         val v = LayoutInflater.from(parent?.context).inflate(R.layout.layout_device_item, parent, false)
         v.setOnClickListener(this)
         v.setOnLongClickListener(this)
         return DeviceRecyclerInfo(v)
     }
 
-    override fun onBindViewHolder(holder: DeviceRecyclerInfo?, position: Int) {
+    override fun onBindViewHolder(holder: DeviceRecyclerInfo, position: Int) {
         val info = mDeviceList?.get(position)
 
         val iconUrl = "${info?.ip}:${info?.port}${info?.icon}"
         holder?.itemView?.setTag(R.id.extra_tag, position)
-        Glide.with(holder?.itemView?.context).load("http://" + iconUrl).
-                apply(RequestOptions().placeholder(R.drawable.ic_boy).skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE)).
-                into(holder?.icon) // 规避缓存机制导致图片不刷新
+        Glide.with(holder?.itemView?.context).load("http://" + iconUrl).apply(RequestOptions().placeholder(R.drawable.ic_boy).skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE)).into(holder?.icon) // 规避缓存机制导致图片不刷新
 
         holder?.name?.setText(info?.name)
 
@@ -127,7 +125,7 @@ class DeviceRecyclerViewAdapter : RecyclerView.Adapter<DeviceRecyclerInfo>, View
                 if (index == 0) {
                     if (mWeakRef?.get() != null && mWeakRef!!.get() != null) {
                         val activity = mWeakRef?.get()
-                        if (activity is FragmentActivity) {
+                        if (activity is androidx.fragment.app.FragmentActivity) {
                             SimpleDialogFragment(ApDataDialog(mWeakRef?.get()!!).apply {
                                 setup(deviceInfo!!.ip, deviceInfo.port)
                             }).show(activity.supportFragmentManager, "ap_data_dialog")

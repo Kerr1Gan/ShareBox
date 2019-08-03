@@ -11,7 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.*;
+import androidx.annotation.*;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.*;
