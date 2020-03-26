@@ -28,7 +28,6 @@ android {
   }
 
   compileSdkVersion 26
-  buildToolsVersion '27.0.2'
 
   defaultConfig {
     minSdkVersion 15
@@ -133,8 +132,8 @@ artifacts {
   archives sourcesJar
 }
 
-task findConventions << {
-  println project.getConvention()
-}
+//task findConventions << {
+//  println project.getConvention()
+//}
 
 

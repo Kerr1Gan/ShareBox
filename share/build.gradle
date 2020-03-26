@@ -142,7 +142,8 @@ dependencies {
     })
     //compile 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation project(':channellibrary')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    //implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     //glide
     //compile 'com.github.bumptech.glide:glide:3.6.1'
     implementation project(':circularprogresslibrary')
@@ -154,7 +155,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'de.hdodenhof:circleimageview:2.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.vectordrawable:vectordrawable:1.0.0'
+    implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
     implementation 'com.tencent.bugly:crashreport:2.8.6.0'
     testCompile 'junit:junit:4.12'
     implementation(name: 'easyserver-release', ext: 'aar')
