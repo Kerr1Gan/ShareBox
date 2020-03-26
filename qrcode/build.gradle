@@ -46,7 +46,7 @@ android {
 
 dependencies {
   compile 'com.google.zxing:core:3.2.1'
-  compile 'androidx.appcompat:appcompat:1.0.0'
+  compile 'androidx.appcompat:appcompat:1.1.0'
   testCompile 'junit:junit:4.12'
 //  testCompile 'org.mockito:mockito-core:2.7.5'
 //  testCompile "org.robolectric:robolectric:3.2.2"
