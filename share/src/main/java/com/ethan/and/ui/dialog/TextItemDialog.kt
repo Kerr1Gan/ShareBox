@@ -1,6 +1,7 @@
 package com.ethan.and.ui.dialog
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -27,6 +28,8 @@ class TextItemDialog(context: Context) : BaseBottomSheetDialog(context), View.On
     }
 
     override fun onViewCreated(view: View?): Boolean {
+        findViewById<View>(R.id.design_bottom_sheet)?.setBackgroundColor(Color.TRANSPARENT)
+
         mRoot = view as ViewGroup?
 
         for (index in 0..(mTitles!!.size - 1)) {

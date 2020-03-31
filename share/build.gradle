@@ -53,7 +53,7 @@ android {
     compileSdkVersion 28
     buildToolsVersion '28.0.2'
     defaultConfig {
-        applicationId "com.ecjtu.sharebox"
+        applicationId "com.ecjtu.sharebox22"
         minSdkVersion 16
         targetSdkVersion 28
         versionCode 20
@@ -108,7 +108,7 @@ android {
                     def path = "../../../"
                     def outputFile = output.outputFile
                     def fileName = outputFile.name.replace("-", "_")
-//                        .replace("app", "app_${variant.name}")
+                    //                        .replace("app", "app_${variant.name}")
                             .replace("release.apk", "_v${variant.versionName}_${new SimpleDateFormat("yyyy-MM-dd").format(new Date())}_${variant.versionCode}_release.apk")
                     output.outputFileName = fileName
                 }
@@ -194,6 +194,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-ads-identifier:16.0.0'
     //Required: Install Referrer (If publishing to Google Play)
     implementation 'com.android.installreferrer:installreferrer:1.0'
+
+    implementation 'com.google.android.material:material:1.1.0-alpha08'
 }
 
 repositories {
@@ -203,5 +205,5 @@ repositories {
     }
 }
 
-apply plugin: 'com.google.gms.google-services'
+//apply plugin: 'com.google.gms.google-services'
 

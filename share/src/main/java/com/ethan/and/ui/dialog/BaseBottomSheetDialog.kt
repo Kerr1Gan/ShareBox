@@ -32,8 +32,10 @@ abstract class BaseBottomSheetDialog : BottomSheetDialog, SimpleDialogFragment.I
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         var immersive = init()
-        if (ownerActivity == null)
+        if (ownerActivity == null) {
+            window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             return
+        }
         val screenHeight = getScreenHeight(ownerActivity)
         val statusBarHeight = getStatusBarHeight(context)
         val dialogHeight = if (immersive) screenHeight else screenHeight - statusBarHeight

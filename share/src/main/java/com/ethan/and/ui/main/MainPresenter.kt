@@ -63,7 +63,7 @@ class MainPresenter : MainContract.Presenter {
         const val DEBUG = true
     }
 
-    private val requestPermission = arrayOf(Manifest.permission.READ_PHONE_STATE,
+    private val requestPermission = arrayOf(/*Manifest.permission.READ_PHONE_STATE,*/
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -100,7 +100,7 @@ class MainPresenter : MainContract.Presenter {
         shareDatabase = RoomRepository(activity).shareDatabase
 
         val filter = IntentFilter(ApDataDialog.ACTION_UPDATE_DEVICE)
-        androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(activity).registerReceiver(mUpdateDeviceInfoReceiver, filter)
+        LocalBroadcastManager.getInstance(activity).registerReceiver(mUpdateDeviceInfoReceiver, filter)
         reconnectHistory()
 
         FirebaseManager.logEvent(FirebaseAnalytics.Event.APP_OPEN, null)

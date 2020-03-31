@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">视频分享</string>
+    <string name="app_name">SendBy</string>
 
     <string name="movie">视频</string>
     <string name="music">音乐</string>
@@ -15,6 +15,7 @@
     <string name="close">关闭</string>
     <string name="open">打开</string>
     <string name="open_by_others">其他方式打开</string>
+    <string name="delete">删除</string>
     <string name="name_too_long">名字太长啦呆逼</string>
     <string name="no_permission">请给予权限</string>
     <string name="failure">失败</string>

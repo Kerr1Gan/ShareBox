@@ -5,7 +5,11 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
+import com.common.componentes.activity.ImmersiveFragmentActivity
+import com.common.componentes.activity.RotateByOrientationActivity.newInstance
+import com.ethan.and.ui.fragment.PermissionRequestFragment
 import com.ethan.and.ui.main.MainActivity
+import com.ethan.and.ui.sendby.SendByActivity
 
 
 class SplashActivity : AppCompatActivity() {
@@ -30,13 +34,12 @@ class SplashActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if (!sIsShow) {
-            handler?.postDelayed({
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                finish()
-            }, 500)
+            val intent = ImmersiveFragmentActivity.newInstance(SplashActivity@ this, PermissionRequestFragment::class.java, clazz = SimpleImmersiveFragmentActivity::class.java)
+            //val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
         } else {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, SendByActivity::class.java)
             startActivity(intent)
             finish()
         }

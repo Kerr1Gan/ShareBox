@@ -9,7 +9,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+
 import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +27,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.common.componentes.BuildConfig;
 import com.common.componentes.activity.ActionBarFragmentActivity;
 import com.common.componentes.activity.RotateNoCreateActivity;
 import com.flybd.sharebox.R;
@@ -477,7 +480,7 @@ public class FileExpandableAdapter extends BaseExpandableListAdapter implements 
             Intent i = RotateNoCreateActivity.newInstance(mContext, IjkVideoFragment.class, bundle);
             mContext.startActivity(i);
         } else {
-            Intent i = FileOpenIntentUtil.INSTANCE.openFile(path);
+            Intent i = FileOpenIntentUtil.INSTANCE.openFile(path, BuildConfig.APPLICATION_ID + ".fileprovider", mContext);
             try {
                 mContext.startActivity(i);
             } catch (Exception ignore) {

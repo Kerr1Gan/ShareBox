@@ -154,4 +154,14 @@
         </item>
         <item name="android:indeterminateTintMode" tools:targetApi="lollipop">src_atop</item>
     </style>
+
+    <style name="SimpleImmersiveStyle" parent="CCImageStatusBarStyle">
+        <item name="android:colorControlHighlight" tools:targetApi="lollipop">@color/cc_colorDark
+        </item>
+        <item name="android:colorAccent" tools:targetApi="lollipop">@color/cc_colorAccent</item>
+        <item name="colorPrimary">@color/cc_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/cc_colorPrimaryDark</item>
+        <item name="colorAccent">@color/cc_colorAccent</item>
+        <item name="drawerArrowStyle">@style/CCAppTheme.DrawerArrowToggle</item>
+    </style>
 </resources>

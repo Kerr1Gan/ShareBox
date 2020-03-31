@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Video sharing</string>
+    <string name="app_name">SendBy</string>
 
     <string name="movie">Video</string>
     <string name="music">Music</string>
@@ -15,6 +15,7 @@
     <string name="close">Close</string>
     <string name="open">Open</string>
     <string name="open_by_others">Open by other app</string>
+    <string name="delete">delete</string>
     <string name="name_too_long">name is too long</string>
     <string name="no_permission">No Permission</string>
     <string name="failure">fail</string>

@@ -10,7 +10,9 @@
     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <!-- Bugly -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission
+        android:name="android.permission.READ_PHONE_STATE"
+        tools:node="remove" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -109,6 +111,15 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="com.ethan.and.ui.activity.SimpleImmersiveFragmentActivity"
+            android:theme="@style/SimpleImmersiveStyle" />
+
+        <activity
+            android:name="com.ethan.and.ui.sendby.SendByActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/CCImageStatusBarStyle" />
+
         <!-- FCM 推送 -->
         <service android:name="com.ethan.and.service.SimpleFirebaseMessagingService">
             <intent-filter>
@@ -144,7 +155,7 @@
 
         <receiver
             android:name="com.kochava.base.ReferralReceiver"
-            tools:node="remove"></receiver>
+            tools:node="remove" />
 
         <receiver
             android:name="com.google.android.gms.analytics.AnalyticsReceiver"
@@ -158,6 +169,8 @@
             android:name="com.google.android.gms.analytics.AnalyticsService"
             android:enabled="true"
             android:exported="false" />
+
+        <service android:name="com.ethan.and.ui.sendby.CoreService" />
 
     </application>
 
