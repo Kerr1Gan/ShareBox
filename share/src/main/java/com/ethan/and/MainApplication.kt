@@ -20,6 +20,7 @@ import com.flybd.sharebox.R
 import com.flybd.sharebox.parcel.FileExpandablePropertyCache
 import com.ethan.and.ui.main.MainActivity
 import com.ethan.and.ui.dialog.FilePickDialog
+import com.ethan.and.ui.sendby.http.HttpManager
 import com.flybd.sharebox.util.firebase.FirebaseManager
 import com.google.android.gms.ads.MobileAds
 import com.kochava.base.Tracker
@@ -55,6 +56,8 @@ class MainApplication : MultiDexApplication() {
             return
         }
         LeakCanary.install(this)
+        HttpManager.getInstance(this)
+        com.ethan.and.ui.sendby.Constants.get().init(this)
         if (isAppMainProcess(BuildConfig.APPLICATION_ID)) {
             initMainProcess()
         } else {
@@ -121,7 +124,7 @@ class MainApplication : MultiDexApplication() {
         })
 
         // Start the Kochava Tracker
-        Tracker.configure( Tracker.Configuration(applicationContext)
+        Tracker.configure(Tracker.Configuration(applicationContext)
                 .setAppGuid("kovideo-sharing-1gcj"))
     }
 

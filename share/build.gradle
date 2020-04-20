@@ -53,7 +53,7 @@ android {
     compileSdkVersion 28
     buildToolsVersion '28.0.2'
     defaultConfig {
-        applicationId "com.ecjtu.sharebox22"
+        applicationId "com.projectwinter.sendby"
         minSdkVersion 16
         targetSdkVersion 28
         versionCode 20
@@ -196,6 +196,8 @@ dependencies {
     implementation 'com.android.installreferrer:installreferrer:1.0'
 
     implementation 'com.google.android.material:material:1.1.0-alpha08'
+
+    implementation 'com.liulishuo.filedownloader:library:1.7.7'
 }
 
 repositories {

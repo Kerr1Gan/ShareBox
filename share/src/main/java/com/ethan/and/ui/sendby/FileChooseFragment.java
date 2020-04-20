@@ -64,9 +64,7 @@ public class FileChooseFragment extends BottomSheetFragment {
             }
         });
 
-        tvSend.setOnClickListener(v -> {
-
-        });
+        tvSend.setOnClickListener(v -> sendFiles());
 
 
         initData();

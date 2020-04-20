@@ -7,13 +7,17 @@ import android.widget.Button;
 
 import com.common.componentes.activity.ImmersiveFragmentActivity;
 import com.common.utils.activity.ActivityUtil;
+import com.ethan.and.ui.sendby.http.HttpManager;
+import com.ethan.and.ui.sendby.http.bean.CommonResponse;
+import com.flybd.sharebox.AppExecutorManager;
 import com.flybd.sharebox.R;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import org.jetbrains.annotations.Nullable;
 
 public class SendByActivity extends ImmersiveFragmentActivity {
-
-    private View bottom;
 
     private FileChooseFragment fileChooseFragment;
 
@@ -29,7 +33,6 @@ public class SendByActivity extends ImmersiveFragmentActivity {
         View content = findViewById(R.id.content);
         content.setPadding(content.getPaddingLeft(), content.getPaddingTop() + ActivityUtil.getStatusBarHeight(this), content.getPaddingRight(), content.getPaddingBottom());
 
-        bottom = findViewById(R.id.design_bottom_sheet);
         btnSend = findViewById(R.id.btn_send);
         btnSend.setActivated(true);
         btnSend.setOnClickListener(v -> fileChooseFragment.sendFiles());
@@ -51,5 +54,32 @@ public class SendByActivity extends ImmersiveFragmentActivity {
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AppExecutorManager.INSTANCE.getInstance().networkIO().execute(() -> {
+            try {
+                CommonResponse response = HttpManager.getInstance().getConfig(Constants.get().getRestUrl());
+                if (response != null) {
+                    JsonObject data = new Gson().fromJson(new Gson().toJson(response.getData()), JsonObject.class);
+                    if (data != null) {
+                        JsonElement element = data.get("chunkSize");
+                        if (element != null) {
+                            long chunkSize = element.getAsLong();
+                            Constants.get().setChunkSize(chunkSize);
+                        }
+                        element = data.get("chunkedStreamingMode");
+                        if (element != null) {
+                            long chunkSize = element.getAsLong();
+                            Constants.get().setChunkedStreamingMode(chunkSize);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

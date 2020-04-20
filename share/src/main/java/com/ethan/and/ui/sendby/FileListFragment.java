@@ -2,6 +2,7 @@ package com.ethan.and.ui.sendby;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -140,6 +141,13 @@ public class FileListFragment extends LazyInitFragment {
                 break;
             case APP:
                 list = FileUtil.INSTANCE.getAllApkFile(context, null);
+                List<PackageInfo> installAppInfo = FileUtil.INSTANCE.getInstalledApps(context, true);
+                for (PackageInfo info : installAppInfo) {
+                    File apkFile = new File(info.applicationInfo.sourceDir);
+                    if (apkFile.exists()) {
+                        list.add(apkFile);
+                    }
+                }
                 strList = new ArrayList<>();
                 for (File path : list) {
                     strList.add(path.getAbsolutePath());
