@@ -53,7 +53,7 @@ android {
     compileSdkVersion 28
     buildToolsVersion '28.0.2'
     defaultConfig {
-        applicationId "com.projectwinter.sendby"
+        applicationId "com.isaidamier.kotlin.trivialdrive"
         minSdkVersion 16
         targetSdkVersion 28
         versionCode 20
@@ -74,6 +74,16 @@ android {
 
     signingConfigs {
         release {
+            keyAlias "${signing_keyAlias}"
+            keyPassword "${signging_certificatePassword}"
+            storeFile file("../keystore/${signing_certificate}")
+            storePassword "${signging_storePassword}"
+
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+
+        debug {
             keyAlias "${signing_keyAlias}"
             keyPassword "${signging_certificatePassword}"
             storeFile file("../keystore/${signing_certificate}")
@@ -191,14 +201,18 @@ dependencies {
     // kochava analytics
     implementation 'com.kochava.base:tracker:3.6.0'
     //Required: Google Play Services Ads Identifier (If publishing to Google Play)
-    implementation 'com.google.android.gms:play-services-ads-identifier:16.0.0'
+    implementation 'com.google.android.gms:play-services-ads-identifier:17.0.0'
     //Required: Install Referrer (If publishing to Google Play)
-    implementation 'com.android.installreferrer:installreferrer:1.0'
+    implementation 'com.android.installreferrer:installreferrer:1.1.2'
 
     implementation 'com.google.android.material:material:1.1.0-alpha08'
 
     implementation 'com.liulishuo.filedownloader:library:1.7.7'
 
+    implementation "com.android.billingclient:billing:2.2.0"
+    // Dependency for Google Sign-In
+    implementation 'com.google.android.gms:play-services-auth:18.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation "com.android.billingclient:billing:2.2.0"
 }
 

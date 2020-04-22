@@ -2,15 +2,27 @@ package com.ethan.and.ui.sendby;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
+
 import com.common.componentes.activity.ImmersiveFragmentActivity;
 import com.common.utils.activity.ActivityUtil;
+import com.ethan.and.ui.fragment.LoginFragment;
+import com.ethan.and.ui.fragment.PaymentFragment;
 import com.ethan.and.ui.sendby.http.HttpManager;
 import com.ethan.and.ui.sendby.http.bean.CommonResponse;
 import com.flybd.sharebox.AppExecutorManager;
 import com.flybd.sharebox.R;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -18,6 +30,8 @@ import com.google.gson.JsonObject;
 import org.jetbrains.annotations.Nullable;
 
 public class SendByActivity extends ImmersiveFragmentActivity {
+
+    private static final String TAG = "SendByActivity";
 
     private FileChooseFragment fileChooseFragment;
 
@@ -45,6 +59,9 @@ public class SendByActivity extends ImmersiveFragmentActivity {
 
         fileChooseFragment = new FileChooseFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.design_bottom_sheet, fileChooseFragment, "SendByActivity").commitAllowingStateLoss();
+
+        Intent intent = ImmersiveFragmentActivity.newInstance(this, PaymentFragment.class);
+        startActivity(intent);
     }
 
     @Override
@@ -82,4 +99,6 @@ public class SendByActivity extends ImmersiveFragmentActivity {
             }
         });
     }
+
+
 }

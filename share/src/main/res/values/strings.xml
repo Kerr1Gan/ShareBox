@@ -172,4 +172,9 @@
     <string name="connect_wifi">Connect wifi</string>
     <string name="or">or</string>
     <string name="connect_ap">Connect ap</string>
+
+    <!-- TODO(user): replace with your real server client ID -->
+    <!-- Server Client ID.  This should be a valid Web OAuth 2.0 Client ID obtained
+         from https://console.developers.google.com/ -->
+    <string name="server_client_id" translatable="false">598282183161-ul7qr43dhecie53nshbbcrfcb8k380qg.apps.googleusercontent.com</string>
 </resources>
