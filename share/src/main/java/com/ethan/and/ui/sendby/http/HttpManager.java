@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.ethan.and.ui.sendby.http.bean.CommonResponse;
+import com.ethan.and.ui.sendby.http.bean.DownloadListResponse;
 import com.flybd.sharebox.BuildConfig;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -125,6 +126,31 @@ public class HttpManager {
                     continue;
                 }
                 return new Gson().fromJson(response.body().string(), new TypeToken<CommonResponse>() {
+                }.getType());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public DownloadListResponse getDownloadList(String[] remoteUrl, String code) {
+        OkHttpClient client = getOkHttpClient();
+        String[] urls = new String[remoteUrl.length];
+        for (int i = 0; i < remoteUrl.length; i++) {
+            urls[i] = remoteUrl[i] + "/spread/file/file-urls";
+        }
+        for (String url : urls) {
+            try {
+                Request request = new Request.Builder()
+                        .header("key", code)
+                        .url(url)
+                        .build();
+                Response response = client.newCall(request).execute();
+                if (!response.isSuccessful()) {
+                    continue;
+                }
+                return new Gson().fromJson(response.body().string(), new TypeToken<DownloadListResponse>() {
                 }.getType());
             } catch (Exception e) {
                 e.printStackTrace();

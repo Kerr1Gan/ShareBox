@@ -27,8 +27,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
 
-import okhttp3.OkHttpClient;
 import okio.BufferedSource;
 import okio.Okio;
 
@@ -50,9 +50,11 @@ public class UploadTask implements Cloneable {
     File file;
     Context ctx;
     String url;
-    long transferBytes;
-    int status = Status.IDLE;
+    AtomicLong transferBytes = new AtomicLong();
+    volatile int[] status = new int[]{Status.IDLE};
     UploadRunnable uploadRunnable;
+    volatile boolean[] stop = new boolean[]{false};
+    Thread workThread;
 
     public static class Status {
         public static final int IDLE = 1;
@@ -118,15 +120,21 @@ public class UploadTask implements Cloneable {
         @Override
         public void run() {
             HttpURLConnection conn = null;
+            long total = 0;
+            long uploadedSize = 0L;
+            InputStream in = null;
+            task.setWorkThread(Thread.currentThread());
             try {
-                task.status = Status.RUNNING;
-
+                task.setStatus(Status.RUNNING);
                 CommonResponse res = HttpManager.getInstance().getFileSize(Constants.get().getRestUrl(), task.name, chunkIndex, task.key);
-                long uploadedSize = 0L;
+                if (isStop()) {
+                    return;
+                }
                 if (res != null) {
                     try {
                         if ("success".equalsIgnoreCase(res.getInfo())) {
                             Log.i(TAG, "run: 分片" + chunkIndex + "已上传成功");
+                            task.getTransferBytes().addAndGet(totalSize);
                             return;
                         }
                         if (res.getData() instanceof Number) {
@@ -136,8 +144,15 @@ public class UploadTask implements Cloneable {
                         e.printStackTrace();
                     }
                 }
+                if (isStop()) {
+                    return;
+                }
                 String md5Hash = getMd5Hash(task.file, startPosition, endPosition);
+                if (isStop()) {
+                    return;
+                }
                 startPosition += uploadedSize;
+                task.getTransferBytes().addAndGet(uploadedSize);
 
                 URL url = new URL(task.getUrl());
                 conn = (HttpURLConnection) url.openConnection();
@@ -192,6 +207,9 @@ public class UploadTask implements Cloneable {
                 Map<String, File> fileParams = new HashMap<>();
                 fileParams.put(task.file.getName(), task.file);
                 for (Map.Entry<String, File> fileEntry : fileParams.entrySet()) {
+                    if (isStop()) {
+                        return;
+                    }
                     fileSb.append(PREFIX)
                             .append(BOUNDARY)
                             .append(LINE_END)
@@ -209,13 +227,16 @@ public class UploadTask implements Cloneable {
                     InputStream is = new FileInputStream(fileEntry.getValue());
                     byte[] buffer = new byte[8196];
                     long len;
-                    long total = 0;
                     is.skip(startPosition);
                     while ((len = is.read(buffer)) != -1) {
+                        if (isStop()) {
+                            return;
+                        }
                         if (startPosition + total + len > endPosition) {
                             len = endPosition - startPosition - total;
                         }
                         total += len;
+                        task.getTransferBytes().addAndGet(len);
                         byte[] bytes = new byte[(int) len];
                         System.arraycopy(buffer, 0, bytes, 0, (int) len);
                         dos.write(bytes, 0, (int) len);
@@ -230,7 +251,10 @@ public class UploadTask implements Cloneable {
                 Log.e(TAG, "postResponseCode() = " + conn.getResponseCode());
                 //读取服务器返回信息
                 if (conn.getResponseCode() == 200) {
-                    InputStream in = conn.getInputStream();
+                    if (isStop()) {
+                        return;
+                    }
+                    in = conn.getInputStream();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(in));
                     String line;
                     StringBuilder response = new StringBuilder();
@@ -241,17 +265,31 @@ public class UploadTask implements Cloneable {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                task.getTransferBytes().addAndGet(-total);
+                task.getTransferBytes().addAndGet(-uploadedSize);
                 Log.i(TAG, "run: startPosition " + startPosition + " endPosition " + endPosition);
                 try {
                     Thread.sleep(50);
                     run();
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
+                    return;
                 }
             } finally {
-                task.status = Status.END;
+                AtomicLong bytesTransfer = task.getTransferBytes();
+                //bytesTransfer.addAndGet(total);
+                Log.i(TAG, "run: total " + bytesTransfer.get() + " real " + task.file.length());
+                if (bytesTransfer.get() == task.file.length()) {
+                    task.setStatus(Status.END);
+                }
                 if (conn != null) {
                     conn.disconnect();
+                }
+                if (in != null) {
+                    try {
+                        in.close();
+                    } catch (IOException e) {
+                    }
                 }
             }
         }
@@ -277,6 +315,14 @@ public class UploadTask implements Cloneable {
             String md5Hash = new BigInteger(1, md.digest()).toString(16);
             Log.i(TAG, "hash: " + md5Hash);
             return md5Hash;
+        }
+
+        public boolean isStop() {
+            if (task.isStop() || (task.getWorkThread() != null && task.getWorkThread().isInterrupted())) {
+                task.getWorkThread().interrupt();
+                return true;
+            }
+            return false;
         }
 
         /**
@@ -347,11 +393,11 @@ public class UploadTask implements Cloneable {
         this.url = url;
     }
 
-    public long getTransferBytes() {
+    public AtomicLong getTransferBytes() {
         return transferBytes;
     }
 
-    public void setTransferBytes(long transferBytes) {
+    public void setTransferBytes(AtomicLong transferBytes) {
         this.transferBytes = transferBytes;
     }
 
@@ -359,7 +405,11 @@ public class UploadTask implements Cloneable {
     public Object clone() {
         try {
             UploadTask task = (UploadTask) super.clone();
+            task.setStatus(getStatus());
+            task.setTaskId(getTaskId());
             task.setFile(new File(this.file.getAbsolutePath()));
+            task.setWorkThread(getWorkThread());
+            task.setStop(isStop());
             task.ctx = this.ctx;
             return task;
         } catch (CloneNotSupportedException e) {
@@ -373,6 +423,37 @@ public class UploadTask implements Cloneable {
     }
 
     public void setCtx(Context ctx) {
-        this.ctx = ctx;
+        this.ctx = ctx.getApplicationContext();
+    }
+
+    public int getStatus() {
+        return status[0];
+    }
+
+    public void setStatus(int status) {
+        this.status[0] = status;
+    }
+
+    public boolean isStop() {
+        return stop[0];
+    }
+
+    public void setStop(boolean stop) {
+        this.stop[0] = stop;
+    }
+
+    public void stop() {
+        setStop(true);
+        if (getWorkThread() != null) {
+            getWorkThread().interrupt();
+        }
+    }
+
+    public Thread getWorkThread() {
+        return workThread;
+    }
+
+    public void setWorkThread(Thread workThread) {
+        this.workThread = workThread;
     }
 }

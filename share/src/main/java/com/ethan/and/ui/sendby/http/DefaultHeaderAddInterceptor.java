@@ -9,8 +9,11 @@ import android.util.Base64;
 
 import com.flybd.sharebox.BuildConfig;
 import com.flybd.sharebox.R;
+import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 
 import org.ecjtu.channellibrary.wifiutil.NetworkUtil;
 import org.jetbrains.annotations.NotNull;
@@ -77,21 +80,21 @@ public class DefaultHeaderAddInterceptor implements Interceptor {
     }
 
     private String getGAId() {
-//        AdvertisingIdClient.Info adInfo = null;
-//        try {
-//            adInfo = AdvertisingIdClient.getAdvertisingIdInfo(context);
-//            final String id = adInfo.getId();
-//            //final boolean isLAT = adInfo.isLimitAdTrackingEnabled();
-//            return id;
-//        } catch (IOException e) {
-//            // Unrecoverable error connecting to Google Play services (e.g.,
-//            // the old version of the service doesn't support getting AdvertisingId).
-//
-//        } catch (GooglePlayServicesNotAvailableException e) {
-//            // Google Play services is not available entirely.
-//        } catch (GooglePlayServicesRepairableException e) {
-//            e.printStackTrace();
-//        }
+        AdvertisingIdClient.Info adInfo = null;
+        try {
+            adInfo = AdvertisingIdClient.getAdvertisingIdInfo(context);
+            final String id = adInfo.getId();
+            //final boolean isLAT = adInfo.isLimitAdTrackingEnabled();
+            return id;
+        } catch (IOException e) {
+            // Unrecoverable error connecting to Google Play services (e.g.,
+            // the old version of the service doesn't support getting AdvertisingId).
+
+        } catch (GooglePlayServicesNotAvailableException e) {
+            // Google Play services is not available entirely.
+        } catch (GooglePlayServicesRepairableException e) {
+            e.printStackTrace();
+        }
         return "";
     }
 

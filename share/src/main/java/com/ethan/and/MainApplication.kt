@@ -24,6 +24,8 @@ import com.ethan.and.ui.sendby.http.HttpManager
 import com.flybd.sharebox.util.firebase.FirebaseManager
 import com.google.android.gms.ads.MobileAds
 import com.kochava.base.Tracker
+import com.liulishuo.filedownloader.FileDownloader
+import com.liulishuo.filedownloader.connection.FileDownloadUrlConnection
 import com.squareup.leakcanary.LeakCanary
 import com.tencent.bugly.crashreport.CrashReport
 import org.ecjtu.easyserver.server.DeviceInfo
@@ -31,6 +33,7 @@ import java.io.*
 import java.lang.ref.WeakReference
 import java.lang.reflect.InvocationTargetException
 import java.util.*
+import java.util.concurrent.ForkJoinPool
 import kotlin.collections.ArrayList
 
 
@@ -55,9 +58,16 @@ class MainApplication : MultiDexApplication() {
             // You should not init your app in this process.
             return
         }
+
         LeakCanary.install(this)
         HttpManager.getInstance(this)
         com.ethan.and.ui.sendby.Constants.get().init(this)
+        FileDownloader.setupOnApplicationOnCreate(this)
+                .connectionCreator(FileDownloadUrlConnection.Creator(FileDownloadUrlConnection.Configuration()
+                        .connectTimeout(15000) // set connection timeout.
+                        .readTimeout(15000) // set read timeout.
+                ))
+                .commit()
         if (isAppMainProcess(BuildConfig.APPLICATION_ID)) {
             initMainProcess()
         } else {
@@ -78,7 +88,7 @@ class MainApplication : MultiDexApplication() {
 
 //        WifiDirectManager.getInstance(this)
 
-        androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(this)
+        LocalBroadcastManager.getInstance(this)
 
         initSavedState()
 
