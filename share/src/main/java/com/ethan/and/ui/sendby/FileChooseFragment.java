@@ -102,6 +102,7 @@ public class FileChooseFragment extends BottomSheetFragment {
                 if (select != null) {
                     selectedFiles.addAll(select);
                 }
+                fragment.clearSelected();
             }
         }
         Context ctx = getContext();
@@ -127,6 +128,10 @@ public class FileChooseFragment extends BottomSheetFragment {
 
     public void collapse() {
         getBehavior().setState(SimpleBottomSheetBehavior.STATE_COLLAPSED);
+    }
+
+    public void setPeekHeight(int height) {
+        getBehavior().setPeekHeight(height);
     }
 
     class SimplePagerAdapter extends FragmentPagerAdapter {

@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.ethan.and.ui.sendby.http.HttpManager;
 import com.ethan.and.ui.sendby.http.TraceSender;
-import com.ethan.and.ui.sendby.http.bean.CommonResponse;
+import com.ethan.and.ui.sendby.entity.CommonResponse;
 import com.flybd.sharebox.BuildConfig;
 import com.flybd.sharebox.R;
 

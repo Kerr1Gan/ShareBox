@@ -80,6 +80,10 @@ public class UploadManager {
         return uploadTask.get(hash);
     }
 
+    public void clear() {
+        uploadTask.clear();
+    }
+
     private static class Inner {
         private static final UploadManager sInstance = new UploadManager();
     }

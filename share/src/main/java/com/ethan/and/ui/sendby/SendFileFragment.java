@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import androidx.collection.SparseArrayCompat;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,8 +30,10 @@ import com.common.componentes.fragment.LazyInitFragment;
 import com.common.utils.activity.ActivityUtil;
 import com.common.utils.file.FileUtil;
 import com.ethan.and.async.AppThumbTask;
+import com.ethan.and.ui.sendby.entity.HttpResponse;
+import com.ethan.and.ui.sendby.entity.KeyEntity;
 import com.ethan.and.ui.sendby.http.HttpManager;
-import com.ethan.and.ui.sendby.http.bean.CommonResponse;
+import com.ethan.and.ui.sendby.entity.CommonResponse;
 import com.flybd.sharebox.AppExecutorManager;
 import com.flybd.sharebox.R;
 import com.google.gson.Gson;
@@ -53,11 +56,13 @@ public class SendFileFragment extends LazyInitFragment {
 
     private TextView tvKey;
 
-    private int taskHash = 0;
-
-    private long lastBytesTransfer = 0L;
+    private volatile int taskCount = 0;
 
     private static final LruCache<String, Bitmap> sLruCache = new LruCache<>(24);
+
+    private KeyEntity keyEntity;
+
+    private SparseArrayCompat<ViewState> viewState = new SparseArrayCompat<>();
 
     public static Bundle getBundle(List<File> selectedFiles) {
         Bundle bundle = new Bundle();
@@ -95,7 +100,9 @@ public class SendFileFragment extends LazyInitFragment {
 
                 }).setNegativeButton(android.R.string.cancel, (dialog, which) -> {
 
-        }).setCancelable(false).create().show();
+        }).setCancelable(false).setOnDismissListener(dialog -> {
+            send(taskCount);
+        }).create().show();
 
         rvList = view.findViewById(R.id.rv_list);
         rvList.setLayoutManager(new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false));
@@ -111,43 +118,16 @@ public class SendFileFragment extends LazyInitFragment {
                     for (File f : selectedFiles) {
                         names.add(f.getName());
                     }
-
                     AppExecutorManager.INSTANCE.getInstance().networkIO().execute(() -> {
-                        CommonResponse response = HttpManager.getInstance().getCode(Constants.get().getRestUrl(), names);
+                        HttpResponse<KeyEntity> response = HttpManager.getInstance().getCode(Constants.get().getRestUrl(), names);
                         Log.i(TAG, "onViewCreated: " + new Gson().toJson(response));
-
-                        getHandler().post(() -> {
-                            try {
-                                UploadTask task = new UploadTask();
-                                task.setCtx(getContext());
-                                if (response.getData() != null) {
-                                    JsonObject data = new Gson().fromJson(new Gson().toJson(response.getData()), JsonObject.class);
-                                    if (data != null) {
-                                        String key = data.get("key").getAsString();
-                                        String url = data.get("server").getAsString();
-                                        if (!TextUtils.isEmpty(key) && !TextUtils.isEmpty(url)) {
-                                            task.setKey(key);
-                                            task.setFile(selectedFiles.get(0));
-                                            task.setName(selectedFiles.get(0).getName());
-                                            task.setUrl(url);
-                                            taskHash = UploadManager.getInstance().pushTask(task);
-                                            rvList.getAdapter().notifyDataSetChanged();
-                                            tvKey.setText(key);
-                                        }
-                                    }
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        });
-                    });
-                    getHandler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            rvList.getAdapter().notifyDataSetChanged();
-                            getHandler().postDelayed(this, 1000);
+                        if (response != null && response.getData() != null) {
+                            this.keyEntity = response.getData();
+                            getHandler().post(() -> {
+                                tvKey.setText(keyEntity.getKey());
+                            });
                         }
-                    }, 500);
+                    });
                 }
             }
         } else {
@@ -158,14 +138,76 @@ public class SendFileFragment extends LazyInitFragment {
         }
     }
 
+    private boolean send(int index) {
+        if (taskCount >= selectedFiles.size() || keyEntity == null) {
+            return false;
+        }
+        getHandler().removeCallbacksAndMessages(null);
+        if (selectedFiles.size() > 0) {
+            List<String> names = new ArrayList<>();
+            for (File f : selectedFiles) {
+                names.add(f.getName());
+            }
+            try {
+                UploadTask task = new UploadTask();
+                task.setCtx(getContext());
+
+                String key = keyEntity.getKey();
+                String url = keyEntity.getServer();
+                if (!TextUtils.isEmpty(key) && !TextUtils.isEmpty(url)) {
+                    task.setKey(key);
+                    task.setFile(selectedFiles.get(index));
+                    task.setName(selectedFiles.get(index).getName());
+                    task.setUrl(url);
+                    int taskHash = UploadManager.getInstance().pushTask(task);
+                    ViewState state = viewState.get(index);
+                    if (state == null) {
+                        state = new ViewState();
+                        state.lastBytesTransfer = 0L;
+                        state.taskHash = taskHash;
+                        viewState.put(index, state);
+                    }
+
+                    rvList.getAdapter().notifyItemChanged(index);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            getHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    UploadTask task = UploadManager.getInstance().getTask(viewState.get(index).taskHash);
+                    rvList.getAdapter().notifyItemChanged(index);
+                    if (task != null && task.getStatus() == UploadTask.Status.END) {
+                        send(++taskCount);
+                    } else {
+                        getHandler().postDelayed(this, 1000);
+                    }
+                }
+            }, 500);
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void onDestroy() {
         getHandler().removeCallbacksAndMessages(null);
-        UploadTask tsk = UploadManager.getInstance().getTask(taskHash);
-        if (tsk != null) {
-            tsk.stop();
+        for (int i = 0; i < viewState.size(); i++) {
+            ViewState state = viewState.get(i);
+            if (state != null) {
+                UploadTask tsk = UploadManager.getInstance().getTask(state.taskHash);
+                if (tsk != null) {
+                    tsk.stop();
+                }
+            }
         }
         super.onDestroy();
+    }
+
+    private class ViewState {
+        int taskHash;
+        long lastBytesTransfer = 0L;
     }
 
     private static class Holder extends RecyclerView.ViewHolder {
@@ -205,13 +247,17 @@ public class SendFileFragment extends LazyInitFragment {
             setChildViewThumb(type, file.getAbsolutePath(), holder.ivIcon);
 
             holder.tvStatus.setText("等待中");
-            UploadTask task = UploadManager.getInstance().getTask(taskHash);
+            ViewState state = viewState.get(position);
+            if (state == null) {
+                return;
+            }
+            UploadTask task = UploadManager.getInstance().getTask(state.taskHash);
             if (task != null) {
                 if (task.getStatus() == UploadTask.Status.IDLE) {
                     holder.tvStatus.setText("等待中");
                 } else if (task.getStatus() == UploadTask.Status.RUNNING) {
-                    long transfer = task.getTransferBytes().get() - lastBytesTransfer;
-                    lastBytesTransfer = task.getTransferBytes().get();
+                    long transfer = task.getTransferBytes().get() - state.lastBytesTransfer;
+                    state.lastBytesTransfer = task.getTransferBytes().get();
                     holder.tvStatus.setText("上传中 " + Formatter.formatBytes(transfer).value + " " + Formatter.formatBytes(transfer).units);
                 } else if (task.getStatus() == UploadTask.Status.END) {
                     holder.tvStatus.setText("结束");

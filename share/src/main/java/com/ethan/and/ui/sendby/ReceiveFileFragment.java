@@ -33,7 +33,7 @@ import com.common.componentes.fragment.LazyInitFragment;
 import com.common.utils.activity.ActivityUtil;
 import com.common.utils.file.FileUtil;
 import com.ethan.and.ui.sendby.http.HttpManager;
-import com.ethan.and.ui.sendby.http.bean.DownloadListResponse;
+import com.ethan.and.ui.sendby.entity.DownloadListResponse;
 import com.flybd.sharebox.AppExecutorManager;
 import com.flybd.sharebox.R;
 import com.google.gson.Gson;
@@ -268,7 +268,7 @@ public class ReceiveFileFragment extends LazyInitFragment {
                 state.lastTransferBytes = state.transferBytes;
 
                 Formatter.BytesResult speedResult = Formatter.formatBytes(speed);
-                holder.tvStatus.setText("下载中 " + speedResult.units + " " + speedResult.value);
+                holder.tvStatus.setText("下载中 " + speedResult.value + " " + speedResult.units);
                 Formatter.BytesResult result = Formatter.formatBytes(state.totalBytes);
                 holder.tvSize.setText(result.value + " " + result.units);
             } else if (status == FileDownloadStatus.completed) {

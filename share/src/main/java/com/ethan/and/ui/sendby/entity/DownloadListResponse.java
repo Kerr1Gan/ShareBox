@@ -1,4 +1,4 @@
-package com.ethan.and.ui.sendby.http.bean;
+package com.ethan.and.ui.sendby.entity;
 
 import com.google.gson.annotations.SerializedName;
 

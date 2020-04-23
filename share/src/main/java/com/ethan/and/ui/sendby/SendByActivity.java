@@ -1,28 +1,19 @@
 package com.ethan.and.ui.sendby;
 
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
-import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
-
-import androidx.annotation.NonNull;
 
 import com.common.componentes.activity.ImmersiveFragmentActivity;
 import com.common.utils.activity.ActivityUtil;
-import com.ethan.and.ui.fragment.LoginFragment;
-import com.ethan.and.ui.fragment.PaymentFragment;
 import com.ethan.and.ui.sendby.http.HttpManager;
-import com.ethan.and.ui.sendby.http.bean.CommonResponse;
+import com.ethan.and.ui.sendby.entity.CommonResponse;
 import com.flybd.sharebox.AppExecutorManager;
 import com.flybd.sharebox.R;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -57,11 +48,23 @@ public class SendByActivity extends ImmersiveFragmentActivity {
             startActivity(intent);
         });
 
+        btnSend.getTranslationY();
         fileChooseFragment = new FileChooseFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.design_bottom_sheet, fileChooseFragment, "SendByActivity").commitAllowingStateLoss();
 
-        Intent intent = ImmersiveFragmentActivity.newInstance(this, PaymentFragment.class);
-        startActivity(intent);
+
+//        Intent intent = ImmersiveFragmentActivity.newInstance(this, PaymentFragment.class);
+//        startActivity(intent);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        int offsetY = (int) (((ViewGroup) btnSend.getParent()).getY() + btnSend.getHeight());
+        Point size = new Point();
+        getWindowManager().getDefaultDisplay().getSize(size);
+        int height = size.y - offsetY - (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, getResources().getDisplayMetrics());
+        fileChooseFragment.setPeekHeight(height);
     }
 
     @Override

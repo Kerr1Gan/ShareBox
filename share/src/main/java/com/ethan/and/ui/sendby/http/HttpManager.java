@@ -1,10 +1,11 @@
 package com.ethan.and.ui.sendby.http;
 
 import android.content.Context;
-import android.util.Log;
 
-import com.ethan.and.ui.sendby.http.bean.CommonResponse;
-import com.ethan.and.ui.sendby.http.bean.DownloadListResponse;
+import com.ethan.and.ui.sendby.entity.CommonResponse;
+import com.ethan.and.ui.sendby.entity.DownloadListResponse;
+import com.ethan.and.ui.sendby.entity.HttpResponse;
+import com.ethan.and.ui.sendby.entity.KeyEntity;
 import com.flybd.sharebox.BuildConfig;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -81,7 +82,7 @@ public class HttpManager {
         return null;
     }
 
-    public CommonResponse getCode(String[] remoteUrl, List<String> fileNames) {
+    public HttpResponse<KeyEntity> getCode(String[] remoteUrl, List<String> fileNames) {
         OkHttpClient client = getOkHttpClient();
         String[] urls = new String[remoteUrl.length];
         for (int i = 0; i < remoteUrl.length; i++) {
@@ -98,7 +99,7 @@ public class HttpManager {
                 if (!response.isSuccessful()) {
                     continue;
                 }
-                return new Gson().fromJson(response.body().string(), new TypeToken<CommonResponse>() {
+                return new Gson().fromJson(response.body().string(), new TypeToken<HttpResponse<KeyEntity>>() {
                 }.getType());
             } catch (Exception e) {
                 e.printStackTrace();

@@ -1,11 +1,7 @@
-package com.ethan.and.ui.fragment;
+package com.ethan.and.ui.sendby.googlepay;
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 
@@ -13,13 +9,13 @@ import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.ConsumeParams;
+import com.android.billingclient.api.ConsumeResponseListener;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
-import com.common.componentes.fragment.LazyInitFragment;
-import com.ethan.and.ui.sendby.googlepay.AugmentedSkuDetails;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -28,30 +24,18 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
-public class PaymentFragment extends LazyInitFragment {
+public class GooglePayManager {
 
-    private static final String TAG = "PaymentFragment";
+    private static final String TAG = "GooglePayManager";
 
     private BillingClient playStoreBillingClient;
 
     private List<SkuDetails> skuDetailList;
 
+    private Activity activity;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        startDataSourceConnections();
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public GooglePayManager(Activity activity) {
+        this.activity = activity;
     }
 
     /**
@@ -75,14 +59,12 @@ public class PaymentFragment extends LazyInitFragment {
     }
 
     private void instantiateAndConnectToPlayBillingService() {
-        playStoreBillingClient = BillingClient.newBuilder(getContext().getApplicationContext())
+        playStoreBillingClient = BillingClient.newBuilder(activity)
                 .enablePendingPurchases() // required or app will crash
                 .setListener(new PurchasesUpdatedListener() {
                     @Override
                     public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> list) {
                         int responseCode = billingResult.getResponseCode();
-                        Log.i(TAG, "onPurchasesUpdated: " + new Gson().toJson(billingResult));
-                        Log.i(TAG, "onPurchasesUpdated: " + new Gson().toJson(list));
                         if (responseCode == BillingClient.BillingResponseCode.OK) {
 
                         } else if (responseCode == BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED) {
@@ -158,14 +140,6 @@ public class PaymentFragment extends LazyInitFragment {
         HashSet<Purchase> purchasesResult = new HashSet<>();
         Purchase.PurchasesResult result = playStoreBillingClient.queryPurchases(BillingClient.SkuType.INAPP);
         Log.d(TAG, "queryPurchasesAsync INAPP results: " + result.getPurchasesList().size());
-//        ConsumeParams params =
-//                ConsumeParams.newBuilder().setPurchaseToken(result.getPurchasesList().get(0).getPurchaseToken()).build();
-//        playStoreBillingClient.consumeAsync(params, new ConsumeResponseListener() {
-//            @Override
-//            public void onConsumeResponse(BillingResult billingResult, String s) {
-//
-//            }
-//        });
         if (result.getPurchasesList() != null) {
             result.getPurchasesList().addAll(result.getPurchasesList());
         }
@@ -220,12 +194,20 @@ public class PaymentFragment extends LazyInitFragment {
                         for (SkuDetails detail : list) {
                             Log.i(TAG, "onSkuDetailsResponse: " + new Gson().toJson(detail));
                         }
-                        launchBillingFlow(getActivity(), list.get(0));
+                        launchBillingFlow(activity, list.get(0));
                     }
                 } else {
                     Log.i(TAG, "onSkuDetailsResponse: " + billingResult.getDebugMessage());
                 }
             }
+        });
+    }
+
+    public void consumeProduct(String purchaseToken) {
+        ConsumeParams params =
+                ConsumeParams.newBuilder().setPurchaseToken(purchaseToken).build();
+        playStoreBillingClient.consumeAsync(params, (billingResult, s) -> {
+            Log.i(TAG, "consumeSku: " + new Gson().toJson(billingResult));
         });
     }
 
