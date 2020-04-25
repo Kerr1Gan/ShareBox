@@ -168,6 +168,15 @@ public class ReceiveFileFragment extends LazyInitFragment {
 
     @Override
     public void onDestroy() {
+        FileDownloader.getImpl().pauseAll();
+        for (int i = 0; i < viewState.size(); i++) {
+            int key = viewState.keyAt(i);
+            ViewState state = viewState.get(key);
+            if (state != null) {
+                int id = state.downloadId;
+                FileDownloader.getImpl().clear(id, state.downloadItem.getUrl());
+            }
+        }
         super.onDestroy();
         getHandler().removeCallbacksAndMessages(null);
     }
@@ -328,5 +337,20 @@ public class ReceiveFileFragment extends LazyInitFragment {
         } else if (type == FileUtil.MediaFileType.RAR) {
             icon.setImageResource(R.mipmap.rar);
         }
+    }
+
+    private boolean checkTaskFinished() {
+        for (int i = 0; i < viewState.size(); i++) {
+            int key = viewState.keyAt(i);
+            ViewState state = viewState.get(key);
+            if (state != null) {
+                int id = state.downloadId;
+                byte status = FileDownloader.getImpl().getStatus(id, state.downloadItem.getUrl());
+                if (status == FileDownloadStatus.pending || status == FileDownloadStatus.progress || status == FileDownloadStatus.connected || status == FileDownloadStatus.started) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

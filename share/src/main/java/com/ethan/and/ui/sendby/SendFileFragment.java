@@ -308,4 +308,8 @@ public class SendFileFragment extends LazyInitFragment {
             icon.setImageResource(R.mipmap.rar);
         }
     }
+
+    private boolean checkTaskFinished(){
+        return false;
+    }
 }
