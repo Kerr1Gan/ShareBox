@@ -56,8 +56,8 @@ android {
         applicationId "com.isaidamier.kotlin.trivialdrive"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 20
-        versionName "1.1.20"
+        versionCode 21
+        versionName "1.1.21"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
