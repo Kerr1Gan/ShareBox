@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_login"
+        android:title="Login" />
+
+    <item
+        android:id="@+id/nav_vip"
+        android:title="Get Vip" />
+
+    <!--    <item-->
+    <!--        android:id="@+id/nav_contact_us"-->
+    <!--        android:title="@string/action_contact_us" />-->
+
+    <!--    <item-->
+    <!--        android:id="@+id/nav_copy_download_link"-->
+    <!--        android:title="@string/action_copy_download_link" />-->
+
+</menu>

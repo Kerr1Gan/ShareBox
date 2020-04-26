@@ -9,6 +9,7 @@ public class Constants {
 
     private static final String KEY_CHUNK_SIZE = "key_chunk_size";
     private static final String KEY_CHUNKED_STREAMING_MODE = "key_chunked_streaming_mode";
+    private static final String KEY_LOGIN_TOKEN = "key_login_token";
 
     private Context appContext;
 
@@ -49,5 +50,15 @@ public class Constants {
     public long getChunkedStreamingMode() {
         SharedPreferences pref = this.appContext.getSharedPreferences("constants", Context.MODE_PRIVATE);
         return pref.getLong(KEY_CHUNKED_STREAMING_MODE, 10 * 1024 * 1024);
+    }
+
+    public String getToken() {
+        SharedPreferences pref = this.appContext.getSharedPreferences("constants", Context.MODE_PRIVATE);
+        return pref.getString(KEY_LOGIN_TOKEN, "");
+    }
+
+    public void setToken(String token) {
+        SharedPreferences pref = this.appContext.getSharedPreferences("constants", Context.MODE_PRIVATE);
+        pref.edit().putString(KEY_LOGIN_TOKEN, token).apply();
     }
 }

@@ -1,42 +1,39 @@
 {
   "project_info": {
-    "project_number": "892575101681",
-    "firebase_url": "https://sharebox-fe157.firebaseio.com",
-    "project_id": "sharebox-fe157",
-    "storage_bucket": "sharebox-fe157.appspot.com"
+    "project_number": "598282183161",
+    "firebase_url": "https://project-winter-2-1587523735527.firebaseio.com",
+    "project_id": "project-winter-2-1587523735527",
+    "storage_bucket": "project-winter-2-1587523735527.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:892575101681:android:53af46a154db5359",
+        "mobilesdk_app_id": "1:598282183161:android:dba2b713ac0167c580dd28",
         "android_client_info": {
-          "package_name": "com.ecjtu.sharebox"
+          "package_name": "com.projectwinter.sendby"
         }
       },
       "oauth_client": [
         {
-          "client_id": "892575101681-eqthrkhjlkii14gfbig055rpng5k1av6.apps.googleusercontent.com",
+          "client_id": "598282183161-fs24vu6o3gilhejdqetiajd9v102ek9a.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCSohHjGQ32WsMZHiDUuqL49CENQc5DNCo"
+          "current_key": "AIzaSyAQesyhtLf4MGKQ1t1Zf1FBRZYp-RYcsh0"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "598282183161-fs24vu6o3gilhejdqetiajd9v102ek9a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
-      },
-      "admob_app_id": "ca-app-pub-1160759304210068~6504718621"
+      }
     }
   ],
   "configuration_version": "1"

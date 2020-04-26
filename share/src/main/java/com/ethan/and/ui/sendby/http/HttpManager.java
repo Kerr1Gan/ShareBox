@@ -3,9 +3,11 @@ package com.ethan.and.ui.sendby.http;
 import android.content.Context;
 
 import com.ethan.and.ui.sendby.entity.CommonResponse;
+import com.ethan.and.ui.sendby.entity.ConfigEntity;
 import com.ethan.and.ui.sendby.entity.DownloadListResponse;
 import com.ethan.and.ui.sendby.entity.HttpResponse;
 import com.ethan.and.ui.sendby.entity.KeyEntity;
+import com.ethan.and.ui.sendby.entity.LoginEntity;
 import com.flybd.sharebox.BuildConfig;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -58,7 +60,7 @@ public class HttpManager {
     }
 
     //http://192.168.3.16:9998/spread/file/upload
-    public CommonResponse getConfig(String[] remoteUrl) {
+    public HttpResponse<ConfigEntity> getConfig(String[] remoteUrl) {
         OkHttpClient client = getOkHttpClient();
         String[] urls = new String[remoteUrl.length];
         for (int i = 0; i < remoteUrl.length; i++) {
@@ -73,7 +75,7 @@ public class HttpManager {
                 if (!response.isSuccessful()) {
                     continue;
                 }
-                return new Gson().fromJson(response.body().string(), new TypeToken<CommonResponse>() {
+                return new Gson().fromJson(response.body().string(), new TypeToken<HttpResponse<ConfigEntity>>() {
                 }.getType());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -152,6 +154,33 @@ public class HttpManager {
                     continue;
                 }
                 return new Gson().fromJson(response.body().string(), new TypeToken<DownloadListResponse>() {
+                }.getType());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public HttpResponse<LoginEntity> googleVerify(String[] remoteUrl, String idToken) {
+        OkHttpClient client = getOkHttpClient();
+        String[] urls = new String[remoteUrl.length];
+        for (int i = 0; i < remoteUrl.length; i++) {
+            urls[i] = remoteUrl[i] + "/auth/googleVerify";
+        }
+        for (String url : urls) {
+            try {
+                RequestBody reqBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), "{}");
+                Request request = new Request.Builder()
+                        .header("idToken", idToken)
+                        .url(url)
+                        .post(reqBody)
+                        .build();
+                Response response = client.newCall(request).execute();
+                if (!response.isSuccessful()) {
+                    continue;
+                }
+                return new Gson().fromJson(response.body().string(), new TypeToken<HttpResponse<LoginEntity>>() {
                 }.getType());
             } catch (Exception e) {
                 e.printStackTrace();

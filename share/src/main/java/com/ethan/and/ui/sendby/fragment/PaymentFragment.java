@@ -1,4 +1,4 @@
-package com.ethan.and.ui.fragment;
+package com.ethan.and.ui.sendby.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -106,7 +106,7 @@ public class PaymentFragment extends LazyInitFragment {
                     int responseCode = billingResult.getResponseCode();
                     if (responseCode == BillingClient.BillingResponseCode.OK) {
                         Log.i(TAG, "onBillingSetupFinished successfully");
-                        querySkuDetailsAsync(BillingClient.SkuType.INAPP, Arrays.asList("gas", "premium_car"));
+                        querySkuDetailsAsync(BillingClient.SkuType.INAPP, Arrays.asList("test"/*, "premium_car"*/));
                         //querySkuDetailsAsync(BillingClient.SkuType.SUBS, Arrays.asList("gold_monthly", "gold_yearly"));
                         queryPurchasesAsync();
                     } else if (responseCode == BillingClient.BillingResponseCode.BILLING_UNAVAILABLE) {

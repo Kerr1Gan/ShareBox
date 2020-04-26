@@ -7,6 +7,7 @@ import android.content.pm.Signature;
 import android.preference.PreferenceManager;
 import android.util.Base64;
 
+import com.ethan.and.ui.sendby.Constants;
 import com.flybd.sharebox.BuildConfig;
 import com.flybd.sharebox.R;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
@@ -45,10 +46,7 @@ public class DefaultHeaderAddInterceptor implements Interceptor {
         if (userRequest.header("Connection") == null) {
             requestBuilder.header("Connection", "Keep-Alive");
         }
-//        if (userRequest.header("Accept-Encoding") == null && userRequest.header("Range") == null) {
-//            requestBuilder.header("Accept-Encoding", "gzip");
-//        }
-        String appsFlyersId = "";
+
         Locale locale = context.getResources().getConfiguration().locale;
         String lang = locale.getLanguage();
         String country = locale.getCountry();
@@ -57,7 +55,6 @@ public class DefaultHeaderAddInterceptor implements Interceptor {
                 .header("X-APP-VERSION-NAME", String.valueOf(BuildConfig.VERSION_NAME))
                 .header("X-APP-PACKAGE-NAME", getPackageName())
                 .header("X-APP-NAME", getAppName())
-                .header("X-AF-ID", appsFlyersId != null ? appsFlyersId : "")
                 .header("X-GA-ID", getGAId())
                 .header("X-LANGUAGE", lang)
                 .header("X-COUNTRY", country)
@@ -69,7 +66,8 @@ public class DefaultHeaderAddInterceptor implements Interceptor {
                 .header("X-REFERRER", getReferrer())
                 .header("X-SIM-OPERATOR", NetworkUtil.getCurrentSimOperator(context))
                 .header("X-NETWORK-STATE", String.valueOf(NetworkUtil.getNetworkState(context)))
-                .header("X-GP-AVAILABLE", String.valueOf(isGooglePlayServiceAvailable()));
+                .header("X-GP-AVAILABLE", String.valueOf(isGooglePlayServiceAvailable()))
+                .header("idToken", Constants.get().getToken());
 
         return chain.proceed(requestBuilder.build());
     }
@@ -141,6 +139,10 @@ public class DefaultHeaderAddInterceptor implements Interceptor {
 
     private String getReferrer() {
         return PreferenceManager.getDefaultSharedPreferences(context).getString("referrer", "");
+    }
+
+    private String getToken() {
+        return Constants.get().getToken();
     }
 }
 
