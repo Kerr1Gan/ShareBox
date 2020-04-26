@@ -5,26 +5,24 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.Purchase;
 import com.common.componentes.activity.ImmersiveFragmentActivity;
 import com.common.utils.activity.ActivityUtil;
-import com.sendby.ads.AdCoreManager;
-import com.sendby.entity.ConfigEntity;
-import com.sendby.entity.HttpResponse;
-import com.sendby.entity.LoginEntity;
-import com.sendby.fragment.LoginFragment;
-import com.sendby.fragment.PaymentFragment;
-import com.sendby.http.HttpManager;
 import com.flybd.sharebox.AppExecutorManager;
 import com.flybd.sharebox.BuildConfig;
 import com.flybd.sharebox.R;
@@ -33,8 +31,20 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.material.navigation.NavigationView;
+import com.sendby.ads.AdCoreManager;
+import com.sendby.entity.ConfigEntity;
+import com.sendby.entity.HttpResponse;
+import com.sendby.entity.LoginEntity;
+import com.sendby.fragment.LoginFragment;
+import com.sendby.fragment.PaymentFragment;
+import com.sendby.googlepay.GooglePayManager;
+import com.sendby.http.HttpManager;
 
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
 
 public class SendByActivity extends ImmersiveFragmentActivity {
 
@@ -52,6 +62,10 @@ public class SendByActivity extends ImmersiveFragmentActivity {
 
     private NavigationView navigationView;
 
+    private TextView tvNavigationHeader;
+
+    private GooglePayManager googlePayManager;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +79,18 @@ public class SendByActivity extends ImmersiveFragmentActivity {
 
         navigationView = findViewById(R.id.nv_menu_left);
         navigationView.setPadding(navigationView.getPaddingLeft(), navigationView.getPaddingTop() + ActivityUtil.getStatusBarHeight(this), navigationView.getPaddingRight(), navigationView.getPaddingBottom());
+        View header = LayoutInflater.from(this).inflate(R.layout.layout_navigation_header, navigationView, false);
+        navigationView.addHeaderView(header);
+        tvNavigationHeader = header.findViewById(R.id.tv_login);
+        String token = Constants.get().getToken();
+        if (!TextUtils.isEmpty(token)) {
+            LoginEntity loginEntity = Constants.get().getLoginEntity();
+            if (loginEntity != null) {
+                tvNavigationHeader.setText(loginEntity.getName());
+            }
+        } else {
+            tvNavigationHeader.setText("未登录");
+        }
 
         btnSend = findViewById(R.id.btn_send);
         btnSend.setActivated(true);
@@ -95,6 +121,25 @@ public class SendByActivity extends ImmersiveFragmentActivity {
                 Intent intent = ImmersiveFragmentActivity.newInstance(this, PaymentFragment.class);
                 startActivityForResult(intent, REQUEST_BUY_VIP_CODE);
                 return true;
+            } else if (menuItem.getItemId() == R.id.nav_remove_ad) {
+                googlePayManager.setConfig(Arrays.asList("ad_remove"), (billingResult, list) -> {
+                    if (list.size() > 0) {
+                        googlePayManager.launchBillingFlow(SendByActivity.this, list.get(0));
+                    }
+                }, (billingResult, list) -> {
+                    int responseCode = billingResult.getResponseCode();
+                    if (responseCode == BillingClient.BillingResponseCode.OK) {
+                        Constants.get().setRemoveAd(true);
+                    } else if (responseCode == BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED) {
+                        Constants.get().setRemoveAd(true);
+                    } else if (responseCode == BillingClient.BillingResponseCode.SERVICE_DISCONNECTED) {
+                        googlePayManager.connectToPlayBillingService();
+                    } else {
+                        Log.i(TAG, billingResult.getDebugMessage());
+                    }
+                });
+                googlePayManager.startDataSourceConnections();
+                return true;
             }
             return false;
         });
@@ -115,7 +160,39 @@ public class SendByActivity extends ImmersiveFragmentActivity {
             }
         });
         adView.loadAd(adRequest);
-        flAd.addView(adView);
+        if (!Constants.get().isRemoveAd()) {
+            flAd.addView(adView);
+        }
+
+
+        googlePayManager = new GooglePayManager(SendByActivity.this);
+        googlePayManager.setConfig(Arrays.asList("ad_remove"), (billingResult, list) -> {
+            if (list.size() > 0) {
+                HashSet<Purchase> result = googlePayManager.queryPurchasesAsync();
+                if (result == null) {
+                    return;
+                }
+                Iterator<Purchase> iterator = result.iterator();
+                if (!iterator.hasNext()) {
+                    Constants.get().setRemoveAd(false);
+                } else {
+                    while (iterator.hasNext()) {
+                        Purchase purchase = iterator.next();
+                        if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
+                            Constants.get().setRemoveAd(true);
+                        }
+                    }
+                }
+            }
+        }, (billingResult, list) -> {
+        });
+        googlePayManager.startDataSourceConnections();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        googlePayManager.endDataSourceConnections();
     }
 
     @Override
@@ -158,10 +235,22 @@ public class SendByActivity extends ImmersiveFragmentActivity {
             try {
                 HttpResponse<LoginEntity> response = HttpManager.getInstance().googleVerify(Constants.get().getRestUrl(), Constants.get().getToken());
                 if (response != null && response.getData() != null) {
-                    getHandler().post(() -> Toast.makeText(this, "登录成功", Toast.LENGTH_LONG).show());
+                    Constants.get().setLoginEntity(response.getData());
+                    getHandler().post(() -> {
+                        Toast.makeText(this, "登录成功", Toast.LENGTH_LONG).show();
+                        LoginEntity loginEntity = Constants.get().getLoginEntity();
+                        if (loginEntity != null) {
+                            tvNavigationHeader.setText(loginEntity.getName());
+                        }
+
+                    });
                 } else {
                     Constants.get().setToken("");
-                    getHandler().post(() -> Toast.makeText(this, "登录失败", Toast.LENGTH_LONG).show());
+                    Constants.get().setLoginEntity(null);
+                    getHandler().post(() -> {
+                        Toast.makeText(this, "登录失败", Toast.LENGTH_LONG).show();
+                        tvNavigationHeader.setText("未登录");
+                    });
                 }
             } catch (Exception e) {
                 e.printStackTrace();

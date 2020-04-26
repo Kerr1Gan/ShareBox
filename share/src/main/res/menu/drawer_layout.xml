@@ -8,6 +8,10 @@
         android:id="@+id/nav_vip"
         android:title="Get Vip" />
 
+    <item
+        android:id="@+id/nav_remove_ad"
+        android:title="移除广告" />
+
     <!--    <item-->
     <!--        android:id="@+id/nav_contact_us"-->
     <!--        android:title="@string/action_contact_us" />-->

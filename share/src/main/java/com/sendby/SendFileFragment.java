@@ -158,15 +158,18 @@ public class SendFileFragment extends LazyInitFragment {
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-        builder.setTitle("小技巧")
+        AlertDialog dlg = builder.setTitle("小技巧")
                 .setMessage("观看一段广告加速传输效果")
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                     interstitialAd.showVideoAd();
                 }).setNegativeButton(android.R.string.cancel, (dialog, which) -> {
-            interstitialAd.showInterstitialAd();
-        }).setCancelable(false).setOnDismissListener(dialog -> {
-            send(taskCount);
-        }).create().show();
+                    interstitialAd.showInterstitialAd();
+                }).setCancelable(false).setOnDismissListener(dialog -> {
+                    send(taskCount);
+                }).create();
+        if (!Constants.get().isRemoveAd()) {
+            dlg.show();
+        }
 
         rvList = view.findViewById(R.id.rv_list);
         rvList.setLayoutManager(new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false));
@@ -187,7 +190,9 @@ public class SendFileFragment extends LazyInitFragment {
             }
         });
         adView.loadAd(adRequest);
-        flAd.addView(adView);
+        if (!Constants.get().isRemoveAd()) {
+            flAd.addView(adView);
+        }
 
 
         Bundle bundle = getArguments();

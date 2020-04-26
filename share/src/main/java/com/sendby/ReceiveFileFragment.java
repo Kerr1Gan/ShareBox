@@ -158,13 +158,16 @@ public class ReceiveFileFragment extends LazyInitFragment {
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-        builder.setTitle("小技巧")
+        AlertDialog dlg = builder.setTitle("小技巧")
                 .setMessage("观看一段广告加速传输效果")
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                     interstitialAd.showVideoAd();
                 }).setNegativeButton(android.R.string.cancel, (dialog, which) -> {
-            interstitialAd.showInterstitialAd();
-        }).setCancelable(false).create().show();
+                    interstitialAd.showInterstitialAd();
+                }).setCancelable(false).create();
+        if (!Constants.get().isRemoveAd()) {
+            dlg.show();
+        }
 
         btnReceive = view.findViewById(R.id.btn_receive);
         btnReceive.setActivated(true);
@@ -241,7 +244,9 @@ public class ReceiveFileFragment extends LazyInitFragment {
             }
         });
         adView.loadAd(adRequest);
-        flAd.addView(adView);
+        if (!Constants.get().isRemoveAd()) {
+            flAd.addView(adView);
+        }
     }
 
     private static class Holder extends RecyclerView.ViewHolder {

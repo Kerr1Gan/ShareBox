@@ -33,8 +33,21 @@ public class GooglePayManager {
 
     private Activity activity;
 
+    private SkuDetailsResponseListener skuDetailsResponseListener;
+
+    private PurchasesUpdatedListener purchasesUpdatedListener;
+
+    private List<String> skuList;
+
     public GooglePayManager(Activity activity) {
         this.activity = activity;
+    }
+
+    public GooglePayManager setConfig(List<String> skuList, SkuDetailsResponseListener skuDetailsResponseListener, PurchasesUpdatedListener purchasesUpdatedListener) {
+        this.skuList = skuList;
+        this.skuDetailsResponseListener = skuDetailsResponseListener;
+        this.purchasesUpdatedListener = purchasesUpdatedListener;
+        return this;
     }
 
     /**
@@ -45,12 +58,16 @@ public class GooglePayManager {
      * [startDataSourceConnections] when the [BillingViewModel] is instantiated and
      * [endDataSourceConnections] inside [ViewModel.onCleared]
      */
-    private void startDataSourceConnections() {
+    public void startDataSourceConnections() {
         Log.i(TAG, "startDataSourceConnections");
+        if (playStoreBillingClient != null) {
+            playStoreBillingClient.endConnection();
+            playStoreBillingClient = null;
+        }
         instantiateAndConnectToPlayBillingService();
     }
 
-    private void endDataSourceConnections() {
+    public void endDataSourceConnections() {
         playStoreBillingClient.endConnection();
         // normally you don't worry about closing a DB connection unless you have more than
         // one DB open. so no need to call 'localCacheBillingClient.close()'
@@ -60,25 +77,28 @@ public class GooglePayManager {
     private void instantiateAndConnectToPlayBillingService() {
         playStoreBillingClient = BillingClient.newBuilder(activity)
                 .enablePendingPurchases() // required or app will crash
-                .setListener(new PurchasesUpdatedListener() {
-                    @Override
-                    public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> list) {
-                        int responseCode = billingResult.getResponseCode();
-                        if (responseCode == BillingClient.BillingResponseCode.OK) {
-
-                        } else if (responseCode == BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED) {
-
-                        } else if (responseCode == BillingClient.BillingResponseCode.SERVICE_DISCONNECTED) {
-                            connectToPlayBillingService();
-                        } else {
-                            Log.i(TAG, billingResult.getDebugMessage());
-                        }
-                    }
-                }).build();
+                .setListener(purchasesUpdatedListener).build();
+//        playStoreBillingClient = BillingClient.newBuilder(activity)
+//                .enablePendingPurchases() // required or app will crash
+//                .setListener(new PurchasesUpdatedListener() {
+//                    @Override
+//                    public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> list) {
+//                        int responseCode = billingResult.getResponseCode();
+//                        if (responseCode == BillingClient.BillingResponseCode.OK) {
+//
+//                        } else if (responseCode == BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED) {
+//
+//                        } else if (responseCode == BillingClient.BillingResponseCode.SERVICE_DISCONNECTED) {
+//                            connectToPlayBillingService();
+//                        } else {
+//                            Log.i(TAG, billingResult.getDebugMessage());
+//                        }
+//                    }
+//                }).build();
         connectToPlayBillingService();
     }
 
-    private boolean connectToPlayBillingService() {
+    public boolean connectToPlayBillingService() {
         Log.i(TAG, "connectToPlayBillingService");
         if (!playStoreBillingClient.isReady()) {
             playStoreBillingClient.startConnection(new BillingClientStateListener() {
@@ -87,7 +107,7 @@ public class GooglePayManager {
                     int responseCode = billingResult.getResponseCode();
                     if (responseCode == BillingClient.BillingResponseCode.OK) {
                         Log.i(TAG, "onBillingSetupFinished successfully");
-                        querySkuDetailsAsync(BillingClient.SkuType.INAPP, Arrays.asList("gas", "premium_car"));
+                        querySkuDetailsAsync(BillingClient.SkuType.INAPP, skuList, skuDetailsResponseListener);
                         //querySkuDetailsAsync(BillingClient.SkuType.SUBS, Arrays.asList("gold_monthly", "gold_yearly"));
                         queryPurchasesAsync();
                     } else if (responseCode == BillingClient.BillingResponseCode.BILLING_UNAVAILABLE) {
@@ -134,7 +154,7 @@ public class GooglePayManager {
      * owned," which can happen if a user buys the item around the same time
      * on a different device.
      */
-    private void queryPurchasesAsync() {
+    public HashSet<Purchase> queryPurchasesAsync() {
         Log.d(TAG, "queryPurchasesAsync called");
         HashSet<Purchase> purchasesResult = new HashSet<>();
         Purchase.PurchasesResult result = playStoreBillingClient.queryPurchases(BillingClient.SkuType.INAPP);
@@ -151,12 +171,13 @@ public class GooglePayManager {
             Log.d(TAG, "queryPurchasesAsync SUBS results: " + result.getPurchasesList().size());
         }
         //processPurchases(purchasesResult)
+        return purchasesResult;
     }
 
     /**
      * Checks if the user's device supports subscriptions
      */
-    private boolean isSubscriptionSupported() {
+    public boolean isSubscriptionSupported() {
         BillingResult billingResult =
                 playStoreBillingClient.isFeatureSupported(BillingClient.FeatureType.SUBSCRIPTIONS);
         boolean succeeded = false;
@@ -179,27 +200,28 @@ public class GooglePayManager {
      * <p>
      * The result is passed to [onSkuDetailsResponse]
      */
-    private void querySkuDetailsAsync(@BillingClient.SkuType String skuType,
-                                      List<String> skuList) {
+    public void querySkuDetailsAsync(@BillingClient.SkuType String skuType,
+                                     List<String> skuList, SkuDetailsResponseListener listener) {
         SkuDetailsParams params = SkuDetailsParams.newBuilder().setSkusList(skuList).setType(skuType).build();
         Log.d(TAG, "querySkuDetailsAsync for " + skuType);
-        playStoreBillingClient.querySkuDetailsAsync(params, new SkuDetailsResponseListener() {
-            @Override
-            public void onSkuDetailsResponse(BillingResult billingResult, List<SkuDetails> list) {
-                int responseCode = billingResult.getResponseCode();
-                if (responseCode == BillingClient.BillingResponseCode.OK) {
-                    if (list != null && list.size() > 0) {
-                        skuDetailList = list;
-                        for (SkuDetails detail : list) {
-                            Log.i(TAG, "onSkuDetailsResponse: " + new Gson().toJson(detail));
-                        }
-                        launchBillingFlow(activity, list.get(0));
-                    }
-                } else {
-                    Log.i(TAG, "onSkuDetailsResponse: " + billingResult.getDebugMessage());
-                }
-            }
-        });
+        playStoreBillingClient.querySkuDetailsAsync(params, listener);
+//        playStoreBillingClient.querySkuDetailsAsync(params, new SkuDetailsResponseListener() {
+//            @Override
+//            public void onSkuDetailsResponse(BillingResult billingResult, List<SkuDetails> list) {
+//                int responseCode = billingResult.getResponseCode();
+//                if (responseCode == BillingClient.BillingResponseCode.OK) {
+//                    if (list != null && list.size() > 0) {
+//                        skuDetailList = list;
+//                        for (SkuDetails detail : list) {
+//                            Log.i(TAG, "onSkuDetailsResponse: " + new Gson().toJson(detail));
+//                        }
+//                        launchBillingFlow(activity, list.get(0));
+//                    }
+//                } else {
+//                    Log.i(TAG, "onSkuDetailsResponse: " + billingResult.getDebugMessage());
+//                }
+//            }
+//        });
     }
 
     public void consumeProduct(String purchaseToken) {
@@ -215,11 +237,11 @@ public class GooglePayManager {
      * launch the Google Play Billing flow. The response to this call is returned in
      * [onPurchasesUpdated]
      */
-    private void launchBillingFlow(Activity activity, AugmentedSkuDetails augmentedSkuDetails) throws JSONException {
+    public void launchBillingFlow(Activity activity, AugmentedSkuDetails augmentedSkuDetails) throws JSONException {
         launchBillingFlow(activity, new SkuDetails(augmentedSkuDetails.getOriginalJson()));
     }
 
-    private void launchBillingFlow(Activity activity, SkuDetails skuDetails) {
+    public void launchBillingFlow(Activity activity, SkuDetails skuDetails) {
         BillingFlowParams purchaseParams = BillingFlowParams.newBuilder().setSkuDetails(skuDetails).build();
         playStoreBillingClient.launchBillingFlow(activity, purchaseParams);
     }
