@@ -9,6 +9,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -17,6 +18,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.common.componentes.activity.ImmersiveFragmentActivity;
 import com.common.utils.activity.ActivityUtil;
+import com.ethan.and.ui.sendby.ads.AdCoreManager;
 import com.ethan.and.ui.sendby.entity.ConfigEntity;
 import com.ethan.and.ui.sendby.entity.HttpResponse;
 import com.ethan.and.ui.sendby.entity.LoginEntity;
@@ -24,7 +26,12 @@ import com.ethan.and.ui.sendby.fragment.LoginFragment;
 import com.ethan.and.ui.sendby.fragment.PaymentFragment;
 import com.ethan.and.ui.sendby.http.HttpManager;
 import com.flybd.sharebox.AppExecutorManager;
+import com.flybd.sharebox.BuildConfig;
 import com.flybd.sharebox.R;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.google.android.material.navigation.NavigationView;
 
 import org.jetbrains.annotations.Nullable;
@@ -49,7 +56,10 @@ public class SendByActivity extends ImmersiveFragmentActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sendby);
-
+        AdCoreManager.initAdmob(this, "ca-app-pub-1847326177341268~7271377670");
+        //interstital ca-app-pub-1847326177341268/3659435721
+        //video ca-app-pub-1847326177341268/4206230631
+        //banner ca-app-pub-1847326177341268/6423246157
         View content = findViewById(R.id.content);
         content.setPadding(content.getPaddingLeft(), content.getPaddingTop() + ActivityUtil.getStatusBarHeight(this), content.getPaddingRight(), content.getPaddingBottom());
 
@@ -88,6 +98,24 @@ public class SendByActivity extends ImmersiveFragmentActivity {
             }
             return false;
         });
+
+
+        FrameLayout flAd = findViewById(R.id.fl_ad);
+        AdView adView = new AdView(this);
+        adView.setAdSize(AdSize.SMART_BANNER);
+        if (BuildConfig.DEBUG) {
+            adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
+        } else {
+            adView.setAdUnitId("ca-app-pub-1847326177341268/6423246157");
+        }
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.setAdListener(new AdListener() {
+            @Override
+            public void onAdOpened() {
+            }
+        });
+        adView.loadAd(adRequest);
+        flAd.addView(adView);
     }
 
     @Override

@@ -12,8 +12,10 @@ import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +23,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.collection.SparseArrayCompat;
 import androidx.core.widget.ContentLoadingProgressBar;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,12 +33,18 @@ import com.common.componentes.fragment.LazyInitFragment;
 import com.common.utils.activity.ActivityUtil;
 import com.common.utils.file.FileUtil;
 import com.ethan.and.async.AppThumbTask;
+import com.ethan.and.ui.sendby.ads.InterstitialAdWrap;
 import com.ethan.and.ui.sendby.entity.HttpResponse;
 import com.ethan.and.ui.sendby.entity.KeyEntity;
 import com.ethan.and.ui.sendby.http.HttpManager;
 import com.ethan.and.ui.sendby.entity.CommonResponse;
 import com.flybd.sharebox.AppExecutorManager;
+import com.flybd.sharebox.BuildConfig;
 import com.flybd.sharebox.R;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -64,10 +73,69 @@ public class SendFileFragment extends LazyInitFragment {
 
     private SparseArrayCompat<ViewState> viewState = new SparseArrayCompat<>();
 
+    private InterstitialAdWrap interstitialAd;
+
     public static Bundle getBundle(List<File> selectedFiles) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(EXTRA, (Serializable) selectedFiles);
         return bundle;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        interstitialAd = new InterstitialAdWrap(getContext(),
+                "ca-app-pub-1847326177341268/4206230631",
+                "ca-app-pub-1847326177341268/3659435721",
+                "",
+                "");
+        interstitialAd.setRewardListener(new InterstitialAdWrap.IRewardListener() {
+            @Override
+            public void onReward() {
+            }
+
+            @Override
+            public void onInterstitialAdImpression() {
+            }
+
+            @Override
+            public void onInterstitialAdOpened() {
+            }
+
+            @Override
+            public void onRewardVideoAdImpression() {
+            }
+        });
+        interstitialAd.loadAd();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        interstitialAd.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        interstitialAd.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        interstitialAd.onDestroy();
+        interstitialAd.forceDestroy();
+        getHandler().removeCallbacksAndMessages(null);
+        for (int i = 0; i < viewState.size(); i++) {
+            ViewState state = viewState.get(i);
+            if (state != null) {
+                UploadTask tsk = UploadManager.getInstance().getTask(state.taskHash);
+                if (tsk != null) {
+                    tsk.stop();
+                }
+            }
+        }
+        super.onDestroy();
     }
 
     @Nullable
@@ -97,9 +165,9 @@ public class SendFileFragment extends LazyInitFragment {
         builder.setTitle("小技巧")
                 .setMessage("观看一段广告加速传输效果")
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-
+                    interstitialAd.showVideoAd();
                 }).setNegativeButton(android.R.string.cancel, (dialog, which) -> {
-
+            interstitialAd.showInterstitialAd();
         }).setCancelable(false).setOnDismissListener(dialog -> {
             send(taskCount);
         }).create().show();
@@ -107,6 +175,24 @@ public class SendFileFragment extends LazyInitFragment {
         rvList = view.findViewById(R.id.rv_list);
         rvList.setLayoutManager(new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false));
         rvList.setAdapter(new Adapter());
+
+        FrameLayout flAd = view.findViewById(R.id.fl_ad);
+        AdView adView = new AdView(view.getContext());
+        adView.setAdSize(AdSize.SMART_BANNER);
+        if (BuildConfig.DEBUG) {
+            adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
+        } else {
+            adView.setAdUnitId("ca-app-pub-1847326177341268/6423246157");
+        }
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.setAdListener(new AdListener() {
+            @Override
+            public void onAdOpened() {
+            }
+        });
+        adView.loadAd(adRequest);
+        flAd.addView(adView);
+
 
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -188,21 +274,6 @@ public class SendFileFragment extends LazyInitFragment {
             return true;
         }
         return false;
-    }
-
-    @Override
-    public void onDestroy() {
-        getHandler().removeCallbacksAndMessages(null);
-        for (int i = 0; i < viewState.size(); i++) {
-            ViewState state = viewState.get(i);
-            if (state != null) {
-                UploadTask tsk = UploadManager.getInstance().getTask(state.taskHash);
-                if (tsk != null) {
-                    tsk.stop();
-                }
-            }
-        }
-        super.onDestroy();
     }
 
     private class ViewState {
@@ -309,7 +380,7 @@ public class SendFileFragment extends LazyInitFragment {
         }
     }
 
-    private boolean checkTaskFinished(){
+    private boolean checkTaskFinished() {
         return false;
     }
 }

@@ -32,12 +32,10 @@
                     app:theme="@style/WhiteToolbar"
                     app:title="@string/app_name" />
 
-
-                <com.google.android.gms.ads.AdView
+                <FrameLayout
+                    android:id="@+id/fl_ad"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:adSize="SMART_BANNER"
-                    app:adUnitId="ca-app-pub-3940256099942544/6300978111" />
+                    android:layout_height="80dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

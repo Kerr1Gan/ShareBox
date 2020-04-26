@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,10 +33,16 @@ import com.bumptech.glide.request.RequestOptions;
 import com.common.componentes.fragment.LazyInitFragment;
 import com.common.utils.activity.ActivityUtil;
 import com.common.utils.file.FileUtil;
+import com.ethan.and.ui.sendby.ads.InterstitialAdWrap;
 import com.ethan.and.ui.sendby.http.HttpManager;
 import com.ethan.and.ui.sendby.entity.DownloadListResponse;
 import com.flybd.sharebox.AppExecutorManager;
+import com.flybd.sharebox.BuildConfig;
 import com.flybd.sharebox.R;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.google.gson.Gson;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadLargeFileListener;
@@ -60,6 +67,8 @@ public class ReceiveFileFragment extends LazyInitFragment {
 
     private SparseArrayCompat<ViewState> viewState;
 
+    private InterstitialAdWrap interstitialAd;
+
     class ViewState {
         int downloadId = 0;
         DownloadListResponse.DownloadItem downloadItem;
@@ -74,6 +83,58 @@ public class ReceiveFileFragment extends LazyInitFragment {
         super.onCreate(savedInstanceState);
         downloadItems = new ArrayList<>();
         viewState = new SparseArrayCompat<>();
+        interstitialAd = new InterstitialAdWrap(getContext(),
+                "ca-app-pub-1847326177341268/4206230631",
+                "ca-app-pub-1847326177341268/3659435721",
+                "",
+                "");
+        interstitialAd.setRewardListener(new InterstitialAdWrap.IRewardListener() {
+            @Override
+            public void onReward() {
+            }
+
+            @Override
+            public void onInterstitialAdImpression() {
+            }
+
+            @Override
+            public void onInterstitialAdOpened() {
+            }
+
+            @Override
+            public void onRewardVideoAdImpression() {
+            }
+        });
+        interstitialAd.loadAd();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        interstitialAd.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        interstitialAd.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        interstitialAd.onDestroy();
+        interstitialAd.forceDestroy();
+        FileDownloader.getImpl().pauseAll();
+        for (int i = 0; i < viewState.size(); i++) {
+            int key = viewState.keyAt(i);
+            ViewState state = viewState.get(key);
+            if (state != null) {
+                int id = state.downloadId;
+                FileDownloader.getImpl().clear(id, state.downloadItem.getUrl());
+            }
+        }
+        super.onDestroy();
+        getHandler().removeCallbacksAndMessages(null);
     }
 
     @Nullable
@@ -100,9 +161,9 @@ public class ReceiveFileFragment extends LazyInitFragment {
         builder.setTitle("小技巧")
                 .setMessage("观看一段广告加速传输效果")
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-
+                    interstitialAd.showVideoAd();
                 }).setNegativeButton(android.R.string.cancel, (dialog, which) -> {
-
+            interstitialAd.showInterstitialAd();
         }).setCancelable(false).create().show();
 
         btnReceive = view.findViewById(R.id.btn_receive);
@@ -164,21 +225,23 @@ public class ReceiveFileFragment extends LazyInitFragment {
         rvList = view.findViewById(R.id.rv_list);
         rvList.setLayoutManager(new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false));
         rvList.setAdapter(new Adapter());
-    }
 
-    @Override
-    public void onDestroy() {
-        FileDownloader.getImpl().pauseAll();
-        for (int i = 0; i < viewState.size(); i++) {
-            int key = viewState.keyAt(i);
-            ViewState state = viewState.get(key);
-            if (state != null) {
-                int id = state.downloadId;
-                FileDownloader.getImpl().clear(id, state.downloadItem.getUrl());
-            }
+        FrameLayout flAd = view.findViewById(R.id.fl_ad);
+        AdView adView = new AdView(view.getContext());
+        adView.setAdSize(AdSize.SMART_BANNER);
+        if (BuildConfig.DEBUG) {
+            adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
+        } else {
+            adView.setAdUnitId("ca-app-pub-1847326177341268/6423246157");
         }
-        super.onDestroy();
-        getHandler().removeCallbacksAndMessages(null);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.setAdListener(new AdListener() {
+            @Override
+            public void onAdOpened() {
+            }
+        });
+        adView.loadAd(adRequest);
+        flAd.addView(adView);
     }
 
     private static class Holder extends RecyclerView.ViewHolder {

@@ -68,12 +68,12 @@ class MainApplication : MultiDexApplication() {
                         .readTimeout(15000) // set read timeout.
                 ))
                 .commit()
+        FirebaseManager.init(this)
         if (isAppMainProcess(BuildConfig.APPLICATION_ID)) {
             initMainProcess()
         } else {
             //child process
         }
-        FirebaseManager.init(this)
     }
 
     private fun initMainProcess() {

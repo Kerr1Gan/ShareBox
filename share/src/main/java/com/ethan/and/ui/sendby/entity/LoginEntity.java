@@ -30,8 +30,8 @@ public class LoginEntity {
     private String androidId;
     private String appPackageName;
     private String apkVersion;
-    private Date createTime;
-    private Date vipExpirationTime;
+    private Long createTime;
+    private Long vipExpirationTime;
 
     private static final String STUB = new LoginEntity().getClass().getSimpleName();
 
@@ -118,7 +118,7 @@ public class LoginEntity {
         this.apkVersion = apkVersion;
     }
 
-    public long getCreateTime() {
+    public Long getCreateTime() {
         return createTime;
     }
 

@@ -56,6 +56,11 @@
             android:visibility="invisible"
             tools:visibility="visible" />
 
+        <FrameLayout
+            android:id="@+id/fl_ad"
+            android:layout_width="match_parent"
+            android:layout_height="80dp" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_list"
             android:layout_width="match_parent"

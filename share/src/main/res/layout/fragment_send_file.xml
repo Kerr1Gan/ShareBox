@@ -57,11 +57,9 @@
             android:layout_marginBottom="3dp"
             android:layout_weight="1" />
 
-        <com.google.android.gms.ads.AdView
-            android:id="@+id/adView"
+        <FrameLayout
+            android:id="@+id/fl_ad"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            ads:adSize="SMART_BANNER"
-            ads:adUnitId="ca-app-pub-3940256099942544/6300978111" />
+            android:layout_height="80dp" />
     </LinearLayout>
 </LinearLayout>
