@@ -52,7 +52,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/shape_rectangle_corners_btn"
-                        android:text="发送" />
+                        android:text="@string/send" />
 
                     <Space
                         android:layout_width="0dp"
@@ -64,7 +64,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/shape_rectangle_corners_btn"
-                        android:text="接收" />
+                        android:text="@string/receive" />
 
                     <Space
                         android:layout_width="0dp"

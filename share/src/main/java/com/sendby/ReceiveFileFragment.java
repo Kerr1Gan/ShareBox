@@ -158,8 +158,8 @@ public class ReceiveFileFragment extends LazyInitFragment {
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-        AlertDialog dlg = builder.setTitle("小技巧")
-                .setMessage("观看一段广告加速传输效果")
+        AlertDialog dlg = builder.setTitle(R.string.tips)
+                .setMessage(R.string.watch_ad_acclerator_transfer)
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                     interstitialAd.showVideoAd();
                 }).setNegativeButton(android.R.string.cancel, (dialog, which) -> {
@@ -336,7 +336,7 @@ public class ReceiveFileFragment extends LazyInitFragment {
                 viewState.put(position, state);
             }
 
-            holder.tvStatus.setText("等待中");
+            holder.tvStatus.setText(R.string.pending);
             holder.tvSize.setText("");
             byte status = FileDownloader.getImpl().getStatus(item.getUrl(), savedPath);
             if (status == FileDownloadStatus.progress) {
@@ -345,18 +345,18 @@ public class ReceiveFileFragment extends LazyInitFragment {
                 state.lastTransferBytes = state.transferBytes;
 
                 Formatter.BytesResult speedResult = Formatter.formatBytes(speed);
-                holder.tvStatus.setText("下载中 " + speedResult.value + " " + speedResult.units);
+                holder.tvStatus.setText(getString(R.string.downloading) + " " + speedResult.value + " " + speedResult.units);
                 Formatter.BytesResult result = Formatter.formatBytes(state.totalBytes);
                 holder.tvSize.setText(result.value + " " + result.units);
             } else if (status == FileDownloadStatus.completed) {
-                holder.tvStatus.setText("下载完成");
+                holder.tvStatus.setText(R.string.downloaded);
                 Formatter.BytesResult result = Formatter.formatBytes(state.totalBytes);
                 holder.tvSize.setText(result.value + " " + result.units);
             } else if (status == FileDownloadStatus.INVALID_STATUS) {
                 if (state.totalBytes == state.transferBytes && state.transferBytes > 0) {
-                    holder.tvStatus.setText("下载完成");
+                    holder.tvStatus.setText(R.string.downloaded);
                 } else {
-                    holder.tvStatus.setText("下载中");
+                    holder.tvStatus.setText(R.string.downloading);
                 }
                 Formatter.BytesResult result = Formatter.formatBytes(state.totalBytes);
                 holder.tvSize.setText(result.value + " " + result.units);

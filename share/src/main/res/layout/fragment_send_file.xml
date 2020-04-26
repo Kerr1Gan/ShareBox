@@ -22,7 +22,7 @@
             android:background="@color/colorPrimary"
             app:navigationIcon="?android:attr/homeAsUpIndicator"
             app:theme="@style/WhiteToolbar"
-            app:title="发送中" />
+            app:title="@string/sending" />
 
         <TextView
             android:id="@+id/tv_key"
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="30dp"
-            android:text="请在另一设备中输入6位数密钥" />
+            android:text="@string/enter_6digit_key" />
 
         <TextView
             android:layout_width="wrap_content"

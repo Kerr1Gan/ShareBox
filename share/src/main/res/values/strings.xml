@@ -176,5 +176,29 @@
     <!-- TODO(user): replace with your real server client ID -->
     <!-- Server Client ID.  This should be a valid Web OAuth 2.0 Client ID obtained
          from https://console.developers.google.com/ -->
-    <string name="server_client_id" translatable="false">598282183161-ul7qr43dhecie53nshbbcrfcb8k380qg.apps.googleusercontent.com</string>
+<!--    <string name="server_client_id" translatable="false">598282183161-ul7qr43dhecie53nshbbcrfcb8k380qg.apps.googleusercontent.com</string>-->
+
+    <string name="tips">Tips</string>
+    <string name="watch_ad_acclerator_transfer">Watch an advertisement to speed up file transfer</string>
+    <string name="pending">Pending</string>
+    <string name="uploading">Uploading</string>
+    <string name="downloading">Downloading</string>
+    <string name="downloaded">Download Finish</string>
+    <string name="not_logged_in">Not logged in</string>
+    <string name="login_success">Login success</string>
+    <string name="login_failed">Login failed</string>
+    <string name="send">Send</string>
+    <string name="receive">Receive</string>
+    <string name="sending">Sending</string>
+    <string name="receiving">Receiving</string>
+    <string name="enter_6digit_key">Please enter a 6-digit key in another device</string>
+    <string name="enter_the_key">Enter the key</string>
+    <string name="logout">Logout</string>
+    <string name="login_failed_try_again">Login failed, please try again</string>
+
+    <string name="grant_permissions">Grant permissions</string>
+    <string name="required_permissions">"Sendby needs access to your storage space. \nRequired"</string>
+    <string name="required_permissions_2">"Also allow access\nCamera\nLocation"</string>
+    <string name="continue_">Continue</string>
+    <string name="quit">Quit</string>
 </resources>

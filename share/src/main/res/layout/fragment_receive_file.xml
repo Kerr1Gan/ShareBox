@@ -21,7 +21,7 @@
             android:background="@color/colorPrimary"
             app:navigationIcon="?android:attr/homeAsUpIndicator"
             app:theme="@style/WhiteToolbar"
-            app:title="接收中" />
+            app:title="@string/receiving" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -29,7 +29,7 @@
             android:layout_gravity="left"
             android:layout_marginLeft="30dp"
             android:layout_marginTop="30dp"
-            android:text="输入密钥"
+            android:text="@string/enter_the_key"
             android:textColor="@android:color/black"
             android:textSize="24dp"
             android:textStyle="bold" />
@@ -42,7 +42,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginRight="30dp"
             android:background="@drawable/shape_receive_enter_key"
-            android:hint="输入密钥"
+            android:text="@string/enter_the_key"
             android:padding="10dp" />
 
         <Button
@@ -52,7 +52,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
             android:background="@drawable/shape_rectangle_corners_btn"
-            android:text="接收"
+            android:text="@string/receive"
             android:visibility="invisible"
             tools:visibility="visible" />
 

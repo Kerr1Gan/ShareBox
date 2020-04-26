@@ -75,7 +75,7 @@ public class LoginFragment extends LazyInitFragment {
             //login already
             if (!account.isExpired()) {
                 Constants.get().setToken("");
-                btnSignIn.getSignInButton().setText("登出");
+                btnSignIn.getSignInButton().setText(R.string.logout);
             }
         }
     }
@@ -147,7 +147,7 @@ public class LoginFragment extends LazyInitFragment {
             } else {
                 Context ctx = getContext();
                 if (ctx != null) {
-                    Toast.makeText(ctx, "登录失败，请重试", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ctx, R.string.login_failed_try_again, Toast.LENGTH_LONG).show();
                 }
             }
             // Signed in successfully, show authenticated UI.
@@ -157,7 +157,7 @@ public class LoginFragment extends LazyInitFragment {
             e.printStackTrace();
             Context ctx = getContext();
             if (ctx != null) {
-                Toast.makeText(ctx, "登录失败，请重试", Toast.LENGTH_LONG).show();
+                Toast.makeText(ctx, R.string.login_failed_try_again, Toast.LENGTH_LONG).show();
             }
         }
     }

@@ -158,8 +158,8 @@ public class SendFileFragment extends LazyInitFragment {
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-        AlertDialog dlg = builder.setTitle("小技巧")
-                .setMessage("观看一段广告加速传输效果")
+        AlertDialog dlg = builder.setTitle(R.string.tips)
+                .setMessage(R.string.watch_ad_acclerator_transfer)
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                     interstitialAd.showVideoAd();
                 }).setNegativeButton(android.R.string.cancel, (dialog, which) -> {
@@ -318,7 +318,7 @@ public class SendFileFragment extends LazyInitFragment {
             holder.ivIcon.setImageBitmap(null);
             setChildViewThumb(type, file.getAbsolutePath(), holder.ivIcon);
 
-            holder.tvStatus.setText("等待中");
+            holder.tvStatus.setText(R.string.pending);
             ViewState state = viewState.get(position);
             if (state == null) {
                 return;
@@ -326,13 +326,13 @@ public class SendFileFragment extends LazyInitFragment {
             UploadTask task = UploadManager.getInstance().getTask(state.taskHash);
             if (task != null) {
                 if (task.getStatus() == UploadTask.Status.IDLE) {
-                    holder.tvStatus.setText("等待中");
+                    holder.tvStatus.setText(R.string.pending);
                 } else if (task.getStatus() == UploadTask.Status.RUNNING) {
                     long transfer = task.getTransferBytes().get() - state.lastBytesTransfer;
                     state.lastBytesTransfer = task.getTransferBytes().get();
-                    holder.tvStatus.setText("上传中 " + Formatter.formatBytes(transfer).value + " " + Formatter.formatBytes(transfer).units);
+                    holder.tvStatus.setText(getString(R.string.uploading) + " " + Formatter.formatBytes(transfer).value + " " + Formatter.formatBytes(transfer).units);
                 } else if (task.getStatus() == UploadTask.Status.END) {
-                    holder.tvStatus.setText("结束");
+                    holder.tvStatus.setText(R.string.end);
                 }
                 float process = ((task.getTransferBytes().get() * 1f) / (file.length() * 1f));
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

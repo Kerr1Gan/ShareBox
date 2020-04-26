@@ -89,7 +89,7 @@ public class SendByActivity extends ImmersiveFragmentActivity {
                 tvNavigationHeader.setText(loginEntity.getName());
             }
         } else {
-            tvNavigationHeader.setText("未登录");
+            tvNavigationHeader.setText(R.string.not_logged_in);
         }
 
         btnSend = findViewById(R.id.btn_send);
@@ -237,7 +237,7 @@ public class SendByActivity extends ImmersiveFragmentActivity {
                 if (response != null && response.getData() != null) {
                     Constants.get().setLoginEntity(response.getData());
                     getHandler().post(() -> {
-                        Toast.makeText(this, "登录成功", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, R.string.login_success, Toast.LENGTH_LONG).show();
                         LoginEntity loginEntity = Constants.get().getLoginEntity();
                         if (loginEntity != null) {
                             tvNavigationHeader.setText(loginEntity.getName());
@@ -248,8 +248,8 @@ public class SendByActivity extends ImmersiveFragmentActivity {
                     Constants.get().setToken("");
                     Constants.get().setLoginEntity(null);
                     getHandler().post(() -> {
-                        Toast.makeText(this, "登录失败", Toast.LENGTH_LONG).show();
-                        tvNavigationHeader.setText("未登录");
+                        Toast.makeText(this, R.string.login_failed, Toast.LENGTH_LONG).show();
+                        tvNavigationHeader.setText(R.string.not_logged_in);
                     });
                 }
             } catch (Exception e) {

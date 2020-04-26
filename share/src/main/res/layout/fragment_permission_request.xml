@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="30dp"
-            android:text="赋予权限"
+            android:text="@string/grant_permissions"
             android:textSize="22dp"
             android:textStyle="bold" />
 
@@ -36,7 +36,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="30dp"
             android:gravity="center_horizontal"
-            android:text="Sendby 需要访问您的存储空间。\n必要条件"
+            android:text="@string/required_permissions"
             android:textSize="16dp"
             android:textStyle="bold" />
 
@@ -46,7 +46,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="30dp"
             android:gravity="center_horizontal"
-            android:text="同时允许访问\n相机\n定位"
+            android:text="@string/required_permissions_2"
             android:textSize="16dp"
             android:textStyle="bold" />
 
@@ -64,7 +64,7 @@
             android:layout_marginBottom="10dp"
             android:background="@drawable/shape_rectangle_btn"
             android:gravity="center"
-            android:text="Continue" />
+            android:text="@string/continue_" />
 
         <Button
             android:id="@+id/btn_quit"
@@ -75,6 +75,6 @@
             android:layout_marginBottom="25dp"
             android:background="@drawable/shape_rectangle_btn"
             android:gravity="center"
-            android:text="Quit" />
+            android:text="@string/quit" />
     </LinearLayout>
 </LinearLayout>
