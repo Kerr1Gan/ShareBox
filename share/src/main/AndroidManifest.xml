@@ -117,7 +117,7 @@
             android:theme="@style/SimpleImmersiveStyle" />
 
         <activity
-            android:name="com.ethan.and.ui.sendby.SendByActivity"
+            android:name="com.sendby.SendByActivity"
             android:launchMode="singleTask"
             android:theme="@style/CCImageStatusBarStyle" />
 
@@ -171,7 +171,7 @@
             android:enabled="true"
             android:exported="false" />
 
-        <service android:name="com.ethan.and.ui.sendby.CoreService" />
+        <service android:name="com.sendby.CoreService" />
 
     </application>
 

@@ -20,7 +20,7 @@ import com.flybd.sharebox.R
 import com.flybd.sharebox.parcel.FileExpandablePropertyCache
 import com.ethan.and.ui.main.MainActivity
 import com.ethan.and.ui.dialog.FilePickDialog
-import com.ethan.and.ui.sendby.http.HttpManager
+import com.sendby.http.HttpManager
 import com.flybd.sharebox.util.firebase.FirebaseManager
 import com.google.android.gms.ads.MobileAds
 import com.kochava.base.Tracker
@@ -33,7 +33,6 @@ import java.io.*
 import java.lang.ref.WeakReference
 import java.lang.reflect.InvocationTargetException
 import java.util.*
-import java.util.concurrent.ForkJoinPool
 import kotlin.collections.ArrayList
 
 
@@ -61,7 +60,7 @@ class MainApplication : MultiDexApplication() {
 
         LeakCanary.install(this)
         HttpManager.getInstance(this)
-        com.ethan.and.ui.sendby.Constants.get().init(this)
+        com.sendby.Constants.get().init(this)
         FileDownloader.setupOnApplicationOnCreate(this)
                 .connectionCreator(FileDownloadUrlConnection.Creator(FileDownloadUrlConnection.Configuration()
                         .connectTimeout(15000) // set connection timeout.

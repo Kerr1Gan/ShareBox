@@ -17,7 +17,7 @@ import androidx.core.content.PermissionChecker;
 
 import com.common.componentes.fragment.LazyInitFragment;
 import com.common.utils.activity.ActivityUtil;
-import com.ethan.and.ui.sendby.SendByActivity;
+import com.sendby.SendByActivity;
 import com.flybd.sharebox.R;
 
 public class PermissionRequestFragment extends LazyInitFragment {

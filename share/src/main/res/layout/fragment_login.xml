@@ -30,7 +30,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_login" />
 
-    <com.ethan.and.ui.sendby.widget.MSignInButton
+    <com.sendby.widget.MSignInButton
         android:id="@+id/btn_sign"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

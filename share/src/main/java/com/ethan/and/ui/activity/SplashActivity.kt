@@ -6,10 +6,8 @@ import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import com.common.componentes.activity.ImmersiveFragmentActivity
-import com.common.componentes.activity.RotateByOrientationActivity.newInstance
 import com.ethan.and.ui.fragment.PermissionRequestFragment
-import com.ethan.and.ui.main.MainActivity
-import com.ethan.and.ui.sendby.SendByActivity
+import com.sendby.SendByActivity
 
 
 class SplashActivity : AppCompatActivity() {
