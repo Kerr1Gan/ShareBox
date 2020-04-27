@@ -84,7 +84,7 @@ public class HttpManager {
         return null;
     }
 
-    public HttpResponse<KeyEntity> getCode(String[] remoteUrl, List<String> fileNames) {
+    public HttpResponse<KeyEntity> getCode(String[] remoteUrl, List<String> fileNames, Long totalFileSize) {
         OkHttpClient client = getOkHttpClient();
         String[] urls = new String[remoteUrl.length];
         for (int i = 0; i < remoteUrl.length; i++) {
@@ -95,6 +95,7 @@ public class HttpManager {
                 RequestBody reqBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), new Gson().toJson(fileNames));
                 Request request = new Request.Builder()
                         .url(url)
+                        .header("fileSize", String.valueOf(totalFileSize))
                         .post(reqBody)
                         .build();
                 Response response = client.newCall(request).execute();

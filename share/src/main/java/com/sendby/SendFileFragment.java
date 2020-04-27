@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -204,15 +205,18 @@ public class SendFileFragment extends LazyInitFragment implements BackPressListe
                 this.selectedFiles = (List<File>) serializable;
                 if (selectedFiles.size() > 0) {
                     List<String> names = new ArrayList<>();
+                    long totalSize = 0L;
                     for (File f : selectedFiles) {
                         if (f.getName().toLowerCase().contains("base.apk")) {
                             names.add(FileUtil.INSTANCE.getApkName(getContext(), f.getAbsolutePath()) + ".apk");
                         } else {
                             names.add(f.getName());
                         }
+                        totalSize += f.length();
                     }
+                    final long finalTotalSize = totalSize;
                     AppExecutorManager.INSTANCE.getInstance().networkIO().execute(() -> {
-                        HttpResponse<KeyEntity> response = HttpManager.getInstance().getCode(Constants.get().getRestUrl(), names);
+                        HttpResponse<KeyEntity> response = HttpManager.getInstance().getCode(Constants.get().getRestUrl(), names, finalTotalSize);
                         Log.i(TAG, "onViewCreated: " + new Gson().toJson(response));
                         if (response != null && response.getData() != null) {
                             this.keyEntity = response.getData();
