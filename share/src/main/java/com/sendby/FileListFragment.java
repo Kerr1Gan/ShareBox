@@ -19,7 +19,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.collection.ArrayMap;
 import androidx.collection.SparseArrayCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,7 +38,9 @@ import com.google.gson.Gson;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 public class FileListFragment extends LazyInitFragment {
 
@@ -53,7 +54,7 @@ public class FileListFragment extends LazyInitFragment {
 
     private static final LruCache<String, Bitmap> sLruCache = new LruCache<>(24);
 
-    private ArrayMap<String, String> installedAppName = new ArrayMap<>();
+    private Map<String, String> installedAppName = new Hashtable<>();
 
     public static FileListFragment newInstance(FileUtil.MediaFileType type) {
         FileListFragment ret = new FileListFragment();
@@ -291,7 +292,7 @@ public class FileListFragment extends LazyInitFragment {
                                     if (file.delete()) {
                                         fileList.remove(file);
                                         viewState.remove(position);
-                                        rvFileList.getAdapter().notifyItemRemoved(position);
+                                        rvFileList.getAdapter().notifyDataSetChanged();
                                     }
                                 }).create().show();
                     }
