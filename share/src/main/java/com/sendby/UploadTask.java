@@ -133,7 +133,9 @@ public class UploadTask implements Cloneable {
                 if (res != null) {
                     try {
                         if ("success".equalsIgnoreCase(res.getInfo())) {
-                            Log.i(TAG, "run: 分片" + chunkIndex + "已上传成功");
+                            if (BuildConfig.DEBUG) {
+                                Log.i(TAG, "run: 分片" + chunkIndex + "已上传成功");
+                            }
                             task.getTransferBytes().addAndGet(totalSize);
                             return;
                         }
@@ -248,7 +250,9 @@ public class UploadTask implements Cloneable {
                 dos.write((PREFIX + BOUNDARY + PREFIX + LINE_END).getBytes());
                 dos.flush();
                 dos.close();
-                Log.e(TAG, "postResponseCode() = " + conn.getResponseCode());
+                if (BuildConfig.DEBUG) {
+                    Log.i(TAG, "postResponseCode() = " + conn.getResponseCode());
+                }
                 //读取服务器返回信息
                 if (conn.getResponseCode() == 200) {
                     if (isStop()) {
@@ -261,13 +265,17 @@ public class UploadTask implements Cloneable {
                     while ((line = reader.readLine()) != null) {
                         response.append(line);
                     }
-                    Log.e(TAG, "run: " + response);
+                    if (BuildConfig.DEBUG) {
+                        Log.i(TAG, "run: " + response);
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 task.getTransferBytes().addAndGet(-total);
                 task.getTransferBytes().addAndGet(-uploadedSize);
-                Log.i(TAG, "run: startPosition " + startPosition + " endPosition " + endPosition);
+                if (BuildConfig.DEBUG) {
+                    Log.i(TAG, "run: startPosition " + startPosition + " endPosition " + endPosition);
+                }
                 try {
                     Thread.sleep(50);
                     run();
@@ -278,7 +286,9 @@ public class UploadTask implements Cloneable {
             } finally {
                 AtomicLong bytesTransfer = task.getTransferBytes();
                 //bytesTransfer.addAndGet(total);
-                Log.i(TAG, "run: total " + bytesTransfer.get() + " real " + task.file.length());
+                if (BuildConfig.DEBUG) {
+                    Log.i(TAG, "run: total " + bytesTransfer.get() + " real " + task.file.length());
+                }
                 if (bytesTransfer.get() == task.file.length()) {
                     task.setStatus(Status.END);
                 }
@@ -313,7 +323,9 @@ public class UploadTask implements Cloneable {
             }
             is.close();
             String md5Hash = new BigInteger(1, md.digest()).toString(16);
-            Log.i(TAG, "hash: " + md5Hash);
+            if (BuildConfig.DEBUG) {
+                Log.i(TAG, "hash: " + md5Hash);
+            }
             return md5Hash;
         }
 

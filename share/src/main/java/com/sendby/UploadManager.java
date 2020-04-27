@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.collection.SparseArrayCompat;
 
 import com.flybd.sharebox.AppExecutorManager;
+import com.flybd.sharebox.BuildConfig;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -51,7 +52,9 @@ public class UploadManager {
                 int index = 0;
                 while (!Thread.currentThread().isInterrupted()) {
                     UploadTask childTask = (UploadTask) task.clone();
-                    Log.i(TAG, "pushTask: active count " + executorService.getActiveCount() + " max size " + executorService.getMaximumPoolSize());
+                    if (BuildConfig.DEBUG) {
+                        Log.i(TAG, "pushTask: active count " + executorService.getActiveCount() + " max size " + executorService.getMaximumPoolSize());
+                    }
                     if (executorService.getActiveCount() == executorService.getMaximumPoolSize()) {
                         SystemClock.sleep(10);
                         continue;
