@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">SendBy</string>
+
+    <string name="tips">Kiat</string>
+    <string name="watch_ad_acclerator_transfer">Tonton iklan untuk mempercepat transfer file</string>
+    <string name="pending">Menunggu</string>
+    <string name="uploading">Mengunggah</string>
+    <string name="downloading">Mengunduh</string>
+    <string name="downloaded">Pengunduhan selesai</string>
+    <string name="not_logged_in">Belum masuk</string>
+    <string name="login_success">Login berhasil</string>
+    <string name="login_failed">Gagal masuk</string>
+    <string name="send">Kirim</string>
+    <string name="receive">Menerima</string>
+    <string name="sending">Mengirim</string>
+    <string name="receiving">Menerima</string>
+    <string name="enter_6digit_key">Masukkan kunci 6 digit di perangkat lain</string>
+    <string name="enter_the_key">Masukkan kunci</string>
+    <string name="logout">Logout</string>
+    <string name="login_failed_try_again">Gagal masuk, silakan coba lagi nanti</string>
+
+    <string name="grant_permissions">Berikan izin</string>
+    <string name="required_permissions">"Sendby membutuhkan akses ke kontrol penyimpanan Anda.\nRequired"</string>
+    <string name="required_permissions_2">"Izinkan juga akses\nKamera\nPosisi"</string>
+    <string name="continue_">Untuk melanjutkan</string>
+    <string name="quit">Keluar</string>
+    <string name="login">Login</string>
+    <string name="purchase_vip">Beli VIP</string>
+    <string name="remove_ads">Hapus iklan</string>
+    <string name="exit_will_terminate_the_task">Keluar sekarang akan menghentikan tugas</string>
+    <string name="storage_path">Jalur penyimpanan:</string>
+    <string name="download_link_copied_to_clipboard">Unduh tautan yang disalin ke clipboard</string>
+    <string name="delete_file">Hapus file</string>
+    <string name="confirm_delete_file">Konfirmasikan penghapusan file?</string>
+</resources>
