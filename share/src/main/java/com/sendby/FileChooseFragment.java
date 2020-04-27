@@ -106,7 +106,8 @@ public class FileChooseFragment extends BottomSheetFragment {
         }
         Context ctx = getContext();
         if (ctx != null) {
-            Intent i = ImmersiveFragmentActivity.newInstance(getContext(), SendFileFragment.class, SendFileFragment.getBundle(selectedFiles));
+            Bundle extra = SendFileFragment.getBundle(selectedFiles);
+            Intent i = SendFileActivity.getIntent(ctx, extra);
             startActivity(i);
         }
     }

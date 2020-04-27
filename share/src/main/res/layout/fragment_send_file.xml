@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="5dp"
-            android:text="剩余时间 09:59" />
+            tools:text="剩余时间 09:59" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_list"

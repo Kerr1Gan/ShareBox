@@ -173,6 +173,13 @@
 
         <service android:name="com.sendby.CoreService" />
 
+        <activity
+            android:name="com.sendby.SendFileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.sendby.ReceiveFileActivity"
+            android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>

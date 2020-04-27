@@ -2,6 +2,7 @@ package com.sendby;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -34,6 +35,7 @@ import com.common.componentes.fragment.LazyInitFragment;
 import com.common.utils.activity.ActivityUtil;
 import com.common.utils.file.FileUtil;
 import com.sendby.ads.InterstitialAdWrap;
+import com.sendby.fragment.BackPressListener;
 import com.sendby.http.HttpManager;
 import com.sendby.entity.DownloadListResponse;
 import com.flybd.sharebox.AppExecutorManager;
@@ -53,7 +55,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReceiveFileFragment extends LazyInitFragment {
+public class ReceiveFileFragment extends LazyInitFragment implements BackPressListener {
 
     private static final String TAG = "ReceiveFileFragment";
 
@@ -83,7 +85,7 @@ public class ReceiveFileFragment extends LazyInitFragment {
         super.onCreate(savedInstanceState);
         downloadItems = new ArrayList<>();
         viewState = new SparseArrayCompat<>();
-        interstitialAd = new InterstitialAdWrap(getContext(),
+        interstitialAd = new InterstitialAdWrap(getContext().getApplicationContext(),
                 "ca-app-pub-1847326177341268/4206230631",
                 "ca-app-pub-1847326177341268/3659435721",
                 "",
@@ -230,7 +232,7 @@ public class ReceiveFileFragment extends LazyInitFragment {
         rvList.setAdapter(new Adapter());
 
         FrameLayout flAd = view.findViewById(R.id.fl_ad);
-        AdView adView = new AdView(view.getContext());
+        AdView adView = new AdView(view.getContext().getApplicationContext());
         adView.setAdSize(AdSize.SMART_BANNER);
         if (BuildConfig.DEBUG) {
             adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
@@ -418,6 +420,33 @@ public class ReceiveFileFragment extends LazyInitFragment {
                     return false;
                 }
             }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onBackPress() {
+        boolean finished = checkTaskFinished();
+        if (finished) {
+            return false;
+        }
+        Context ctx = getContext();
+        if (ctx != null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+            builder.setTitle(R.string.warning)
+                    .setMessage(R.string.exit_will_terminate_the_task)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            getActivity().finish();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                        }
+                    }).create().show();
         }
         return true;
     }

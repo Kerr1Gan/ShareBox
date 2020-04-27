@@ -2,15 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_login"
-        android:title="Login" />
+        android:title="@string/login" />
 
-    <item
-        android:id="@+id/nav_vip"
-        android:title="Get Vip" />
+<!--    <item-->
+<!--        android:id="@+id/nav_vip"-->
+<!--        android:title="@string/purchase_vip" />-->
 
     <item
         android:id="@+id/nav_remove_ad"
-        android:title="移除广告" />
+        android:title="@string/remove_ads" />
 
     <!--    <item-->
     <!--        android:id="@+id/nav_contact_us"-->

@@ -195,4 +195,8 @@
     <string name="required_permissions_2">"同时允许访问\n相机\n定位"</string>
     <string name="continue_">继续</string>
     <string name="quit">退出</string>
+    <string name="login">登录</string>
+    <string name="purchase_vip">购买VIP</string>
+    <string name="remove_ads">移除广告</string>
+    <string name="exit_will_terminate_the_task">现在退出将终止任务</string>
 </resources>

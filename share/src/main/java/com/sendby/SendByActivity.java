@@ -36,7 +36,6 @@ import com.sendby.entity.ConfigEntity;
 import com.sendby.entity.HttpResponse;
 import com.sendby.entity.LoginEntity;
 import com.sendby.fragment.LoginFragment;
-import com.sendby.fragment.PaymentFragment;
 import com.sendby.googlepay.GooglePayManager;
 import com.sendby.http.HttpManager;
 
@@ -98,7 +97,7 @@ public class SendByActivity extends ImmersiveFragmentActivity {
 
         btnReceive = findViewById(R.id.btn_receive);
         btnReceive.setOnClickListener(v -> {
-            Intent intent = ImmersiveFragmentActivity.newInstance(this, ReceiveFileFragment.class);
+            Intent intent = new Intent(SendByActivity.this, ReceiveFileActivity.class);
             startActivity(intent);
         });
 
@@ -117,11 +116,11 @@ public class SendByActivity extends ImmersiveFragmentActivity {
                 Intent intent = ImmersiveFragmentActivity.newInstance(this, LoginFragment.class);
                 startActivityForResult(intent, REQUEST_LOGIN_CODE);
                 return true;
-            } else if (menuItem.getItemId() == R.id.nav_vip) {
+            } /*else if (menuItem.getItemId() == R.id.nav_vip) {
                 Intent intent = ImmersiveFragmentActivity.newInstance(this, PaymentFragment.class);
                 startActivityForResult(intent, REQUEST_BUY_VIP_CODE);
                 return true;
-            } else if (menuItem.getItemId() == R.id.nav_remove_ad) {
+            }*/ else if (menuItem.getItemId() == R.id.nav_remove_ad) {
                 googlePayManager.setConfig(Arrays.asList("ad_remove"), (billingResult, list) -> {
                     if (list.size() > 0) {
                         googlePayManager.launchBillingFlow(SendByActivity.this, list.get(0));
@@ -146,7 +145,7 @@ public class SendByActivity extends ImmersiveFragmentActivity {
 
 
         FrameLayout flAd = findViewById(R.id.fl_ad);
-        AdView adView = new AdView(this);
+        AdView adView = new AdView(this.getApplicationContext());
         adView.setAdSize(AdSize.SMART_BANNER);
         if (BuildConfig.DEBUG) {
             adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");

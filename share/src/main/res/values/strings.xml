@@ -201,4 +201,8 @@
     <string name="required_permissions_2">"Also allow access\nCamera\nLocation"</string>
     <string name="continue_">Continue</string>
     <string name="quit">Quit</string>
+    <string name="login">Login</string>
+    <string name="purchase_vip">Purchase VIP</string>
+    <string name="remove_ads">Remove ads</string>
+    <string name="exit_will_terminate_the_task">Exit now will terminate the task</string>
 </resources>
