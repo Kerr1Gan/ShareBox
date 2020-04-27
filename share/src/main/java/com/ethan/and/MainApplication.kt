@@ -191,7 +191,6 @@ class MainApplication : MultiDexApplication() {
 
     private fun initSDK() {
         CrashReport.initCrashReport(getApplicationContext(), getString(R.string.bugly_id), true)
-        MobileAds.initialize(this, getString(R.string.admob_app_id))
     }
 
     private fun initError() {
