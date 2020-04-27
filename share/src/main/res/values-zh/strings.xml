@@ -199,4 +199,8 @@
     <string name="purchase_vip">购买VIP</string>
     <string name="remove_ads">移除广告</string>
     <string name="exit_will_terminate_the_task">现在退出将终止任务</string>
+    <string name="storage_path">存储路径:</string>
+    <string name="download_link_copied_to_clipboard">已复制下载链接到剪贴板</string>
+    <string name="delete_file">删除文件</string>
+    <string name="confirm_delete_file">确认删除文件?</string>
 </resources>

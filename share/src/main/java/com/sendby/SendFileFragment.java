@@ -205,7 +205,11 @@ public class SendFileFragment extends LazyInitFragment implements BackPressListe
                 if (selectedFiles.size() > 0) {
                     List<String> names = new ArrayList<>();
                     for (File f : selectedFiles) {
-                        names.add(f.getName());
+                        if (f.getName().toLowerCase().contains("base.apk")) {
+                            names.add(FileUtil.INSTANCE.getApkName(getContext(), f.getAbsolutePath()) + ".apk");
+                        } else {
+                            names.add(f.getName());
+                        }
                     }
                     AppExecutorManager.INSTANCE.getInstance().networkIO().execute(() -> {
                         HttpResponse<KeyEntity> response = HttpManager.getInstance().getCode(Constants.get().getRestUrl(), names);
@@ -213,7 +217,7 @@ public class SendFileFragment extends LazyInitFragment implements BackPressListe
                         if (response != null && response.getData() != null) {
                             this.keyEntity = response.getData();
                             getHandler().post(() -> {
-                                tvKey.setText(keyEntity.getKey());
+                                //tvKey.setText(keyEntity.getKey());
                             });
                         }
                     });
@@ -233,10 +237,6 @@ public class SendFileFragment extends LazyInitFragment implements BackPressListe
         }
         getHandler().removeCallbacksAndMessages(null);
         if (selectedFiles.size() > 0) {
-            List<String> names = new ArrayList<>();
-            for (File f : selectedFiles) {
-                names.add(f.getName());
-            }
             try {
                 UploadTask task = new UploadTask();
                 task.setCtx(getContext());
@@ -246,7 +246,11 @@ public class SendFileFragment extends LazyInitFragment implements BackPressListe
                 if (!TextUtils.isEmpty(key) && !TextUtils.isEmpty(url)) {
                     task.setKey(key);
                     task.setFile(selectedFiles.get(index));
-                    task.setName(selectedFiles.get(index).getName());
+                    String name = selectedFiles.get(index).getName();
+                    task.setName(name);
+                    if (name.toLowerCase().contains("base.apk")) {
+                        task.setName(FileUtil.INSTANCE.getApkName(getContext(), selectedFiles.get(index).getAbsolutePath()) + ".apk");
+                    }
                     task.setUrl(url);
                     int taskHash = UploadManager.getInstance().pushTask(task);
                     ViewState state = viewState.get(index);
@@ -314,6 +318,9 @@ public class SendFileFragment extends LazyInitFragment implements BackPressListe
         public void onBindViewHolder(@NonNull Holder holder, int position) {
             File file = selectedFiles.get(position);
             holder.tvTitle.setText(file.getName());
+            if (file.getName().toLowerCase().contains("base.apk")) {
+                holder.tvTitle.setText(FileUtil.INSTANCE.getApkName(holder.itemView.getContext(), file.getAbsolutePath()));
+            }
             Formatter.BytesResult result = Formatter.formatBytes(file.length());
             holder.tvSize.setText(result.value + " " + result.units);
             FileUtil.MediaFileType type = FileUtil.INSTANCE.getMediaFileTypeByName(file.getName());
@@ -341,6 +348,11 @@ public class SendFileFragment extends LazyInitFragment implements BackPressListe
                     holder.pbProgress.setProgress((int) (process * 100), false);
                 } else {
                     holder.pbProgress.setProgress((int) (process * 100));
+                }
+            }
+            if (checkTaskFinished()) {
+                if (keyEntity != null) {
+                    tvKey.setText(keyEntity.getKey());
                 }
             }
         }

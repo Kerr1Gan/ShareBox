@@ -176,7 +176,7 @@
     <!-- TODO(user): replace with your real server client ID -->
     <!-- Server Client ID.  This should be a valid Web OAuth 2.0 Client ID obtained
          from https://console.developers.google.com/ -->
-<!--    <string name="server_client_id" translatable="false">598282183161-ul7qr43dhecie53nshbbcrfcb8k380qg.apps.googleusercontent.com</string>-->
+    <!--    <string name="server_client_id" translatable="false">598282183161-ul7qr43dhecie53nshbbcrfcb8k380qg.apps.googleusercontent.com</string>-->
 
     <string name="tips">Tips</string>
     <string name="watch_ad_acclerator_transfer">Watch an advertisement to speed up file transfer</string>
@@ -205,4 +205,8 @@
     <string name="purchase_vip">Purchase VIP</string>
     <string name="remove_ads">Remove ads</string>
     <string name="exit_will_terminate_the_task">Exit now will terminate the task</string>
+    <string name="storage_path">Storage path:</string>
+    <string name="download_link_copied_to_clipboard">Download link copied to clipboard</string>
+    <string name="delete_file">Delete file</string>
+    <string name="confirm_delete_file">Confirm delete file?</string>
 </resources>

@@ -1,8 +1,12 @@
 package com.sendby;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -25,6 +29,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.collection.SparseArrayCompat;
+import androidx.core.content.FileProvider;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -70,6 +75,8 @@ public class ReceiveFileFragment extends LazyInitFragment implements BackPressLi
     private SparseArrayCompat<ViewState> viewState;
 
     private InterstitialAdWrap interstitialAd;
+
+    private TextView tvStoragePath;
 
     class ViewState {
         int downloadId = 0;
@@ -231,6 +238,9 @@ public class ReceiveFileFragment extends LazyInitFragment implements BackPressLi
         rvList.setLayoutManager(new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false));
         rvList.setAdapter(new Adapter());
 
+        tvStoragePath = view.findViewById(R.id.tv_storage_path);
+        tvStoragePath.setText(getString(R.string.storage_path) + Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
+
         FrameLayout flAd = view.findViewById(R.id.fl_ad);
         AdView adView = new AdView(view.getContext().getApplicationContext());
         adView.setAdSize(AdSize.SMART_BANNER);
@@ -323,6 +333,12 @@ public class ReceiveFileFragment extends LazyInitFragment implements BackPressLi
                                     finalViewState.transferBytes = task.getSmallFileSoFarBytes();
                                     finalViewState.totalBytes = task.getSmallFileTotalBytes();
                                 }
+                                getHandler().post(() -> {
+                                    Context ctx = getContext();
+                                    if (ctx != null) {
+                                        Toast.makeText(ctx, task.getFilename() + " " + getString(R.string.downloaded), Toast.LENGTH_LONG).show();
+                                    }
+                                });
                             }
 
                             @Override
@@ -374,6 +390,31 @@ public class ReceiveFileFragment extends LazyInitFragment implements BackPressLi
             } else {
                 holder.pbProgress.setProgress((int) (process * 100));
             }
+
+            final ViewState finalState = state;
+            holder.itemView.setOnClickListener(v -> {
+//                    //获取到指定文件夹，这里为：/storage/emulated/0/Android/data/你的包	名/files/Download
+//                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//                    //7.0以上跳转系统文件需用FileProvider，参考链接：https://blog.csdn.net/growing_tree/article/details/71190741
+//                    Uri uri;
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                        uri = FileProvider.getUriForFile(
+//                                holder.itemView.getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", new File(savedPath));
+//                    } else {
+//                        uri = Uri.fromFile(new File(savedPath));
+//                    }
+//                    intent.setDataAndType(uri, "*/*");
+//                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+//                    startActivityForResult(intent, 200);
+
+                // 获取系统剪贴板
+                ClipboardManager clipboard = (ClipboardManager) v.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                // 创建一个剪贴数据集，包含一个普通文本数据条目（需要复制的数据）
+                ClipData clipData = ClipData.newPlainText(null, finalState.downloadItem.getUrl());
+                // 把数据集设置（复制）到剪贴板
+                clipboard.setPrimaryClip(clipData);
+                Toast.makeText(v.getContext(), R.string.download_link_copied_to_clipboard, Toast.LENGTH_LONG).show();
+            });
         }
 
         @Override

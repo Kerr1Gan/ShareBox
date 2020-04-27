@@ -42,7 +42,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginRight="30dp"
             android:background="@drawable/shape_receive_enter_key"
-            android:text="@string/enter_the_key"
+            android:hint="@string/enter_the_key"
             android:padding="10dp" />
 
         <Button
@@ -60,6 +60,12 @@
             android:id="@+id/fl_ad"
             android:layout_width="match_parent"
             android:layout_height="80dp" />
+
+        <TextView
+            android:id="@+id/tv_storage_path"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_list"

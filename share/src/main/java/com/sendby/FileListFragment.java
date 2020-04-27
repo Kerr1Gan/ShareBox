@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.LruCache;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.collection.ArrayMap;
 import androidx.collection.SparseArrayCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -50,6 +52,8 @@ public class FileListFragment extends LazyInitFragment {
     private FileUtil.MediaFileType type;
 
     private static final LruCache<String, Bitmap> sLruCache = new LruCache<>(24);
+
+    private ArrayMap<String, String> installedAppName = new ArrayMap<>();
 
     public static FileListFragment newInstance(FileUtil.MediaFileType type) {
         FileListFragment ret = new FileListFragment();
@@ -146,6 +150,8 @@ public class FileListFragment extends LazyInitFragment {
                     File apkFile = new File(info.applicationInfo.sourceDir);
                     if (apkFile.exists()) {
                         list.add(apkFile);
+                        String name = FileUtil.INSTANCE.getApkName(context, apkFile.getAbsolutePath());
+                        installedAppName.put(apkFile.getAbsolutePath(), name);
                     }
                 }
                 strList = new ArrayList<>();
@@ -237,7 +243,15 @@ public class FileListFragment extends LazyInitFragment {
         @Override
         public void onBindViewHolder(@NonNull Holder holder, int position) {
             File file = fileList.get(position);
+
+            FileUtil.MediaFileType type = FileListFragment.this.type;
             holder.tvName.setText(file.getName());
+            if (type == FileUtil.MediaFileType.APP) {
+                String appName = installedAppName.get(file.getAbsolutePath());
+                if (!TextUtils.isEmpty(appName)) {
+                    holder.tvName.setText(appName);
+                }
+            }
             boolean isChecked = false;
             Boolean cache = viewState.get(position);
             if (cache != null) {
@@ -247,7 +261,6 @@ public class FileListFragment extends LazyInitFragment {
 
             String f = file.getAbsolutePath();
 
-            FileUtil.MediaFileType type = FileListFragment.this.type;
             if (type != null) {
                 holder.icon.setImageBitmap(null);
                 setChildViewThumb(type, f, holder.icon);
@@ -271,8 +284,8 @@ public class FileListFragment extends LazyInitFragment {
                         openFile(file.getAbsolutePath());
                     } else if (index == 1) {
                         AlertDialog.Builder b = new AlertDialog.Builder(ctx);
-                        b.setTitle("删除文件")
-                                .setMessage("确认删除文件？")
+                        b.setTitle(R.string.delete_file)
+                                .setMessage(R.string.confirm_delete_file)
                                 .setNegativeButton(android.R.string.cancel, null)
                                 .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                                     if (file.delete()) {

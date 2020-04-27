@@ -101,7 +101,6 @@ public class SendByActivity extends ImmersiveFragmentActivity {
             startActivity(intent);
         });
 
-        btnSend.getTranslationY();
         fileChooseFragment = new FileChooseFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.design_bottom_sheet, fileChooseFragment, "SendByActivity").commitAllowingStateLoss();
 
