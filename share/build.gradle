@@ -56,8 +56,8 @@ android {
         applicationId "com.projectwinter.sendby"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 21
-        versionName "1.1.21"
+        versionCode 22
+        versionName "1.1.22"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
