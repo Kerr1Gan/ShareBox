@@ -1,5 +1,7 @@
 package com.sendby.entity;
 
+import com.google.gson.annotations.SerializedName;
+
 public class LoginEntity {
 
 
@@ -17,18 +19,29 @@ public class LoginEntity {
      * createTime : null
      * vipExpirationTime : null
      */
-
+    @SerializedName("email")
     private String email;
+    @SerializedName("name")
     private String name;
+    @SerializedName("picture")
     private String picture;
+    @SerializedName("locale")
     private String locale;
+    @SerializedName("familyName")
     private String familyName;
+    @SerializedName("givenName")
     private String givenName;
+    @SerializedName("emailVerified")
     private boolean emailVerified;
+    @SerializedName("androidId")
     private String androidId;
+    @SerializedName("appPackageName")
     private String appPackageName;
+    @SerializedName("apkVersion")
     private String apkVersion;
+    @SerializedName("createTime")
     private Long createTime;
+    @SerializedName("vipExpirationTime")
     private Long vipExpirationTime;
 
     private static final String STUB = new LoginEntity().getClass().getSimpleName();

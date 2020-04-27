@@ -1,5 +1,7 @@
 package com.sendby.entity;
 
+import com.google.gson.annotations.SerializedName;
+
 public class ConfigEntity {
 
 
@@ -8,7 +10,9 @@ public class ConfigEntity {
      * chunkedStreamingMode : 10485760
      */
 
+    @SerializedName("chunkSize")
     private int chunkSize;
+    @SerializedName("chunkedStreamingMode")
     private int chunkedStreamingMode;
 
     private static final String STUB = new ConfigEntity().getClass().getSimpleName();
