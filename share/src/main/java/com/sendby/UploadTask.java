@@ -175,6 +175,7 @@ public class UploadTask implements Cloneable {
                 conn.setRequestProperty("Fast-Pass", "ApFRA8rMc57pOlDg");
                 conn.setRequestProperty("File-Size", String.valueOf(uploadedSize));
                 conn.setRequestProperty("fileName", task.name);
+                conn.setRequestProperty("fullSize", String.valueOf(task.file.length()));
                 //设置请求头参数
                 conn.setRequestProperty("Connection", "Keep-Alive");
                 conn.setRequestProperty("Charset", "UTF-8");
